@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
+  base: '/Guoman/',
   plugins: [react()],
   resolve: {
     alias: {
@@ -28,4 +29,16 @@ export default defineConfig({
       overlay: false
     }
   },
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+        }
+      }
+    }
+  }
 }); 
