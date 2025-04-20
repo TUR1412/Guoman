@@ -248,32 +248,29 @@ function Header() {
           <NavLinks>
             {navItems.map((item, index) => (
               <li key={index}>
-                <NavLink 
-                  to={item.path} 
-                  active={location.pathname === item.path ? 1 : 0}
-                >
+                <NavLink to={item.path} active={location.pathname === item.path ? 1 : 0}>
                   {item.title}
                 </NavLink>
               </li>
             ))}
           </NavLinks>
-          
-          <SearchContainer>
-            <SearchInput 
-              type="text" 
-              placeholder="搜索国漫..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleSearch}
-            />
-            <SearchIcon />
-          </SearchContainer>
-          
-          <LoginButton to="/login">
-            <FiUser />
-            登录/注册
-          </LoginButton>
         </Nav>
+        
+        <SearchContainer>
+          <SearchIcon />
+          <SearchInput 
+            type="text" 
+            placeholder="搜索国漫..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearch}
+          />
+        </SearchContainer>
+        
+        <LoginButton to="/login">
+          <FiUser />
+          登录/注册
+        </LoginButton>
         
         <MobileMenuButton onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
           {isMobileMenuOpen ? <FiX /> : <FiMenu />}
@@ -282,28 +279,16 @@ function Header() {
       
       {isMobileMenuOpen && (
         <MobileMenu
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.2 }}
+          initial={{ x: '100%' }}
+          animate={{ x: 0 }}
+          exit={{ x: '100%' }}
+          transition={{ duration: 0.3 }}
         >
-          <SearchContainer style={{ margin: '0 0 2rem 0', width: '80%' }}>
-            <SearchInput 
-              type="text" 
-              placeholder="搜索国漫..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleSearch}
-              style={{ width: '100%' }}
-            />
-            <SearchIcon />
-          </SearchContainer>
-          
           <MobileNavLinks>
             {navItems.map((item, index) => (
               <li key={index}>
                 <MobileNavLink 
-                  to={item.path} 
+                  to={item.path}
                   active={location.pathname === item.path ? 1 : 0}
                 >
                   {item.title}

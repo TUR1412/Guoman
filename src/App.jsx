@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -49,6 +49,7 @@ const LoadingLogo = styled(motion.div)`
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     // 模拟加载过程
@@ -58,6 +59,11 @@ function App() {
 
     return () => clearTimeout(timer);
   }, []);
+
+  // 检测路由变化，确保页面滚动到顶部
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
     <AppContainer>
@@ -93,13 +99,33 @@ function App() {
           } />
           <Route path="/login" element={<Login />} />
           <Route path="/anime/:id" element={<AnimeDetail />} />
-          <Route path="recommendations" element={
+          <Route path="/recommendations" element={
             <>
               <Banner />
               <AnimeList />
               <Features />
               <About />
             </>
+          } />
+          <Route path="/rankings" element={
+            <>
+              <Banner />
+              <AnimeList title="国漫排行榜" />
+              <Features />
+            </>
+          } />
+          <Route path="/news" element={
+            <>
+              <Banner />
+              <Features title="最新动漫资讯" />
+            </>
+          } />
+          <Route path="/about" element={<About fullPage={true} />} />
+          <Route path="*" element={
+            <div style={{textAlign: 'center', padding: '100px 20px'}}>
+              <h1>页面不存在</h1>
+              <p>抱歉，您请求的页面不存在。</p>
+            </div>
           } />
         </Routes>
       </MainContent>

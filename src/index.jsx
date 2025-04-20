@@ -37,10 +37,13 @@ const router = createHashRouter([
     element: <App />
   }
 ], {
+  basename: '', // 哈希路由不需要basename
   future: {
     v7_startTransition: true,
     v7_relativeSplatPath: true
-  }
+  },
+  // 自动滚动到顶部配置
+  scrollBehavior: "auto"
 });
 
 // 在挂载应用前再次添加全局错误处理器
