@@ -1,0 +1,39 @@
+<svg width="1920" height="600" viewBox="0 0 1920 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1920" height="600" fill="#0D1117"/>
+  <rect width="1920" height="600" fill="url(#paint0_linear)" opacity="0.2"/>
+  
+  <!-- 城市线条剪影 -->
+  <path d="M0 400H1920V600H0V400Z" fill="#161B22"/>
+  <path d="M100 400V320H120V400H100Z" fill="#161B22"/>
+  <path d="M200 400V300H220V400H200Z" fill="#161B22"/>
+  <path d="M300 400V280H320V400H300Z" fill="#161B22"/>
+  <path d="M400 400V350H420V400H400Z" fill="#161B22"/>
+  <path d="M500 400V250H520V400H500Z" fill="#161B22"/>
+  <path d="M600 400V300H620V400H600Z" fill="#161B22"/>
+  <path d="M700 400V280H720V400H700Z" fill="#161B22"/>
+  <path d="M800 400V200H820V400H800Z" fill="#161B22"/>
+  <path d="M900 400V250H920V400H900Z" fill="#161B22"/>
+  <path d="M1000 400V300H1020V400H1000Z" fill="#161B22"/>
+  <path d="M1100 400V230H1120V400H1100Z" fill="#161B22"/>
+  <path d="M1200 400V270H1220V400H1200Z" fill="#161B22"/>
+  <path d="M1300 400V220H1320V400H1300Z" fill="#161B22"/>
+  <path d="M1400 400V320H1420V400H1400Z" fill="#161B22"/>
+  <path d="M1500 400V270H1520V400H1500Z" fill="#161B22"/>
+  <path d="M1600 400V350H1620V400H1600Z" fill="#161B22"/>
+  <path d="M1700 400V280H1720V400H1700Z" fill="#161B22"/>
+  <path d="M1800 400V320H1820V400H1800Z" fill="#161B22"/>
+  
+  <!-- 几个漂浮元素 -->
+  <circle cx="150" cy="150" r="5" fill="#FF4D4D" opacity="0.5"/>
+  <circle cx="580" cy="220" r="3" fill="#FF4D4D" opacity="0.5"/>
+  <circle cx="1020" cy="180" r="4" fill="#FF4D4D" opacity="0.5"/>
+  <circle cx="1450" cy="120" r="6" fill="#FF4D4D" opacity="0.5"/>
+  <circle cx="1700" cy="200" r="3" fill="#FF4D4D" opacity="0.5"/>
+  
+  <defs>
+    <linearGradient id="paint0_linear" x1="960" y1="0" x2="960" y2="600" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF4D4D" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#FF4D4D" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg> 
