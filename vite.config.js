@@ -15,16 +15,6 @@ export default defineConfig({
       '@data': path.resolve(__dirname, './src/data'),
     },
   },
-  build: {
-    assetsDir: 'assets',
-    rollupOptions: {
-      output: {
-        manualChunks: undefined,
-      },
-    },
-    outDir: 'dist',
-    emptyOutDir: true,
-  },
   server: {
     port: 3000,
     open: true,
@@ -39,4 +29,8 @@ export default defineConfig({
       overlay: false
     }
   },
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+  }
 }); 

@@ -1,10 +1,9 @@
 name: Deploy to GitHub Pages
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - master
+    branches: [ "master" ]
+  workflow_dispatch:
 
 # 设置必要的权限
 permissions:
@@ -25,10 +24,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Set up Node
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: 18
           cache: 'npm'
 
       - name: Install dependencies
@@ -37,11 +36,16 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Copy files
+        run: |
+          cp .nojekyll dist/ || true
+          cp 404.html dist/ || true
+
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v1
         with:
           path: './dist'
 
@@ -55,4 +59,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2 
+        uses: actions/deploy-pages@v1 
