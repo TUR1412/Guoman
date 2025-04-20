@@ -28,6 +28,10 @@ if (typeof window !== 'undefined') {
       window[DEV_TOOLS][key] = typeof window[DEV_TOOLS][key] === 'function' ? noop : null;
     }
   }
+  
+  // 增强型错误处理
+  window.t = window.t || {};
+  window.t.get = window.t.get || function() { return null; };
 }
 
 // 创建路由器并添加未来标志 - 使用HashRouter适配GitHub Pages
@@ -37,6 +41,7 @@ const router = createHashRouter([
     element: <App />
   }
 ], {
+  basename: '', // 在HashRouter中不需要设置basename
   future: {
     v7_startTransition: true,
     v7_relativeSplatPath: true
@@ -45,6 +50,14 @@ const router = createHashRouter([
 
 // 在挂载应用前再次添加全局错误处理器
 window.onerror = function(message, source, lineno, colno, error) {
+  // 屏蔽常见错误
+  if (message && (
+    message.includes('stadium') || 
+    message.includes('TypeError') ||
+    message.includes('Permissions-Policy')
+  )) {
+    return true;
+  }
   return true; // 阻止所有错误显示
 };
 
