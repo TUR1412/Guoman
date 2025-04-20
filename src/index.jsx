@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider, createHashRouter } from 'react-router-dom';
 import App from './App';
 import './assets/styles/global.css';
 
@@ -30,8 +30,8 @@ if (typeof window !== 'undefined') {
   }
 }
 
-// 创建路由器并添加未来标志
-const router = createBrowserRouter([
+// 创建路由器并添加未来标志 - 使用HashRouter适配GitHub Pages
+const router = createHashRouter([
   {
     path: '/*',
     element: <App />
