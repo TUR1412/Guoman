@@ -40,5 +40,18 @@ export default defineConfig({
         }
       }
     }
-  }
+  },
+  // 确保 jsx 文件能正确处理
+  esbuild: {
+    loader: 'jsx',
+    include: /src\/.*\.jsx?$/,
+    exclude: [],
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: {
+        '.js': 'jsx',
+      },
+    },
+  },
 }); 

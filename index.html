@@ -11,9 +11,21 @@
   <link rel="modulepreload" crossorigin href="/Guoman/assets/react-018e9eb9.js">
   <link rel="modulepreload" crossorigin href="/Guoman/assets/router-232f1c46.js">
   <link rel="stylesheet" href="/Guoman/assets/index-01dbec25.css">
+  <script>
+    // 确保所有路由都通过哈希处理
+    (function() {
+      var pathname = window.location.pathname;
+      var hash = window.location.hash;
+      
+      // 如果有路径但没有哈希，将路径转换为哈希路由
+      if (pathname !== '/' && pathname !== '/index.html' && !hash) {
+        var redirectPath = pathname.replace('/Guoman/', '');
+        window.location.replace('/Guoman/#/' + redirectPath);
+      }
+    })();
+  </script>
 </head>
 <body>
   <div id="root"></div>
-  
 </body>
 </html> 
