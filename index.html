@@ -16,9 +16,16 @@
     (function() {
       var pathname = window.location.pathname;
       var hash = window.location.hash;
+      var host = window.location.host;
+      
+      // 检查是否在根路径下访问
+      if (host === 'tur1412.github.io' && pathname === '/') {
+        window.location.replace('/Guoman/');
+        return;
+      }
       
       // 如果有路径但没有哈希，将路径转换为哈希路由
-      if (pathname !== '/' && pathname !== '/index.html' && !hash) {
+      if (pathname.includes('/Guoman/') && pathname !== '/Guoman/' && pathname !== '/Guoman/index.html' && !hash) {
         var redirectPath = pathname.replace('/Guoman/', '');
         window.location.replace('/Guoman/#/' + redirectPath);
       }
