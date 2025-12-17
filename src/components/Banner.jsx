@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -59,7 +59,8 @@ const bannerData = [
 
 const BannerContainer = styled.section`
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - var(--header-height));
+  height: calc(100svh - var(--header-height));
   position: relative;
   overflow: hidden;
   
@@ -78,11 +79,11 @@ const BannerContainer = styled.section`
   }
   
   @media (max-width: 768px) {
-    height: 70vh;
+    height: calc(70svh - var(--header-height));
   }
   
   @media (max-width: 576px) {
-    height: 60vh;
+    height: calc(60svh - var(--header-height));
   }
   
   .swiper {

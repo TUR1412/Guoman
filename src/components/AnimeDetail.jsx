@@ -4,9 +4,10 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { FiStar, FiPlay, FiCalendar, FiFilm, FiUsers, FiDownload, FiShare2, FiHeart } from 'react-icons/fi';
 import animeData from '../data/animeData';
+import EmptyState from './EmptyState';
 
 const DetailContainer = styled.section`
-  padding-top: calc(var(--header-height) + var(--spacing-xl));
+  padding-top: var(--spacing-xl);
   padding-bottom: var(--spacing-3xl);
 `;
 
@@ -39,7 +40,7 @@ const BannerImage = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url(${props => props.image});
+  background-image: url(${props => props.$image});
   background-size: cover;
   background-position: center;
   filter: blur(2px);
@@ -170,7 +171,7 @@ const ActionButtons = styled.div`
   flex-wrap: wrap;
 `;
 
-const WatchButton = styled(Link)`
+const WatchButton = styled.a`
   padding: 0.75rem 2rem;
   background-color: var(--primary-color);
   color: white;
@@ -274,10 +275,10 @@ const StaffGrid = styled.div`
 const StaffCard = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: rgba(22, 27, 34, 0.6);
+  background: var(--surface-glass);
   border-radius: var(--border-radius-md);
   padding: var(--spacing-md);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-subtle);
 `;
 
 const StaffRole = styled.span`
@@ -302,23 +303,23 @@ const CharacterCard = styled.div`
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
-  background-color: rgba(22, 27, 34, 0.6);
+  background: var(--surface-glass);
   border-radius: var(--border-radius-md);
   padding: var(--spacing-md);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-subtle);
 `;
 
 const CharacterAvatar = styled.div`
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: var(--border-color);
+  background-color: rgba(255, 77, 77, 0.16);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--text-tertiary);
+  color: var(--text-primary);
 `;
 
 const CharacterInfo = styled.div`
@@ -391,7 +392,7 @@ const RelatedTitle = styled.div`
   color: var(--text-secondary);
   padding: var(--spacing-sm);
   text-align: center;
-  background-color: rgba(22, 27, 34, 0.7);
+  background: var(--surface-glass);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -400,10 +401,10 @@ const RelatedTitle = styled.div`
 const ReviewsContainer = styled.div``;
 
 const ReviewCard = styled.div`
-  background-color: rgba(22, 27, 34, 0.6);
+  background: var(--surface-glass);
   border-radius: var(--border-radius-md);
   padding: var(--spacing-lg);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-subtle);
   margin-bottom: var(--spacing-md);
 `;
 
@@ -468,9 +469,13 @@ function AnimeDetail() {
     return (
       <DetailContainer>
         <DetailInner>
-          <div style={{ textAlign: 'center', padding: '5rem 0' }}>
-            <h2>加载中...</h2>
-          </div>
+          <EmptyState
+            icon={<FiFilm size={22} />}
+            title="加载中..."
+            description="正在为你准备作品详情。"
+            primaryAction={{ href: '#/rankings', label: '先逛逛排行榜' }}
+            secondaryAction={{ href: '#/recommendations', label: '看看推荐' }}
+          />
         </DetailInner>
       </DetailContainer>
     );
@@ -480,13 +485,13 @@ function AnimeDetail() {
     return (
       <DetailContainer>
         <DetailInner>
-          <div style={{ textAlign: 'center', padding: '5rem 0' }}>
-            <h2>未找到该动漫</h2>
-            <p>抱歉，我们找不到您请求的动漫内容。</p>
-            <Link to="/" style={{ color: 'var(--primary-color)', marginTop: '1rem', display: 'inline-block' }}>
-              返回首页
-            </Link>
-          </div>
+          <EmptyState
+            icon={<FiFilm size={22} />}
+            title="未找到该动漫"
+            description="可能是链接已过期，或者该条目尚未收录。"
+            primaryAction={{ href: '#/', label: '回到首页' }}
+            secondaryAction={{ href: '#/search', label: '去搜索' }}
+          />
         </DetailInner>
       </DetailContainer>
     );
@@ -495,7 +500,7 @@ function AnimeDetail() {
   return (
     <DetailContainer>
       <BannerContainer>
-        <BannerImage image={anime.cover} />
+        <BannerImage $image={anime.cover} />
       </BannerContainer>
       
       <DetailInner>
@@ -536,7 +541,7 @@ function AnimeDetail() {
             <AnimeDescription>{anime.description}</AnimeDescription>
             
             <ActionButtons>
-              <WatchButton to={anime.watchLinks[0]?.url || "#"} target="_blank">
+              <WatchButton href={anime.watchLinks[0]?.url || "#"} target="_blank" rel="noopener noreferrer">
                 <FiPlay /> 立即观看
               </WatchButton>
               <SecondaryButton>
@@ -554,7 +559,7 @@ function AnimeDetail() {
               <TagsTitle>标签</TagsTitle>
               <Tags>
                 {anime.tags.map((tag, index) => (
-                  <Tag key={index} to={`/tag/${tag}`}>
+                  <Tag key={index} to={`/tag/${encodeURIComponent(tag)}`}>
                     {tag}
                   </Tag>
                 ))}

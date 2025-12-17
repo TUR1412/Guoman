@@ -13,7 +13,7 @@ import featuresBackground from '../assets/images/features-background.svg';
 
 const FeaturesContainer = styled.section`
   padding: var(--spacing-3xl) 0;
-  background-color: rgba(13, 17, 23, 0.5);
+  background-color: rgba(0, 0, 0, 0.06);
   position: relative;
   overflow: hidden;
   
@@ -69,11 +69,11 @@ const FeaturesGrid = styled.div`
 `;
 
 const FeatureCard = styled(motion.div)`
-  background-color: rgba(22, 27, 34, 0.7);
+  background: var(--surface-glass);
   border-radius: var(--border-radius-md);
   padding: var(--spacing-xl);
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-subtle);
   transition: var(--transition);
   
   &:hover {

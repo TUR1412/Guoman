@@ -1,0 +1,95 @@
+import React from 'react';
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
+
+const Page = styled(motion.section)`
+  padding: var(--spacing-3xl) 0;
+  min-height: calc(100vh - var(--header-height));
+`;
+
+const Inner = styled.div`
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+`;
+
+const Header = styled.div`
+  display: grid;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-2xl);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-lg);
+  background: var(--surface-glass);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(14px);
+`;
+
+const TitleRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-lg);
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+`;
+
+const Title = styled.h1`
+  font-size: 2rem;
+  line-height: 1.2;
+
+  @media (max-width: 768px) {
+    font-size: 1.75rem;
+  }
+`;
+
+const Subtitle = styled.p`
+  color: var(--text-secondary);
+  max-width: 70ch;
+`;
+
+const Actions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--spacing-md);
+`;
+
+const Content = styled.div`
+  display: grid;
+  gap: var(--spacing-2xl);
+`;
+
+const pageMotion = {
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -10 },
+  transition: { duration: 0.25 },
+};
+
+function PageShell({ title, subtitle, actions, children }) {
+  return (
+    <Page {...pageMotion}>
+      <Inner>
+        {(title || subtitle || actions) && (
+          <Header>
+            <TitleRow>
+              <div>
+                {title && <Title>{title}</Title>}
+                {subtitle && <Subtitle>{subtitle}</Subtitle>}
+              </div>
+              {actions && <Actions>{actions}</Actions>}
+            </TitleRow>
+          </Header>
+        )}
+        <Content>{children}</Content>
+      </Inner>
+    </Page>
+  );
+}
+
+export default PageShell;
+

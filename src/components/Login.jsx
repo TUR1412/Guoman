@@ -10,17 +10,17 @@ const LoginContainer = styled.section`
   align-items: center;
   justify-content: center;
   padding: var(--spacing-2xl) var(--spacing-lg);
-  background-color: var(--dark-color);
+  background: transparent;
 `;
 
 const LoginCard = styled(motion.div)`
   width: 100%;
   max-width: 450px;
-  background-color: rgba(22, 27, 34, 0.7);
+  background: var(--surface-glass);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
   padding: var(--spacing-2xl);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-subtle);
   position: relative;
   overflow: hidden;
   
@@ -53,7 +53,7 @@ const Tab = styled.button`
   padding: var(--spacing-md) 0;
   font-size: 1.1rem;
   font-weight: 500;
-  color: ${props => props.active ? 'var(--primary-color)' : 'var(--text-tertiary)'};
+  color: ${props => props.$active ? 'var(--primary-color)' : 'var(--text-tertiary)'};
   position: relative;
   
   &::after {
@@ -64,7 +64,7 @@ const Tab = styled.button`
     width: 100%;
     height: 2px;
     background-color: var(--primary-color);
-    transform: scaleX(${props => props.active ? '1' : '0'});
+    transform: scaleX(${props => props.$active ? '1' : '0'});
     transition: var(--transition);
   }
 `;
@@ -83,8 +83,8 @@ const FormInput = styled.input`
   width: 100%;
   padding: var(--spacing-md);
   padding-left: 2.5rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-color);
+  background-color: var(--field-bg);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--border-radius-md);
   color: var(--text-primary);
   font-size: 1rem;
@@ -92,7 +92,7 @@ const FormInput = styled.input`
   
   &:focus {
     border-color: var(--primary-color);
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: var(--field-bg-focus);
   }
   
   &::placeholder {
@@ -143,9 +143,9 @@ const Checkbox = styled.input`
   appearance: none;
   width: 16px;
   height: 16px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--border-radius-sm);
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--field-bg);
   position: relative;
   cursor: pointer;
   
@@ -208,7 +208,7 @@ const Divider = styled.div`
     content: '';
     flex: 1;
     height: 1px;
-    background-color: var(--border-color);
+    background-color: var(--border-subtle);
   }
   
   span {
@@ -277,14 +277,14 @@ function Login() {
         transition={{ duration: 0.5 }}
       >
         <Tabs>
-          <Tab
-            active={activeTab === 'login'}
+          <Tab 
+            $active={activeTab === 'login'}
             onClick={() => setActiveTab('login')}
           >
             登录
           </Tab>
           <Tab
-            active={activeTab === 'register'}
+            $active={activeTab === 'register'}
             onClick={() => setActiveTab('register')}
           >
             注册

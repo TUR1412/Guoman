@@ -139,7 +139,7 @@ const ContactButton = styled(Link)`
   }
 `;
 
-function About() {
+function About({ cta = { to: '/about', label: '了解更多' } }) {
   return (
     <AboutContainer>
       <AboutInner>
@@ -182,7 +182,7 @@ function About() {
             </StatItem>
           </Stats>
           
-          <ContactButton to="/about">了解更多</ContactButton>
+          <ContactButton to={cta.to}>{cta.label}</ContactButton>
         </AboutContent>
         
         <AboutImage

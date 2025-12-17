@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import animeData, { featuredAnime, popularAnime, newReleases, categories } from '../data/animeData';
+import AnimeCard from './anime/AnimeCard';
+import { AnimeGrid } from './anime/AnimeGrid';
 
 const SectionContainer = styled.section`
   padding: var(--spacing-3xl) 0;
@@ -67,97 +67,6 @@ const Tab = styled.button`
   }
 `;
 
-const AnimeGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: var(--spacing-lg);
-  
-  @media (max-width: 576px) {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: var(--spacing-md);
-  }
-`;
-
-const AnimeCard = styled(motion.div)`
-  border-radius: var(--border-radius-md);
-  overflow: hidden;
-  background-color: rgba(22, 27, 34, 0.7);
-  border: 1px solid var(--border-color);
-  transition: var(--transition);
-  box-shadow: var(--shadow-md);
-  
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-    border-color: rgba(255, 77, 77, 0.3);
-  }
-`;
-
-const AnimeCover = styled.div`
-  position: relative;
-  width: 100%;
-  height: 0;
-  padding-top: 140%; /* 10:14 aspect ratio */
-  overflow: hidden;
-  
-  img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
-  
-  ${AnimeCard}:hover & img {
-    transform: scale(1.05);
-  }
-`;
-
-const AnimeCardContent = styled.div`
-  padding: var(--spacing-md);
-`;
-
-const AnimeTitle = styled.h3`
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  
-  @media (max-width: 576px) {
-    font-size: 1rem;
-  }
-`;
-
-const AnimeInfo = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
-  color: var(--text-tertiary);
-`;
-
-const AnimeType = styled.span`
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 70%;
-`;
-
-const AnimeRating = styled.span`
-  display: flex;
-  align-items: center;
-  color: var(--secondary-color);
-  
-  &::before {
-    content: '★';
-    margin-right: 0.25rem;
-  }
-`;
-
 const ShowMoreButton = styled.button`
   display: block;
   margin: var(--spacing-xl) auto 0;
@@ -183,53 +92,78 @@ const categoryOptions = [
   ...categories.map(cat => ({ id: `cat-${cat.id}`, name: cat.name }))
 ];
 
-function AnimeList() {
-  const [activeTab, setActiveTab] = useState('all');
-  const [displayCount, setDisplayCount] = useState(8);
-  const [displayedAnime, setDisplayedAnime] = useState([]);
-  
+const DEFAULT_STORAGE_KEY = 'guoman.animeList.activeTab';
+
+function AnimeList({
+  title = '国漫作品',
+  defaultTab = 'all',
+  storageKey = DEFAULT_STORAGE_KEY,
+  initialDisplayCount = 8,
+}) {
+  const [activeTab, setActiveTab] = useState(() => {
+    if (typeof window === 'undefined') return defaultTab;
+    const saved = window.localStorage?.getItem(storageKey);
+    return saved || defaultTab;
+  });
+
+  const [displayCount, setDisplayCount] = useState(initialDisplayCount);
+
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    window.localStorage?.setItem(storageKey, activeTab);
+  }, [activeTab, storageKey]);
+
+  useEffect(() => {
+    setDisplayCount(initialDisplayCount);
+  }, [activeTab, initialDisplayCount]);
+
+  const displayedAnime = useMemo(() => {
     let filteredAnime = [];
-    
-    switch(activeTab) {
+
+    switch (activeTab) {
       case 'featured':
-        filteredAnime = featuredAnime.map(id => animeData.find(anime => anime.id === id));
+        filteredAnime = featuredAnime
+          .map((id) => animeData.find((anime) => anime.id === id))
+          .filter(Boolean);
         break;
       case 'popular':
-        filteredAnime = popularAnime.map(id => animeData.find(anime => anime.id === id));
+        filteredAnime = popularAnime
+          .map((id) => animeData.find((anime) => anime.id === id))
+          .filter(Boolean);
         break;
       case 'new':
-        filteredAnime = newReleases.map(id => animeData.find(anime => anime.id === id));
+        filteredAnime = newReleases
+          .map((id) => animeData.find((anime) => anime.id === id))
+          .filter(Boolean);
         break;
       case 'all':
         filteredAnime = animeData;
         break;
       default:
         if (activeTab.startsWith('cat-')) {
-          const catId = parseInt(activeTab.slice(4));
-          filteredAnime = animeData.filter(anime => 
-            anime.tags.some(tag => 
-              categories.find(cat => cat.id === catId)?.name === tag
-            )
+          const catId = Number.parseInt(activeTab.slice(4), 10);
+          const categoryName = categories.find((cat) => cat.id === catId)?.name;
+
+          filteredAnime = animeData.filter((anime) =>
+            anime.tags.some((tag) => tag === categoryName),
           );
         } else {
           filteredAnime = animeData;
         }
     }
-    
-    setDisplayedAnime(filteredAnime);
-    setDisplayCount(8); // 重置显示数量
+
+    return filteredAnime;
   }, [activeTab]);
-  
+
   const handleShowMore = () => {
-    setDisplayCount(prev => prev + 8);
+    setDisplayCount((prev) => prev + initialDisplayCount);
   };
   
   return (
     <SectionContainer>
       <SectionInner>
         <SectionHeader>
-          <h2 className="section-title">国漫作品</h2>
+          <h2 className="section-title">{title}</h2>
           <TabsContainer>
             {categoryOptions.map((category) => (
               <Tab 
@@ -245,26 +179,7 @@ function AnimeList() {
         
         <AnimeGrid>
           {displayedAnime.slice(0, displayCount).map((anime) => (
-            <AnimeCard 
-              key={anime.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <Link to={`/anime/${anime.id}`}>
-                <AnimeCover>
-                  <img src={anime.cover} alt={anime.title} />
-                </AnimeCover>
-                <AnimeCardContent>
-                  <AnimeTitle>{anime.title}</AnimeTitle>
-                  <AnimeInfo>
-                    <AnimeType>{anime.type.split('、')[0]}</AnimeType>
-                    <AnimeRating>{anime.rating}</AnimeRating>
-                  </AnimeInfo>
-                </AnimeCardContent>
-              </Link>
-            </AnimeCard>
+            <AnimeCard key={anime.id} anime={anime} />
           ))}
         </AnimeGrid>
         
