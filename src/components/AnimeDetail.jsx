@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { FiStar, FiPlay, FiCalendar, FiFilm, FiUsers, FiDownload, FiShare2, FiHeart } from 'react-icons/fi';
 import animeData from '../data/animeData';
 import EmptyState from './EmptyState';
+import { useFavorites } from './FavoritesProvider';
+import { useToast } from './ToastProvider';
 
 const DetailContainer = styled.section`
   padding-top: var(--spacing-xl);
@@ -192,15 +194,15 @@ const WatchButton = styled.a`
 
 const SecondaryButton = styled.button`
   padding: 0.75rem 1.5rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: var(--text-secondary);
+  background-color: ${(p) => (p.$active ? 'rgba(255, 77, 77, 0.18)' : 'rgba(255, 255, 255, 0.08)')};
+  color: ${(p) => (p.$active ? 'var(--text-primary)' : 'var(--text-secondary)')};
   border-radius: var(--border-radius-md);
   font-weight: 500;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   transition: var(--transition);
-  border: 1px solid var(--border-color);
+  border: 1px solid ${(p) => (p.$active ? 'rgba(255, 77, 77, 0.45)' : 'var(--border-subtle)')};
   
   &:hover {
     background-color: rgba(255, 255, 255, 0.15);
@@ -437,6 +439,8 @@ function AnimeDetail() {
   const [anime, setAnime] = useState(null);
   const [relatedAnimes, setRelatedAnimes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const favorites = useFavorites();
+  const toast = useToast();
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -496,6 +500,22 @@ function AnimeDetail() {
       </DetailContainer>
     );
   }
+
+  const favorited = favorites.isFavorite(anime.id);
+
+  const handleToggleFavorite = () => {
+    favorites.toggleFavorite(anime.id);
+
+    if (favorited) {
+      toast.info('已取消收藏', '你可以随时再次加入收藏。');
+    } else {
+      toast.success('已加入收藏', '已为你保存到「收藏」页。');
+    }
+  };
+
+  const handleStub = (title) => {
+    toast.warning(title, '该功能正在加速开发中。');
+  };
   
   return (
     <DetailContainer>
@@ -544,13 +564,13 @@ function AnimeDetail() {
               <WatchButton href={anime.watchLinks[0]?.url || "#"} target="_blank" rel="noopener noreferrer">
                 <FiPlay /> 立即观看
               </WatchButton>
-              <SecondaryButton>
+              <SecondaryButton type="button" onClick={() => handleStub('下载')}>
                 <FiDownload /> 下载
               </SecondaryButton>
-              <SecondaryButton>
-                <FiHeart /> 收藏
+              <SecondaryButton type="button" $active={favorited} aria-pressed={favorited} onClick={handleToggleFavorite}>
+                <FiHeart /> {favorited ? '已收藏' : '收藏'}
               </SecondaryButton>
-              <SecondaryButton>
+              <SecondaryButton type="button" onClick={() => handleStub('分享')}>
                 <FiShare2 /> 分享
               </SecondaryButton>
             </ActionButtons>

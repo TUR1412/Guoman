@@ -5,8 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>页面不存在 - 国漫世界</title>
   <script>
-    // 重定向到主页
-    window.location.href = '/Guoman/';
+    // GitHub Pages 兜底：把路径路由转换成 Hash 路由（尽量保留用户输入的路径）
+    (function() {
+      try {
+        var base = '/Guoman';
+        var l = window.location;
+        var path = l.pathname || '/';
+
+        if (path.indexOf(base) === 0) {
+          path = path.slice(base.length) || '/';
+        }
+
+        var target = base + '/#' + path + (l.search || '');
+        l.replace(target);
+      } catch (e) {
+        window.location.href = '/Guoman/';
+      }
+    })();
   </script>
   <style>
     body {

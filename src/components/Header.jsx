@@ -239,6 +239,7 @@ const MobileLoginButton = styled(Link)`
 const navItems = [
   { title: '首页', path: '/' },
   { title: '国漫推荐', path: '/recommendations' },
+  { title: '收藏', path: '/favorites' },
   { title: '排行榜', path: '/rankings' },
   { title: '最新资讯', path: '/news' },
   { title: '关于我们', path: '/about' }
@@ -272,6 +273,32 @@ function Header() {
     // 关闭移动菜单当路由改变时
     setIsMobileMenuOpen(false);
   }, [location]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return undefined;
+
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    const onStorage = (e) => {
+      if (e.key !== 'guoman.theme') return;
+      setTheme(getCurrentTheme());
+    };
+
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
+  const isRouteActive = (targetPath) => {
+    if (targetPath === '/') return location.pathname === '/';
+    return location.pathname === targetPath || location.pathname.startsWith(`${targetPath}/`);
+  };
   
   const runSearch = () => {
     const q = searchQuery.trim();
@@ -304,7 +331,7 @@ function Header() {
               <li key={index}>
                 <NavLink 
                   to={item.path} 
-                  $active={location.pathname === item.path}
+                  $active={isRouteActive(item.path)}
                 >
                   {item.title}
                 </NavLink>
@@ -383,7 +410,7 @@ function Header() {
                 <li key={index}>
                   <MobileNavLink 
                     to={item.path} 
-                    $active={location.pathname === item.path}
+                    $active={isRouteActive(item.path)}
                   >
                     {item.title}
                   </MobileNavLink>

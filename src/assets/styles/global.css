@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+/* 字体在 index.html 通过 <link rel="stylesheet"> 引入（避免 CSS @import 的阻塞链路） */
 
 /* 全局重置样式 */
 * {

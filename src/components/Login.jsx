@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiLock, FiMail, FiEye, FiEyeOff } from 'react-icons/fi';
+import { useToast } from './ToastProvider';
 
 const LoginContainer = styled.section`
   min-height: calc(100vh - var(--header-height));
@@ -252,6 +253,7 @@ function Login() {
     rememberMe: false
   });
   const navigate = useNavigate();
+  const toast = useToast();
   
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -263,9 +265,12 @@ function Login() {
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
     // 这里通常会调用API进行登录/注册
     // 成功后重定向到首页
+    toast.success(
+      activeTab === 'login' ? '登录成功（演示）' : '注册成功（演示）',
+      '当前版本未接入真实后端，仅展示交互流程。',
+    );
     navigate('/');
   };
   

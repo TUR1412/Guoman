@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
+import { FavoritesProvider } from './components/FavoritesProvider';
+import { ToastProvider } from './components/ToastProvider';
 
 // 页面
 import HomePage from './pages/HomePage';
@@ -17,6 +19,7 @@ const AboutPage = lazy(() => import('./pages/AboutPage'));
 const SearchPage = lazy(() => import('./pages/SearchPage'));
 const TagPage = lazy(() => import('./pages/TagPage'));
 const CategoryPage = lazy(() => import('./pages/CategoryPage'));
+const FavoritesPage = lazy(() => import('./pages/FavoritesPage'));
 const StaticPage = lazy(() => import('./pages/StaticPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
@@ -87,73 +90,78 @@ function App() {
   }, [loading]);
 
   return (
-    <AppContainer>
-      <a className="skip-link" href="#main">
-        跳到主要内容
-      </a>
+    <ToastProvider>
+      <FavoritesProvider>
+        <AppContainer>
+          <a className="skip-link" href="#main">
+            跳到主要内容
+          </a>
 
-      <AnimatePresence>
-        {loading && (
-          <LoadingScreen
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            onClick={() => {
-              setLoading(false);
-              window.sessionStorage?.setItem(INTRO_KEY, '1');
-            }}
-          >
-            <LoadingLogo
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              国漫世界
-            </LoadingLogo>
-          </LoadingScreen>
-        )}
-      </AnimatePresence>
-
-      <Header />
-      <ScrollToTop />
-      
-      <MainContent id="main">
-        <Suspense fallback={<RouteFallback>加载中...</RouteFallback>}>
-          <AnimatePresence mode="wait">
-            <Routes location={location} key={location.pathname}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/recommendations" element={<RecommendationsPage />} />
-              <Route path="/rankings" element={<RankingsPage />} />
-              <Route path="/news" element={<NewsPage />} />
-              <Route path="/news/:id" element={<NewsDetailPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/tag/:tag" element={<TagPage />} />
-              <Route path="/category/:category" element={<CategoryPage />} />
-
-              <Route path="/login" element={<Login />} />
-              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-              <Route path="/anime/:id" element={<AnimeDetail />} />
-
-              <Route path="/help" element={<StaticPage page="help" />} />
-              <Route path="/faq" element={<StaticPage page="faq" />} />
-              <Route path="/contact" element={<StaticPage page="contact" />} />
-              <Route path="/feedback" element={<StaticPage page="feedback" />} />
-              <Route path="/app" element={<StaticPage page="app" />} />
-
-              <Route path="/terms" element={<StaticPage page="terms" />} />
-              <Route path="/privacy" element={<StaticPage page="privacy" />} />
-              <Route path="/cookies" element={<StaticPage page="cookies" />} />
-              <Route path="/accessibility" element={<StaticPage page="accessibility" />} />
-
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
+          <AnimatePresence>
+            {loading && (
+              <LoadingScreen
+                initial={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                onClick={() => {
+                  setLoading(false);
+                  window.sessionStorage?.setItem(INTRO_KEY, '1');
+                }}
+              >
+                <LoadingLogo
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  国漫世界
+                </LoadingLogo>
+              </LoadingScreen>
+            )}
           </AnimatePresence>
-        </Suspense>
-      </MainContent>
-      
-      <Footer />
-    </AppContainer>
+
+          <Header />
+          <ScrollToTop />
+          
+          <MainContent id="main">
+            <Suspense fallback={<RouteFallback>加载中...</RouteFallback>}>
+              <AnimatePresence mode="wait">
+                <Routes location={location} key={location.pathname}>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/recommendations" element={<RecommendationsPage />} />
+                  <Route path="/favorites" element={<FavoritesPage />} />
+                  <Route path="/rankings" element={<RankingsPage />} />
+                  <Route path="/news" element={<NewsPage />} />
+                  <Route path="/news/:id" element={<NewsDetailPage />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/search" element={<SearchPage />} />
+                  <Route path="/tag/:tag" element={<TagPage />} />
+                  <Route path="/category/:category" element={<CategoryPage />} />
+
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                  <Route path="/anime/:id" element={<AnimeDetail />} />
+
+                  <Route path="/help" element={<StaticPage page="help" />} />
+                  <Route path="/faq" element={<StaticPage page="faq" />} />
+                  <Route path="/contact" element={<StaticPage page="contact" />} />
+                  <Route path="/feedback" element={<StaticPage page="feedback" />} />
+                  <Route path="/app" element={<StaticPage page="app" />} />
+
+                  <Route path="/terms" element={<StaticPage page="terms" />} />
+                  <Route path="/privacy" element={<StaticPage page="privacy" />} />
+                  <Route path="/cookies" element={<StaticPage page="cookies" />} />
+                  <Route path="/accessibility" element={<StaticPage page="accessibility" />} />
+
+                  <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+              </AnimatePresence>
+            </Suspense>
+          </MainContent>
+          
+          <Footer />
+        </AppContainer>
+      </FavoritesProvider>
+    </ToastProvider>
   );
 }
 

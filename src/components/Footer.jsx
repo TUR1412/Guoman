@@ -153,7 +153,7 @@ function Footer() {
               为广大动漫爱好者提供优质的观影体验。
             </FooterDescription>
             <SocialLinks>
-              <SocialLink href="https://github.com" target="_blank" rel="noopener noreferrer">
+              <SocialLink href="https://github.com/TUR1412/Guoman" target="_blank" rel="noopener noreferrer">
                 <FiGithub />
               </SocialLink>
               <SocialLink href="https://twitter.com" target="_blank" rel="noopener noreferrer">
