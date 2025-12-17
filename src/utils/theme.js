@@ -57,7 +57,9 @@ export const toggleTheme = () => {
 };
 
 export const initTheme = () => {
-  if (typeof window === 'undefined') return;
-  applyTheme(getResolvedTheme());
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
+  const already = normalizeTheme(document.documentElement.dataset.theme);
+  applyTheme(already ?? getResolvedTheme());
 };
 

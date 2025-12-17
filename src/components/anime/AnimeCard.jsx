@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiHeart } from 'react-icons/fi';
 import { useFavorites } from '../FavoritesProvider';
+import { useToast } from '../ToastProvider';
 
 const Card = styled(motion.article)`
   border-radius: var(--border-radius-md);
@@ -27,41 +28,78 @@ const Cover = styled.div`
   padding-top: 140%;
   overflow: hidden;
 
-  img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
-
-  ${Card}:hover & img {
+  ${Card}:hover img {
     transform: scale(1.05);
   }
 `;
 
-const FavBadge = styled.div`
+const CoverLink = styled(Link)`
+  position: absolute;
+  inset: 0;
+  display: block;
+  z-index: 1;
+`;
+
+const CoverImg = styled.img`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  z-index: 0;
+`;
+
+const FavButton = styled.button`
   position: absolute;
   top: 10px;
   right: 10px;
   z-index: 2;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.35rem 0.55rem;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 77, 77, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   background: rgba(0, 0, 0, 0.22);
-  color: rgba(255, 77, 77, 0.9);
+  color: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(10px);
-  pointer-events: none;
+  transition: var(--transition);
 
-  span {
-    font-size: 0.85rem;
-    font-weight: 800;
-    color: rgba(255, 255, 255, 0.95);
+  opacity: 0;
+  transform: translateY(-2px);
+
+  ${Card}:hover & {
+    opacity: 1;
+    transform: translateY(0);
   }
+
+  @media (max-width: 768px) {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  &:hover {
+    border-color: rgba(255, 77, 77, 0.45);
+    color: rgba(255, 77, 77, 0.95);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.96);
+  }
+`;
+
+const FavDot = styled.div`
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  z-index: 2;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 77, 77, 0.95);
+  box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.18);
 `;
 
 const Body = styled.div`
@@ -114,8 +152,21 @@ function AnimeCard({ anime }) {
 
   const favorites = useFavorites();
   const favorited = favorites.isFavorite(anime.id);
+  const toast = useToast();
 
   const typeShort = anime?.type?.split('、')?.[0] ?? '';
+
+  const toggleFavorite = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    favorites.toggleFavorite(anime.id);
+    if (favorited) {
+      toast.info('已取消收藏', `《${anime.title}》已从收藏移除。`);
+    } else {
+      toast.success('已加入收藏', `《${anime.title}》已加入收藏。`);
+    }
+  };
 
   return (
     <Card
@@ -124,16 +175,30 @@ function AnimeCard({ anime }) {
       transition={{ duration: 0.35 }}
       whileHover={{ scale: 1.02 }}
     >
+      <Cover>
+        <CoverLink to={`/anime/${anime.id}`} aria-label={`查看《${anime.title}》详情`} />
+        <CoverImg src={anime.cover} alt={anime.title} loading="lazy" />
+        <FavButton
+          type="button"
+          aria-label={favorited ? '取消收藏' : '加入收藏'}
+          aria-pressed={favorited}
+          onClick={toggleFavorite}
+          style={
+            favorited
+              ? {
+                  borderColor: 'rgba(255, 77, 77, 0.55)',
+                  color: 'rgba(255, 77, 77, 0.95)',
+                  background: 'rgba(255, 77, 77, 0.14)',
+                }
+              : undefined
+          }
+          title={favorited ? '已收藏' : '收藏'}
+        >
+          <FiHeart />
+        </FavButton>
+        {favorited ? <FavDot aria-hidden="true" /> : null}
+      </Cover>
       <Link to={`/anime/${anime.id}`} aria-label={`查看《${anime.title}》详情`}>
-        <Cover>
-          {favorited ? (
-            <FavBadge aria-hidden="true" title="已收藏">
-              <FiHeart />
-              <span>收藏</span>
-            </FavBadge>
-          ) : null}
-          <img src={anime.cover} alt={anime.title} loading="lazy" />
-        </Cover>
         <Body>
           <Title>{anime.title}</Title>
           <Meta>

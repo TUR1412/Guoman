@@ -1,103 +1,123 @@
-# 国漫世界 - 探索中国动漫的奇妙旅程
+<div align="center">
+  <img src="docs/hero.svg" alt="国漫世界 Guoman World" width="100%" />
 
-![国漫世界 Logo](public/favicon.svg)
+  <h1>国漫世界 (Guoman World)</h1>
 
-## 项目简介
+  <p>
+    一个为“发现国漫”打造的现代前端项目：更顺滑、更好看、更不丢数据。
+    <br />
+    Aurora 渐变 · Glass 玻璃拟态 · 深/浅主题 · 收藏 · 搜索 · 排行榜 · 资讯
+  </p>
 
-**国漫世界**是一个专注于展示和推广中国优质动漫作品的现代化前端应用。本项目使用 React 与现代前端技术栈构建，提供美观、响应式与动效流畅的浏览体验，帮助你更快找到下一部心动国漫。
+  <p>
+    <a href="https://tur1412.github.io/Guoman/">在线预览</a>
+    ·
+    <a href="#-功能一览">功能一览</a>
+    ·
+    <a href="#-快速开始">快速开始</a>
+    ·
+    <a href="#-部署到-github-pages">部署</a>
+    ·
+    <a href="docs/DEPLOYMENT.md">部署文档</a>
+  </p>
 
-## 主要特点
-
-- 🎨 **精美设计** - Aurora 渐变背景 + 玻璃拟态卡片 + 细微噪点质感
-- 📱 **响应式布局** - 完美适配各种尺寸的设备
-- 🌓 **主题切换** - 支持深/浅色主题，并记忆你的偏好
-- 🔍 **搜索功能** - 支持多关键词（空格分隔）快速检索作品
-- ❤️ **收藏功能** - 本地持久化收藏（刷新不丢），支持一键清空
-- 🏆 **排行榜** - 支持“评分/人气”切换排序
-- 🏷️ **标签/分类** - 按标签与分类浏览动漫内容（可持续扩展）
-- 📰 **资讯模块** - 资讯列表 + 文章详情页
-
-## 技术栈
-
-- **React** - 前端UI库
-- **React Router** - 路由管理
-- **Styled Components** - CSS-in-JS样式解决方案
-- **Framer Motion** - 动画效果库
-- **React Icons** - 图标库
-- **Swiper** - 轮播组件
-- **Vite** - 前端构建工具
-
-## 快速开始
-
-### 前提条件
-
-- Node.js (建议 v18+，与 GitHub Actions 构建环境一致)
-- npm或yarn
-
-### 安装和运行
-
-1. 克隆仓库
-   ```bash
-   git clone https://github.com/TUR1412/Guoman.git
-   cd Guoman
-   ```
-
-2. 安装依赖
-   ```bash
-   npm install
-   # 或
-   yarn
-   ```
-
-3. 启动开发服务器
-   ```bash
-   npm run dev
-   # 或
-   yarn dev
-   ```
-
-4. 在浏览器中访问 `http://localhost:3000`
-
-## 项目结构
-
-```
-src/
-├── assets/          # 静态资源(图片、样式等)
-├── components/      # React组件
-├── pages/           # 页面级路由
-├── data/            # 模拟数据
-├── App.jsx          # 主应用组件
-└── index.jsx        # 应用入口
-```
-
-## 主要功能
-
-- **首页** - 轮播 + 作品列表 + 特色介绍
-- **推荐** - 分类/标签筛选入口
-- **搜索** - 多关键词搜索
-- **收藏** - 本地持久化收藏列表
-- **排行榜** - 评分/人气排序
-- **动漫详情** - 作品信息、角色、制作人员、相关推荐、评论（模拟数据）
-- **资讯** - 列表与详情（模拟数据）
-- **登录/注册** - 交互演示页（后续可接入真实后端）
-
-## 后续计划
-
-- [ ] 加入真实API后端
-- [ ] 收藏云同步（账号体系/多端同步）
-- [ ] 加入评论系统
-- [ ] 增加更多动漫内容
-- [ ] 实现在线观看功能
-- [ ] 提供更丰富的内容筛选和排序
-
-## 贡献
-
-欢迎提交Pull Request或Issue来帮助改进这个项目!
-
-## 许可证
-
-MIT
+  <p>
+    <img alt="GitHub License" src="https://img.shields.io/github/license/TUR1412/Guoman?style=flat-square" />
+    <img alt="Build" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/static.yml?branch=master&style=flat-square" />
+    <img alt="React" src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=000&style=flat-square" />
+    <img alt="Vite" src="https://img.shields.io/badge/Vite-4-646CFF?logo=vite&logoColor=fff&style=flat-square" />
+  </p>
+</div>
 
 ---
 
-**国漫世界** - 为推广中国优质动漫作品而生
+## ✨ 功能一览
+
+- 🎨 **视觉体系**：Aurora Mesh 渐变 + Noise 纹理 + Glass 卡片层级（拒绝死白/死黑）
+- 🌓 **主题切换**：深/浅主题一键切换，并持久化记忆（刷新不丢）
+- 🔎 **站内搜索**：多关键词搜索（空格分隔），支持标题/原名/类型/标签/制作方
+- ❤️ **收藏系统**：一键收藏、收藏页汇总、卡片角标、清空收藏（本地持久化）
+- 🏆 **排行榜**：按“评分 / 人气”切换排序，Top 3 Bento Highlight
+- 📰 **资讯模块**：资讯列表 + 文章详情（模拟数据，可替换为真实 API）
+- 🧩 **路由骨架完整**：分类页、标签页、静态页、404 兜底（支持 GitHub Pages 深链）
+- 🧯 **稳健兜底**：Error Boundary 友好错误页（不在主 UI 裸露错误堆栈）
+
+## 🚀 快速开始
+
+> 建议 Node.js v18+（与 GitHub Actions 构建环境一致）。
+
+### 1) 安装依赖
+
+```bash
+npm ci
+```
+
+### 2) 本地开发（需要你手动执行）
+
+> 本仓库默认使用 Hash Router，适配 GitHub Pages。
+
+```bash
+npm run dev
+```
+
+### 3) 构建与预览
+
+```bash
+npm run build
+npm run preview
+```
+
+## 🧠 设计与体验准则（项目内置）
+
+- **主题原子性**：切换主题同时更新背景/文字/边框/卡片底色（不出现“浅底浅字”）
+- **滚动条治理**：页面以单主滚动为准，移动菜单打开时锁定 body 滚动，避免穿透
+- **动效护栏**：尊重 `prefers-reduced-motion`，关键交互不会依赖“先隐藏再显示”
+- **状态恒常性**：主题、收藏、筛选等关键状态写入 `localStorage`
+
+## 🗂️ 项目结构
+
+```txt
+.
+├── docs/                  # 文档与展示素材（README Hero 等）
+├── public/                # 静态资源（favicon 等）
+├── src/
+│   ├── assets/            # 图片/样式等
+│   ├── components/        # 组件（含 Providers）
+│   ├── data/              # 模拟数据（可替换为真实 API）
+│   ├── pages/             # 页面级路由
+│   ├── utils/             # 工具函数（theme 等）
+│   ├── App.jsx            # 根路由与布局
+│   └── index.jsx          # 应用入口
+├── 404.html               # GitHub Pages 深链兜底（路径 -> Hash）
+├── index.html             # 主题首屏初始化 + 字体直链
+└── vite.config.js         # build base 为 /Guoman/，dev 为 /
+```
+
+## 📦 部署到 GitHub Pages
+
+- 本项目默认通过 GitHub Actions 构建并部署（见 `.github/workflows/static.yml`）。
+- `vite.config.js` 在 `build` 时自动使用 `base: /Guoman/`，保证资源路径正确。
+- `404.html` 会把路径路由转换为 Hash 路由，尽量保留用户访问路径。
+
+更详细说明见：`docs/DEPLOYMENT.md`
+
+## 📚 文档
+
+- `docs/DEPLOYMENT.md`：部署与常见坑位说明
+- `docs/ARCHITECTURE.md`：项目结构与关键设计决策
+- `Task_Status.md`：任务看板（工程记录）
+
+## 🧩 Roadmap
+
+- [ ] 接入真实后端：账号、收藏云同步、评论
+- [ ] 内容扩展：更多作品数据、更多标签/分类体系
+- [ ] 性能升级：更细粒度拆包、预取策略、图片策略
+
+## 🤝 贡献
+
+欢迎 PR / Issue。建议先阅读：`CONTRIBUTING.md`
+
+## 📄 许可证
+
+MIT
+

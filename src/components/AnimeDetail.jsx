@@ -460,7 +460,10 @@ function AnimeDetail() {
           }
         }
       } catch (error) {
-        console.error('Error fetching anime:', error);
+        if (import.meta.env?.DEV) {
+          // eslint-disable-next-line no-console
+          console.error('Error fetching anime:', error);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -516,6 +519,30 @@ function AnimeDetail() {
   const handleStub = (title) => {
     toast.warning(title, '该功能正在加速开发中。');
   };
+
+  const handleShare = async () => {
+    const url = window.location.href;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: anime.title, url });
+        toast.success('已打开分享面板', '把这部国漫安利出去吧。');
+        return;
+      }
+    } catch (e) {
+      // 用户取消/系统不支持都算可接受失败，走复制链接 fallback
+    }
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+        toast.success('链接已复制', '已复制到剪贴板，直接粘贴发送即可。');
+        return;
+      }
+    } catch (e) {}
+
+    toast.warning('无法自动复制', '请手动从地址栏复制当前链接。');
+  };
   
   return (
     <DetailContainer>
@@ -570,7 +597,7 @@ function AnimeDetail() {
               <SecondaryButton type="button" $active={favorited} aria-pressed={favorited} onClick={handleToggleFavorite}>
                 <FiHeart /> {favorited ? '已收藏' : '收藏'}
               </SecondaryButton>
-              <SecondaryButton type="button" onClick={() => handleStub('分享')}>
+              <SecondaryButton type="button" onClick={handleShare}>
                 <FiShare2 /> 分享
               </SecondaryButton>
             </ActionButtons>

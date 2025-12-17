@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FiAlertTriangle, FiCheckCircle, FiInfo, FiX } from 'react-icons/fi';
@@ -87,8 +87,23 @@ const motionProps = {
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
   const nextIdRef = useRef(1);
+  const timeoutIdsRef = useRef(new Map());
+
+  useEffect(() => {
+    return () => {
+      timeoutIdsRef.current.forEach((timeoutId) => {
+        window.clearTimeout(timeoutId);
+      });
+      timeoutIdsRef.current.clear();
+    };
+  }, []);
 
   const remove = useCallback((id) => {
+    const timeoutId = timeoutIdsRef.current.get(id);
+    if (timeoutId) {
+      window.clearTimeout(timeoutId);
+      timeoutIdsRef.current.delete(id);
+    }
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
@@ -97,8 +112,24 @@ export function ToastProvider({ children }) {
       const id = nextIdRef.current++;
       const toast = { id, title, message, variant };
 
-      setToasts((prev) => [toast, ...prev].slice(0, 3));
-      window.setTimeout(() => remove(id), durationMs);
+      setToasts((prev) => {
+        const next = [toast, ...prev];
+        const kept = next.slice(0, 3);
+        const removed = next.slice(3);
+
+        removed.forEach((t) => {
+          const timeoutId = timeoutIdsRef.current.get(t.id);
+          if (timeoutId) {
+            window.clearTimeout(timeoutId);
+            timeoutIdsRef.current.delete(t.id);
+          }
+        });
+
+        return kept;
+      });
+
+      const timeoutId = window.setTimeout(() => remove(id), durationMs);
+      timeoutIdsRef.current.set(id, timeoutId);
     },
     [remove],
   );
