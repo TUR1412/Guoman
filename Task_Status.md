@@ -13,5 +13,5 @@
 - [x] 引入 Aurora + Noise + Glass 的全局主题基建（深/浅色主题，持久化）
 - [x] 补齐核心路由：推荐 / 搜索 / 排行榜 / 资讯（含详情）/ 分类 / 标签 / 静态页 / 404
 - [x] 运行 `npm install` 与 `npm run build`（有限热同步，不启动 dev server）
-- [ ] `git commit` 并 `git push` 至远程 `origin/master`
+- [x] `git commit` 并 `git push` 至远程 `origin/master`
 - [ ] 推送成功后安全删除 `C:\wooK\Guoman`
