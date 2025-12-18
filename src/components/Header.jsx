@@ -250,6 +250,7 @@ function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [theme, setTheme] = useState(() => getCurrentTheme());
+  const desktopSearchRef = useRef(null);
   const mobileSearchRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -305,6 +306,43 @@ function Header() {
       window.removeEventListener('keydown', onKeyDown);
       window.clearTimeout(timeoutId);
     };
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      const key = String(e.key || '').toLowerCase();
+      const modifier = e.ctrlKey || e.metaKey;
+
+      if (!modifier || key !== 'k') return;
+
+      const target = e.target;
+      const tagName = target?.tagName?.toLowerCase?.();
+      const isEditable =
+        tagName === 'input' ||
+        tagName === 'textarea' ||
+        tagName === 'select' ||
+        target?.isContentEditable;
+
+      if (isEditable) return;
+
+      e.preventDefault();
+
+      if (isMobileMenuOpen) {
+        mobileSearchRef.current?.focus?.();
+        return;
+      }
+
+      const isMobile = window.matchMedia?.('(max-width: 768px)')?.matches;
+      if (isMobile) {
+        setIsMobileMenuOpen(true);
+        return;
+      }
+
+      desktopSearchRef.current?.focus?.();
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
   }, [isMobileMenuOpen]);
 
   useEffect(() => {
@@ -368,10 +406,12 @@ function Header() {
 
           <SearchContainer>
             <SearchInput
+              ref={desktopSearchRef}
               type="search"
               name="q"
-              placeholder="搜索国漫..."
+              placeholder="搜索国漫...（Ctrl/⌘ + K）"
               aria-label="搜索国漫"
+              aria-keyshortcuts="Control+K Meta+K"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={handleSearchKeyDown}
@@ -421,8 +461,9 @@ function Header() {
                 ref={mobileSearchRef}
                 type="search"
                 name="q"
-                placeholder="搜索国漫..."
+                placeholder="搜索国漫...（Ctrl/⌘ + K）"
                 aria-label="搜索国漫"
+                aria-keyshortcuts="Control+K Meta+K"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleSearchKeyDown}
