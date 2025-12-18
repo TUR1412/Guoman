@@ -44,8 +44,8 @@ const IconWrap = styled.div`
   display: grid;
   place-items: center;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--chip-bg);
+  border: 1px solid var(--chip-border);
 `;
 
 const Title = styled.div`
@@ -64,13 +64,13 @@ const CloseButton = styled.button`
   width: 28px;
   height: 28px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--chip-border);
+  background: var(--chip-bg);
   color: var(--text-secondary);
   transition: var(--transition);
 
   &:hover {
-    background: rgba(0, 0, 0, 0.18);
+    background: var(--chip-bg-hover);
     color: var(--text-primary);
   }
 
