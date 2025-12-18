@@ -19,18 +19,25 @@
       // GitHub Pages 兜底：把路径路由转换成 Hash 路由（尽量保留用户输入的路径）
       (function () {
         try {
-          var base = '/Guoman';
           var l = window.location;
+          var host = l.hostname || '';
+          var base = '';
           var path = l.pathname || '/';
 
-          if (path.indexOf(base) === 0) {
+          // 仅在 *.github.io 场景下推断“仓库子路径”（例如 /Guoman/）
+          if (host.endsWith('github.io')) {
+            var seg = path.split('/').filter(Boolean)[0];
+            if (seg) base = '/' + seg;
+          }
+
+          if (base && path.indexOf(base) === 0) {
             path = path.slice(base.length) || '/';
           }
 
-          var target = base + '/#' + path + (l.search || '');
+          var target = (base || '') + '/#' + path + (l.search || '');
           l.replace(target);
         } catch (e) {
-          window.location.href = '/Guoman/';
+          window.location.href = '/';
         }
       })();
     </script>
@@ -116,7 +123,7 @@
     <div class="card">
       <h1>页面不存在</h1>
       <p>抱歉，您请求的页面不存在。正在返回首页...</p>
-      <a href="/Guoman/#/">立即返回首页</a>
+      <a href="./#/">立即返回首页</a>
     </div>
   </body>
 </html>
