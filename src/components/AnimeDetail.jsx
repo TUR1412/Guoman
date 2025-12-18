@@ -16,6 +16,7 @@ import animeData from '../data/animeData';
 import EmptyState from './EmptyState';
 import { useFavorites } from './FavoritesProvider';
 import { useToast } from './ToastProvider';
+import { shareOrCopyLink } from '../utils/share';
 
 const DetailContainer = styled.section`
   padding-top: var(--spacing-xl);
@@ -535,24 +536,17 @@ function AnimeDetail() {
 
   const handleShare = async () => {
     const url = window.location.href;
+    const result = await shareOrCopyLink({ title: anime.title, url });
 
-    try {
-      if (navigator.share) {
-        await navigator.share({ title: anime.title, url });
-        toast.success('已打开分享面板', '把这部国漫安利出去吧。');
-        return;
-      }
-    } catch {
-      // 用户取消/系统不支持都算可接受失败，走复制链接 fallback
+    if (result.ok && result.method === 'share') {
+      toast.success('已打开分享面板', '把这部国漫安利出去吧。');
+      return;
     }
 
-    try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(url);
-        toast.success('链接已复制', '已复制到剪贴板，直接粘贴发送即可。');
-        return;
-      }
-    } catch {}
+    if (result.ok && result.method === 'clipboard') {
+      toast.success('链接已复制', '已复制到剪贴板，直接粘贴发送即可。');
+      return;
+    }
 
     toast.warning('无法自动复制', '请手动从地址栏复制当前链接。');
   };
