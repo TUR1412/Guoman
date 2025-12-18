@@ -93,6 +93,33 @@ function App() {
     return () => clearTimeout(timer);
   }, [loading]);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const connection =
+      navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+    if (connection?.saveData) return undefined;
+    if (connection?.effectiveType && ['slow-2g', '2g'].includes(connection.effectiveType)) {
+      return undefined;
+    }
+
+    const prefetch = () => {
+      void import('./pages/RecommendationsPage');
+      void import('./pages/RankingsPage');
+      void import('./pages/NewsPage');
+      void import('./pages/FavoritesPage');
+    };
+
+    if (typeof window.requestIdleCallback === 'function') {
+      const handle = window.requestIdleCallback(prefetch, { timeout: 2000 });
+      return () => window.cancelIdleCallback?.(handle);
+    }
+
+    const timeoutId = window.setTimeout(prefetch, 1200);
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
   return (
     <MotionConfig reducedMotion="user">
       <ToastProvider>
