@@ -141,6 +141,11 @@ npm run preview
 
 欢迎 PR / Issue。建议先阅读：`CONTRIBUTING.md`
 
+同时建议了解：
+
+- `CODE_OF_CONDUCT.md`：社区行为准则
+- `SECURITY.md`：安全问题上报流程（避免在公开 Issue 泄漏细节）
+
 ## 📄 许可证
 
 MIT
