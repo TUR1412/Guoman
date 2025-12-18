@@ -15,7 +15,9 @@
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
-  --shadow-glow: 0 0 0 1px rgba(255, 77, 77, 0.12), 0 10px 30px rgba(255, 77, 77, 0.12);
+  --shadow-glow:
+    0 0 0 1px rgba(var(--primary-rgb), 0.12),
+    0 10px 30px rgba(var(--primary-rgb), 0.12);
 
   --border-radius-sm: 4px;
   --border-radius-md: 8px;
@@ -33,6 +35,7 @@
 /* 主题色板（避免“只换背景不换文字”的灾难） */
 :root[data-theme='dark'] {
   --primary-color: #ff4d4d;
+  --primary-rgb: 255, 77, 77;
   --secondary-color: #ffb800;
   --accent-color: #7e22ce;
 
@@ -45,6 +48,20 @@
 
   --surface-glass: rgba(22, 27, 34, 0.55);
   --border-subtle: rgba(255, 255, 255, 0.12);
+
+  /* 组件级 tokens（避免散落 hardcode rgba） */
+  --surface-soft: rgba(255, 255, 255, 0.06);
+  --surface-soft-hover: rgba(255, 255, 255, 0.1);
+
+  --chip-bg: rgba(0, 0, 0, 0.16);
+  --chip-bg-hover: rgba(0, 0, 0, 0.22);
+  --chip-border: rgba(255, 255, 255, 0.14);
+  --chip-border-hover: rgba(var(--primary-rgb), 0.35);
+  --chip-bg-active: rgba(var(--primary-rgb), 0.18);
+  --chip-border-active: rgba(var(--primary-rgb), 0.45);
+
+  --badge-bg: rgba(0, 0, 0, 0.18);
+  --badge-border: rgba(255, 255, 255, 0.14);
 
   --header-bg: rgba(13, 17, 23, 0.72);
   --header-bg-scrolled: rgba(13, 17, 23, 0.92);
@@ -62,6 +79,7 @@
 
 :root[data-theme='light'] {
   --primary-color: #e11d48;
+  --primary-rgb: 225, 29, 72;
   --secondary-color: #b45309;
   --accent-color: #7c3aed;
 
@@ -74,6 +92,20 @@
 
   --surface-glass: rgba(255, 255, 255, 0.65);
   --border-subtle: rgba(15, 23, 42, 0.12);
+
+  /* 组件级 tokens（避免散落 hardcode rgba） */
+  --surface-soft: rgba(15, 23, 42, 0.04);
+  --surface-soft-hover: rgba(15, 23, 42, 0.06);
+
+  --chip-bg: rgba(15, 23, 42, 0.04);
+  --chip-bg-hover: rgba(15, 23, 42, 0.06);
+  --chip-border: rgba(15, 23, 42, 0.12);
+  --chip-border-hover: rgba(var(--primary-rgb), 0.28);
+  --chip-bg-active: rgba(var(--primary-rgb), 0.12);
+  --chip-border-active: rgba(var(--primary-rgb), 0.35);
+
+  --badge-bg: rgba(15, 23, 42, 0.04);
+  --badge-border: rgba(15, 23, 42, 0.12);
 
   --header-bg: rgba(255, 255, 255, 0.72);
   --header-bg-scrolled: rgba(255, 255, 255, 0.92);
@@ -128,7 +160,7 @@ button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 2px solid rgba(255, 77, 77, 0.8);
+  outline: 2px solid rgba(var(--primary-rgb), 0.8);
   outline-offset: 2px;
 }
 
@@ -154,7 +186,7 @@ button {
 }
 
 ::selection {
-  background: rgba(255, 77, 77, 0.35);
+  background: rgba(var(--primary-rgb), 0.35);
   color: var(--text-primary);
 }
 
@@ -383,7 +415,7 @@ ol {
 }
 
 .btn-secondary:hover {
-  background-color: rgba(255, 77, 77, 0.1);
+  background-color: rgba(var(--primary-rgb), 0.1);
   transform: translateY(-2px);
 }
 
@@ -399,7 +431,7 @@ ol {
 .card:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-lg), var(--shadow-glow);
-  border-color: rgba(255, 77, 77, 0.3);
+  border-color: rgba(var(--primary-rgb), 0.3);
 }
 
 /* 动画效果 */
