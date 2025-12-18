@@ -183,7 +183,7 @@ function AnimeCard({ anime }) {
     >
       <Cover>
         <CoverLink to={`/anime/${anime.id}`} aria-label={`查看《${anime.title}》详情`} />
-        <CoverImg src={anime.cover} alt={anime.title} loading="lazy" />
+        <CoverImg src={anime.cover} alt={anime.title} loading="lazy" decoding="async" />
         <FavButton
           type="button"
           aria-label={favorited ? '取消收藏' : '加入收藏'}
