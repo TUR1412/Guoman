@@ -173,6 +173,7 @@ function AnimeList({
                 key={category.id}
                 type="button"
                 $active={activeTab === category.id}
+                aria-pressed={activeTab === category.id}
                 onClick={() => setActiveTab(category.id)}
               >
                 {category.name}

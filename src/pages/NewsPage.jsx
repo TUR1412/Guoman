@@ -107,6 +107,7 @@ function NewsPage() {
               type="button"
               onClick={() => setActiveTag(tag)}
               $active={activeTag === tag}
+              aria-pressed={activeTag === tag}
             >
               <FiTag />
               {tag === 'all' ? '全部' : tag}

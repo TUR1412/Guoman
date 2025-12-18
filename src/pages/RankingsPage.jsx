@@ -133,6 +133,7 @@ function RankingsPage() {
               key={item.id}
               type="button"
               $active={sortId === item.id}
+              aria-pressed={sortId === item.id}
               onClick={() => setSortAndPersist(item.id)}
             >
               {item.icon}
