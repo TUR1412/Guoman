@@ -211,7 +211,7 @@ const BannerDescription = styled(motion.p)`
   }
 `;
 
-const BannerButton = styled(motion.button)`
+const BannerButton = styled(motion(Link))`
   padding: 0.75rem 2rem;
   background-color: var(--primary-color);
   color: white;
@@ -220,6 +220,10 @@ const BannerButton = styled(motion.button)`
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 0 4px 12px rgba(255, 77, 77, 0.3);
   transition: var(--transition);
 
@@ -283,20 +287,20 @@ function Banner() {
               >
                 {banner.desc}
               </BannerDescription>
-              <Link to={banner.link}>
-                <BannerButton
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{
-                    opacity: activeIndex === index ? 1 : 0,
-                    y: activeIndex === index ? 0 : 30,
-                  }}
-                  transition={{ duration: 0.6, delay: 0.8 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {banner.buttonText}
-                </BannerButton>
-              </Link>
+              <BannerButton
+                to={banner.link}
+                aria-label={banner.buttonText}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{
+                  opacity: activeIndex === index ? 1 : 0,
+                  y: activeIndex === index ? 0 : 30,
+                }}
+                transition={{ duration: 0.6, delay: 0.8 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {banner.buttonText}
+              </BannerButton>
             </BannerContent>
           </SwiperSlide>
         ))}
