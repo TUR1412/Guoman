@@ -64,13 +64,14 @@ const Tag = styled.button`
   gap: 0.35rem;
   padding: 0.25rem 0.65rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(0, 0, 0, 0.16);
+  border: 1px solid ${(p) => (p.$active ? 'var(--chip-border-active)' : 'var(--chip-border)')};
+  background: ${(p) => (p.$active ? 'var(--chip-bg-active)' : 'var(--chip-bg)')};
   color: var(--text-secondary);
   transition: var(--transition);
 
   &:hover {
-    border-color: rgba(255, 77, 77, 0.35);
+    border-color: var(--chip-border-hover);
+    background: var(--chip-bg-hover);
     color: var(--text-primary);
   }
 `;
@@ -105,11 +106,7 @@ function NewsPage() {
               key={tag}
               type="button"
               onClick={() => setActiveTag(tag)}
-              style={{
-                background: activeTag === tag ? 'rgba(255, 77, 77, 0.18)' : 'rgba(0, 0, 0, 0.16)',
-                borderColor:
-                  activeTag === tag ? 'rgba(255, 77, 77, 0.45)' : 'rgba(255, 255, 255, 0.14)',
-              }}
+              $active={activeTag === tag}
             >
               <FiTag />
               {tag === 'all' ? '全部' : tag}
