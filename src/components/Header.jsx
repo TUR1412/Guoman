@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -250,6 +250,7 @@ function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [theme, setTheme] = useState(() => getCurrentTheme());
+  const mobileSearchRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -283,6 +284,26 @@ function Header() {
 
     return () => {
       document.body.style.overflow = prev;
+    };
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return undefined;
+
+    const onKeyDown = (e) => {
+      if (e.key !== 'Escape') return;
+      setIsMobileMenuOpen(false);
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+
+    const timeoutId = window.setTimeout(() => {
+      mobileSearchRef.current?.focus?.();
+    }, 0);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      window.clearTimeout(timeoutId);
     };
   }, [isMobileMenuOpen]);
 
@@ -391,6 +412,7 @@ function Header() {
           >
             <SearchContainer style={{ margin: '0 0 2rem 0', width: '80%' }}>
               <SearchInput
+                ref={mobileSearchRef}
                 type="text"
                 placeholder="搜索国漫..."
                 aria-label="搜索国漫"
