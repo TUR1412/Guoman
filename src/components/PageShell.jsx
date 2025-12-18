@@ -55,6 +55,7 @@ const Actions = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--spacing-md);
 `;
 

@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { safeLocalStorageGet, safeLocalStorageSet } from '../utils/storage';
+import { parseFavoritesBackup, serializeFavoritesBackup } from '../utils/favoritesBackup';
 
 const STORAGE_KEY = 'guoman.favorites.v1';
 
@@ -83,14 +84,54 @@ export function FavoritesProvider({ children }) {
     });
   }, []);
 
+  const exportFavoritesBackup = useCallback(
+    () => serializeFavoritesBackup(favoriteIds),
+    [favoriteIds],
+  );
+
+  const importFavoritesBackup = useCallback(
+    (jsonText, { mode = 'merge' } = {}) => {
+      const parsed = parseFavoritesBackup(jsonText);
+      const incomingIds = Array.isArray(parsed.favoriteIds) ? parsed.favoriteIds : [];
+      const normalizedMode = mode === 'replace' ? 'replace' : 'merge';
+
+      const before = favoriteIds.size;
+      const next = normalizedMode === 'replace' ? new Set() : new Set(favoriteIds);
+      incomingIds.forEach((id) => next.add(id));
+
+      writeToStorage(next);
+      setFavoriteIds(next);
+
+      return {
+        before,
+        after: next.size,
+        imported: incomingIds.length,
+        added: next.size - before,
+        mode: normalizedMode,
+        schemaVersion: parsed.schemaVersion ?? null,
+        exportedAt: parsed.exportedAt ?? null,
+      };
+    },
+    [favoriteIds],
+  );
+
   const value = useMemo(
     () => ({
       favoriteIds,
       isFavorite,
       toggleFavorite,
       clearFavorites,
+      exportFavoritesBackup,
+      importFavoritesBackup,
     }),
-    [favoriteIds, isFavorite, toggleFavorite, clearFavorites],
+    [
+      favoriteIds,
+      isFavorite,
+      toggleFavorite,
+      clearFavorites,
+      exportFavoritesBackup,
+      importFavoritesBackup,
+    ],
   );
 
   return <FavoritesContext.Provider value={value}>{children}</FavoritesContext.Provider>;

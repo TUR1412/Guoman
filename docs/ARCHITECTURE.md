@@ -46,11 +46,14 @@
 
 - 主题：`localStorage -> guoman.theme`
 - 收藏：`localStorage -> guoman.favorites.v1`
+- 收藏备份：在收藏页提供导出/导入（JSON 文件，支持合并/覆盖）
 - 部分筛选/排序：各页面/组件使用独立 key
 
 对应实现：
 
 - `src/components/FavoritesProvider.jsx`
+- `src/utils/favoritesBackup.js`（备份格式与解析）
+- `src/utils/download.js`（下载工具）
 - `src/utils/theme.js`
 
 ---
