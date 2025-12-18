@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -18,6 +19,28 @@ const publicDir = path.join(repoRoot, 'public');
 
 const readJson = async (filePath) => JSON.parse(await fs.readFile(filePath, 'utf-8'));
 
+const getStableLastmod = () => {
+  const sourceDateEpoch = process.env.SOURCE_DATE_EPOCH;
+  if (typeof sourceDateEpoch === 'string' && /^\d+$/.test(sourceDateEpoch)) {
+    const epochMs = Number(sourceDateEpoch) * 1000;
+    if (Number.isFinite(epochMs)) return formatDate(new Date(epochMs));
+  }
+
+  try {
+    const iso = String(
+      execFileSync('git', ['log', '-1', '--format=%cI'], {
+        cwd: repoRoot,
+        encoding: 'utf-8',
+        stdio: ['ignore', 'pipe', 'ignore'],
+      }),
+    ).trim();
+
+    if (iso) return iso.slice(0, 10);
+  } catch {}
+
+  return formatDate(new Date());
+};
+
 const main = async () => {
   const pkg = await readJson(path.join(repoRoot, 'package.json'));
   const homepage = normalizeHomepage(pkg.homepage);
@@ -25,7 +48,7 @@ const main = async () => {
     throw new Error('package.json 缺少有效的 homepage（需要 http/https URL）');
   }
 
-  const lastmod = formatDate(new Date());
+  const lastmod = getStableLastmod();
   const routes = getDefaultSitemapRoutes();
 
   await fs.mkdir(publicDir, { recursive: true });
