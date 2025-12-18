@@ -368,7 +368,8 @@ function Header() {
 
           <SearchContainer>
             <SearchInput
-              type="text"
+              type="search"
+              name="q"
               placeholder="搜索国漫..."
               aria-label="搜索国漫"
               value={searchQuery}
@@ -397,6 +398,8 @@ function Header() {
           type="button"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label={isMobileMenuOpen ? '关闭菜单' : '打开菜单'}
+          aria-expanded={isMobileMenuOpen}
+          aria-controls="guoman-mobile-menu"
         >
           {isMobileMenuOpen ? <FiX /> : <FiMenu />}
         </MobileMenuButton>
@@ -405,6 +408,9 @@ function Header() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <MobileMenu
+            id="guoman-mobile-menu"
+            role="navigation"
+            aria-label="移动端菜单"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -413,7 +419,8 @@ function Header() {
             <SearchContainer style={{ margin: '0 0 2rem 0', width: '80%' }}>
               <SearchInput
                 ref={mobileSearchRef}
-                type="text"
+                type="search"
+                name="q"
                 placeholder="搜索国漫..."
                 aria-label="搜索国漫"
                 value={searchQuery}

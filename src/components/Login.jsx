@@ -304,6 +304,8 @@ function Login() {
                 type="email"
                 name="email"
                 placeholder="邮箱"
+                aria-label="邮箱"
+                autoComplete="email"
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -319,6 +321,8 @@ function Login() {
               type="text"
               name="username"
               placeholder="用户名"
+              aria-label="用户名"
+              autoComplete="username"
               value={formData.username}
               onChange={handleChange}
               required
@@ -333,6 +337,8 @@ function Login() {
               type={showPassword ? 'text' : 'password'}
               name="password"
               placeholder="密码"
+              aria-label="密码"
+              autoComplete={activeTab === 'login' ? 'current-password' : 'new-password'}
               value={formData.password}
               onChange={handleChange}
               required
@@ -340,7 +346,11 @@ function Login() {
             <InputIcon>
               <FiLock />
             </InputIcon>
-            <TogglePasswordButton type="button" onClick={() => setShowPassword(!showPassword)}>
+            <TogglePasswordButton
+              type="button"
+              aria-label={showPassword ? '隐藏密码' : '显示密码'}
+              onClick={() => setShowPassword(!showPassword)}
+            >
               {showPassword ? <FiEyeOff /> : <FiEye />}
             </TogglePasswordButton>
           </FormGroup>
