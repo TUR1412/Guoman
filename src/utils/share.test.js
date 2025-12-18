@@ -28,7 +28,10 @@ describe('shareOrCopyLink', () => {
 
   it('falls back to execCommand when clipboard not available', async () => {
     Object.defineProperty(globalThis.navigator, 'share', { value: undefined, configurable: true });
-    Object.defineProperty(globalThis.navigator, 'clipboard', { value: undefined, configurable: true });
+    Object.defineProperty(globalThis.navigator, 'clipboard', {
+      value: undefined,
+      configurable: true,
+    });
     document.execCommand = vi.fn().mockReturnValue(true);
 
     const res = await shareOrCopyLink({ title: 't', url: 'https://example.com' });
@@ -36,4 +39,3 @@ describe('shareOrCopyLink', () => {
     expect(document.execCommand).toHaveBeenCalledWith('copy');
   });
 });
-
