@@ -39,7 +39,7 @@ const TabsContainer = styled.div`
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--surface-soft);
     border-radius: 4px;
   }
 
@@ -61,12 +61,12 @@ const Tab = styled.button`
   white-space: nowrap;
   transition: var(--transition);
   background-color: ${(props) =>
-    props.$active ? 'var(--primary-color)' : 'rgba(255, 255, 255, 0.1)'};
+    props.$active ? 'var(--primary-color)' : 'var(--surface-soft)'};
   color: ${(props) => (props.$active ? 'white' : 'var(--text-secondary)')};
 
   &:hover {
     background-color: ${(props) =>
-      props.$active ? 'var(--primary-color)' : 'rgba(255, 255, 255, 0.15)'};
+      props.$active ? 'var(--primary-color)' : 'var(--surface-soft-hover)'};
   }
 `;
 
