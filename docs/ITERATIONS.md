@@ -1,7 +1,7 @@
-# 轮询迭代记录（每轮 10 次）
+# 轮询迭代记录（原子级提交）
 
 > 目标：每次迭代只做一件事（原子级），并以独立 commit 推送到 `master`。
-> 日期：2025-12-18（R1 + R2 + R3）
+> 日期：2025-12-18（R1 + R2 + R3 + R4）
 
 ## 第 1 轮（R1）
 
@@ -40,3 +40,38 @@
 | 1    | `34b2e7c` | 收藏备份：新增导出/导入（合并/覆盖）+ 解析与测试基线           |
 | 2    | `81a18b8` | 快捷键：`Ctrl/⌘ + K` 聚焦搜索（桌面/外接键盘）                 |
 | 3    | `62c4f8a` | 协作模板：Issue/PR 模板 + `SECURITY.md` + `CODE_OF_CONDUCT.md` |
+
+## 第 4 轮（R4 · 夸克级 30 次）
+
+| 迭代 | Commit     | 原子改进                                   |
+| ---- | ---------- | ------------------------------------------ |
+| 1    | `7e06919`  | 文档：新增夸克级审计与 30 次迭代清单       |
+| 2    | `451ce5a`  | A11y：修复 Banner CTA 交互嵌套语义         |
+| 3    | `74271e8`  | Motion：Banner 尊重“减少动效”偏好          |
+| 4    | `d5b55e0`  | A11y：AnimeCard 收藏按钮键盘聚焦可见       |
+| 5    | `564fa75`  | Perf：图片补齐 `decoding="async"`          |
+| 6    | `0e52ef6`  | Theme：新增 tokens + 主色 RGB（消除硬编码） |
+| 7    | `9cf00a5`  | Theme：资讯标签切换使用 Chip tokens        |
+| 8    | `613942b`  | Theme：排行榜 Toggle/Badge 使用 tokens     |
+| 9    | `288275c`  | Theme：AnimeList Tabs 使用 tokens          |
+| 10   | `6d7476f`  | Theme：About 页按钮使用 tokens             |
+| 11   | `755b584`  | Theme：Toast 组件使用 tokens               |
+| 12   | `31d411b`  | A11y：筛选/切换按钮补齐 `aria-pressed`     |
+| 13   | `00869fb`  | UX：移动菜单滚动锁增强（保留滚动位置）     |
+| 14   | `93324bc`  | A11y：移动菜单 Focus Trap（Tab 不逃逸）    |
+| 15   | `3452eac`  | Resilience：404 兜底回退到相对路径         |
+| 16   | `79d079d`  | Repo：添加 `.gitattributes` 统一换行       |
+| 17   | `ad364f4`  | Repo：添加 `.editorconfig`                 |
+| 18   | `3fd4626`  | Build：新增 sitemap/robots 生成脚本        |
+| 19   | `1eec72c`  | Build：接入 prebuild 自动生成 SEO 文件     |
+| 20   | `b0aaf51`  | Test：SEO 生成脚本基线覆盖                 |
+| 21   | `b9fa4b7`  | Ops：添加 Dependabot 配置                  |
+| 22   | `e915ada`  | Ops：添加 CODEOWNERS                       |
+| 23   | `6b63093`  | CI：用 `npm run check` 作为单一闸门        |
+| 24   | `b1be61a`  | CI：PR 也运行闸门，push 才部署 Pages       |
+| 25   | `ee7c805`  | Docs：README 补齐安全与社区入口            |
+| 26   | `fcee6eb`  | Docs：新增 CHANGELOG                       |
+| 27   | `b8779cf`  | Docs：补齐 Design Tokens 规范              |
+| 28   | `5beb8fb`  | UX：EmptyState 支持 Router Link 导航       |
+| 29   | `042ca7d`  | A11y：补齐 sr-only 与描述关联              |
+| 30   | （本提交） | 文档：追加第 4 轮迭代记录                  |
