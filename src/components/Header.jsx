@@ -252,6 +252,7 @@ function Header() {
   const [theme, setTheme] = useState(() => getCurrentTheme());
   const desktopSearchRef = useRef(null);
   const mobileSearchRef = useRef(null);
+  const mobileMenuRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -328,6 +329,49 @@ function Header() {
       window.removeEventListener('keydown', onKeyDown);
       window.clearTimeout(timeoutId);
     };
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return undefined;
+
+    const menu = mobileMenuRef.current;
+    if (!menu) return undefined;
+
+    const focusableSelector =
+      'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+
+    const getFocusable = () =>
+      Array.from(menu.querySelectorAll(focusableSelector)).filter(
+        (el) => !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true',
+      );
+
+    const onKeyDown = (e) => {
+      if (e.key !== 'Tab') return;
+
+      const focusable = getFocusable();
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+      const isInMenu = active instanceof HTMLElement ? menu.contains(active) : false;
+
+      if (e.shiftKey) {
+        if (!isInMenu || active === first) {
+          e.preventDefault();
+          last.focus();
+        }
+        return;
+      }
+
+      if (active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    menu.addEventListener('keydown', onKeyDown);
+    return () => menu.removeEventListener('keydown', onKeyDown);
   }, [isMobileMenuOpen]);
 
   useEffect(() => {
@@ -473,6 +517,7 @@ function Header() {
             id="guoman-mobile-menu"
             role="navigation"
             aria-label="移动端菜单"
+            ref={mobileMenuRef}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
