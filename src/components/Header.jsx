@@ -343,7 +343,7 @@ function Header() {
     <HeaderContainer $scrolled={isScrolled}>
       <HeaderInner>
         <Logo to="/">
-          <img src={logoSvg} alt="国漫世界 Logo" />
+          <img src={logoSvg} alt="国漫世界 Logo" decoding="async" />
           <span>国漫世界</span>
         </Logo>
 

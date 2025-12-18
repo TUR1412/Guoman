@@ -565,7 +565,13 @@ function AnimeDetail() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <img src={anime.cover} alt={anime.title} />
+              <img
+                src={anime.cover}
+                alt={anime.title}
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+              />
             </CoverImage>
           </CoverContainer>
 
@@ -678,7 +684,12 @@ function AnimeDetail() {
                   {relatedAnimes.map((relatedAnime) => (
                     <RelatedCard key={relatedAnime.id} to={`/anime/${relatedAnime.id}`}>
                       <RelatedImage>
-                        <img src={relatedAnime.cover} alt={relatedAnime.title} />
+                        <img
+                          src={relatedAnime.cover}
+                          alt={relatedAnime.title}
+                          loading="lazy"
+                          decoding="async"
+                        />
                       </RelatedImage>
                       <RelatedTitle>{relatedAnime.title}</RelatedTitle>
                     </RelatedCard>

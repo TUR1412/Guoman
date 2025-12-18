@@ -191,7 +191,7 @@ function About({ cta = { to: '/about', label: '了解更多' } }) {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <img src={teamImage} alt="国漫世界团队" />
+          <img src={teamImage} alt="国漫世界团队" loading="lazy" decoding="async" />
         </AboutImage>
       </AboutInner>
     </AboutContainer>
