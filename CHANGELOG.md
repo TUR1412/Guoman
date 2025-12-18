@@ -12,4 +12,3 @@
 - 主题原子性：深/浅主题 + 首帧初始化（减少闪烁）
 - 对象恒常性：收藏/主题等状态本地持久化
 - 工程化：ESLint + Prettier + Vitest + GitHub Actions 闸门
-

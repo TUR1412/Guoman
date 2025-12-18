@@ -60,8 +60,7 @@ const Tab = styled.button`
   font-size: 1rem;
   white-space: nowrap;
   transition: var(--transition);
-  background-color: ${(props) =>
-    props.$active ? 'var(--primary-color)' : 'var(--surface-soft)'};
+  background-color: ${(props) => (props.$active ? 'var(--primary-color)' : 'var(--surface-soft)')};
   color: ${(props) => (props.$active ? 'white' : 'var(--text-secondary)')};
 
   &:hover {

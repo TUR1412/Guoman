@@ -62,4 +62,3 @@ export const buildSitemapXml = ({ homepage, lastmod, routes }) => {
   lines.push('');
   return lines.join('\n');
 };
-

@@ -34,4 +34,3 @@ describe('seo helpers', () => {
     expect(xml).toContain('<lastmod>2025-12-18</lastmod>');
   });
 });
-
