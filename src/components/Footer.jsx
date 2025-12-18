@@ -157,22 +157,44 @@ function Footer() {
                 href="https://github.com/TUR1412/Guoman"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="GitHub"
+                title="GitHub"
               >
                 <FiGithub />
               </SocialLink>
-              <SocialLink href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+              <SocialLink
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Twitter"
+                title="Twitter"
+              >
                 <FiTwitter />
               </SocialLink>
-              <SocialLink href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+              <SocialLink
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                title="Instagram"
+              >
                 <FiInstagram />
               </SocialLink>
-              <SocialLink href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+              <SocialLink
+                href="https://youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+                title="YouTube"
+              >
                 <FiYoutube />
               </SocialLink>
               <SocialLink
                 href="mailto:contact@guoman.world"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="邮箱联系"
+                title="邮箱联系"
               >
                 <FiMail />
               </SocialLink>
