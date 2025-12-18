@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation, Autoplay, EffectFade } from 'swiper/modules';
@@ -236,19 +236,28 @@ const BannerButton = styled(motion(Link))`
 
 function Banner() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const reducedMotion = useReducedMotion();
+
+  const swiperModules = reducedMotion
+    ? [Pagination, Navigation]
+    : [Pagination, Navigation, Autoplay, EffectFade];
 
   return (
     <BannerContainer>
       <Swiper
-        modules={[Pagination, Navigation, Autoplay, EffectFade]}
+        modules={swiperModules}
         slidesPerView={1}
-        effect="fade"
+        effect={reducedMotion ? 'slide' : 'fade'}
         pagination={{ clickable: true }}
         navigation
-        autoplay={{
-          delay: 5000,
-          disableOnInteraction: false,
-        }}
+        autoplay={
+          reducedMotion
+            ? false
+            : {
+                delay: 5000,
+                disableOnInteraction: false,
+              }
+        }
         loop={true}
         onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
       >
@@ -258,46 +267,46 @@ function Banner() {
             <BannerOverlay />
             <BannerContent>
               <BannerTitle
-                initial={{ opacity: 0, y: 30 }}
+                initial={reducedMotion ? false : { opacity: 0, y: 30 }}
                 animate={{
                   opacity: activeIndex === index ? 1 : 0,
-                  y: activeIndex === index ? 0 : 30,
+                  y: reducedMotion ? 0 : activeIndex === index ? 0 : 30,
                 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+                transition={reducedMotion ? { duration: 0 } : { duration: 0.6, delay: 0.2 }}
               >
                 {banner.title}
               </BannerTitle>
               <BannerSubtitle
-                initial={{ opacity: 0, y: 30 }}
+                initial={reducedMotion ? false : { opacity: 0, y: 30 }}
                 animate={{
                   opacity: activeIndex === index ? 1 : 0,
-                  y: activeIndex === index ? 0 : 30,
+                  y: reducedMotion ? 0 : activeIndex === index ? 0 : 30,
                 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
+                transition={reducedMotion ? { duration: 0 } : { duration: 0.6, delay: 0.4 }}
               >
                 {banner.subtitle}
               </BannerSubtitle>
               <BannerDescription
-                initial={{ opacity: 0, y: 30 }}
+                initial={reducedMotion ? false : { opacity: 0, y: 30 }}
                 animate={{
                   opacity: activeIndex === index ? 1 : 0,
-                  y: activeIndex === index ? 0 : 30,
+                  y: reducedMotion ? 0 : activeIndex === index ? 0 : 30,
                 }}
-                transition={{ duration: 0.6, delay: 0.6 }}
+                transition={reducedMotion ? { duration: 0 } : { duration: 0.6, delay: 0.6 }}
               >
                 {banner.desc}
               </BannerDescription>
               <BannerButton
                 to={banner.link}
                 aria-label={banner.buttonText}
-                initial={{ opacity: 0, y: 30 }}
+                initial={reducedMotion ? false : { opacity: 0, y: 30 }}
                 animate={{
                   opacity: activeIndex === index ? 1 : 0,
-                  y: activeIndex === index ? 0 : 30,
+                  y: reducedMotion ? 0 : activeIndex === index ? 0 : 30,
                 }}
-                transition={{ duration: 0.6, delay: 0.8 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                transition={reducedMotion ? { duration: 0 } : { duration: 0.6, delay: 0.8 }}
+                whileHover={reducedMotion ? undefined : { scale: 1.05 }}
+                whileTap={reducedMotion ? undefined : { scale: 0.95 }}
               >
                 {banner.buttonText}
               </BannerButton>
