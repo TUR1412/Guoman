@@ -98,7 +98,23 @@ function App() {
       <ToastProvider>
         <FavoritesProvider>
           <AppContainer>
-            <a className="skip-link" href="#main">
+            <a
+              className="skip-link"
+              href="#main"
+              aria-hidden={loading}
+              tabIndex={loading ? -1 : 0}
+              onClick={(e) => {
+                e.preventDefault();
+                const main = document.getElementById('main');
+                if (!main) return;
+
+                try {
+                  main.focus({ preventScroll: true });
+                } catch {
+                  main.focus();
+                }
+              }}
+            >
               跳到主要内容
             </a>
 
@@ -130,7 +146,7 @@ function App() {
             <Header />
             <ScrollToTop />
 
-            <MainContent id="main">
+            <MainContent id="main" tabIndex={-1}>
               <Suspense fallback={<RouteFallback>加载中...</RouteFallback>}>
                 <AnimatePresence mode="wait">
                   <Routes location={location} key={location.pathname}>

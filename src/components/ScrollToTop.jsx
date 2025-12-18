@@ -6,6 +6,15 @@ function ScrollToTop() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+
+    const main = document.getElementById('main');
+    if (!main) return;
+
+    try {
+      main.focus({ preventScroll: true });
+    } catch {
+      main.focus();
+    }
   }, [location.pathname, location.search, location.hash]);
 
   return null;
