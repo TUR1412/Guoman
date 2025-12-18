@@ -38,8 +38,8 @@ function TagPage() {
           icon={<FiTag size={22} />}
           title="这个标签下暂无作品"
           description="试试别的标签，或者回到首页随便逛逛。"
-          primaryAction={{ href: '#/', label: '回到首页' }}
-          secondaryAction={{ href: '#/recommendations', label: '去看推荐' }}
+          primaryAction={{ to: '/', label: '回到首页' }}
+          secondaryAction={{ to: '/recommendations', label: '去看推荐' }}
         />
       )}
     </PageShell>

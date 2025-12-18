@@ -55,8 +55,8 @@ function NewsDetailPage() {
         <EmptyState
           title="找不到这篇文章"
           description="试试返回资讯列表，或者回到首页继续探索。"
-          primaryAction={{ href: '#/news', label: '返回资讯' }}
-          secondaryAction={{ href: '#/', label: '回到首页' }}
+          primaryAction={{ to: '/news', label: '返回资讯' }}
+          secondaryAction={{ to: '/', label: '回到首页' }}
         />
       </PageShell>
     );

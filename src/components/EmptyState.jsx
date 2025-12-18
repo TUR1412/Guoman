@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const Wrap = styled.div`
   display: grid;
@@ -93,10 +94,22 @@ function EmptyState({ icon, title, description, primaryAction, secondaryAction }
         {(primaryAction || secondaryAction) && (
           <Actions>
             {primaryAction && (
-              <PrimaryLink href={primaryAction.href}>{primaryAction.label}</PrimaryLink>
+              <PrimaryLink
+                as={primaryAction.to ? Link : 'a'}
+                to={primaryAction.to}
+                href={primaryAction.href}
+              >
+                {primaryAction.label}
+              </PrimaryLink>
             )}
             {secondaryAction && (
-              <SecondaryLink href={secondaryAction.href}>{secondaryAction.label}</SecondaryLink>
+              <SecondaryLink
+                as={secondaryAction.to ? Link : 'a'}
+                to={secondaryAction.to}
+                href={secondaryAction.href}
+              >
+                {secondaryAction.label}
+              </SecondaryLink>
             )}
           </Actions>
         )}

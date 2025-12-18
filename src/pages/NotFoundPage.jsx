@@ -10,8 +10,8 @@ function NotFoundPage() {
         icon={<FiCompass size={22} />}
         title="404：迷路了"
         description="回到首页继续探索，或者去推荐和排行榜看看。"
-        primaryAction={{ href: '#/', label: '回到首页' }}
-        secondaryAction={{ href: '#/recommendations', label: '去看推荐' }}
+        primaryAction={{ to: '/', label: '回到首页' }}
+        secondaryAction={{ to: '/recommendations', label: '去看推荐' }}
       />
     </PageShell>
   );

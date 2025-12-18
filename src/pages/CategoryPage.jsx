@@ -31,8 +31,8 @@ function CategoryPage() {
           icon={<FiGrid size={22} />}
           title="找不到这个分类"
           description="回到推荐页，从标签和筛选开始探索。"
-          primaryAction={{ href: '#/recommendations', label: '去看推荐' }}
-          secondaryAction={{ href: '#/', label: '回到首页' }}
+          primaryAction={{ to: '/recommendations', label: '去看推荐' }}
+          secondaryAction={{ to: '/', label: '回到首页' }}
         />
       </PageShell>
     );
@@ -54,8 +54,8 @@ function CategoryPage() {
           icon={<FiGrid size={22} />}
           title="这个分类下暂无作品"
           description="我们会持续补充内容，先去看看推荐与排行榜吧。"
-          primaryAction={{ href: '#/rankings', label: '看看排行榜' }}
-          secondaryAction={{ href: '#/recommendations', label: '去看推荐' }}
+          primaryAction={{ to: '/rankings', label: '看看排行榜' }}
+          secondaryAction={{ to: '/recommendations', label: '去看推荐' }}
         />
       )}
     </PageShell>

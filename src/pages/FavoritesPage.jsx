@@ -218,8 +218,8 @@ function FavoritesPage() {
           icon={<FiHeart size={22} />}
           title="你还没有收藏任何作品"
           description="去作品详情页点一下“收藏”，它就会出现在这里。"
-          primaryAction={{ href: '#/recommendations', label: '去看推荐' }}
-          secondaryAction={{ href: '#/rankings', label: '看看排行榜' }}
+          primaryAction={{ to: '/recommendations', label: '去看推荐' }}
+          secondaryAction={{ to: '/rankings', label: '看看排行榜' }}
         />
       )}
     </PageShell>

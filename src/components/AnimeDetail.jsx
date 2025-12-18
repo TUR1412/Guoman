@@ -494,8 +494,8 @@ function AnimeDetail() {
             icon={<FiFilm size={22} />}
             title="加载中..."
             description="正在为你准备作品详情。"
-            primaryAction={{ href: '#/rankings', label: '先逛逛排行榜' }}
-            secondaryAction={{ href: '#/recommendations', label: '看看推荐' }}
+            primaryAction={{ to: '/rankings', label: '先逛逛排行榜' }}
+            secondaryAction={{ to: '/recommendations', label: '看看推荐' }}
           />
         </DetailInner>
       </DetailContainer>
@@ -510,8 +510,8 @@ function AnimeDetail() {
             icon={<FiFilm size={22} />}
             title="未找到该动漫"
             description="可能是链接已过期，或者该条目尚未收录。"
-            primaryAction={{ href: '#/', label: '回到首页' }}
-            secondaryAction={{ href: '#/search', label: '去搜索' }}
+            primaryAction={{ to: '/', label: '回到首页' }}
+            secondaryAction={{ to: '/search', label: '去搜索' }}
           />
         </DetailInner>
       </DetailContainer>

@@ -135,8 +135,8 @@ function SearchPage() {
           description={
             q ? '换个关键词试试，或者去推荐/排行榜逛逛。' : '输入关键词，按下回车或点击搜索。'
           }
-          primaryAction={{ href: '#/recommendations', label: '去看推荐' }}
-          secondaryAction={{ href: '#/rankings', label: '看看排行榜' }}
+          primaryAction={{ to: '/recommendations', label: '去看推荐' }}
+          secondaryAction={{ to: '/rankings', label: '看看排行榜' }}
         />
       )}
     </PageShell>
