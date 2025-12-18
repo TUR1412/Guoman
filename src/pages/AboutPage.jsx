@@ -49,13 +49,13 @@ const LinkButton = styled.a`
   padding: 0.75rem 1.1rem;
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--surface-soft);
   color: var(--text-primary);
   transition: var(--transition);
 
   &:hover {
     transform: translateY(-1px);
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--surface-soft-hover);
   }
 `;
 
