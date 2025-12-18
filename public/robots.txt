@@ -2,4 +2,3 @@ User-agent: *
 Allow: /
 
 Sitemap: https://tur1412.github.io/Guoman/sitemap.xml
-
