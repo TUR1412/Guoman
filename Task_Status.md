@@ -24,5 +24,4 @@
 - [x] 新增 ESLint + Prettier + Vitest（最小可用基线）
 - [x] 更新 GitHub Actions：增加 lint/test，再 build & deploy
 - [x] 有限热同步验证：`npm ci` → `npm run lint` → `npm run test` → `npm run build`
-- [ ] `git commit` + `git push origin master`
-- [ ] 推送成功后安全删除本地克隆目录 `C:\Users\Kong\_work\Guoman`
+- [x] 轮询迭代（10 次原子级提交）：见 `docs/ITERATIONS.md`

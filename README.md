@@ -112,6 +112,7 @@ npm run preview
 
 - `docs/DEPLOYMENT.md`：部署与常见坑位说明
 - `docs/ARCHITECTURE.md`：项目结构与关键设计决策
+- `docs/ITERATIONS.md`：轮询迭代记录（原子级改进清单）
 - `Task_Status.md`：任务看板（工程记录）
 
 ## 🧩 Roadmap
