@@ -26,5 +26,27 @@ export default defineConfig(({ command }) => ({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (!id.includes('node_modules')) return undefined;
+
+          if (
+            id.includes('node_modules/react-router') ||
+            id.includes('node_modules/react-dom') ||
+            id.includes('node_modules/react/')
+          ) {
+            return 'vendor-react';
+          }
+
+          if (id.includes('node_modules/framer-motion')) return 'vendor-motion';
+          if (id.includes('node_modules/styled-components')) return 'vendor-styled';
+          if (id.includes('node_modules/react-icons')) return 'vendor-icons';
+          if (id.includes('node_modules/swiper')) return 'vendor-swiper';
+
+          return 'vendor';
+        },
+      },
+    },
   },
 }));
