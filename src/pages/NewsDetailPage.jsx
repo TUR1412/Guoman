@@ -89,4 +89,3 @@ function NewsDetailPage() {
 }
 
 export default NewsDetailPage;
-

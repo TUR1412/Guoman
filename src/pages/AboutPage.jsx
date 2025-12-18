@@ -55,7 +55,7 @@ const LinkButton = styled.a`
 
   &:hover {
     transform: translateY(-1px);
-    background: rgba(255, 255, 255, 0.10);
+    background: rgba(255, 255, 255, 0.1);
   }
 `;
 
@@ -103,7 +103,8 @@ function AboutPage() {
           开源与致谢
         </CardTitle>
         <CardDesc>
-          本项目使用 React / Vite / Styled Components / Framer Motion 等现代前端技术构建，感谢这些优秀开源项目让体验更上一层楼。
+          本项目使用 React / Vite / Styled Components / Framer Motion
+          等现代前端技术构建，感谢这些优秀开源项目让体验更上一层楼。
         </CardDesc>
       </Card>
     </PageShell>
@@ -111,4 +112,3 @@ function AboutPage() {
 }
 
 export default AboutPage;
-

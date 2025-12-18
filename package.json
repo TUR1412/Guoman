@@ -4,28 +4,50 @@
   "version": "1.0.0",
   "type": "module",
   "homepage": "https://tur1412.github.io/Guoman",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "dev": "vite",
     "prebuild": "echo \"Creating .nojekyll file...\" && echo \"\" > .nojekyll",
     "build": "vite build && node -e \"require('fs').copyFileSync('.nojekyll', 'dist/.nojekyll'); require('fs').copyFileSync('404.html', 'dist/404.html');\"",
     "preview": "vite preview",
+    "lint": "eslint .",
+    "test": "vitest run --config vitest.config.js",
+    "test:watch": "vitest --config vitest.config.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist --nojekyll"
   },
   "dependencies": {
-    "framer-motion": "^10.16.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-icons": "^4.11.0",
-    "react-router-dom": "^6.16.0",
-    "styled-components": "^6.0.8",
+    "framer-motion": "^10.18.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^4.12.0",
+    "react-router-dom": "^6.30.2",
+    "styled-components": "^6.1.19",
     "swiper": "^10.3.1"
   },
   "devDependencies": {
-    "@types/react": "^18.2.24",
-    "@types/react-dom": "^18.2.8",
-    "@vitejs/plugin-react": "^4.1.0",
+    "@eslint/js": "^9.39.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/react": "^18.3.27",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.7.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "gh-pages": "^6.3.0",
-    "vite": "^4.4.11"
+    "globals": "^16.5.0",
+    "jsdom": "^22.1.0",
+    "prettier": "^3.7.4",
+    "vite": "^6.4.1",
+    "vitest": "^3.2.4"
   }
 }

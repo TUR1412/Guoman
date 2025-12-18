@@ -24,6 +24,8 @@ npm run dev
 构建校验（提交前建议跑一下）：
 
 ```bash
+npm run lint
+npm run test
 npm run build
 ```
 
@@ -51,7 +53,7 @@ docs: 重写 README
 ## 4. PR Checklist
 
 - [ ] `npm run build` 通过
+- [ ] `npm run lint` / `npm run test` 通过
 - [ ] 未提交 `node_modules/`、`dist/` 等产物（除非仓库明确要求）
 - [ ] 新增交互有 Toast/EmptyState 等用户反馈
 - [ ] 新增页面在 Header/Footer 导航中可达，且不出现 404 死链
-

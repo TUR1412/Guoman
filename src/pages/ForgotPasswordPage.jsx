@@ -80,7 +80,8 @@ function ForgotPasswordPage() {
     <PageShell title="找回密码" subtitle="当前为演示版本：我们模拟发送重置邮件的流程。">
       <Card>
         <Tip>
-          输入邮箱后点击发送。未来接入后端后，这里会真正发出重置链接，并提供安全验证（验证码 / 限流等）。
+          输入邮箱后点击发送。未来接入后端后，这里会真正发出重置链接，并提供安全验证（验证码 /
+          限流等）。
         </Tip>
 
         <InputRow onSubmit={submit}>
@@ -107,4 +108,3 @@ function ForgotPasswordPage() {
 }
 
 export default ForgotPasswordPage;
-

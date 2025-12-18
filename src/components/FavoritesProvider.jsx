@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { safeLocalStorageGet, safeLocalStorageSet } from '../utils/storage';
 
 const STORAGE_KEY = 'guoman.favorites.v1';
 
@@ -11,18 +12,16 @@ const readFromStorage = () => {
   if (typeof window === 'undefined') return new Set();
 
   try {
-    const raw = window.localStorage?.getItem(STORAGE_KEY);
+    const raw = safeLocalStorageGet(STORAGE_KEY);
     if (!raw) return new Set();
 
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return new Set();
 
-    const ids = parsed
-      .map(normalizeId)
-      .filter((id) => id !== null);
+    const ids = parsed.map(normalizeId).filter((id) => id !== null);
 
     return new Set(ids);
-  } catch (e) {
+  } catch {
     return new Set();
   }
 };
@@ -31,8 +30,8 @@ const writeToStorage = (favoriteIds) => {
   if (typeof window === 'undefined') return;
 
   try {
-    window.localStorage?.setItem(STORAGE_KEY, JSON.stringify(Array.from(favoriteIds)));
-  } catch (e) {}
+    safeLocalStorageSet(STORAGE_KEY, JSON.stringify(Array.from(favoriteIds)));
+  } catch {}
 };
 
 const FavoritesContext = createContext(null);
@@ -104,4 +103,3 @@ export function useFavorites() {
   }
   return ctx;
 }
-

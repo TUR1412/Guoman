@@ -208,4 +208,3 @@ function StaticPage({ page }) {
 }
 
 export default StaticPage;
-

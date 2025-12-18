@@ -22,7 +22,7 @@ function CategoryPage() {
   const results = useMemo(() => {
     if (!meta) return [];
     return animeData.filter((anime) => (anime.tags || []).includes(meta.tag));
-  }, [category]);
+  }, [meta]);
 
   if (!meta) {
     return (
@@ -63,4 +63,3 @@ function CategoryPage() {
 }
 
 export default CategoryPage;
-

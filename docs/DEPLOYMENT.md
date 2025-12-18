@@ -71,4 +71,3 @@ Vite 在 GitHub Pages 子路径下部署时，资源路径必须带 base：
 
 - Pages 是否指向 GitHub Actions 部署产物
 - `404.html` 是否被正常部署到站点根目录
-

@@ -1,4 +1,12 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FiAlertTriangle, FiCheckCircle, FiInfo, FiX } from 'react-icons/fi';
@@ -57,7 +65,7 @@ const CloseButton = styled.button`
   height: 28px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(0, 0, 0, 0.10);
+  background: rgba(0, 0, 0, 0.1);
   color: var(--text-secondary);
   transition: var(--transition);
 
@@ -90,11 +98,12 @@ export function ToastProvider({ children }) {
   const timeoutIdsRef = useRef(new Map());
 
   useEffect(() => {
+    const timeouts = timeoutIdsRef.current;
     return () => {
-      timeoutIdsRef.current.forEach((timeoutId) => {
+      timeouts.forEach((timeoutId) => {
         window.clearTimeout(timeoutId);
       });
-      timeoutIdsRef.current.clear();
+      timeouts.clear();
     };
   }, []);
 
@@ -180,4 +189,3 @@ export function useToast() {
   }
   return ctx;
 }
-

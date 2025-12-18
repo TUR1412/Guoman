@@ -25,7 +25,7 @@
     <img alt="GitHub License" src="https://img.shields.io/github/license/TUR1412/Guoman?style=flat-square" />
     <img alt="Build" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/static.yml?branch=master&style=flat-square" />
     <img alt="React" src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=000&style=flat-square" />
-    <img alt="Vite" src="https://img.shields.io/badge/Vite-4-646CFF?logo=vite&logoColor=fff&style=flat-square" />
+    <img alt="Vite" src="https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=fff&style=flat-square" />
   </p>
 </div>
 
@@ -50,6 +50,13 @@
 
 ```bash
 npm ci
+```
+
+### 1.5) 提交前建议（有限热同步）
+
+```bash
+npm run lint
+npm run test
 ```
 
 ### 2) 本地开发（需要你手动执行）
@@ -120,4 +127,3 @@ npm run preview
 ## 📄 许可证
 
 MIT
-

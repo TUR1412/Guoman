@@ -7,10 +7,12 @@
 ## 1. 技术栈
 
 - **React 18**：组件与状态
-- **Vite 4**：开发与构建
+- **Vite 6**：开发与构建
 - **React Router（Hash Router）**：路由（适配 GitHub Pages）
 - **styled-components**：样式（配合全局 Design Tokens）
 - **framer-motion**：动效（含页面切换动效）
+- **ESLint + Prettier**：代码质量与风格（CI 闸门）
+- **Vitest + Testing Library**：单元测试基线（CI 闸门）
 
 ---
 
@@ -73,4 +75,3 @@
 
 - 统一 API 客户端（fetch/axios 二选一，避免混用）
 - 引入请求层缓存与错误提示策略（Toast + EmptyState）
-

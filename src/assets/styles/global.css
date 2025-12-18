@@ -16,11 +16,11 @@
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
   --shadow-glow: 0 0 0 1px rgba(255, 77, 77, 0.12), 0 10px 30px rgba(255, 77, 77, 0.12);
-  
+
   --border-radius-sm: 4px;
   --border-radius-md: 8px;
   --border-radius-lg: 16px;
-  
+
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
@@ -36,7 +36,7 @@
   --secondary-color: #ffb800;
   --accent-color: #7e22ce;
 
-  --dark-color: #0D1117;
+  --dark-color: #0d1117;
   --darker-color: #0a0d12;
   --text-primary: #f7f7f7;
   --text-secondary: #ccd6f6;
@@ -49,7 +49,7 @@
   --header-bg: rgba(13, 17, 23, 0.72);
   --header-bg-scrolled: rgba(13, 17, 23, 0.92);
 
-  --field-bg: rgba(255, 255, 255, 0.10);
+  --field-bg: rgba(255, 255, 255, 0.1);
   --field-bg-focus: rgba(255, 255, 255, 0.14);
 
   /* 极光 + Mesh 渐变（拒绝死黑） */
@@ -57,7 +57,7 @@
     radial-gradient(1200px 600px at 10% 10%, rgba(126, 34, 206, 0.18), transparent 60%),
     radial-gradient(900px 500px at 90% 20%, rgba(255, 77, 77, 0.16), transparent 55%),
     radial-gradient(1000px 650px at 30% 95%, rgba(255, 184, 0, 0.12), transparent 55%),
-    linear-gradient(180deg, #0D1117 0%, #0a0d12 100%);
+    linear-gradient(180deg, #0d1117 0%, #0a0d12 100%);
 }
 
 :root[data-theme='light'] {
@@ -65,7 +65,7 @@
   --secondary-color: #b45309;
   --accent-color: #7c3aed;
 
-  --dark-color: #F7F8FA;
+  --dark-color: #f7f8fa;
   --darker-color: #ffffff;
   --text-primary: #0f172a;
   --text-secondary: #334155;
@@ -85,12 +85,23 @@
   --app-bg:
     radial-gradient(1200px 600px at 10% 10%, rgba(124, 58, 237, 0.14), transparent 60%),
     radial-gradient(900px 500px at 90% 20%, rgba(225, 29, 72, 0.12), transparent 55%),
-    radial-gradient(1000px 650px at 30% 95%, rgba(180, 83, 9, 0.10), transparent 55%),
-    linear-gradient(180deg, #F7F8FA 0%, #FFFFFF 100%);
+    radial-gradient(1000px 650px at 30% 95%, rgba(180, 83, 9, 0.1), transparent 55%),
+    linear-gradient(180deg, #f7f8fa 0%, #ffffff 100%);
 }
 
 body {
-  font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family:
+    'Noto Sans SC',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Open Sans',
+    'Helvetica Neue',
+    sans-serif;
   line-height: 1.6;
   font-size: 16px;
   overflow-x: hidden;
@@ -127,7 +138,10 @@ a {
   transition: var(--transition);
 }
 
-button, input, textarea, select {
+button,
+input,
+textarea,
+select {
   font-family: inherit;
   font-size: inherit;
   outline: none;
@@ -144,7 +158,12 @@ button {
   color: var(--text-primary);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 700;
   line-height: 1.2;
 }
@@ -179,7 +198,8 @@ img {
   object-fit: cover;
 }
 
-ul, ol {
+ul,
+ol {
   list-style-type: none;
 }
 
@@ -384,13 +404,23 @@ ul, ol {
 
 /* 动画效果 */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .fadeIn {
@@ -412,11 +442,11 @@ ul, ol {
   :root {
     --max-width: 720px;
   }
-  
+
   h1 {
     font-size: 2.25rem;
   }
-  
+
   h2 {
     font-size: 1.85rem;
   }
@@ -426,15 +456,15 @@ ul, ol {
   :root {
     --max-width: 540px;
   }
-  
+
   h1 {
     font-size: 2rem;
   }
-  
+
   h2 {
     font-size: 1.65rem;
   }
-  
+
   h3 {
     font-size: 1.5rem;
   }
@@ -445,19 +475,19 @@ ul, ol {
     --spacing-xl: 1.5rem;
     --spacing-2xl: 2rem;
   }
-  
+
   h1 {
     font-size: 1.75rem;
   }
-  
+
   h2 {
     font-size: 1.5rem;
   }
-  
+
   h3 {
     font-size: 1.35rem;
   }
-  
+
   .section-title {
     font-size: 1.5rem;
   }
@@ -468,7 +498,9 @@ ul, ol {
     --transition: none;
   }
 
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

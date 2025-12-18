@@ -16,7 +16,7 @@ const AboutInner = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-2xl);
   align-items: center;
-  
+
   @media (max-width: 992px) {
     grid-template-columns: 1fr;
     gap: var(--spacing-xl);
@@ -36,7 +36,7 @@ const AboutTitle = styled.h2`
   color: var(--text-primary);
   position: relative;
   display: inline-block;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -46,7 +46,7 @@ const AboutTitle = styled.h2`
     height: 3px;
     background: var(--primary-color);
   }
-  
+
   @media (max-width: 768px) {
     font-size: 2rem;
   }
@@ -57,7 +57,7 @@ const AboutDescription = styled.p`
   font-size: 1.1rem;
   line-height: 1.8;
   margin-bottom: var(--spacing-lg);
-  
+
   @media (max-width: 768px) {
     font-size: 1rem;
   }
@@ -79,7 +79,7 @@ const StatNumber = styled.div`
   font-weight: 700;
   color: var(--primary-color);
   margin-bottom: var(--spacing-xs);
-  
+
   @media (max-width: 768px) {
     font-size: 2rem;
   }
@@ -92,17 +92,17 @@ const StatTitle = styled.div`
 
 const AboutImage = styled(motion.div)`
   position: relative;
-  
+
   @media (max-width: 992px) {
     order: 1;
   }
-  
+
   img {
     width: 100%;
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-lg);
   }
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -113,7 +113,7 @@ const AboutImage = styled(motion.div)`
     top: 20px;
     left: 20px;
     z-index: -1;
-    
+
     @media (max-width: 768px) {
       top: 10px;
       left: 10px;
@@ -131,7 +131,7 @@ const ContactButton = styled(Link)`
   font-weight: 600;
   transition: var(--transition);
   box-shadow: 0 4px 12px rgba(255, 77, 77, 0.3);
-  
+
   &:hover {
     background-color: #e64545;
     transform: translateY(-2px);
@@ -151,7 +151,7 @@ function About({ cta = { to: '/about', label: '了解更多' } }) {
           <AboutDescription>
             自2018年成立以来，我们与国内顶尖动画工作室深度合作，独家引进多部精品国漫，持续为用户呈现高品质的国漫内容。我们相信，中国动漫正处于蓬勃发展的黄金时期，国漫世界愿与每一位国漫爱好者共同见证这个伟大的时代。
           </AboutDescription>
-          
+
           <Stats>
             <StatItem
               initial={{ opacity: 0, y: 20 }}
@@ -181,24 +181,21 @@ function About({ cta = { to: '/about', label: '了解更多' } }) {
               <StatTitle>合作工作室</StatTitle>
             </StatItem>
           </Stats>
-          
+
           <ContactButton to={cta.to}>{cta.label}</ContactButton>
         </AboutContent>
-        
+
         <AboutImage
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <img 
-            src={teamImage}
-            alt="国漫世界团队" 
-          />
+          <img src={teamImage} alt="国漫世界团队" />
         </AboutImage>
       </AboutInner>
     </AboutContainer>
   );
 }
 
-export default About; 
+export default About;

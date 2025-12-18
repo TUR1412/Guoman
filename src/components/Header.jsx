@@ -12,12 +12,12 @@ const HeaderContainer = styled.header`
   left: 0;
   width: 100%;
   height: var(--header-height);
-  background-color: ${p => p.$scrolled ? 'var(--header-bg-scrolled)' : 'var(--header-bg)'};
+  background-color: ${(p) => (p.$scrolled ? 'var(--header-bg-scrolled)' : 'var(--header-bg)')};
   backdrop-filter: blur(8px);
   z-index: 100;
   border-bottom: 1px solid var(--border-color);
   transition: var(--transition);
-  box-shadow: ${p => p.$scrolled ? 'var(--shadow-md)' : 'none'};
+  box-shadow: ${(p) => (p.$scrolled ? 'var(--shadow-md)' : 'none')};
 `;
 
 const HeaderInner = styled.div`
@@ -34,7 +34,7 @@ const Logo = styled(Link)`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  
+
   img {
     height: 32px;
   }
@@ -54,7 +54,7 @@ const Logo = styled(Link)`
 const Nav = styled.nav`
   display: flex;
   align-items: center;
-  
+
   @media (max-width: 768px) {
     display: none;
   }
@@ -68,22 +68,22 @@ const NavLinks = styled.ul`
 const NavLink = styled(Link)`
   position: relative;
   font-weight: 500;
-  color: ${props => props.$active ? 'var(--primary-color)' : 'var(--text-secondary)'};
-  
+  color: ${(props) => (props.$active ? 'var(--primary-color)' : 'var(--text-secondary)')};
+
   &::after {
     content: '';
     position: absolute;
     bottom: -4px;
     left: 0;
-    width: ${props => props.$active ? '100%' : '0'};
+    width: ${(props) => (props.$active ? '100%' : '0')};
     height: 2px;
     background-color: var(--primary-color);
     transition: var(--transition);
   }
-  
+
   &:hover {
     color: var(--primary-color);
-    
+
     &::after {
       width: 100%;
     }
@@ -104,7 +104,7 @@ const SearchInput = styled.input`
   width: 200px;
   color: var(--text-primary);
   transition: var(--transition);
-  
+
   &:focus {
     background-color: var(--field-bg-focus);
     border-color: var(--primary-color);
@@ -118,7 +118,7 @@ const SearchInput = styled.input`
       width: 100%;
     }
   }
-  
+
   &::placeholder {
     color: var(--text-tertiary);
   }
@@ -145,7 +145,7 @@ const LoginButton = styled(Link)`
   font-weight: 500;
   margin-left: var(--spacing-lg);
   transition: var(--transition);
-  
+
   &:hover {
     background-color: var(--primary-color);
     color: white;
@@ -167,7 +167,7 @@ const ThemeButton = styled.button`
 
   &:hover {
     transform: translateY(-1px);
-    background: rgba(255, 255, 255, 0.10);
+    background: rgba(255, 255, 255, 0.1);
   }
 
   &:active {
@@ -179,7 +179,7 @@ const MobileMenuButton = styled.button`
   display: none;
   font-size: 1.5rem;
   color: var(--text-primary);
-  
+
   @media (max-width: 768px) {
     display: flex;
   }
@@ -211,8 +211,8 @@ const MobileNavLinks = styled.ul`
 const MobileNavLink = styled(Link)`
   font-size: 1.5rem;
   font-weight: 500;
-  color: ${props => props.$active ? 'var(--primary-color)' : 'var(--text-secondary)'};
-  
+  color: ${(props) => (props.$active ? 'var(--primary-color)' : 'var(--text-secondary)')};
+
   &:hover {
     color: var(--primary-color);
   }
@@ -230,7 +230,7 @@ const MobileLoginButton = styled(Link)`
   color: white;
   font-weight: 500;
   margin-top: var(--spacing-xl);
-  
+
   &:hover {
     background-color: #e64545;
   }
@@ -242,7 +242,7 @@ const navItems = [
   { title: '收藏', path: '/favorites' },
   { title: '排行榜', path: '/rankings' },
   { title: '最新资讯', path: '/news' },
-  { title: '关于我们', path: '/about' }
+  { title: '关于我们', path: '/about' },
 ];
 
 function Header() {
@@ -252,7 +252,7 @@ function Header() {
   const [theme, setTheme] = useState(() => getCurrentTheme());
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 20) {
@@ -261,14 +261,15 @@ function Header() {
         setIsScrolled(false);
       }
     };
-    
-    window.addEventListener('scroll', handleScroll);
-    
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-  
+
   useEffect(() => {
     // 关闭移动菜单当路由改变时
     setIsMobileMenuOpen(false);
@@ -299,7 +300,7 @@ function Header() {
     if (targetPath === '/') return location.pathname === '/';
     return location.pathname === targetPath || location.pathname.startsWith(`${targetPath}/`);
   };
-  
+
   const runSearch = () => {
     const q = searchQuery.trim();
     navigate(q ? `/search?q=${encodeURIComponent(q)}` : '/search');
@@ -324,25 +325,22 @@ function Header() {
           <img src={logoSvg} alt="国漫世界 Logo" />
           <span>国漫世界</span>
         </Logo>
-        
+
         <Nav>
           <NavLinks>
-            {navItems.map((item, index) => (
-              <li key={index}>
-                <NavLink 
-                  to={item.path} 
-                  $active={isRouteActive(item.path)}
-                >
+            {navItems.map((item) => (
+              <li key={item.path}>
+                <NavLink to={item.path} $active={isRouteActive(item.path)}>
                   {item.title}
                 </NavLink>
               </li>
             ))}
           </NavLinks>
-          
+
           <SearchContainer>
-            <SearchInput 
-              type="text" 
-              placeholder="搜索国漫..." 
+            <SearchInput
+              type="text"
+              placeholder="搜索国漫..."
               aria-label="搜索国漫"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -350,7 +348,7 @@ function Header() {
             />
             <SearchIcon />
           </SearchContainer>
-          
+
           <LoginButton to="/login">
             <FiUser />
             登录/注册
@@ -365,15 +363,16 @@ function Header() {
             {theme === 'dark' ? <FiSun /> : <FiMoon />}
           </ThemeButton>
         </Nav>
-        
+
         <MobileMenuButton
+          type="button"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label={isMobileMenuOpen ? '关闭菜单' : '打开菜单'}
         >
           {isMobileMenuOpen ? <FiX /> : <FiMenu />}
         </MobileMenuButton>
       </HeaderInner>
-      
+
       <AnimatePresence>
         {isMobileMenuOpen && (
           <MobileMenu
@@ -383,9 +382,9 @@ function Header() {
             transition={{ duration: 0.2 }}
           >
             <SearchContainer style={{ margin: '0 0 2rem 0', width: '80%' }}>
-              <SearchInput 
-                type="text" 
-                placeholder="搜索国漫..." 
+              <SearchInput
+                type="text"
+                placeholder="搜索国漫..."
                 aria-label="搜索国漫"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -404,20 +403,17 @@ function Header() {
             >
               {theme === 'dark' ? <FiSun /> : <FiMoon />}
             </ThemeButton>
-            
+
             <MobileNavLinks>
-              {navItems.map((item, index) => (
-                <li key={index}>
-                  <MobileNavLink 
-                    to={item.path} 
-                    $active={isRouteActive(item.path)}
-                  >
+              {navItems.map((item) => (
+                <li key={item.path}>
+                  <MobileNavLink to={item.path} $active={isRouteActive(item.path)}>
                     {item.title}
                   </MobileNavLink>
                 </li>
               ))}
             </MobileNavLinks>
-            
+
             <MobileLoginButton to="/login">
               <FiUser />
               登录/注册
@@ -429,4 +425,4 @@ function Header() {
   );
 }
 
-export default Header; 
+export default Header;

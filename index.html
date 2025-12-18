@@ -1,42 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN" data-theme="dark">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>国漫世界 - 探索中国动漫的奇妙旅程</title>
-  <meta name="color-scheme" content="dark light" />
-  <meta name="theme-color" content="#0D1117" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>国漫世界 - 探索中国动漫的奇妙旅程</title>
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0D1117" />
 
-  <!-- Fonts (性能优化) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap"
-  />
+    <!-- Fonts (性能优化) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap"
+    />
 
-  <script>
-    ;(() => {
-      try {
-        const key = 'guoman.theme';
-        const stored = localStorage.getItem(key);
-        const systemDark =
-          window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = stored === 'light' || stored === 'dark' ? stored : systemDark ? 'dark' : 'light';
+    <script>
+      (() => {
+        try {
+          const key = 'guoman.theme';
+          const stored = localStorage.getItem(key);
+          const systemDark =
+            window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const theme =
+            stored === 'light' || stored === 'dark' ? stored : systemDark ? 'dark' : 'light';
 
-        document.documentElement.dataset.theme = theme;
-        const meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', theme === 'dark' ? '#0D1117' : '#F7F8FA');
-      } catch (e) {}
-    })();
-  </script>
+          document.documentElement.dataset.theme = theme;
+          const meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', theme === 'dark' ? '#0D1117' : '#F7F8FA');
+        } catch (e) {}
+      })();
+    </script>
 
-  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-  <meta name="description" content="国漫世界 - 汇聚最热门的中国动漫作品，包括《斗罗大陆》、《天官赐福》、《魔道祖师》等精彩国漫">
-  <meta name="keywords" content="国漫,中国动漫,动画,网络动画,斗罗大陆,天官赐福,魔道祖师">
-</head>
-<body>
-  <div id="root"></div>
-  <script type="module" src="./src/index.jsx"></script>
-</body>
-</html> 
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta
+      name="description"
+      content="国漫世界 - 汇聚最热门的中国动漫作品，包括《斗罗大陆》、《天官赐福》、《魔道祖师》等精彩国漫"
+    />
+    <meta name="keywords" content="国漫,中国动漫,动画,网络动画,斗罗大陆,天官赐福,魔道祖师" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./src/index.jsx"></script>
+  </body>
+</html>

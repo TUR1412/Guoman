@@ -1,13 +1,14 @@
 import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, MotionConfig } from 'framer-motion';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import { FavoritesProvider } from './components/FavoritesProvider';
 import { ToastProvider } from './components/ToastProvider';
+import { safeSessionStorageGet, safeSessionStorageSet } from './utils/storage';
 
 // 页面
 import HomePage from './pages/HomePage';
@@ -39,7 +40,7 @@ const MainContent = styled.main`
   padding-top: var(--header-height);
 `;
 
-const LoadingScreen = styled(motion.div)`
+const LoadingScreen = styled(motion.button)`
   position: fixed;
   top: 0;
   left: 0;
@@ -50,6 +51,9 @@ const LoadingScreen = styled(motion.div)`
   align-items: center;
   background-color: var(--dark-color);
   z-index: 1000;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 `;
 
 const LoadingLogo = styled(motion.div)`
@@ -73,7 +77,7 @@ const INTRO_KEY = 'guoman.introSeen';
 function App() {
   const [loading, setLoading] = useState(() => {
     if (typeof window === 'undefined') return false;
-    return !window.sessionStorage?.getItem(INTRO_KEY);
+    return !safeSessionStorageGet(INTRO_KEY);
   });
   const location = useLocation();
 
@@ -83,86 +87,91 @@ function App() {
     // 首次进入展示品牌开屏（短、可跳过、仅一次）
     const timer = setTimeout(() => {
       setLoading(false);
-      window.sessionStorage?.setItem(INTRO_KEY, '1');
+      safeSessionStorageSet(INTRO_KEY, '1');
     }, 900);
 
     return () => clearTimeout(timer);
   }, [loading]);
 
   return (
-    <ToastProvider>
-      <FavoritesProvider>
-        <AppContainer>
-          <a className="skip-link" href="#main">
-            跳到主要内容
-          </a>
+    <MotionConfig reducedMotion="user">
+      <ToastProvider>
+        <FavoritesProvider>
+          <AppContainer>
+            <a className="skip-link" href="#main">
+              跳到主要内容
+            </a>
 
-          <AnimatePresence>
-            {loading && (
-              <LoadingScreen
-                initial={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                onClick={() => {
-                  setLoading(false);
-                  window.sessionStorage?.setItem(INTRO_KEY, '1');
-                }}
-              >
-                <LoadingLogo
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
+            <AnimatePresence>
+              {loading && (
+                <LoadingScreen
+                  type="button"
+                  aria-label="跳过开屏"
+                  title="点击跳过开屏"
+                  initial={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
                   transition={{ duration: 0.5 }}
+                  onClick={() => {
+                    setLoading(false);
+                    safeSessionStorageSet(INTRO_KEY, '1');
+                  }}
                 >
-                  国漫世界
-                </LoadingLogo>
-              </LoadingScreen>
-            )}
-          </AnimatePresence>
+                  <LoadingLogo
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    国漫世界
+                  </LoadingLogo>
+                </LoadingScreen>
+              )}
+            </AnimatePresence>
 
-          <Header />
-          <ScrollToTop />
-          
-          <MainContent id="main">
-            <Suspense fallback={<RouteFallback>加载中...</RouteFallback>}>
-              <AnimatePresence mode="wait">
-                <Routes location={location} key={location.pathname}>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/recommendations" element={<RecommendationsPage />} />
-                  <Route path="/favorites" element={<FavoritesPage />} />
-                  <Route path="/rankings" element={<RankingsPage />} />
-                  <Route path="/news" element={<NewsPage />} />
-                  <Route path="/news/:id" element={<NewsDetailPage />} />
-                  <Route path="/about" element={<AboutPage />} />
-                  <Route path="/search" element={<SearchPage />} />
-                  <Route path="/tag/:tag" element={<TagPage />} />
-                  <Route path="/category/:category" element={<CategoryPage />} />
+            <Header />
+            <ScrollToTop />
 
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                  <Route path="/anime/:id" element={<AnimeDetail />} />
+            <MainContent id="main">
+              <Suspense fallback={<RouteFallback>加载中...</RouteFallback>}>
+                <AnimatePresence mode="wait">
+                  <Routes location={location} key={location.pathname}>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/recommendations" element={<RecommendationsPage />} />
+                    <Route path="/favorites" element={<FavoritesPage />} />
+                    <Route path="/rankings" element={<RankingsPage />} />
+                    <Route path="/news" element={<NewsPage />} />
+                    <Route path="/news/:id" element={<NewsDetailPage />} />
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/search" element={<SearchPage />} />
+                    <Route path="/tag/:tag" element={<TagPage />} />
+                    <Route path="/category/:category" element={<CategoryPage />} />
 
-                  <Route path="/help" element={<StaticPage page="help" />} />
-                  <Route path="/faq" element={<StaticPage page="faq" />} />
-                  <Route path="/contact" element={<StaticPage page="contact" />} />
-                  <Route path="/feedback" element={<StaticPage page="feedback" />} />
-                  <Route path="/app" element={<StaticPage page="app" />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                    <Route path="/anime/:id" element={<AnimeDetail />} />
 
-                  <Route path="/terms" element={<StaticPage page="terms" />} />
-                  <Route path="/privacy" element={<StaticPage page="privacy" />} />
-                  <Route path="/cookies" element={<StaticPage page="cookies" />} />
-                  <Route path="/accessibility" element={<StaticPage page="accessibility" />} />
+                    <Route path="/help" element={<StaticPage page="help" />} />
+                    <Route path="/faq" element={<StaticPage page="faq" />} />
+                    <Route path="/contact" element={<StaticPage page="contact" />} />
+                    <Route path="/feedback" element={<StaticPage page="feedback" />} />
+                    <Route path="/app" element={<StaticPage page="app" />} />
 
-                  <Route path="*" element={<NotFoundPage />} />
-                </Routes>
-              </AnimatePresence>
-            </Suspense>
-          </MainContent>
-          
-          <Footer />
-        </AppContainer>
-      </FavoritesProvider>
-    </ToastProvider>
+                    <Route path="/terms" element={<StaticPage page="terms" />} />
+                    <Route path="/privacy" element={<StaticPage page="privacy" />} />
+                    <Route path="/cookies" element={<StaticPage page="cookies" />} />
+                    <Route path="/accessibility" element={<StaticPage page="accessibility" />} />
+
+                    <Route path="*" element={<NotFoundPage />} />
+                  </Routes>
+                </AnimatePresence>
+              </Suspense>
+            </MainContent>
+
+            <Footer />
+          </AppContainer>
+        </FavoritesProvider>
+      </ToastProvider>
+    </MotionConfig>
   );
 }
 
-export default App; 
+export default App;

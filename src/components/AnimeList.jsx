@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import animeData, { featuredAnime, popularAnime, newReleases, categories } from '../data/animeData';
 import AnimeCard from './anime/AnimeCard';
 import { AnimeGrid } from './anime/AnimeGrid';
+import { safeLocalStorageGet, safeLocalStorageSet } from '../utils/storage';
 
 const SectionContainer = styled.section`
   padding: var(--spacing-3xl) 0;
@@ -19,7 +20,7 @@ const SectionHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--spacing-xl);
-  
+
   @media (max-width: 576px) {
     flex-direction: column;
     align-items: flex-start;
@@ -32,21 +33,21 @@ const TabsContainer = styled.div`
   gap: var(--spacing-md);
   overflow-x: auto;
   padding-bottom: var(--spacing-sm);
-  
+
   &::-webkit-scrollbar {
     height: 4px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 4px;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: var(--primary-color);
     border-radius: 4px;
   }
-  
+
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -59,11 +60,13 @@ const Tab = styled.button`
   font-size: 1rem;
   white-space: nowrap;
   transition: var(--transition);
-  background-color: ${props => props.$active ? 'var(--primary-color)' : 'rgba(255, 255, 255, 0.1)'};
-  color: ${props => props.$active ? 'white' : 'var(--text-secondary)'};
-  
+  background-color: ${(props) =>
+    props.$active ? 'var(--primary-color)' : 'rgba(255, 255, 255, 0.1)'};
+  color: ${(props) => (props.$active ? 'white' : 'var(--text-secondary)')};
+
   &:hover {
-    background-color: ${props => props.$active ? 'var(--primary-color)' : 'rgba(255, 255, 255, 0.15)'};
+    background-color: ${(props) =>
+      props.$active ? 'var(--primary-color)' : 'rgba(255, 255, 255, 0.15)'};
   }
 `;
 
@@ -77,7 +80,7 @@ const ShowMoreButton = styled.button`
   border-radius: var(--border-radius-md);
   font-weight: 500;
   transition: var(--transition);
-  
+
   &:hover {
     background-color: rgba(255, 77, 77, 0.1);
     transform: translateY(-2px);
@@ -89,7 +92,7 @@ const categoryOptions = [
   { id: 'featured', name: '精选' },
   { id: 'popular', name: '热门' },
   { id: 'new', name: '最新' },
-  ...categories.map(cat => ({ id: `cat-${cat.id}`, name: cat.name }))
+  ...categories.map((cat) => ({ id: `cat-${cat.id}`, name: cat.name })),
 ];
 
 const DEFAULT_STORAGE_KEY = 'guoman.animeList.activeTab';
@@ -102,7 +105,7 @@ function AnimeList({
 }) {
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window === 'undefined') return defaultTab;
-    const saved = window.localStorage?.getItem(storageKey);
+    const saved = safeLocalStorageGet(storageKey);
     return saved || defaultTab;
   });
 
@@ -110,7 +113,7 @@ function AnimeList({
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    window.localStorage?.setItem(storageKey, activeTab);
+    safeLocalStorageSet(storageKey, activeTab);
   }, [activeTab, storageKey]);
 
   useEffect(() => {
@@ -158,7 +161,7 @@ function AnimeList({
   const handleShowMore = () => {
     setDisplayCount((prev) => prev + initialDisplayCount);
   };
-  
+
   return (
     <SectionContainer>
       <SectionInner>
@@ -166,8 +169,9 @@ function AnimeList({
           <h2 className="section-title">{title}</h2>
           <TabsContainer>
             {categoryOptions.map((category) => (
-              <Tab 
+              <Tab
                 key={category.id}
+                type="button"
                 $active={activeTab === category.id}
                 onClick={() => setActiveTab(category.id)}
               >
@@ -176,15 +180,15 @@ function AnimeList({
             ))}
           </TabsContainer>
         </SectionHeader>
-        
+
         <AnimeGrid>
           {displayedAnime.slice(0, displayCount).map((anime) => (
             <AnimeCard key={anime.id} anime={anime} />
           ))}
         </AnimeGrid>
-        
+
         {displayCount < displayedAnime.length && (
-          <ShowMoreButton onClick={handleShowMore}>
+          <ShowMoreButton type="button" onClick={handleShowMore}>
             查看更多
           </ShowMoreButton>
         )}
@@ -193,4 +197,4 @@ function AnimeList({
   );
 }
 
-export default AnimeList; 
+export default AnimeList;

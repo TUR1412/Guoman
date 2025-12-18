@@ -120,7 +120,6 @@ class AppErrorBoundary extends React.Component {
 
   componentDidCatch(error, info) {
     if (import.meta.env?.DEV) {
-      // eslint-disable-next-line no-console
       console.error('[AppErrorBoundary] 捕获到未处理错误：', error, info);
     }
   }
@@ -135,9 +134,7 @@ class AppErrorBoundary extends React.Component {
             <FiAlertTriangle size={22} />
             <Title>页面出了点小状况</Title>
           </TitleRow>
-          <Desc>
-            不用担心，刷新通常可以恢复。如果问题持续出现，建议清空缓存或稍后再试。
-          </Desc>
+          <Desc>不用担心，刷新通常可以恢复。如果问题持续出现，建议清空缓存或稍后再试。</Desc>
           <Actions>
             <Button type="button" onClick={() => window.location.reload()}>
               <FiRefreshCcw />
@@ -149,7 +146,9 @@ class AppErrorBoundary extends React.Component {
           {import.meta.env?.DEV && this.state.error && (
             <DevDetails>
               <summary>开发者信息（仅开发环境展示）</summary>
-              <pre>{String(this.state.error?.stack || this.state.error?.message || this.state.error)}</pre>
+              <pre>
+                {String(this.state.error?.stack || this.state.error?.message || this.state.error)}
+              </pre>
             </DevDetails>
           )}
         </Card>
@@ -159,4 +158,3 @@ class AppErrorBoundary extends React.Component {
 }
 
 export default AppErrorBoundary;
-

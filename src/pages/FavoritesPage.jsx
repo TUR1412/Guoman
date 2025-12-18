@@ -41,9 +41,7 @@ function FavoritesPage() {
 
   const list = useMemo(() => {
     const ids = Array.from(favoriteIds);
-    return ids
-      .map((id) => animeData.find((a) => a.id === id))
-      .filter(Boolean);
+    return ids.map((id) => animeData.find((a) => a.id === id)).filter(Boolean);
   }, [favoriteIds]);
 
   const onClear = () => {
@@ -90,4 +88,3 @@ function FavoritesPage() {
 }
 
 export default FavoritesPage;
-

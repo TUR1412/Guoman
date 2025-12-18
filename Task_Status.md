@@ -1,28 +1,28 @@
-# [GUOMAN-NUKE-20251217-R3] 任务看板
-> **环境**: Windows (pwsh -NoLogo -NoProfile wrapper) | **框架**: React + Vite | **档位**: 4档 (架构重构)
-> **已激活矩阵**: [模块 A: 视觉矫正] + [模块 E: 幽灵防御]
+# [GUOMAN-WORLD1-20251218-R1] 任务看板
+
+> **环境**: Windows 11 + pwsh (-NoLogo -NoProfile wrapper) | **框架**: React + Vite | **档位**: 4档 (架构重构)
+> **已激活矩阵**: [模块 A: 视觉矫正] + [模块 B: 逻辑直通] + [模块 E: 幽灵防御] + [模块 F: 需求镜像/靶向验证]
 
 ## 1. 需求镜像 (Requirement Mirroring)
-> **我的理解**: 对 `TUR1412/Guoman` 进行“原子弹级再次升级 + 原子级审查”，并重写/美化 GitHub Markdown 文档（README 等），完成后推送到远程仓库，然后删除本地克隆目录。
-> **不做什么**: 不后台启动长期驻留服务；不抢占端口；不在 UI 区域裸露 JSON/错误堆栈；不提交敏感信息。
 
-## 2. 执行清单 (Execution)
-- [x] 修复 GitHub Pages 子路径 favicon：使用相对路径 `./favicon.svg`
-- [x] 404 页面视觉升级 + 深链兜底强化（路径 -> Hash）
-- [x] 收藏体验升级：卡片快捷收藏 + Toast 即时反馈
-- [x] 分享体验升级：优先 Web Share，fallback 复制链接 + Toast
-- [x] Toast 原子级稳健：清理 timeout，避免卸载后回调
-- [x] 主题首帧无闪烁：`index.html` 预写入 `data-theme`
-- [x] 文档超级美化：全新 README + 部署/架构文档 + 贡献指南
-- [x] 构建验证：`npm ci` + `npm run build`（有限热同步，不启动 dev server）
-- [ ] `git commit` 并 `git push` 至远程 `origin/master`
-- [ ] 推送成功后安全删除 `C:\wooK\Guoman`
-- [x] 字体加载优化：移除 CSS `@import`，改为 `index.html` 直链（减少阻塞链路）
-- [x] 主题首帧无闪烁：Head 内联脚本（< 30 行）提前写入 `data-theme`
-- [x] 404 深链兜底：将 `/Guoman/xxx` 转为 `/Guoman/#/xxx`，尽量保留路径
-- [x] 收藏系统：LocalStorage 持久化 + 收藏页 + 卡片收藏角标
-- [x] 多巴胺反馈：全局 Toast（收藏/清空/演示登录）
-- [x] 导航稳健：子路由高亮、移动菜单打开时锁定页面滚动
-- [x] 构建验证：`npm ci` + `npm run build`（有限热同步，不启动 dev server）
-- [ ] `git commit` 并 `git push` 至远程 `origin/master`
-- [ ] 推送成功后安全删除 `C:\wooK\Guoman`
+> **我的理解**: 对 `TUR1412/Guoman` 做“原子级审计 → 修复 → 升级扩展”，目标是更稳健（安全/无障碍/兼容性/性能）与更工程化（Lint/Test/CI），并保持 GitHub Pages 可部署。完成后 **推送到** `origin/master`，随后 **安全删除本地克隆目录**：`C:\Users\Kong\_work\Guoman`。
+> **不做什么**: 不后台启动长期驻留服务（dev server）；不抢占端口；不在主 UI 裸露 JSON/错误堆栈；不提交敏感信息；不引入必须依赖后端的功能（保持静态站可独立运行）。
+
+## 2. 审计发现 (Atomic Findings)
+
+- [!] **安全**：`npm audit`（使用 `https://registry.npmjs.org`）提示 `vite/esbuild` 存在 _moderate_ 风险（影响 dev server），需要升级到 `vite >= 6.1.7`。
+- [!] **稳健**：多处对 `localStorage/sessionStorage` 的访问仅用了 `?.`，但未 `try/catch`（在隐私模式/禁用存储/安全策略下可能抛错并导致白屏）。
+- [!] **体验**：`SearchPage` 输入框的内部 state 不会随 URL `q` 变化而同步（回退/前进时表现不一致）。
+- [!] **无障碍/规范**：少量 `button` 缺少 `type="button"`；部分列表渲染使用 `index` 作为 key。
+- [!] **工程化**：缺少 ESLint/Prettier/测试基线；CI 仅 build 部署，缺少 lint/test 闸门。
+
+## 3. 执行清单 (Execution)
+
+- [x] 升级 Vite 到 v6（保持 Node 18 兼容）并消除 audit 风险
+- [x] 新增 `storage` 工具层并替换调用点（theme/tab/sort/intro 等）
+- [x] a11y/稳定性修复（button type、稳定 key、URL 状态同步）
+- [x] 新增 ESLint + Prettier + Vitest（最小可用基线）
+- [x] 更新 GitHub Actions：增加 lint/test，再 build & deploy
+- [x] 有限热同步验证：`npm ci` → `npm run lint` → `npm run test` → `npm run build`
+- [ ] `git commit` + `git push origin master`
+- [ ] 推送成功后安全删除本地克隆目录 `C:\Users\Kong\_work\Guoman`

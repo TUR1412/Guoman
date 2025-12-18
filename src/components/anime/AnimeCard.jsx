@@ -148,12 +148,12 @@ const Rating = styled.span`
 `;
 
 function AnimeCard({ anime }) {
-  if (!anime) return null;
-
   const favorites = useFavorites();
-  const favorited = favorites.isFavorite(anime.id);
   const toast = useToast();
 
+  if (!anime) return null;
+
+  const favorited = favorites.isFavorite(anime.id);
   const typeShort = anime?.type?.split('、')?.[0] ?? '';
 
   const toggleFavorite = (e) => {
@@ -212,4 +212,3 @@ function AnimeCard({ anime }) {
 }
 
 export default AnimeCard;
-

@@ -79,17 +79,11 @@ const SecondaryLink = styled.a`
 
   &:hover {
     transform: translateY(-1px);
-    background: rgba(255, 255, 255, 0.10);
+    background: rgba(255, 255, 255, 0.1);
   }
 `;
 
-function EmptyState({
-  icon,
-  title,
-  description,
-  primaryAction,
-  secondaryAction,
-}) {
+function EmptyState({ icon, title, description, primaryAction, secondaryAction }) {
   return (
     <Wrap>
       <Card>
@@ -112,4 +106,3 @@ function EmptyState({
 }
 
 export default EmptyState;
-

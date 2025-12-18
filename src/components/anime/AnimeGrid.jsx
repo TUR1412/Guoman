@@ -10,4 +10,3 @@ export const AnimeGrid = styled.div`
     gap: var(--spacing-md);
   }
 `;
-

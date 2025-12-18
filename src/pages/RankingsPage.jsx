@@ -5,6 +5,7 @@ import PageShell from '../components/PageShell';
 import AnimeCard from '../components/anime/AnimeCard';
 import { AnimeGrid } from '../components/anime/AnimeGrid';
 import animeData from '../data/animeData';
+import { safeLocalStorageGet, safeLocalStorageSet } from '../utils/storage';
 
 const ToggleGroup = styled.div`
   display: inline-flex;
@@ -100,7 +101,7 @@ const SORTS = {
 function RankingsPage() {
   const [sortId, setSortId] = useState(() => {
     if (typeof window === 'undefined') return SORTS.rating.id;
-    return window.localStorage?.getItem(STORAGE_KEY) || SORTS.rating.id;
+    return safeLocalStorageGet(STORAGE_KEY) || SORTS.rating.id;
   });
 
   const sort = SORTS[sortId] || SORTS.rating;
@@ -109,7 +110,7 @@ function RankingsPage() {
     const list = [...animeData];
     list.sort(sort.sortFn);
     return list;
-  }, [sortId]);
+  }, [sort.sortFn]);
 
   const top3 = sorted.slice(0, 3);
   const rest = sorted.slice(0, 12);
@@ -117,7 +118,7 @@ function RankingsPage() {
   const setSortAndPersist = (nextId) => {
     setSortId(nextId);
     if (typeof window !== 'undefined') {
-      window.localStorage?.setItem(STORAGE_KEY, nextId);
+      safeLocalStorageSet(STORAGE_KEY, nextId);
     }
   };
 
@@ -172,4 +173,3 @@ function RankingsPage() {
 }
 
 export default RankingsPage;
-

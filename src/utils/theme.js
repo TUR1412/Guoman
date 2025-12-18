@@ -1,3 +1,5 @@
+import { safeLocalStorageGet, safeLocalStorageSet } from './storage';
+
 const STORAGE_KEY = 'guoman.theme';
 
 export const THEMES = Object.freeze({
@@ -18,7 +20,7 @@ export const getSystemTheme = () => {
 
 export const getStoredTheme = () => {
   if (typeof window === 'undefined') return null;
-  return normalizeTheme(window.localStorage?.getItem(STORAGE_KEY));
+  return normalizeTheme(safeLocalStorageGet(STORAGE_KEY));
 };
 
 export const getResolvedTheme = () => getStoredTheme() ?? getSystemTheme();
@@ -40,7 +42,7 @@ export const setTheme = (theme) => {
   const normalized = normalizeTheme(theme);
   if (!normalized || typeof window === 'undefined') return;
 
-  window.localStorage?.setItem(STORAGE_KEY, normalized);
+  safeLocalStorageSet(STORAGE_KEY, normalized);
   applyTheme(normalized);
 };
 
@@ -62,4 +64,3 @@ export const initTheme = () => {
   const already = normalizeTheme(document.documentElement.dataset.theme);
   applyTheme(already ?? getResolvedTheme());
 };
-

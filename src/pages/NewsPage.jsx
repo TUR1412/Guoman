@@ -106,9 +106,9 @@ function NewsPage() {
               type="button"
               onClick={() => setActiveTag(tag)}
               style={{
-                background:
-                  activeTag === tag ? 'rgba(255, 77, 77, 0.18)' : 'rgba(0, 0, 0, 0.16)',
-                borderColor: activeTag === tag ? 'rgba(255, 77, 77, 0.45)' : 'rgba(255, 255, 255, 0.14)',
+                background: activeTag === tag ? 'rgba(255, 77, 77, 0.18)' : 'rgba(0, 0, 0, 0.16)',
+                borderColor:
+                  activeTag === tag ? 'rgba(255, 77, 77, 0.45)' : 'rgba(255, 255, 255, 0.14)',
               }}
             >
               <FiTag />
@@ -135,4 +135,3 @@ function NewsPage() {
 }
 
 export default NewsPage;
-

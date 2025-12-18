@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useSearchParams } from 'react-router-dom';
 import { FiSearch } from 'react-icons/fi';
@@ -60,12 +60,19 @@ const Summary = styled.div`
   color: var(--text-tertiary);
 `;
 
-const normalize = (value) => String(value || '').toLowerCase().trim();
+const normalize = (value) =>
+  String(value || '')
+    .toLowerCase()
+    .trim();
 
 function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const q = searchParams.get('q') || '';
   const [value, setValue] = useState(q);
+
+  useEffect(() => {
+    setValue(q);
+  }, [q]);
 
   const results = useMemo(() => {
     const query = normalize(q);
@@ -74,13 +81,9 @@ function SearchPage() {
     const tokens = query.split(/\s+/).filter(Boolean);
     return animeData.filter((anime) => {
       const haystack = normalize(
-        [
-          anime.title,
-          anime.originalTitle,
-          anime.studio,
-          anime.type,
-          ...(anime.tags || []),
-        ].join(' '),
+        [anime.title, anime.originalTitle, anime.studio, anime.type, ...(anime.tags || [])].join(
+          ' ',
+        ),
       );
 
       return tokens.every((t) => haystack.includes(t));
@@ -100,6 +103,9 @@ function SearchPage() {
     >
       <SearchBar onSubmit={onSubmit} role="search" aria-label="站内搜索">
         <Input
+          type="search"
+          name="q"
+          aria-label="搜索关键词"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="例如：古风 仙侠 / 斗罗 / 绘梦动画"
@@ -126,7 +132,9 @@ function SearchPage() {
         <EmptyState
           icon={<FiSearch size={22} />}
           title={q ? '没有找到匹配结果' : '从这里开始搜索'}
-          description={q ? '换个关键词试试，或者去推荐/排行榜逛逛。' : '输入关键词，按下回车或点击搜索。'}
+          description={
+            q ? '换个关键词试试，或者去推荐/排行榜逛逛。' : '输入关键词，按下回车或点击搜索。'
+          }
           primaryAction={{ href: '#/recommendations', label: '去看推荐' }}
           secondaryAction={{ href: '#/rankings', label: '看看排行榜' }}
         />
@@ -136,4 +144,3 @@ function SearchPage() {
 }
 
 export default SearchPage;
-
