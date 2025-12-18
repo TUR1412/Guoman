@@ -75,6 +75,12 @@ const FavButton = styled.button`
     transform: translateY(0);
   }
 
+  ${Card}:focus-within &,
+  &:focus-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   @media (max-width: 768px) {
     opacity: 1;
     transform: translateY(0);
