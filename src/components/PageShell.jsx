@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const Page = styled(motion.section)`
   padding: var(--spacing-3xl) 0;
@@ -63,14 +63,23 @@ const Content = styled.div`
   gap: var(--spacing-2xl);
 `;
 
-const pageMotion = {
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -10 },
-  transition: { duration: 0.25 },
-};
-
 function PageShell({ title, subtitle, actions, children }) {
+  const reducedMotion = useReducedMotion();
+
+  const pageMotion = reducedMotion
+    ? {
+        initial: { opacity: 1, y: 0 },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 1, y: 0 },
+        transition: { duration: 0 },
+      }
+    : {
+        initial: { opacity: 0, y: 10 },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -10 },
+        transition: { duration: 0.25 },
+      };
+
   return (
     <Page {...pageMotion}>
       <Inner>
