@@ -328,13 +328,21 @@ function Header() {
 
         <Nav>
           <NavLinks>
-            {navItems.map((item) => (
-              <li key={item.path}>
-                <NavLink to={item.path} $active={isRouteActive(item.path)}>
-                  {item.title}
-                </NavLink>
-              </li>
-            ))}
+            {navItems.map((item) => {
+              const active = isRouteActive(item.path);
+
+              return (
+                <li key={item.path}>
+                  <NavLink
+                    to={item.path}
+                    $active={active}
+                    aria-current={active ? 'page' : undefined}
+                  >
+                    {item.title}
+                  </NavLink>
+                </li>
+              );
+            })}
           </NavLinks>
 
           <SearchContainer>
@@ -405,13 +413,21 @@ function Header() {
             </ThemeButton>
 
             <MobileNavLinks>
-              {navItems.map((item) => (
-                <li key={item.path}>
-                  <MobileNavLink to={item.path} $active={isRouteActive(item.path)}>
-                    {item.title}
-                  </MobileNavLink>
-                </li>
-              ))}
+              {navItems.map((item) => {
+                const active = isRouteActive(item.path);
+
+                return (
+                  <li key={item.path}>
+                    <MobileNavLink
+                      to={item.path}
+                      $active={active}
+                      aria-current={active ? 'page' : undefined}
+                    >
+                      {item.title}
+                    </MobileNavLink>
+                  </li>
+                );
+              })}
             </MobileNavLinks>
 
             <MobileLoginButton to="/login">
