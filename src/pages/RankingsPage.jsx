@@ -12,7 +12,7 @@ const ToggleGroup = styled.div`
   border: 1px solid var(--border-subtle);
   border-radius: 999px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--surface-soft);
 `;
 
 const Toggle = styled.button`
@@ -25,7 +25,7 @@ const Toggle = styled.button`
   transition: var(--transition);
 
   &:hover {
-    background: ${(p) => (p.$active ? 'var(--primary-color)' : 'rgba(255, 255, 255, 0.08)')};
+    background: ${(p) => (p.$active ? 'var(--primary-color)' : 'var(--surface-soft-hover)')};
   }
 `;
 
@@ -63,8 +63,8 @@ const Badge = styled.div`
   gap: 0.5rem;
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--badge-border);
+  background: var(--badge-bg);
   color: var(--text-secondary);
   font-weight: 600;
 `;
