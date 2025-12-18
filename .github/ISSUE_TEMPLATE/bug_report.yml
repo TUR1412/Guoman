@@ -1,0 +1,59 @@
+name: 🐛 Bug 报告
+description: 提交一个可以复现的问题（越具体越容易修复）
+title: '[Bug]: '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈！为了更快定位问题，请尽量提供「复现步骤 + 期望/实际 + 环境信息」。
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 发生了什么？
+      description: 你看到的实际行为是什么？
+      placeholder: 例如：点击“收藏”后 Toast 提示成功，但刷新页面收藏丢失
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 你期望发生什么？
+      placeholder: 例如：收藏应该写入 localStorage，刷新后仍可看到
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 请按顺序列出可复现的步骤（最少 3 步）
+      placeholder: |
+        1. 打开 ...
+        2. 点击 ...
+        3. 看到 ...
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: 环境信息
+      description: 浏览器/系统/设备
+      placeholder: 例如：Chrome 122 / Windows 11 / 桌面端
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 截图 / 录屏（可选）
+      description: 拖拽上传图片或视频更直观
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: 额外信息（可选）
+      description: 控制台报错（如有）请用文字粘贴，不要截图一整屏 stack

@@ -1,0 +1,37 @@
+name: ✨ 功能请求
+description: 提交一个改进建议或新功能想法
+title: '[Feature]: '
+labels: ['enhancement']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        欢迎提出想法！建议从「用户问题」出发描述，再给出你期望的解决方案。
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你想解决什么问题？
+      placeholder: 例如：收藏是本地的，换设备会丢失，希望有导出/导入备份
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 你希望的解决方案
+      placeholder: 例如：在收藏页新增“导出/导入”按钮，导出为 JSON 文件，导入支持合并/覆盖
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 你考虑过的替代方案（可选）
+      placeholder: 例如：分享链接携带收藏 ID；或使用账号云同步
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 额外上下文（可选）
+      description: 相关截图、参考链接、竞品等

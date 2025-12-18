@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 在线预览
+    url: https://tur1412.github.io/Guoman/
+    about: 先确认问题是否能在在线预览中复现
+  - name: 部署与常见问题
+    url: https://github.com/TUR1412/Guoman/blob/master/docs/DEPLOYMENT.md
+    about: GitHub Pages、路由与 404 兜底等常见坑位
