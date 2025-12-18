@@ -471,6 +471,9 @@ function Header() {
           </NavLinks>
 
           <SearchContainer>
+            <span id="guoman-search-hint-desktop" className="sr-only">
+              快捷键 Ctrl/⌘ + K 可以快速聚焦搜索框
+            </span>
             <SearchInput
               ref={desktopSearchRef}
               type="search"
@@ -478,6 +481,7 @@ function Header() {
               placeholder="搜索国漫...（Ctrl/⌘ + K）"
               aria-label="搜索国漫"
               aria-keyshortcuts="Control+K Meta+K"
+              aria-describedby="guoman-search-hint-desktop"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={handleSearchKeyDown}
@@ -524,6 +528,9 @@ function Header() {
             transition={{ duration: 0.2 }}
           >
             <SearchContainer style={{ margin: '0 0 2rem 0', width: '80%' }}>
+              <span id="guoman-search-hint-mobile" className="sr-only">
+                快捷键 Ctrl/⌘ + K 可以快速聚焦搜索框
+              </span>
               <SearchInput
                 ref={mobileSearchRef}
                 type="search"
@@ -531,6 +538,7 @@ function Header() {
                 placeholder="搜索国漫...（Ctrl/⌘ + K）"
                 aria-label="搜索国漫"
                 aria-keyshortcuts="Control+K Meta+K"
+                aria-describedby="guoman-search-hint-mobile"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleSearchKeyDown}

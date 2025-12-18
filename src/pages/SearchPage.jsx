@@ -102,10 +102,14 @@ function SearchPage() {
       subtitle="按标题 / 原名 / 类型 / 标签 / 制作方搜索。支持多关键词（空格分隔）。"
     >
       <SearchBar onSubmit={onSubmit} role="search" aria-label="站内搜索">
+        <span id="guoman-search-page-hint" className="sr-only">
+          支持多关键词搜索，空格分隔；例如：古风 仙侠
+        </span>
         <Input
           type="search"
           name="q"
           aria-label="搜索关键词"
+          aria-describedby="guoman-search-page-hint"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="例如：古风 仙侠 / 斗罗 / 绘梦动画"
