@@ -156,7 +156,7 @@ export function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={api}>
       {children}
-      <Host aria-live="polite" aria-relevant="additions removals" role="status">
+      <Host aria-live="polite" aria-relevant="additions removals" aria-atomic="true" role="status">
         <AnimatePresence>
           {toasts.map((t) => {
             const meta = VARIANTS[t.variant] || VARIANTS.info;

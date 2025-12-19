@@ -6,7 +6,7 @@ import { FiHeart } from 'react-icons/fi';
 import { useFavorites } from '../FavoritesProvider';
 import { useToast } from '../ToastProvider';
 
-const Card = styled(motion.article)`
+const Card = styled(motion.article).attrs({ role: 'listitem' })`
   border-radius: var(--border-radius-md);
   overflow: hidden;
   background: var(--surface-glass);

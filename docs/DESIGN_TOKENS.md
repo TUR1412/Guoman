@@ -28,6 +28,7 @@
 - `--surface-glass`：玻璃卡片底色
 - `--border-subtle`：微边框
 - `--surface-soft / --surface-soft-hover`：轻按钮/轻底色（Hover 状态）
+- `--primary-soft / --primary-soft-hover / --primary-soft-border`：主色柔和态（用于 CTA/强调按钮）
 
 ### 2.3 Chip / Badge（筛选、标签、徽章）
 

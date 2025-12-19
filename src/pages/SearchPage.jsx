@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useSearchParams } from 'react-router-dom';
 import { FiSearch } from 'react-icons/fi';
@@ -25,8 +25,13 @@ const Input = styled.input`
   padding: 0.85rem 1rem;
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--field-bg);
   color: var(--text-primary);
+
+  &:focus {
+    border-color: var(--primary-color);
+    background: var(--field-bg-focus);
+  }
 
   &::placeholder {
     color: var(--text-tertiary);
@@ -40,8 +45,8 @@ const Button = styled.button`
   gap: 0.5rem;
   padding: 0.85rem 1.1rem;
   border-radius: var(--border-radius-md);
-  border: 1px solid rgba(255, 77, 77, 0.45);
-  background: rgba(255, 77, 77, 0.16);
+  border: 1px solid var(--primary-soft-border);
+  background: var(--primary-soft);
   color: var(--text-primary);
   font-weight: 700;
   transition: var(--transition);
@@ -49,6 +54,7 @@ const Button = styled.button`
   &:hover {
     transform: translateY(-1px);
     box-shadow: var(--shadow-glow);
+    background: var(--primary-soft-hover);
   }
 
   &:active {
@@ -60,6 +66,27 @@ const Summary = styled.div`
   color: var(--text-tertiary);
 `;
 
+const ClearButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1rem;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+  transition: var(--transition);
+
+  &:hover {
+    background: var(--surface-soft-hover);
+    color: var(--text-primary);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+`;
+
 const normalize = (value) =>
   String(value || '')
     .toLowerCase()
@@ -69,10 +96,15 @@ function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const q = searchParams.get('q') || '';
   const [value, setValue] = useState(q);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     setValue(q);
   }, [q]);
+
+  useEffect(() => {
+    inputRef.current?.focus?.();
+  }, []);
 
   const results = useMemo(() => {
     const query = normalize(q);
@@ -96,6 +128,13 @@ function SearchPage() {
     setSearchParams(next ? { q: next } : {});
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key !== 'Escape') return;
+    setValue('');
+    setSearchParams({});
+    inputRef.current?.focus?.();
+  };
+
   return (
     <PageShell
       title="搜索"
@@ -110,18 +149,33 @@ function SearchPage() {
           name="q"
           aria-label="搜索关键词"
           aria-describedby="guoman-search-page-hint"
+          ref={inputRef}
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="例如：古风 仙侠 / 斗罗 / 绘梦动画"
         />
         <Button type="submit">
           <FiSearch />
           搜索
         </Button>
+        {value ? (
+          <ClearButton
+            type="button"
+            aria-label="清空搜索"
+            onClick={() => {
+              setValue('');
+              setSearchParams({});
+              inputRef.current?.focus?.();
+            }}
+          >
+            清空
+          </ClearButton>
+        ) : null}
       </SearchBar>
 
       {q ? (
-        <Summary>
+        <Summary role="status" aria-live="polite">
           关键词：<strong>{q}</strong> · 共找到 <strong>{results.length}</strong> 部作品
         </Summary>
       ) : null}

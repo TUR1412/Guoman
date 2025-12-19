@@ -1,7 +1,7 @@
 {
   "name": "guoman-world",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "homepage": "https://tur1412.github.io/Guoman",
   "engines": {

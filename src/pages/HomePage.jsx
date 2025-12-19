@@ -1,21 +1,30 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import Banner from '../components/Banner';
 import AnimeList from '../components/AnimeList';
 import Features from '../components/Features';
 import About from '../components/About';
-
-const pageMotion = {
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -10 },
-  transition: { duration: 0.25 },
-};
+import RecentlyViewed from '../components/RecentlyViewed';
+import { usePageMeta } from '../utils/pageMeta';
 
 function HomePage() {
+  const reducedMotion = useReducedMotion();
+
+  const pageMotion = reducedMotion
+    ? { initial: false, animate: false, exit: false }
+    : {
+        initial: { opacity: 0, y: 10 },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -10 },
+        transition: { duration: 0.25 },
+      };
+
+  usePageMeta();
+
   return (
     <motion.div {...pageMotion}>
       <Banner />
+      <RecentlyViewed />
       <AnimeList />
       <Features />
       <About cta={{ to: '/about', label: '了解更多' }} />

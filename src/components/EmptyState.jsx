@@ -26,8 +26,12 @@ const Icon = styled.div`
   border-radius: 16px;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, rgba(255, 77, 77, 0.18), rgba(126, 34, 206, 0.14));
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(
+    135deg,
+    rgba(var(--primary-rgb), 0.18),
+    rgba(126, 34, 206, 0.14)
+  );
+  border: 1px solid var(--border-subtle);
   color: var(--text-primary);
 `;
 
@@ -54,15 +58,15 @@ const PrimaryLink = styled.a`
   justify-content: center;
   padding: 0.75rem 1.25rem;
   border-radius: var(--border-radius-md);
-  border: 1px solid var(--primary-color);
-  background: rgba(255, 77, 77, 0.12);
+  border: 1px solid var(--primary-soft-border);
+  background: var(--primary-soft);
   color: var(--text-primary);
   font-weight: 600;
   transition: var(--transition);
 
   &:hover {
     transform: translateY(-1px);
-    background: rgba(255, 77, 77, 0.16);
+    background: var(--primary-soft-hover);
     box-shadow: var(--shadow-glow);
   }
 `;
@@ -74,13 +78,13 @@ const SecondaryLink = styled.a`
   padding: 0.75rem 1.25rem;
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--surface-soft);
   color: var(--text-primary);
   transition: var(--transition);
 
   &:hover {
     transform: translateY(-1px);
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--surface-soft-hover);
   }
 `;
 

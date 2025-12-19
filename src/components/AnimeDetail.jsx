@@ -17,6 +17,8 @@ import EmptyState from './EmptyState';
 import { useFavorites } from './FavoritesProvider';
 import { useToast } from './ToastProvider';
 import { shareOrCopyLink } from '../utils/share';
+import { recordRecentlyViewed } from '../utils/recentlyViewed';
+import { usePageMeta } from '../utils/pageMeta';
 
 const DetailContainer = styled.section`
   padding-top: var(--spacing-xl);
@@ -205,11 +207,20 @@ const WatchButton = styled.a`
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(255, 77, 77, 0.4);
   }
+
+  &[aria-disabled='true'] {
+    cursor: not-allowed;
+    opacity: 0.6;
+    box-shadow: none;
+    background-color: var(--surface-soft);
+    color: var(--text-tertiary);
+    border: 1px solid var(--border-subtle);
+  }
 `;
 
 const SecondaryButton = styled.button`
   padding: 0.75rem 1.5rem;
-  background-color: ${(p) => (p.$active ? 'rgba(255, 77, 77, 0.18)' : 'rgba(255, 255, 255, 0.08)')};
+  background-color: ${(p) => (p.$active ? 'var(--primary-soft)' : 'var(--surface-soft)')};
   color: ${(p) => (p.$active ? 'var(--text-primary)' : 'var(--text-secondary)')};
   border-radius: var(--border-radius-md);
   font-weight: 500;
@@ -217,10 +228,10 @@ const SecondaryButton = styled.button`
   align-items: center;
   gap: 0.5rem;
   transition: var(--transition);
-  border: 1px solid ${(p) => (p.$active ? 'rgba(255, 77, 77, 0.45)' : 'var(--border-subtle)')};
+  border: 1px solid ${(p) => (p.$active ? 'var(--primary-soft-border)' : 'var(--border-subtle)')};
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: ${(p) => (p.$active ? 'var(--primary-soft-hover)' : 'var(--surface-soft-hover)')};
     transform: translateY(-2px);
   }
 `;
@@ -244,14 +255,15 @@ const Tags = styled.div`
 
 const Tag = styled(Link)`
   padding: 0.25rem 0.75rem;
-  background-color: rgba(255, 77, 77, 0.1);
+  background-color: var(--primary-soft);
+  border: 1px solid var(--primary-soft-border);
   color: var(--primary-color);
   border-radius: var(--border-radius-sm);
   font-size: 0.9rem;
   transition: var(--transition);
 
   &:hover {
-    background-color: rgba(255, 77, 77, 0.2);
+    background-color: var(--primary-soft-hover);
     transform: translateY(-2px);
   }
 `;
@@ -330,7 +342,7 @@ const CharacterAvatar = styled.div`
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: rgba(255, 77, 77, 0.16);
+  background-color: var(--primary-soft);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -456,6 +468,10 @@ function AnimeDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const favorites = useFavorites();
   const toast = useToast();
+  usePageMeta({
+    title: anime ? anime.title : '作品详情',
+    description: anime?.description || '查看国漫详情、评分、剧情与角色信息。',
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -485,6 +501,11 @@ function AnimeDetail() {
 
     fetchAnime();
   }, [id]);
+
+  useEffect(() => {
+    if (!anime?.id) return;
+    recordRecentlyViewed(anime.id);
+  }, [anime?.id]);
 
   if (isLoading) {
     return (
@@ -519,6 +540,8 @@ function AnimeDetail() {
   }
 
   const favorited = favorites.isFavorite(anime.id);
+  const watchHref = anime.watchLinks?.[0]?.url;
+  const isWatchDisabled = !watchHref;
 
   const handleToggleFavorite = () => {
     favorites.toggleFavorite(anime.id);
@@ -610,9 +633,16 @@ function AnimeDetail() {
 
             <ActionButtons>
               <WatchButton
-                href={anime.watchLinks[0]?.url || '#'}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={watchHref || undefined}
+                target={isWatchDisabled ? undefined : '_blank'}
+                rel={isWatchDisabled ? undefined : 'noopener noreferrer'}
+                aria-disabled={isWatchDisabled}
+                tabIndex={isWatchDisabled ? -1 : 0}
+                onClick={(event) => {
+                  if (!isWatchDisabled) return;
+                  event.preventDefault();
+                  toast.info('暂无播放链接', '该作品暂未提供可用播放入口。');
+                }}
               >
                 <FiPlay /> 立即观看
               </WatchButton>

@@ -46,6 +46,7 @@
 
 - 主题：`localStorage -> guoman.theme`
 - 收藏：`localStorage -> guoman.favorites.v1`
+- 最近浏览：`localStorage -> guoman.recent.v1`
 - 收藏备份：在收藏页提供导出/导入（JSON 文件，支持合并/覆盖）
 - 部分筛选/排序：各页面/组件使用独立 key
 
@@ -55,6 +56,14 @@
 - `src/utils/favoritesBackup.js`（备份格式与解析）
 - `src/utils/download.js`（下载工具）
 - `src/utils/theme.js`
+- `src/utils/recentlyViewed.js`
+
+---
+
+## 4.1 页面元信息（Meta）
+
+- `src/utils/pageMeta.js`：统一更新 `document.title` 与 `meta[name="description"]`
+- `PageShell` 与关键页面挂载该逻辑，保证 SPA 也有“像多页应用”的标题体验
 
 ---
 

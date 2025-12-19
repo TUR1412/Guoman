@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useId } from 'react';
 import styled from 'styled-components';
 import { motion, useReducedMotion } from 'framer-motion';
+import { usePageMeta } from '../utils/pageMeta';
 
 const Page = styled(motion.section)`
   padding: var(--spacing-3xl) 0;
@@ -66,6 +67,9 @@ const Content = styled.div`
 
 function PageShell({ title, subtitle, actions, children }) {
   const reducedMotion = useReducedMotion();
+  const titleId = useId();
+  const subtitleId = useId();
+  usePageMeta({ title, description: subtitle });
 
   const pageMotion = reducedMotion
     ? {
@@ -82,14 +86,19 @@ function PageShell({ title, subtitle, actions, children }) {
       };
 
   return (
-    <Page {...pageMotion}>
+    <Page
+      {...pageMotion}
+      role="region"
+      aria-labelledby={title ? titleId : undefined}
+      aria-describedby={subtitle ? subtitleId : undefined}
+    >
       <Inner>
         {(title || subtitle || actions) && (
           <Header>
             <TitleRow>
               <div>
-                {title && <Title>{title}</Title>}
-                {subtitle && <Subtitle>{subtitle}</Subtitle>}
+                {title && <Title id={titleId}>{title}</Title>}
+                {subtitle && <Subtitle id={subtitleId}>{subtitle}</Subtitle>}
               </div>
               {actions && <Actions>{actions}</Actions>}
             </TitleRow>

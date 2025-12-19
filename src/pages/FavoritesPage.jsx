@@ -17,7 +17,7 @@ const ActionButton = styled.button`
   padding: 0.75rem 1.1rem;
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--surface-soft);
   color: var(--text-primary);
   font-weight: 800;
   transition: var(--transition);
@@ -25,6 +25,7 @@ const ActionButton = styled.button`
   &:hover:not(:disabled) {
     transform: translateY(-1px);
     box-shadow: var(--shadow-glow);
+    background: var(--surface-soft-hover);
   }
 
   &:active:not(:disabled) {
@@ -43,8 +44,8 @@ const DangerButton = styled.button`
   gap: 0.5rem;
   padding: 0.75rem 1.1rem;
   border-radius: var(--border-radius-md);
-  border: 1px solid rgba(255, 77, 77, 0.45);
-  background: rgba(255, 77, 77, 0.16);
+  border: 1px solid var(--primary-soft-border);
+  background: var(--primary-soft);
   color: var(--text-primary);
   font-weight: 800;
   transition: var(--transition);
@@ -52,6 +53,7 @@ const DangerButton = styled.button`
   &:hover:not(:disabled) {
     transform: translateY(-1px);
     box-shadow: var(--shadow-glow);
+    background: var(--primary-soft-hover);
   }
 
   &:active:not(:disabled) {
@@ -203,7 +205,7 @@ function FavoritesPage() {
         </>
       }
     >
-      <Summary>
+      <Summary role="status" aria-live="polite">
         共收藏 <strong>{favoriteIds.size}</strong> 部作品 · 支持本地备份/恢复（JSON 文件）
       </Summary>
 

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FiTag } from 'react-icons/fi';
 import PageShell from '../components/PageShell';
+import EmptyState from '../components/EmptyState';
 import newsData from '../data/newsData';
 
 const Grid = styled.div`
@@ -116,18 +117,32 @@ function NewsPage() {
         </TagRow>
       }
     >
-      <Grid>
-        {filtered.map((item) => (
-          <Card key={item.id} to={`/news/${item.id}`} aria-label={`阅读：${item.title}`}>
-            <Title>{item.title}</Title>
-            <Meta>
-              <span>{formatDate(item.date)}</span>
-              <span>{item.tags.join(' · ')}</span>
-            </Meta>
-            <Summary>{item.summary}</Summary>
-          </Card>
-        ))}
-      </Grid>
+      {filtered.length > 0 ? (
+        <Grid role="list">
+          {filtered.map((item) => (
+            <Card
+              key={item.id}
+              to={`/news/${item.id}`}
+              aria-label={`阅读：${item.title}`}
+              role="listitem"
+            >
+              <Title>{item.title}</Title>
+              <Meta>
+                <span>{formatDate(item.date)}</span>
+                <span>{item.tags.join(' · ')}</span>
+              </Meta>
+              <Summary>{item.summary}</Summary>
+            </Card>
+          ))}
+        </Grid>
+      ) : (
+        <EmptyState
+          title="暂无相关资讯"
+          description="换个标签试试，或者稍后再来看看。"
+          primaryAction={{ to: '/recommendations', label: '去看推荐' }}
+          secondaryAction={{ to: '/rankings', label: '看看排行榜' }}
+        />
+      )}
     </PageShell>
   );
 }

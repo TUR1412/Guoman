@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { FiPlay, FiDownload, FiWifi, FiMonitor, FiHeart, FiUsers } from 'react-icons/fi';
 import featuresBackground from '../assets/images/features-background.svg';
 
@@ -156,6 +156,17 @@ const itemVariants = {
 };
 
 function Features() {
+  const reducedMotion = useReducedMotion();
+
+  const containerMotionProps = reducedMotion
+    ? {}
+    : {
+        variants: containerVariants,
+        initial: 'hidden',
+        whileInView: 'visible',
+        viewport: { once: true, amount: 0.1 },
+      };
+
   return (
     <FeaturesContainer>
       <FeaturesInner>
@@ -167,15 +178,13 @@ function Features() {
           </SectionSubtitle>
         </SectionHeader>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-        >
+        <motion.div {...containerMotionProps}>
           <FeaturesGrid>
             {features.map((feature) => (
-              <FeatureCard key={feature.title} variants={itemVariants}>
+              <FeatureCard
+                key={feature.title}
+                variants={reducedMotion ? undefined : itemVariants}
+              >
                 <FeatureIcon>{feature.icon}</FeatureIcon>
                 <FeatureTitle>{feature.title}</FeatureTitle>
                 <FeatureDescription>{feature.description}</FeatureDescription>

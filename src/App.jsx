@@ -173,8 +173,14 @@ function App() {
             <Header />
             <ScrollToTop />
 
-            <MainContent id="main" tabIndex={-1}>
-              <Suspense fallback={<RouteFallback>加载中...</RouteFallback>}>
+            <MainContent id="main" tabIndex={-1} role="main">
+              <Suspense
+                fallback={
+                  <RouteFallback role="status" aria-live="polite">
+                    加载中...
+                  </RouteFallback>
+                }
+              >
                 <AnimatePresence mode="wait">
                   <Routes location={location} key={location.pathname}>
                     <Route path="/" element={<HomePage />} />

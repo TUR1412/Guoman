@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiLock, FiMail, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useToast } from './ToastProvider';
+import { usePageMeta } from '../utils/pageMeta';
 
 const LoginContainer = styled.section`
   min-height: calc(100vh - var(--header-height));
@@ -255,6 +256,13 @@ function Login() {
   });
   const navigate = useNavigate();
   const toast = useToast();
+  usePageMeta({
+    title: activeTab === 'login' ? '登录' : '注册',
+    description:
+      activeTab === 'login'
+        ? '登录国漫世界，继续你的收藏与探索之旅。'
+        : '注册国漫世界账号，解锁更多个性化体验。',
+  });
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

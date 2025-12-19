@@ -268,7 +268,7 @@ function Footer() {
         <FooterBottom>
           <Copyright>&copy; {new Date().getFullYear()} 国漫世界. 保留所有权利.</Copyright>
 
-          <FooterNav>
+          <FooterNav aria-label="页脚导航">
             <FooterNavLink to="/terms">服务条款</FooterNavLink>
             <FooterNavLink to="/privacy">隐私政策</FooterNavLink>
             <FooterNavLink to="/cookies">Cookie 政策</FooterNavLink>

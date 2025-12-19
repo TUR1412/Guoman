@@ -27,8 +27,13 @@ const Input = styled.input`
   padding: 0.85rem 1rem;
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--field-bg);
   color: var(--text-primary);
+
+  &:focus {
+    border-color: var(--primary-color);
+    background: var(--field-bg-focus);
+  }
 
   &::placeholder {
     color: var(--text-tertiary);
@@ -41,8 +46,8 @@ const Button = styled.button`
   gap: 0.5rem;
   padding: 0.85rem 1.1rem;
   border-radius: var(--border-radius-md);
-  border: 1px solid rgba(255, 77, 77, 0.45);
-  background: rgba(255, 77, 77, 0.16);
+  border: 1px solid var(--primary-soft-border);
+  background: var(--primary-soft);
   color: var(--text-primary);
   font-weight: 700;
   transition: var(--transition);
@@ -50,6 +55,7 @@ const Button = styled.button`
   &:hover {
     transform: translateY(-1px);
     box-shadow: var(--shadow-glow);
+    background: var(--primary-soft-hover);
   }
 `;
 
@@ -93,6 +99,8 @@ function ForgotPasswordPage() {
               setSent(false);
             }}
             placeholder="请输入你的邮箱"
+            aria-label="邮箱"
+            autoComplete="email"
             required
           />
           <Button type="submit">

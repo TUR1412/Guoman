@@ -89,3 +89,38 @@
 28. UX：EmptyState 支持使用 React Router 的 `Link`（避免不必要刷新）
 29. A11y：细化表单/控件的 label/description 关联（更可读）
 30. Docs：收口更新 `docs/ITERATIONS.md`（追加 R4 30 次迭代记录）
+
+---
+
+## 3. 30 次原子迭代清单（R5 · 2025-12-19）
+
+1. SEO：新增 `pageMeta`，统一管理标题/描述
+2. SEO：`PageShell` 自动注入页面 Meta
+3. UX：新增最近浏览存储与工具层
+4. UX：最近浏览独立组件（带清空入口）
+5. UX：详情页记录最近浏览
+6. UX：首页展示最近浏览
+7. 搜索：Header 搜索与 URL 参数同步
+8. 搜索：Header 搜索表单语义 + 自动完成关闭
+9. A11y：主内容 `role="main"` + 加载提示语义
+10. A11y：`PageShell` 区域语义与标题关联
+11. 搜索：搜索页支持清空按钮与 ESC 快捷清除
+12. 搜索：搜索页自动聚焦 + 输入框/按钮 tokens 化
+13. Theme：新增 `primary-soft` 系列 tokens
+14. Theme：搜索/找回密码/空状态按钮统一 tokens
+15. Theme：收藏页按钮统一 tokens
+16. Theme：详情页按钮/标签统一 tokens
+17. A11y：AnimeGrid/AnimeCard 列表语义补齐
+18. A11y：资讯列表语义补齐 + 空状态兜底
+19. A11y：收藏计数区域 `aria-live` 提示
+20. A11y：最近浏览区域语义与描述绑定
+21. Motion：首页尊重 `prefers-reduced-motion`
+22. Motion：Features 尊重 `prefers-reduced-motion`
+23. UX：详情页无播放链接时禁用入口
+24. A11y：Toast Host 增加 `aria-atomic`
+25. Test：新增 `recentlyViewed` 基线测试
+26. Test：新增 `pageMeta` 基线测试
+27. Docs：README 一级美化与结构重写
+28. Docs：ARCHITECTURE 补齐 Meta/最近浏览说明
+29. Docs：DESIGN_TOKENS 补齐主色柔和 tokens
+30. Docs：QUARK_AUDIT + ITERATIONS 追加 R5 记录

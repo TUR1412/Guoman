@@ -90,7 +90,7 @@ const NavLink = styled(Link)`
   }
 `;
 
-const SearchContainer = styled.div`
+const SearchForm = styled.form`
   position: relative;
   margin-left: var(--spacing-lg);
 `;
@@ -279,6 +279,13 @@ function Header() {
   }, [location]);
 
   useEffect(() => {
+    if (!location.pathname.startsWith('/search')) return;
+    const params = new URLSearchParams(location.search);
+    const q = params.get('q') || '';
+    setSearchQuery(q);
+  }, [location.pathname, location.search]);
+
+  useEffect(() => {
     if (!isMobileMenuOpen) return undefined;
 
     const body = document.body;
@@ -431,11 +438,9 @@ function Header() {
     navigate(q ? `/search?q=${encodeURIComponent(q)}` : '/search');
   };
 
-  const handleSearchKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      runSearch();
-    }
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    runSearch();
   };
 
   const handleToggleTheme = () => {
@@ -451,7 +456,7 @@ function Header() {
           <span>国漫世界</span>
         </Logo>
 
-        <Nav>
+        <Nav aria-label="主导航">
           <NavLinks>
             {navItems.map((item) => {
               const active = isRouteActive(item.path);
@@ -470,7 +475,7 @@ function Header() {
             })}
           </NavLinks>
 
-          <SearchContainer>
+          <SearchForm role="search" aria-label="站内搜索" onSubmit={handleSearchSubmit}>
             <span id="guoman-search-hint-desktop" className="sr-only">
               快捷键 Ctrl/⌘ + K 可以快速聚焦搜索框
             </span>
@@ -482,12 +487,12 @@ function Header() {
               aria-label="搜索国漫"
               aria-keyshortcuts="Control+K Meta+K"
               aria-describedby="guoman-search-hint-desktop"
+              autoComplete="off"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleSearchKeyDown}
             />
             <SearchIcon />
-          </SearchContainer>
+          </SearchForm>
 
           <LoginButton to="/login">
             <FiUser />
@@ -527,7 +532,12 @@ function Header() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
           >
-            <SearchContainer style={{ margin: '0 0 2rem 0', width: '80%' }}>
+            <SearchForm
+              role="search"
+              aria-label="站内搜索"
+              onSubmit={handleSearchSubmit}
+              style={{ margin: '0 0 2rem 0', width: '80%' }}
+            >
               <span id="guoman-search-hint-mobile" className="sr-only">
                 快捷键 Ctrl/⌘ + K 可以快速聚焦搜索框
               </span>
@@ -539,13 +549,13 @@ function Header() {
                 aria-label="搜索国漫"
                 aria-keyshortcuts="Control+K Meta+K"
                 aria-describedby="guoman-search-hint-mobile"
+                autoComplete="off"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={handleSearchKeyDown}
                 style={{ width: '100%' }}
               />
               <SearchIcon />
-            </SearchContainer>
+            </SearchForm>
 
             <ThemeButton
               type="button"
