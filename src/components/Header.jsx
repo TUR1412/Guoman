@@ -1,10 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FiMenu, FiX, FiSearch, FiSun, FiMoon, FiUser } from 'react-icons/fi';
 import logoSvg from '../assets/images/logo.svg';
 import { getCurrentTheme, toggleTheme } from '../utils/theme';
+import { usePersistedState } from '../utils/usePersistedState';
+import { STORAGE_KEYS } from '../utils/dataKeys';
+import { prefetchRoute } from '../utils/routePrefetch';
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -18,12 +21,28 @@ const HeaderContainer = styled.header`
   border-bottom: 1px solid var(--border-color);
   transition: var(--transition);
   box-shadow: ${(p) => (p.$scrolled ? 'var(--shadow-md)' : 'none')};
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      420px 120px at 20% 0%,
+      rgba(var(--primary-rgb), 0.16),
+      transparent 70%
+    );
+    opacity: ${(p) => (p.$scrolled ? 0.45 : 0.3)};
+  }
 `;
 
 const HeaderInner = styled.div`
-  display: flex;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--spacing-lg);
   align-items: center;
-  justify-content: space-between;
   height: 100%;
   padding: 0 var(--spacing-lg);
   max-width: var(--max-width);
@@ -33,7 +52,8 @@ const HeaderInner = styled.div`
 const Logo = styled(Link)`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
+  grid-column: span 2;
 
   img {
     height: 32px;
@@ -42,6 +62,7 @@ const Logo = styled(Link)`
   span {
     font-weight: 800;
     letter-spacing: -0.02em;
+    font-family: var(--font-display);
   }
 
   @media (max-width: 576px) {
@@ -49,23 +70,46 @@ const Logo = styled(Link)`
       display: none;
     }
   }
+
+  @media (max-width: 992px) {
+    grid-column: span 2;
+  }
+
+  @media (max-width: 768px) {
+    grid-column: 1 / span 10;
+  }
 `;
 
 const Nav = styled.nav`
   display: flex;
   align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  min-width: 0;
+  grid-column: span 5;
+
+  @media (max-width: 1200px) {
+    grid-column: span 4;
+  }
+
+  @media (max-width: 992px) {
+    grid-column: span 3;
+  }
 
   @media (max-width: 768px) {
     display: none;
   }
 `;
 
-const NavLinks = styled.ul`
+const NavLinks = styled.ul.attrs({ 'data-divider': 'inline', role: 'list' })`
   display: flex;
   gap: var(--spacing-lg);
+  row-gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  align-items: center;
 `;
 
-const NavLink = styled(Link)`
+const NavLink = styled(Link).attrs({ 'data-pressable': true })`
   position: relative;
   font-weight: 500;
   color: ${(props) => (props.$active ? 'var(--primary-color)' : 'var(--text-secondary)')};
@@ -90,25 +134,61 @@ const NavLink = styled(Link)`
   }
 `;
 
+const DesktopSearch = styled.div`
+  grid-column: span 3;
+  display: flex;
+  justify-self: end;
+  width: 100%;
+  max-width: clamp(220px, 24vw, 340px);
+
+  @media (max-width: 1200px) {
+    grid-column: span 4;
+    max-width: 100%;
+  }
+
+  @media (max-width: 992px) {
+    grid-column: span 4;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const ActionGroup = styled.div`
+  grid-column: span 2;
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  gap: var(--spacing-sm);
+
+  @media (max-width: 992px) {
+    grid-column: span 3;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
 const SearchForm = styled.form`
   position: relative;
-  margin-left: var(--spacing-lg);
+  width: 100%;
 `;
 
 const SearchInput = styled.input`
   background-color: var(--field-bg);
   border: 1px solid var(--border-subtle);
-  border-radius: 20px;
-  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius-pill);
+  padding: var(--spacing-sm) var(--spacing-md);
   padding-left: 2.5rem;
-  width: 200px;
+  width: 100%;
   color: var(--text-primary);
   transition: var(--transition);
 
   &:focus {
     background-color: var(--field-bg-focus);
     border-color: var(--primary-color);
-    width: 250px;
   }
 
   @media (max-width: 768px) {
@@ -127,47 +207,47 @@ const SearchInput = styled.input`
 const SearchIcon = styled(FiSearch)`
   position: absolute;
   top: 50%;
-  left: 0.75rem;
+  left: var(--spacing-sm-plus);
   transform: translateY(-50%);
   color: var(--text-tertiary);
   pointer-events: none;
 `;
 
-const LoginButton = styled(Link)`
+const LoginButton = styled(Link).attrs({
+  'data-pressable': true,
+})`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--border-radius-md);
   background-color: transparent;
   border: 1px solid var(--primary-color);
   color: var(--primary-color);
   font-weight: 500;
-  margin-left: var(--spacing-lg);
   transition: var(--transition);
 
   &:hover {
     background-color: var(--primary-color);
-    color: white;
+    color: var(--text-on-primary);
   }
 `;
 
-const ThemeButton = styled.button`
+const ThemeButton = styled.button.attrs({ 'data-pressable': true, 'data-focus-guide': true })`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 38px;
   height: 38px;
-  border-radius: 999px;
-  margin-left: var(--spacing-md);
-  border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--border-radius-pill);
+  border: 1px solid var(--control-border);
+  background: var(--control-bg);
   color: var(--text-primary);
   transition: var(--transition);
 
   &:hover {
     transform: translateY(-1px);
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--control-bg-hover);
   }
 
   &:active {
@@ -175,32 +255,37 @@ const ThemeButton = styled.button`
   }
 `;
 
-const MobileMenuButton = styled.button`
+const MobileMenuButton = styled.button.attrs({ 'data-pressable': true })`
   display: none;
-  font-size: 1.5rem;
+  font-size: var(--text-4xl);
   color: var(--text-primary);
+  justify-self: end;
 
   @media (max-width: 768px) {
     display: flex;
+    grid-column: 11 / -1;
   }
 `;
 
-const MobileMenu = styled(motion.div)`
+
+const MobileMenu = styled(motion.nav)`
   position: fixed;
   top: var(--header-height);
   left: 0;
   width: 100%;
   height: calc(100vh - var(--header-height));
-  background-color: var(--dark-color);
+  background: var(--surface-ink);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   padding-top: var(--spacing-xl);
   z-index: 99;
+  border-top: 1px solid var(--border-subtle);
+  backdrop-filter: blur(16px);
 `;
 
-const MobileNavLinks = styled.ul`
+const MobileNavLinks = styled.ul.attrs({ 'data-divider': 'list', role: 'list' })`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -208,8 +293,8 @@ const MobileNavLinks = styled.ul`
   width: 100%;
 `;
 
-const MobileNavLink = styled(Link)`
-  font-size: 1.5rem;
+const MobileNavLink = styled(Link).attrs({ 'data-pressable': true })`
+  font-size: var(--text-4xl);
   font-weight: 500;
   color: ${(props) => (props.$active ? 'var(--primary-color)' : 'var(--text-secondary)')};
 
@@ -218,21 +303,22 @@ const MobileNavLink = styled(Link)`
   }
 `;
 
-const MobileLoginButton = styled(Link)`
+const MobileLoginButton = styled(Link).attrs({ 'data-pressable': true })`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
   width: 80%;
-  padding: 0.75rem 0;
+  padding: var(--spacing-sm-plus) 0;
   border-radius: var(--border-radius-md);
   background-color: var(--primary-color);
-  color: white;
+  color: var(--text-on-primary);
   font-weight: 500;
   margin-top: var(--spacing-xl);
 
   &:hover {
-    background-color: #e64545;
+    background-color: var(--primary-color);
+    filter: brightness(1.05);
   }
 `;
 
@@ -243,6 +329,7 @@ const navItems = [
   { title: '排行榜', path: '/rankings' },
   { title: '最新资讯', path: '/news' },
   { title: '关于我们', path: '/about' },
+  { title: '用户中心', path: '/profile' },
 ];
 
 function Header() {
@@ -250,9 +337,21 @@ function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [theme, setTheme] = useState(() => getCurrentTheme());
+  const [shortcutSettings] = usePersistedState(STORAGE_KEYS.shortcuts, { enabled: true }, {
+    serialize: (value) => JSON.stringify(value),
+    deserialize: (raw) => {
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return { enabled: true };
+      }
+    },
+  });
   const desktopSearchRef = useRef(null);
   const mobileSearchRef = useRef(null);
   const mobileMenuRef = useRef(null);
+  const desktopSearchId = useId();
+  const mobileSearchId = useId();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -382,6 +481,7 @@ function Header() {
   }, [isMobileMenuOpen]);
 
   useEffect(() => {
+    if (!shortcutSettings?.enabled) return undefined;
     const onKeyDown = (e) => {
       const key = String(e.key || '').toLowerCase();
       const modifier = e.ctrlKey || e.metaKey;
@@ -416,7 +516,7 @@ function Header() {
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [isMobileMenuOpen]);
+  }, [isMobileMenuOpen, shortcutSettings?.enabled]);
 
   useEffect(() => {
     const onStorage = (e) => {
@@ -449,10 +549,25 @@ function Header() {
   };
 
   return (
-    <HeaderContainer $scrolled={isScrolled}>
+    <HeaderContainer
+      $scrolled={isScrolled}
+      aria-label="站点顶部导航"
+      aria-describedby="guoman-header-desc"
+    >
+      <span id="guoman-header-desc" className="sr-only">
+        包含主导航、站内搜索、登录入口与主题切换。
+      </span>
       <HeaderInner>
         <Logo to="/">
-          <img src={logoSvg} alt="国漫世界 Logo" decoding="async" />
+          <img
+            src={logoSvg}
+            alt="国漫世界 Logo"
+            decoding="async"
+            loading="eager"
+            fetchPriority="high"
+            width="40"
+            height="40"
+          />
           <span>国漫世界</span>
         </Logo>
 
@@ -467,6 +582,8 @@ function Header() {
                     to={item.path}
                     $active={active}
                     aria-current={active ? 'page' : undefined}
+                    onMouseEnter={() => prefetchRoute(item.path)}
+                    onFocus={() => prefetchRoute(item.path)}
                   >
                     {item.title}
                   </NavLink>
@@ -474,16 +591,22 @@ function Header() {
               );
             })}
           </NavLinks>
+        </Nav>
 
+        <DesktopSearch>
           <SearchForm role="search" aria-label="站内搜索" onSubmit={handleSearchSubmit}>
+            <label className="sr-only" htmlFor={desktopSearchId}>
+              搜索国漫
+            </label>
             <span id="guoman-search-hint-desktop" className="sr-only">
-              快捷键 Ctrl/⌘ + K 可以快速聚焦搜索框
+              快捷键 Ctrl/? + K 可以快速聚焦搜索框
             </span>
             <SearchInput
               ref={desktopSearchRef}
+              id={desktopSearchId}
               type="search"
               name="q"
-              placeholder="搜索国漫...（Ctrl/⌘ + K）"
+              placeholder="搜索国漫...（Ctrl/? + K）"
               aria-label="搜索国漫"
               aria-keyshortcuts="Control+K Meta+K"
               aria-describedby="guoman-search-hint-desktop"
@@ -493,8 +616,14 @@ function Header() {
             />
             <SearchIcon />
           </SearchForm>
+        </DesktopSearch>
 
-          <LoginButton to="/login">
+        <ActionGroup>
+          <LoginButton
+            to="/login"
+            onMouseEnter={() => prefetchRoute('/login')}
+            onFocus={() => prefetchRoute('/login')}
+          >
             <FiUser />
             登录/注册
           </LoginButton>
@@ -504,16 +633,18 @@ function Header() {
             onClick={handleToggleTheme}
             aria-label={theme === 'dark' ? '切换到浅色主题' : '切换到深色主题'}
             title={theme === 'dark' ? '浅色主题' : '深色主题'}
+            aria-pressed={theme === 'dark'}
           >
             {theme === 'dark' ? <FiSun /> : <FiMoon />}
           </ThemeButton>
-        </Nav>
+        </ActionGroup>
 
         <MobileMenuButton
           type="button"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label={isMobileMenuOpen ? '关闭菜单' : '打开菜单'}
           aria-expanded={isMobileMenuOpen}
+          aria-pressed={isMobileMenuOpen}
           aria-controls="guoman-mobile-menu"
         >
           {isMobileMenuOpen ? <FiX /> : <FiMenu />}
@@ -536,13 +667,17 @@ function Header() {
               role="search"
               aria-label="站内搜索"
               onSubmit={handleSearchSubmit}
-              style={{ margin: '0 0 2rem 0', width: '80%' }}
+              style={{ margin: '0 0 var(--spacing-xl) 0', width: '80%' }}
             >
+              <label className="sr-only" htmlFor={mobileSearchId}>
+                搜索国漫
+              </label>
               <span id="guoman-search-hint-mobile" className="sr-only">
                 快捷键 Ctrl/⌘ + K 可以快速聚焦搜索框
               </span>
               <SearchInput
                 ref={mobileSearchRef}
+                id={mobileSearchId}
                 type="search"
                 name="q"
                 placeholder="搜索国漫...（Ctrl/⌘ + K）"
@@ -562,7 +697,8 @@ function Header() {
               onClick={handleToggleTheme}
               aria-label={theme === 'dark' ? '切换到浅色主题' : '切换到深色主题'}
               title={theme === 'dark' ? '浅色主题' : '深色主题'}
-              style={{ marginLeft: 0, marginBottom: '1.25rem' }}
+              aria-pressed={theme === 'dark'}
+              style={{ marginLeft: 0, marginBottom: 'var(--spacing-lg-compact)' }}
             >
               {theme === 'dark' ? <FiSun /> : <FiMoon />}
             </ThemeButton>
@@ -577,6 +713,8 @@ function Header() {
                       to={item.path}
                       $active={active}
                       aria-current={active ? 'page' : undefined}
+                      onMouseEnter={() => prefetchRoute(item.path)}
+                      onFocus={() => prefetchRoute(item.path)}
                     >
                       {item.title}
                     </MobileNavLink>
@@ -585,7 +723,11 @@ function Header() {
               })}
             </MobileNavLinks>
 
-            <MobileLoginButton to="/login">
+            <MobileLoginButton
+              to="/login"
+              onMouseEnter={() => prefetchRoute('/login')}
+              onFocus={() => prefetchRoute('/login')}
+            >
               <FiUser />
               登录/注册
             </MobileLoginButton>
@@ -597,3 +739,7 @@ function Header() {
 }
 
 export default Header;
+
+
+
+

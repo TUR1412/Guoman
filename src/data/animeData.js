@@ -452,4 +452,19 @@ export const categories = [
   { id: 10, name: '冒险' },
 ];
 
+export const animeIndex = new Map(animeData.map((anime) => [anime.id, anime]));
+
+export const selectAnimeByIds = (ids = []) =>
+  ids.map((id) => animeIndex.get(id)).filter(Boolean);
+
+export const selectAnimeByCategory = (categoryName) =>
+  animeData.filter((anime) => anime.tags.some((tag) => tag === categoryName));
+
+export const tagCounts = animeData.reduce((acc, anime) => {
+  (anime.tags || []).forEach((tag) => {
+    acc[tag] = (acc[tag] || 0) + 1;
+  });
+  return acc;
+}, {});
+
 export default animeData;

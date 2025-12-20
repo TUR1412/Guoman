@@ -30,8 +30,9 @@
 `src/assets/styles/global.css` 定义了主题变量与基础组件规范：
 
 - `:root[data-theme='dark'|'light']`：主题原子性（背景/文本/边框/卡片统一切换）
-- Aurora Mesh 渐变背景 + Noise 纹理：拒绝纯色死白/死黑
+- 墨韵 + Aurora 渐变背景 + Noise 纹理：拒绝纯色死白/死黑
 - `prefers-reduced-motion`：动效降级护栏
+- 字体体系：`Noto Sans SC`（正文）+ `ZCOOL XiaoWei/Noto Serif SC`（标题）
 
 主题状态与首帧初始化：
 
@@ -47,6 +48,7 @@
 - 主题：`localStorage -> guoman.theme`
 - 收藏：`localStorage -> guoman.favorites.v1`
 - 最近浏览：`localStorage -> guoman.recent.v1`
+- 观看进度：`localStorage -> guoman.watchProgress.v1`
 - 收藏备份：在收藏页提供导出/导入（JSON 文件，支持合并/覆盖）
 - 部分筛选/排序：各页面/组件使用独立 key
 
@@ -57,6 +59,8 @@
 - `src/utils/download.js`（下载工具）
 - `src/utils/theme.js`
 - `src/utils/recentlyViewed.js`
+- `src/utils/watchProgress.js`
+- `src/components/ContinueWatching.jsx`
 
 ---
 

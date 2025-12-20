@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { motion, AnimatePresence, MotionConfig } from 'framer-motion';
+import { motion, AnimatePresence, LayoutGroup, MotionConfig } from 'framer-motion';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -9,6 +9,8 @@ import ScrollToTop from './components/ScrollToTop';
 import { FavoritesProvider } from './components/FavoritesProvider';
 import { ToastProvider } from './components/ToastProvider';
 import { safeSessionStorageGet, safeSessionStorageSet } from './utils/storage';
+import { prefetchRoutes } from './utils/routePrefetch';
+import { trackEvent } from './utils/analytics';
 
 // 页面
 import HomePage from './pages/HomePage';
@@ -26,6 +28,7 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
 const Login = lazy(() => import('./components/Login'));
 const AnimeDetail = lazy(() => import('./components/AnimeDetail'));
+const UserCenterPage = lazy(() => import('./pages/UserCenterPage'));
 
 const AppContainer = styled.div`
   min-height: 100vh;
@@ -61,10 +64,10 @@ const LoadingLogo = styled(motion.div)`
   font-weight: bold;
   color: var(--primary-color);
   font-family: 'Noto Sans SC', sans-serif;
-  text-shadow: 0 0 10px rgba(255, 77, 77, 0.35);
+  text-shadow: var(--text-glow-primary);
 `;
 
-const RouteFallback = styled.div`
+const RouteFallback = styled(motion.div)`
   min-height: calc(100vh - var(--header-height));
   display: grid;
   place-items: center;
@@ -105,10 +108,16 @@ function App() {
     }
 
     const prefetch = () => {
-      void import('./pages/RecommendationsPage');
-      void import('./pages/RankingsPage');
-      void import('./pages/NewsPage');
-      void import('./pages/FavoritesPage');
+      prefetchRoutes([
+        '/recommendations',
+        '/rankings',
+        '/news',
+        '/favorites',
+        '/search',
+        '/about',
+        '/login',
+        '/profile',
+      ]);
     };
 
     if (typeof window.requestIdleCallback === 'function') {
@@ -118,6 +127,61 @@ function App() {
 
     const timeoutId = window.setTimeout(prefetch, 1200);
     return () => window.clearTimeout(timeoutId);
+  }, []);
+
+  useEffect(() => {
+    trackEvent('page.view', { path: location.pathname });
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    let rafId = null;
+    const update = () => {
+      rafId = null;
+      document.documentElement.style.setProperty('--scroll-y', `${window.scrollY || 0}px`);
+    };
+
+    const onScroll = () => {
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const markLoaded = (img) => {
+      if (!img || img.dataset.loaded === 'true') return;
+      img.dataset.loaded = 'true';
+    };
+
+    const onLoad = (event) => {
+      const target = event.target;
+      if (target && target.tagName === 'IMG') {
+        markLoaded(target);
+      }
+    };
+
+    const images = document.querySelectorAll('img');
+    images.forEach((img) => {
+      if (img.complete) {
+        markLoaded(img);
+      }
+    });
+
+    document.addEventListener('load', onLoad, true);
+    return () => document.removeEventListener('load', onLoad, true);
   }, []);
 
   return (
@@ -176,13 +240,21 @@ function App() {
             <MainContent id="main" tabIndex={-1} role="main">
               <Suspense
                 fallback={
-                  <RouteFallback role="status" aria-live="polite">
-                    加载中...
+                  <RouteFallback
+                    data-skeleton
+                    role="status"
+                    aria-live="polite"
+                    initial={{ opacity: 0.6, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35 }}
+                  >
+                    正在加载页面...
                   </RouteFallback>
                 }
               >
-                <AnimatePresence mode="wait">
-                  <Routes location={location} key={location.pathname}>
+                <LayoutGroup id="guoman-routes">
+                  <AnimatePresence mode="wait">
+                    <Routes location={location} key={location.pathname}>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/recommendations" element={<RecommendationsPage />} />
                     <Route path="/favorites" element={<FavoritesPage />} />
@@ -197,6 +269,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                     <Route path="/anime/:id" element={<AnimeDetail />} />
+                    <Route path="/profile" element={<UserCenterPage />} />
 
                     <Route path="/help" element={<StaticPage page="help" />} />
                     <Route path="/faq" element={<StaticPage page="faq" />} />
@@ -210,8 +283,9 @@ function App() {
                     <Route path="/accessibility" element={<StaticPage page="accessibility" />} />
 
                     <Route path="*" element={<NotFoundPage />} />
-                  </Routes>
-                </AnimatePresence>
+                    </Routes>
+                  </AnimatePresence>
+                </LayoutGroup>
               </Suspense>
             </MainContent>
 

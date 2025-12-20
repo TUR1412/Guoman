@@ -110,3 +110,160 @@
 | 28   | （本提交） | Docs：ARCHITECTURE 补齐 Meta/最近浏览说明       |
 | 29   | （本提交） | Docs：DESIGN_TOKENS 补齐主色柔和 tokens         |
 | 30   | （本提交） | Docs：QUARK_AUDIT + ITERATIONS 追加 R5 记录     |
+
+## 第 6 轮（R6 · 夸克级 50 次）
+
+| 迭代 | Commit     | 原子改进 |
+| ---- | ---------- | ---------------------------------------------- |
+| 1    | （本提交） | 视觉：新增墨韵国风主色/副色/点缀色 tokens         |
+| 2    | （本提交） | 视觉：新增字体 tokens（正文/标题）并落地           |
+| 3    | （本提交） | 视觉：全局背景升级为墨韵 + 极光 Mesh              |
+| 4    | （本提交） | 视觉：新增 control/progress/overlay tokens        |
+| 5    | （本提交） | 资源：引入 ZCOOL XiaoWei / Noto Serif SC         |
+| 6    | （本提交） | 缓存：更新 favicon/manifest 版本号               |
+| 7    | （本提交） | Banner：遮罩改为 `--hero-overlay`                |
+| 8    | （本提交） | Banner：分页/导航按钮 tokens 化                   |
+| 9    | （本提交） | Banner：CTA 渐变升级 + 阴影强化                   |
+| 10   | （本提交） | Banner：新增“题签式”标签                          |
+| 11   | （本提交） | Features：改为 Bento Grid 排布                   |
+| 12   | （本提交） | Features：卡片 hover/边框 tokens 化              |
+| 13   | （本提交） | Features：图标改为“印章质感”胶囊                  |
+| 14   | （本提交） | AnimeCard：收藏按钮 tokens 化                    |
+| 15   | （本提交） | AnimeCard：收藏状态高亮统一                      |
+| 16   | （本提交） | AnimeCard：新增观看进度浮层                      |
+| 17   | （本提交） | ContinueWatching：新增组件骨架                   |
+| 18   | （本提交） | Home：接入“继续观看”入口                         |
+| 19   | （本提交） | watchProgress：新增持久化工具层                  |
+| 20   | （本提交） | watchProgress：新增事件订阅/跨页同步             |
+| 21   | （本提交） | watchProgress：新增单元测试基线                  |
+| 22   | （本提交） | AnimeDetail：新增观看进度面板                    |
+| 23   | （本提交） | AnimeDetail：集数输入与进度滑块                  |
+| 24   | （本提交） | AnimeDetail：快捷进度按钮（半程/追到最新）        |
+| 25   | （本提交） | AnimeDetail：进度清空入口                        |
+| 26   | （本提交） | AnimeDetail：封面遮罩 tokens 化                  |
+| 27   | （本提交） | AnimeList：查看更多按钮 tokens 化                |
+| 28   | （本提交） | Header：主题切换按钮 tokens 化                   |
+| 29   | （本提交） | Header：移动登录按钮 hover tokens 化             |
+| 30   | （本提交） | Footer：社交按钮 tokens 化                       |
+| 31   | （本提交） | EmptyState：图标渐变使用 accent tokens           |
+| 32   | （本提交） | NewsPage：卡片 hover 边框 tokens 化              |
+| 33   | （本提交） | NewsDetail：标签底色 tokens 化                   |
+| 34   | （本提交） | ForgotPassword：成功提示 tokens 化               |
+| 35   | （本提交） | Toast：状态色 tokens 化                          |
+| 36   | （本提交） | AppErrorBoundary：按钮/代码块 tokens 化          |
+| 37   | （本提交） | About：标题下划线渐变升级                        |
+| 38   | （本提交） | About：数据数字改为金色强调                      |
+| 39   | （本提交） | About：CTA 阴影与 hover 优化                     |
+| 40   | （本提交） | Global：新增 success/info/warning 语义色 tokens  |
+| 41   | （本提交） | Global：新增 overlay/progress tokens             |
+| 42   | （本提交） | Global：标题字体统一为 display font              |
+| 43   | （本提交） | Global：背景噪点 + 纸张光晕层级化                |
+| 44   | （本提交） | Global：主题背景提升对比度                       |
+| 45   | （本提交） | Docs：ARCHITECTURE 补齐观看进度说明              |
+| 46   | （本提交） | Docs：DESIGN_TOKENS 补齐新 tokens 说明           |
+| 47   | （本提交） | Docs：新增 1000 微任务清单                       |
+| 48   | （本提交） | Task_Status：更新 R6 执行清单                    |
+| 49   | （本提交） | ContinueWatching：区域语义与 aria-live 提示      |
+| 50   | （本提交） | AnimeCard：进度条对比度优化                      |
+
+## 第 7 轮（R7 · 夸克级 250 次）
+
+| 迭代 | Commit     | 原子改进 |
+| ---- | ---------- | ---------------------------------------------- |
+| 1    | （本提交） | 批次开启：生成 R7 250 清单文档                 |
+| 2    | （本提交） | PageShell：新增徽章/Meta 行与装饰光晕          |
+| 3    | （本提交） | 全局：新增 stamp/divider/scrollbar tokens      |
+| 4    | （本提交） | 排行榜：Top3 卡片加入封面遮罩                  |
+| 5    | （本提交） | 搜索页：热门标签快选                           |
+| 6    | （本提交） | 收藏页：显示最近更新时间                       |
+| 7    | （本提交） | 资讯列表：首卡放大（Bento）                    |
+| 8    | （本提交） | 继续观看：时间提示                             |
+| 9    | （本提交） | 最近浏览：数量提示                             |
+| 10   | （本提交） | 多页面：新增 badge 元信息                       |
+| 11   | （本提交） | 排行榜：Top3 卡片可点击跳转详情                |
+| 12   | （本提交） | 搜索页：新增搜索历史与清空入口                 |
+| 13   | （本提交） | 收藏页：新增排序切换                           |
+| 14   | （本提交） | 分类页：新增排序切换                           |
+| 15   | （本提交） | 标签页：新增排序切换                           |
+| 16   | （本提交） | 资讯详情：新增分享入口                         |
+| 17   | （本提交） | 搜索页：热门标签点击同步历史                   |
+| 18   | （本提交） | Theme：新增主色阴影/文字光晕/禁用态 tokens     |
+| 19   | （本提交） | Theme：CTA/登录/详情按钮阴影统一为 tokens      |
+| 20   | （本提交） | Theme：EmptyState/PageShell 渐变 tokens 化     |
+| 21   | （本提交） | Theme：WCAG AA 对比度增强（文本/边框/控件）    |
+| 22   | （本提交） | Theme：滚动条/徽章/卡片对比度提升              |
+| 23   | （本提交） | Glass：AnimeCard/Features/Login 增强玻璃层级   |
+| 24   | （本提交） | Glass：AnimeDetail 详情块统一 blur 层          |
+| 25   | （本提交） | Theme：新增 pill 圆角 token 并替换硬编码       |
+| 26   | （本提交） | Theme：统一圆角等级（卡片/标签/输入/滚动条）   |
+| 27   | （本提交） | Theme：surface tokens 注入纸张纹理渐变         |
+| 28   | （本提交） | Theme：surface-ink/surface-glass 质感升级      |
+| 29   | （本提交） | Theme：优化 divider/hero/app-bg 渐变过渡       |
+| 30   | （本提交） | Theme：新增背景光晕层以提升层次                |
+| 31   | （本提交） | Theme：新增 shadow-ring token 并替换徽标阴影   |
+| 32   | （本提交） | Theme：阴影体系收敛到单一 token 集             |
+| 33   | （本提交） | Layout：AnimeGrid 启用 Bento 栅格与焦点规则    |
+| 34   | （本提交） | Layout：分类/标签/收藏/搜索/排行落地 Bento     |
+| 35   | （本提交） | Layout：资讯列表 Bento 化并强化首卡焦点        |
+| 36   | （本提交） | Header：导航/搜索/操作分区重构（Bento）        |
+| 37   | （本提交） | Banner：主视觉拆分 + 右侧速览卡                |
+| 38   | （本提交） | AnimeDetail：封面/信息区 12 栅格重排           |
+| 39   | （本提交） | Features：升级 12 栅格并重设跨度规则           |
+| 40   | （本提交） | About：数据统计改为 Bento 卡片                 |
+| 41   | （本提交） | Footer：品牌卡片强化 + 栅格对齐                |
+| 42   | （本提交） | PageShell：标题区升级 12 栅格布局              |
+| 43   | （本提交） | Login：双栏 Bento + 权益侧栏                   |
+| 44   | （本提交） | ForgotPassword：表单/提示双卡布局              |
+| 45   | （本提交） | NewsDetail：正文 + 侧栏信息卡                  |
+| 46   | （本提交） | EmptyState：图标/内容栅格重排                  |
+| 47   | （本提交） | AppErrorBoundary：主信息 + 快速排查侧栏        |
+| 48   | （本提交） | StaticPage：内容卡片 Bento 网格                |
+| 49   | （本提交） | Toast：提示卡片升级为 12 栅格                  |
+| 50   | （本提交） | Tokens：新增反白文字 + 社交品牌色              |
+
+## 第 8 轮（R8 · 夸克级 250 次）
+
+| 迭代 | Commit     | 原子改进 |
+| ---- | ---------- | ---------------------------------------------- |
+| 1    | （本提交） | 批次开启：生成 R8 250 清单文档                 |
+| 2    | （本提交） | 设计 tokens：新增排版/行高层级变量             |
+| 3    | （本提交） | 设计 tokens：新增微间距 spacing 变量           |
+| 4    | （本提交） | 全组件字号/行高替换为 tokens                   |
+| 5    | （本提交） | 全组件 padding/gap 替换为 spacing tokens       |
+| 6    | （本提交） | 全组件：Divider 标记与 Card/Pressable 统一     |
+| 7    | （本提交） | 全局：Hover/Active/Disabled 统一交互状态        |
+| 8    | （本提交） | 全局：响应式断点缩放（spacing/header/字号）     |
+| 9    | （本提交） | Motion：stagger/视差/点击反馈统一机制           |
+| 10   | （本提交） | 路由：LayoutGroup + 页面 layout 动效贯通       |
+| 11   | （本提交） | A11y：列表语义/aria-selected/控件标签补齐      |
+| 12   | （本提交） | UI：修复若干间距/拼写/样式异常                  |
+
+## 第 9 轮（R9 · 夸克级 250 次）
+
+| 迭代 | Commit     | 原子改进 |
+| ---- | ---------- | ---------------------------------------------- |
+| 1    | （本提交） | 批次开启：生成 R9 250 清单文档                 |
+| 2    | （本提交） | Motion：prefers-reduced-motion 全量覆盖        |
+| 3    | （本提交） | Motion：关键 CTA shimmer/focus-guide 补齐      |
+| 4    | （本提交） | 体验：骨架淡入与滚动定位柔性过渡               |
+| 5    | （本提交） | 体验：图片加载渐显与动效性能稳定               |
+| 6    | （本提交） | A11y：Header/搜索表单 label 关联补齐           |
+| 7    | （本提交） | A11y：登录/找回密码/详情表单 label 补齐         |
+| 8    | （本提交） | A11y：列表语义与描述关联完善                   |
+| 9    | （本提交） | A11y：EmptyState/Toast/ErrorBoundary 语义补齐  |
+| 10   | （本提交） | UI：多页面 CTA 统一 shimmer/focus 引导         |
+
+## 第 10 轮（R10 · 夸克级 250 次）
+
+| 迭代 | Commit     | 原子改进 |
+| ---- | ---------- | ---------------------------------------------- |
+| 1    | （本提交） | 批次开启：生成 R10 250 清单文档                |
+| 2    | （本提交） | 工程：路由 chunk 拆分 + hover/idle 预取        |
+| 3    | （本提交） | 性能：CLS/LCP/FID 监控与关键图片占位           |
+| 4    | （本提交） | SEO：结构化数据 + OG/Twitter + sitemap 更新    |
+| 5    | （本提交） | 资源：字体预连接/预加载与 SVG 优化脚本         |
+| 6    | （本提交） | 工具：Bundle 报告 + Lighthouse 基线生成        |
+| 7    | （本提交） | 业务：用户中心与本地数据仓库导入导出            |
+| 8    | （本提交） | 业务：收藏分组/评论/通知/反馈持久化             |
+| 9    | （本提交） | 体验：空状态引导与虚拟滚动预案                  |
+| 10   | （本提交） | 测试：新增数据仓库/缓存单元测试                |

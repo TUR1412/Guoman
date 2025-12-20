@@ -10,6 +10,8 @@ import {
   getDefaultSitemapRoutes,
   normalizeHomepage,
 } from './seo.js';
+const CATEGORY_SLUGS = ['action', 'fantasy', 'ancient', 'scifi', 'comedy'];
+const TAGS = ['热血', '古风', '玄幻', '科幻', '奇幻', '仙侠', '武侠', '悬疑', '推理', '冒险', '搞笑'];
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,7 +51,13 @@ const main = async () => {
   }
 
   const lastmod = getStableLastmod();
-  const routes = getDefaultSitemapRoutes();
+  const animeIds = Array.from({ length: 12 }, (_, idx) => idx + 1);
+  const tags = TAGS;
+  const routes = getDefaultSitemapRoutes({
+    animeIds,
+    tags,
+    categorySlugs: CATEGORY_SLUGS,
+  });
 
   await fs.mkdir(publicDir, { recursive: true });
   await fs.writeFile(path.join(publicDir, 'robots.txt'), buildRobotsTxt(homepage), 'utf-8');

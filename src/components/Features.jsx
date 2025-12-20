@@ -6,9 +6,11 @@ import featuresBackground from '../assets/images/features-background.svg';
 
 const FeaturesContainer = styled.section`
   padding: var(--spacing-3xl) 0;
-  background-color: rgba(0, 0, 0, 0.06);
+  background: var(--surface-ink);
   position: relative;
   overflow: hidden;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
 
   &::before {
     content: '';
@@ -23,7 +25,7 @@ const FeaturesContainer = styled.section`
   }
 `;
 
-const FeaturesInner = styled.div`
+const FeaturesInner = styled.div.attrs({ 'data-divider': 'list' })`
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 var(--spacing-lg);
@@ -36,24 +38,24 @@ const SectionHeader = styled.div`
 
 const SectionSubtitle = styled.p`
   color: var(--text-tertiary);
-  font-size: 1.1rem;
+  font-size: var(--text-lg);
   margin-top: var(--spacing-md);
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
 
   @media (max-width: 576px) {
-    font-size: 1rem;
+    font-size: var(--text-base);
   }
 `;
 
-const FeaturesGrid = styled.div`
+const FeaturesGrid = styled.div.attrs({ role: 'list', 'data-stagger': true })`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--spacing-xl);
 
   @media (max-width: 992px) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   @media (max-width: 576px) {
@@ -61,18 +63,59 @@ const FeaturesGrid = styled.div`
   }
 `;
 
-const FeatureCard = styled(motion.div)`
+const FeatureCard = styled(motion.div).attrs({
+  role: 'listitem',
+  'data-card': true,
+  'data-divider': 'card',
+})`
   background: var(--surface-glass);
   border-radius: var(--border-radius-md);
   padding: var(--spacing-xl);
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border-subtle);
   transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  grid-column: span 4;
+  backdrop-filter: blur(12px);
+
+  &:nth-child(1) {
+    grid-column: span 6;
+  }
+
+  &:nth-child(2) {
+    grid-column: span 6;
+  }
+
+  &:nth-child(5) {
+    grid-column: span 4;
+  }
+
+  &:nth-child(6) {
+    grid-column: span 12;
+  }
+
+  @media (max-width: 992px) {
+    grid-column: span 1;
+  }
 
   &:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-lg);
-    border-color: rgba(255, 77, 77, 0.3);
+    border-color: var(--chip-border-hover);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      180px 120px at 85% 0%,
+      var(--primary-soft),
+      transparent 70%
+    );
+    opacity: 0.6;
+    pointer-events: none;
   }
 `;
 
@@ -80,18 +123,19 @@ const FeatureIcon = styled.div`
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  background: var(--surface-paper);
+  border: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: var(--spacing-lg);
-  font-size: 1.5rem;
-  color: white;
-  box-shadow: 0 4px 12px rgba(255, 77, 77, 0.2);
+  font-size: var(--text-4xl);
+  color: var(--primary-color);
+  box-shadow: var(--shadow-primary-soft);
 `;
 
 const FeatureTitle = styled.h3`
-  font-size: 1.2rem;
+  font-size: var(--text-lg-plus);
   font-weight: 600;
   margin-bottom: var(--spacing-md);
   color: var(--text-primary);
@@ -99,7 +143,7 @@ const FeatureTitle = styled.h3`
 
 const FeatureDescription = styled.p`
   color: var(--text-tertiary);
-  line-height: 1.6;
+  line-height: var(--leading-normal);
 `;
 
 const features = [
@@ -157,6 +201,8 @@ const itemVariants = {
 
 function Features() {
   const reducedMotion = useReducedMotion();
+  const titleId = 'features-title';
+  const subtitleId = 'features-subtitle';
 
   const containerMotionProps = reducedMotion
     ? {}
@@ -168,11 +214,13 @@ function Features() {
       };
 
   return (
-    <FeaturesContainer>
+    <FeaturesContainer aria-labelledby={titleId} aria-describedby={subtitleId}>
       <FeaturesInner>
         <SectionHeader>
-          <h2 className="section-title">我们的特色</h2>
-          <SectionSubtitle>
+          <h2 className="section-title" id={titleId}>
+            我们的特色
+          </h2>
+          <SectionSubtitle id={subtitleId}>
             国漫世界致力于为您提供最优质的国漫内容与服务体验，
             让每一位国漫爱好者都能尽情享受中国动漫的魅力
           </SectionSubtitle>
@@ -198,3 +246,6 @@ function Features() {
 }
 
 export default Features;
+
+
+

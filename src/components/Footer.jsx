@@ -17,13 +17,33 @@ const FooterInner = styled.div`
 
 const FooterTop = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--spacing-xl);
   padding-bottom: var(--spacing-xl);
   border-bottom: 1px solid var(--border-color);
 
+  & > :nth-child(1) {
+    grid-column: span 5;
+  }
+
+  & > :nth-child(2) {
+    grid-column: span 2;
+  }
+
+  & > :nth-child(3) {
+    grid-column: span 2;
+  }
+
+  & > :nth-child(4) {
+    grid-column: span 3;
+  }
+
   @media (max-width: 992px) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    & > * {
+      grid-column: span 1;
+    }
   }
 
   @media (max-width: 576px) {
@@ -47,12 +67,43 @@ const FooterBottom = styled.div`
 
 const FooterColumn = styled.div``;
 
+const FooterBrand = styled(FooterColumn).attrs({ 'data-card': true, 'data-divider': 'card' })`
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-glass);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      200px 120px at 10% 0%,
+      var(--primary-soft),
+      transparent 70%
+    );
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  & > * {
+    position: relative;
+    z-index: 1;
+  }
+`;
+
 const FooterLogo = styled(Link)`
-  font-size: 1.5rem;
+  font-size: var(--text-4xl);
   font-weight: 700;
   color: var(--text-primary);
   display: inline-block;
   margin-bottom: var(--spacing-md);
+  font-family: var(--font-display);
 
   span {
     background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
@@ -63,20 +114,20 @@ const FooterLogo = styled(Link)`
 
 const FooterDescription = styled.p`
   color: var(--text-tertiary);
-  line-height: 1.6;
+  line-height: var(--leading-normal);
   margin-bottom: var(--spacing-lg);
 `;
 
-const SocialLinks = styled.div`
+const SocialLinks = styled.div.attrs({ 'data-divider': 'inline', role: 'list' })`
   display: flex;
   gap: var(--spacing-md);
 `;
 
-const SocialLink = styled.a`
+const SocialLink = styled.a.attrs({ 'data-pressable': true, role: 'listitem' })`
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--control-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,25 +136,25 @@ const SocialLink = styled.a`
 
   &:hover {
     background-color: var(--primary-color);
-    color: white;
+    color: var(--text-on-primary);
     transform: translateY(-3px);
   }
 `;
 
 const FooterHeading = styled.h4`
-  font-size: 1.1rem;
+  font-size: var(--text-lg);
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: var(--spacing-lg);
 `;
 
-const FooterLinks = styled.ul`
+const FooterLinks = styled.ul.attrs({ 'data-divider': 'list', role: 'list' })`
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
 `;
 
-const FooterLink = styled(Link)`
+const FooterLink = styled(Link).attrs({ 'data-pressable': true })`
   color: var(--text-tertiary);
   transition: var(--transition);
 
@@ -115,10 +166,10 @@ const FooterLink = styled(Link)`
 
 const Copyright = styled.p`
   color: var(--text-tertiary);
-  font-size: 0.9rem;
+  font-size: var(--text-sm);
 `;
 
-const FooterNav = styled.nav`
+const FooterNav = styled.nav.attrs({ 'data-divider': 'inline', role: 'list' })`
   display: flex;
   gap: var(--spacing-lg);
 
@@ -129,9 +180,9 @@ const FooterNav = styled.nav`
   }
 `;
 
-const FooterNavLink = styled(Link)`
+const FooterNavLink = styled(Link).attrs({ 'data-pressable': true, role: 'listitem' })`
   color: var(--text-tertiary);
-  font-size: 0.9rem;
+  font-size: var(--text-sm);
   transition: var(--transition);
 
   &:hover {
@@ -140,12 +191,18 @@ const FooterNavLink = styled(Link)`
 `;
 
 function Footer() {
+  const titleId = 'footer-title';
+  const descId = 'footer-desc';
+
   return (
-    <FooterContainer>
+    <FooterContainer aria-labelledby={titleId} aria-describedby={descId}>
+      <span id={descId} className="sr-only">
+        页脚包含品牌介绍、导航链接、分类入口与支持信息。
+      </span>
       <FooterInner>
         <FooterTop>
-          <FooterColumn>
-            <FooterLogo to="/">
+          <FooterBrand>
+            <FooterLogo to="/" id={titleId}>
               国漫<span>世界</span>
             </FooterLogo>
             <FooterDescription>
@@ -199,7 +256,7 @@ function Footer() {
                 <FiMail />
               </SocialLink>
             </SocialLinks>
-          </FooterColumn>
+          </FooterBrand>
 
           <FooterColumn>
             <FooterHeading>导航</FooterHeading>
@@ -218,6 +275,9 @@ function Footer() {
               </li>
               <li>
                 <FooterLink to="/about">关于我们</FooterLink>
+              </li>
+              <li>
+                <FooterLink to="/profile">用户中心</FooterLink>
               </li>
             </FooterLinks>
           </FooterColumn>
@@ -281,3 +341,6 @@ function Footer() {
 }
 
 export default Footer;
+
+
+

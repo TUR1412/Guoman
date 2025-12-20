@@ -1,15 +1,25 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useId, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import animeData, { featuredAnime, popularAnime, newReleases, categories } from '../data/animeData';
+import animeData, {
+  categories,
+  featuredAnime,
+  newReleases,
+  popularAnime,
+  selectAnimeByCategory,
+  selectAnimeByIds,
+} from '../data/animeData';
 import AnimeCard from './anime/AnimeCard';
 import { AnimeGrid } from './anime/AnimeGrid';
-import { safeLocalStorageGet, safeLocalStorageSet } from '../utils/storage';
+import { usePersistedState } from '../utils/usePersistedState';
+import { trackEvent } from '../utils/analytics';
+import { recordInteraction } from '../utils/interactionStore';
+import { STORAGE_KEYS } from '../utils/dataKeys';
 
 const SectionContainer = styled.section`
   padding: var(--spacing-3xl) 0;
 `;
 
-const SectionInner = styled.div`
+const SectionInner = styled.div.attrs({ 'data-divider': 'list' })`
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 var(--spacing-lg);
@@ -28,11 +38,12 @@ const SectionHeader = styled.div`
   }
 `;
 
-const TabsContainer = styled.div`
+const TabsContainer = styled.div.attrs({ role: 'tablist', 'data-divider': 'inline' })`
   display: flex;
   gap: var(--spacing-md);
   overflow-x: auto;
   padding-bottom: var(--spacing-sm);
+  position: relative;
 
   &::-webkit-scrollbar {
     height: 4px;
@@ -40,28 +51,40 @@ const TabsContainer = styled.div`
 
   &::-webkit-scrollbar-track {
     background: var(--surface-soft);
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
   }
 
   &::-webkit-scrollbar-thumb {
     background: var(--primary-color);
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
   }
 
   @media (max-width: 768px) {
     width: 100%;
   }
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--divider-gradient);
+    opacity: 0.4;
+  }
 `;
 
-const Tab = styled.button`
-  padding: 0.5rem 1rem;
+const Tab = styled.button.attrs({ 'data-pressable': true, role: 'tab' })`
+  padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--border-radius-md);
   font-weight: 500;
-  font-size: 1rem;
+  font-size: var(--text-base);
   white-space: nowrap;
   transition: var(--transition);
   background-color: ${(props) => (props.$active ? 'var(--primary-color)' : 'var(--surface-soft)')};
-  color: ${(props) => (props.$active ? 'white' : 'var(--text-secondary)')};
+  color: ${(props) => (props.$active ? 'var(--text-on-primary)' : 'var(--text-secondary)')};
+  border: 1px solid ${(props) => (props.$active ? 'transparent' : 'var(--border-subtle)')};
 
   &:hover {
     background-color: ${(props) =>
@@ -69,10 +92,14 @@ const Tab = styled.button`
   }
 `;
 
-const ShowMoreButton = styled.button`
+const ShowMoreButton = styled.button.attrs({
+  'data-pressable': true,
+  'data-shimmer': true,
+  'data-focus-guide': true,
+})`
   display: block;
   margin: var(--spacing-xl) auto 0;
-  padding: 0.75rem 2rem;
+  padding: var(--spacing-sm-plus) var(--spacing-xl);
   background-color: transparent;
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
@@ -81,7 +108,7 @@ const ShowMoreButton = styled.button`
   transition: var(--transition);
 
   &:hover {
-    background-color: rgba(255, 77, 77, 0.1);
+    background-color: var(--primary-soft);
     transform: translateY(-2px);
   }
 `;
@@ -101,78 +128,67 @@ function AnimeList({
   defaultTab = 'all',
   storageKey = DEFAULT_STORAGE_KEY,
   initialDisplayCount = 8,
+  bento = true,
 }) {
-  const [activeTab, setActiveTab] = useState(() => {
-    if (typeof window === 'undefined') return defaultTab;
-    const saved = safeLocalStorageGet(storageKey);
-    return saved || defaultTab;
-  });
+  const titleId = useId();
+  const descId = useId();
+  const [activeTab, setActiveTab] = usePersistedState(storageKey, defaultTab);
 
   const [displayCount, setDisplayCount] = useState(initialDisplayCount);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    safeLocalStorageSet(storageKey, activeTab);
-  }, [activeTab, storageKey]);
 
   useEffect(() => {
     setDisplayCount(initialDisplayCount);
   }, [activeTab, initialDisplayCount]);
 
   const displayedAnime = useMemo(() => {
-    let filteredAnime = [];
-
     switch (activeTab) {
       case 'featured':
-        filteredAnime = featuredAnime
-          .map((id) => animeData.find((anime) => anime.id === id))
-          .filter(Boolean);
-        break;
+        return selectAnimeByIds(featuredAnime);
       case 'popular':
-        filteredAnime = popularAnime
-          .map((id) => animeData.find((anime) => anime.id === id))
-          .filter(Boolean);
-        break;
+        return selectAnimeByIds(popularAnime);
       case 'new':
-        filteredAnime = newReleases
-          .map((id) => animeData.find((anime) => anime.id === id))
-          .filter(Boolean);
-        break;
+        return selectAnimeByIds(newReleases);
       case 'all':
-        filteredAnime = animeData;
-        break;
+        return animeData;
       default:
         if (activeTab.startsWith('cat-')) {
           const catId = Number.parseInt(activeTab.slice(4), 10);
           const categoryName = categories.find((cat) => cat.id === catId)?.name;
-
-          filteredAnime = animeData.filter((anime) =>
-            anime.tags.some((tag) => tag === categoryName),
-          );
-        } else {
-          filteredAnime = animeData;
+          if (categoryName) {
+            return selectAnimeByCategory(categoryName);
+          }
         }
+        return animeData;
     }
-
-    return filteredAnime;
   }, [activeTab]);
 
   const handleShowMore = () => {
     setDisplayCount((prev) => prev + initialDisplayCount);
   };
 
+  useEffect(() => {
+    trackEvent('recommendations.tab.change', { tab: activeTab, storageKey });
+    if (storageKey === STORAGE_KEYS.recommendationsTab) {
+      recordInteraction(STORAGE_KEYS.recommendationsActions, { tab: activeTab });
+    }
+  }, [activeTab, storageKey]);
+
   return (
-    <SectionContainer>
+    <SectionContainer aria-labelledby={titleId} aria-describedby={descId} data-stagger>
       <SectionInner>
         <SectionHeader>
-          <h2 className="section-title">{title}</h2>
-          <TabsContainer>
+          <h2 className="section-title" id={titleId}>
+            {title}
+          </h2>
+          <TabsContainer aria-label="作品筛选标签">
             {categoryOptions.map((category) => (
               <Tab
                 key={category.id}
                 type="button"
                 $active={activeTab === category.id}
+                aria-selected={activeTab === category.id}
                 aria-pressed={activeTab === category.id}
+                tabIndex={activeTab === category.id ? 0 : -1}
                 onClick={() => setActiveTab(category.id)}
               >
                 {category.name}
@@ -180,8 +196,11 @@ function AnimeList({
             ))}
           </TabsContainer>
         </SectionHeader>
+        <span id={descId} className="sr-only">
+          可通过上方标签切换作品分类，切换后列表将自动更新。
+        </span>
 
-        <AnimeGrid>
+        <AnimeGrid $bento={bento}>
           {displayedAnime.slice(0, displayCount).map((anime) => (
             <AnimeCard key={anime.id} anime={anime} />
           ))}
@@ -198,3 +217,6 @@ function AnimeList({
 }
 
 export default AnimeList;
+
+
+

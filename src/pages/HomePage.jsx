@@ -5,6 +5,7 @@ import AnimeList from '../components/AnimeList';
 import Features from '../components/Features';
 import About from '../components/About';
 import RecentlyViewed from '../components/RecentlyViewed';
+import ContinueWatching from '../components/ContinueWatching';
 import { usePageMeta } from '../utils/pageMeta';
 
 function HomePage() {
@@ -22,8 +23,9 @@ function HomePage() {
   usePageMeta();
 
   return (
-    <motion.div {...pageMotion}>
+    <motion.div {...pageMotion} data-stagger layout>
       <Banner />
+      <ContinueWatching />
       <RecentlyViewed />
       <AnimeList />
       <Features />
@@ -33,3 +35,6 @@ function HomePage() {
 }
 
 export default HomePage;
+
+
+

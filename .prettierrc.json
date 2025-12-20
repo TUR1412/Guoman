@@ -3,5 +3,9 @@
   "singleQuote": true,
   "semi": true,
   "trailingComma": "all",
-  "endOfLine": "auto"
+  "endOfLine": "auto",
+  "tabWidth": 2,
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "jsxSingleQuote": false
 }

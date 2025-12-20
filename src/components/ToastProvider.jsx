@@ -24,7 +24,7 @@ const Host = styled.div`
   pointer-events: none;
 `;
 
-const ToastCard = styled(motion.div)`
+const ToastCard = styled(motion.div).attrs({ 'data-card': true, 'data-divider': 'card' })`
   pointer-events: auto;
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--border-subtle);
@@ -33,7 +33,7 @@ const ToastCard = styled(motion.div)`
   backdrop-filter: blur(14px);
   padding: 12px 12px;
   display: grid;
-  grid-template-columns: 28px 1fr 28px;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 10px;
   align-items: start;
 `;
@@ -43,31 +43,38 @@ const IconWrap = styled.div`
   height: 28px;
   display: grid;
   place-items: center;
-  border-radius: 10px;
+  border-radius: var(--border-radius-md);
   background: var(--chip-bg);
   border: 1px solid var(--chip-border);
+  grid-column: span 1;
+`;
+
+const ToastContent = styled.div`
+  grid-column: span 10;
 `;
 
 const Title = styled.div`
   font-weight: 800;
   color: var(--text-primary);
-  line-height: 1.2;
+  line-height: var(--leading-tight);
 `;
 
 const Message = styled.div`
   margin-top: 4px;
   color: var(--text-secondary);
-  line-height: 1.4;
+  line-height: var(--leading-snug-plus);
 `;
 
-const CloseButton = styled.button`
+const CloseButton = styled.button.attrs({ 'data-pressable': true })`
   width: 28px;
   height: 28px;
-  border-radius: 10px;
+  border-radius: var(--border-radius-md);
   border: 1px solid var(--chip-border);
   background: var(--chip-bg);
   color: var(--text-secondary);
   transition: var(--transition);
+  grid-column: span 1;
+  justify-self: end;
 
   &:hover {
     background: var(--chip-bg-hover);
@@ -80,9 +87,9 @@ const CloseButton = styled.button`
 `;
 
 const VARIANTS = {
-  success: { icon: <FiCheckCircle />, color: 'rgba(34, 197, 94, 0.55)' },
-  info: { icon: <FiInfo />, color: 'rgba(59, 130, 246, 0.55)' },
-  warning: { icon: <FiAlertTriangle />, color: 'rgba(245, 158, 11, 0.65)' },
+  success: { icon: <FiCheckCircle />, color: 'var(--success-color)' },
+  info: { icon: <FiInfo />, color: 'var(--info-color)' },
+  warning: { icon: <FiAlertTriangle />, color: 'var(--warning-color)' },
 };
 
 const motionProps = {
@@ -156,7 +163,13 @@ export function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={api}>
       {children}
-      <Host aria-live="polite" aria-relevant="additions removals" aria-atomic="true" role="status">
+      <Host
+        aria-live="polite"
+        aria-relevant="additions removals"
+        aria-atomic="true"
+        role="status"
+        aria-label="全局提示"
+      >
         <AnimatePresence>
           {toasts.map((t) => {
             const meta = VARIANTS[t.variant] || VARIANTS.info;
@@ -166,10 +179,10 @@ export function ToastProvider({ children }) {
                 <IconWrap style={{ borderColor: meta.color, color: meta.color }}>
                   {meta.icon}
                 </IconWrap>
-                <div>
+                <ToastContent>
                   <Title>{t.title}</Title>
                   {t.message ? <Message>{t.message}</Message> : null}
-                </div>
+                </ToastContent>
                 <CloseButton type="button" aria-label="关闭提示" onClick={() => remove(t.id)}>
                   <FiX />
                 </CloseButton>
@@ -189,3 +202,6 @@ export function useToast() {
   }
   return ctx;
 }
+
+
+

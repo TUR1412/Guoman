@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { applyTheme, THEMES, toggleTheme } from './theme';
+import { flushStorageQueue } from './storageQueue';
 
 describe('theme utils', () => {
   beforeEach(() => {
@@ -21,6 +22,7 @@ describe('theme utils', () => {
     applyTheme(THEMES.dark);
 
     const next = toggleTheme();
+    flushStorageQueue();
     expect(next).toBe(THEMES.light);
     expect(window.localStorage.getItem('guoman.theme')).toBe(THEMES.light);
   });

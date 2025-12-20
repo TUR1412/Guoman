@@ -30,6 +30,11 @@ export default [
       react: {
         version: 'detect',
       },
+      'import/resolver': {
+        node: {
+          extensions: ['.js', '.jsx'],
+        },
+      },
     },
     plugins: {
       import: importPlugin,
@@ -61,6 +66,9 @@ export default [
 
       // 允许 warn/error（用于错误边界/开发期诊断），禁止 console.log
       'no-console': ['error', { allow: ['warn', 'error'] }],
+
+      // 轻量提升 JSX 质量（警告级别，不阻塞 CI）
+      'react/jsx-no-useless-fragment': 'warn',
     },
   },
   eslintConfigPrettier,

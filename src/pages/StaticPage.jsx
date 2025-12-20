@@ -1,9 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FiMail, FiShield, FiHelpCircle, FiMessageSquare, FiDownload } from 'react-icons/fi';
 import PageShell from '../components/PageShell';
+import { useToast } from '../components/ToastProvider';
+import { clearFeedback, getFeedbackList, submitFeedback } from '../utils/feedbackStore';
 
-const Card = styled.div`
+const Grid = styled.div.attrs({
+  role: 'list',
+  'data-stagger': true,
+  'data-divider': 'grid',
+  'aria-label': '信息卡片列表',
+})`
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--spacing-lg);
+`;
+
+const Card = styled.div.attrs({
+  role: 'listitem',
+  'data-card': true,
+  'data-divider': 'card',
+})`
   border-radius: var(--border-radius-lg);
   background: var(--surface-glass);
   border: 1px solid var(--border-subtle);
@@ -12,26 +29,40 @@ const Card = styled.div`
   backdrop-filter: blur(14px);
   display: grid;
   gap: var(--spacing-md);
+  grid-column: span 6;
+
+  &:nth-child(1) {
+    grid-column: span 7;
+  }
+
+  &:nth-child(2) {
+    grid-column: span 5;
+  }
+
+  @media (max-width: 992px) {
+    grid-column: 1 / -1;
+  }
 `;
 
 const H2 = styled.h2`
-  font-size: 1.25rem;
+  font-size: var(--text-xl);
+  font-family: var(--font-display);
 `;
 
 const P = styled.p`
   color: var(--text-secondary);
-  line-height: 1.85;
+  line-height: var(--leading-relaxed);
 `;
 
-const List = styled.ul`
+const List = styled.ul.attrs({ 'data-divider': 'list' })`
   display: grid;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
   color: var(--text-secondary);
 `;
 
 const Li = styled.li`
   position: relative;
-  padding-left: 1rem;
+  padding-left: var(--spacing-md);
 
   &::before {
     content: '•';
@@ -45,6 +76,7 @@ const PAGES = {
   help: {
     title: '帮助中心',
     subtitle: '常见操作指引与使用建议。',
+    badge: '帮助',
     sections: [
       {
         title: '快速开始',
@@ -65,6 +97,7 @@ const PAGES = {
   faq: {
     title: '常见问题',
     subtitle: '先看这里，可能就解决了。',
+    badge: 'FAQ',
     sections: [
       {
         title: '为什么“登录/注册”无法真正登录？',
@@ -81,6 +114,7 @@ const PAGES = {
   contact: {
     title: '联系我们',
     subtitle: '你的一句话，可能让下一版更好。',
+    badge: '联系',
     sections: [
       {
         title: '邮箱',
@@ -97,6 +131,7 @@ const PAGES = {
   feedback: {
     title: '意见反馈',
     subtitle: '把你想要的功能/体验告诉我们。',
+    badge: '反馈',
     sections: [
       {
         title: '我们最想收到的反馈',
@@ -119,6 +154,7 @@ const PAGES = {
   app: {
     title: '下载 APP',
     subtitle: '移动端体验与离线观看，敬请期待。',
+    badge: 'APP',
     sections: [
       {
         title: '计划中',
@@ -136,6 +172,7 @@ const PAGES = {
   terms: {
     title: '服务条款',
     subtitle: '透明、清晰、可理解（示例文本）。',
+    badge: '条款',
     sections: [
       {
         title: '内容声明',
@@ -147,6 +184,7 @@ const PAGES = {
   privacy: {
     title: '隐私政策',
     subtitle: '我们尽量少收集、只在必要时收集（示例文本）。',
+    badge: '隐私',
     sections: [
       {
         title: '数据收集',
@@ -158,6 +196,7 @@ const PAGES = {
   cookies: {
     title: 'Cookie 政策',
     subtitle: '当前版本仅用于演示（示例文本）。',
+    badge: 'Cookie',
     sections: [
       {
         title: '说明',
@@ -169,6 +208,7 @@ const PAGES = {
   accessibility: {
     title: '无障碍声明',
     subtitle: '让每个人都能顺畅使用。',
+    badge: '无障碍',
     sections: [
       {
         title: '已做的事',
@@ -189,22 +229,138 @@ function StaticPage({ page }) {
   const data = PAGES[page] || {
     title: '页面未开放',
     subtitle: '我们正在加速完善内容。',
+    badge: '公告',
     sections: [],
+  };
+  const toast = useToast();
+  const [feedbackList, setFeedbackList] = useState(() => getFeedbackList());
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [feedbackContact, setFeedbackContact] = useState('');
+
+  const onSubmitFeedback = (event) => {
+    event.preventDefault();
+    const trimmed = feedbackMessage.trim();
+    if (!trimmed) {
+      toast.warning('反馈不能为空', '写点你的想法吧。');
+      return;
+    }
+    const entry = submitFeedback({ message: trimmed, contact: feedbackContact });
+    if (!entry) {
+      toast.warning('提交失败', '稍后再试。');
+      return;
+    }
+    setFeedbackList((prev) => [entry, ...prev]);
+    setFeedbackMessage('');
+    setFeedbackContact('');
+    toast.success('感谢反馈', '已保存到本地。');
+  };
+
+  const onClearFeedback = () => {
+    clearFeedback();
+    setFeedbackList([]);
+    toast.info('已清空反馈记录');
   };
 
   return (
-    <PageShell title={data.title} subtitle={data.subtitle}>
-      {data.sections.map((s) => (
-        <Card key={s.title}>
+    <PageShell title={data.title} subtitle={data.subtitle} badge={data.badge}>
+      <Grid>
+        {data.sections.map((s) => (
+          <Card key={s.title}>
+            <H2>
+              <span style={{ marginRight: 'var(--spacing-sm)', color: 'var(--primary-color)' }}>
+                {s.icon}
+              </span>
+              {s.title}
+            </H2>
+            {s.body}
+          </Card>
+        ))}
+      </Grid>
+
+      {page === 'feedback' && (
+        <Card>
           <H2>
-            <span style={{ marginRight: '0.5rem', color: 'var(--primary-color)' }}>{s.icon}</span>
-            {s.title}
+            <span style={{ marginRight: 'var(--spacing-sm)', color: 'var(--primary-color)' }}>
+              <FiMessageSquare />
+            </span>
+            提交反馈
           </H2>
-          {s.body}
+          <form
+            onSubmit={onSubmitFeedback}
+            style={{ display: 'grid', gap: 'var(--spacing-md)' }}
+          >
+            <input
+              type="text"
+              placeholder="联系方式（可选）"
+              value={feedbackContact}
+              onChange={(event) => setFeedbackContact(event.target.value)}
+              style={{
+                padding: 'var(--spacing-sm) var(--spacing-md)',
+                borderRadius: 'var(--border-radius-md)',
+                border: '1px solid var(--border-subtle)',
+                background: 'var(--field-bg)',
+                color: 'var(--text-primary)',
+              }}
+            />
+            <textarea
+              placeholder="写下你的建议..."
+              value={feedbackMessage}
+              onChange={(event) => setFeedbackMessage(event.target.value)}
+              style={{
+                minHeight: '120px',
+                padding: 'var(--spacing-sm) var(--spacing-md)',
+                borderRadius: 'var(--border-radius-md)',
+                border: '1px solid var(--border-subtle)',
+                background: 'var(--field-bg)',
+                color: 'var(--text-primary)',
+              }}
+            />
+            <div style={{ display: 'flex', gap: 'var(--spacing-md)', flexWrap: 'wrap' }}>
+              <button
+                type="submit"
+                style={{
+                  padding: 'var(--spacing-sm) var(--spacing-md)',
+                  borderRadius: 'var(--border-radius-md)',
+                  border: '1px solid var(--border-subtle)',
+                  background: 'var(--surface-soft)',
+                  color: 'var(--text-primary)',
+                }}
+              >
+                提交反馈
+              </button>
+              <button
+                type="button"
+                onClick={onClearFeedback}
+                style={{
+                  padding: 'var(--spacing-sm) var(--spacing-md)',
+                  borderRadius: 'var(--border-radius-md)',
+                  border: '1px solid var(--border-subtle)',
+                  background: 'var(--surface-soft)',
+                  color: 'var(--text-primary)',
+                }}
+              >
+                清空记录
+              </button>
+            </div>
+          </form>
+
+          {feedbackList.length > 0 && (
+            <List style={{ marginTop: 'var(--spacing-md)' }}>
+              {feedbackList.map((item) => (
+                <li key={item.id}>
+                  <strong>{new Date(item.createdAt).toLocaleString('zh-CN')}</strong> ·{' '}
+                  {item.message}
+                </li>
+              ))}
+            </List>
+          )}
         </Card>
-      ))}
+      )}
     </PageShell>
   );
 }
 
 export default StaticPage;
+
+
+

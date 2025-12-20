@@ -6,12 +6,14 @@ import { AnimeGrid } from './anime/AnimeGrid';
 import AnimeCard from './anime/AnimeCard';
 import { clearRecentlyViewed, getRecentlyViewed } from '../utils/recentlyViewed';
 import { useToast } from './ToastProvider';
+import EmptyState from './EmptyState';
+import { trackEvent } from '../utils/analytics';
 
 const SectionContainer = styled.section`
   padding: var(--spacing-3xl) 0;
 `;
 
-const SectionInner = styled.div`
+const SectionInner = styled.div.attrs({ 'data-divider': 'list' })`
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 var(--spacing-lg);
@@ -31,38 +33,54 @@ const SectionHeader = styled.div`
   }
 `;
 
+const TitleGroup = styled.div`
+  display: grid;
+  gap: var(--spacing-xs-plus);
+`;
+
 const TitleWrap = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--spacing-sm-plus);
+  row-gap: var(--spacing-xs);
   align-items: center;
-  gap: 0.75rem;
 `;
 
 const TitleIcon = styled.div`
   width: 40px;
   height: 40px;
-  border-radius: 12px;
+  border-radius: var(--border-radius-lg);
   background: var(--surface-soft);
   border: 1px solid var(--border-subtle);
   display: grid;
   place-items: center;
   color: var(--primary-color);
+  grid-row: 1 / span 2;
 `;
 
 const Title = styled.h2`
-  font-size: 1.9rem;
+  font-size: var(--text-7xl);
   font-weight: 800;
+  grid-column: 2;
 `;
 
 const Subtitle = styled.p`
   color: var(--text-tertiary);
-  margin-top: 0.25rem;
+  margin-top: var(--spacing-xs);
+  grid-column: 2;
 `;
 
-const ClearButton = styled.button`
+const MetaLine = styled.div`
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+  margin-top: var(--spacing-xs-plus);
+`;
+
+const ClearButton = styled.button.attrs({ 'data-pressable': true })`
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.55rem 0.9rem;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm-compact) var(--spacing-md-tight);
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-subtle);
   background: var(--surface-soft);
@@ -92,11 +110,8 @@ function RecentlyViewed() {
     clearRecentlyViewed();
     setIds([]);
     toast.info('已清空最近浏览', '随时可以从作品详情重新生成记录。');
+    trackEvent('recent.clear');
   };
-
-  if (list.length === 0) {
-    return null;
-  }
 
   return (
     <SectionContainer
@@ -106,35 +121,47 @@ function RecentlyViewed() {
       aria-label="最近浏览"
       aria-describedby="guoman-recent-desc"
     >
-      <SectionInner>
+      <SectionInner data-stagger>
         <SectionHeader>
-          <div>
+          <TitleGroup>
             <TitleWrap>
               <TitleIcon aria-hidden="true">
                 <FiClock />
               </TitleIcon>
-              <div>
-                <Title>最近浏览</Title>
-                <Subtitle id="guoman-recent-desc">
-                  你刚刚看过的作品会留在这里，方便继续探索。
-                </Subtitle>
-              </div>
+              <Title>最近浏览</Title>
+              <Subtitle id="guoman-recent-desc">
+                你刚刚看过的作品会留在这里，方便继续探索。
+              </Subtitle>
             </TitleWrap>
-          </div>
+            <MetaLine>共 {list.length} 部作品</MetaLine>
+          </TitleGroup>
           <ClearButton type="button" onClick={onClear} aria-label="清空最近浏览">
             <FiTrash2 />
             清空记录
           </ClearButton>
         </SectionHeader>
 
-        <AnimeGrid>
-          {list.map((anime) => (
-            <AnimeCard key={anime.id} anime={anime} />
-          ))}
-        </AnimeGrid>
+        {list.length > 0 ? (
+          <AnimeGrid $bento>
+            {list.map((anime) => (
+              <AnimeCard key={anime.id} anime={anime} />
+            ))}
+          </AnimeGrid>
+        ) : (
+          <EmptyState
+            icon={<FiClock size={22} />}
+            title="还没有最近浏览"
+            description="浏览作品详情后，这里会自动记录。"
+            primaryAction={{ to: '/search', label: '去搜索' }}
+            secondaryAction={{ to: '/recommendations', label: '去看推荐' }}
+          />
+        )}
       </SectionInner>
     </SectionContainer>
   );
 }
 
 export default RecentlyViewed;
+
+
+

@@ -1,6 +1,10 @@
-import { safeLocalStorageGet, safeLocalStorageSet } from './storage';
+import { safeLocalStorageGet } from './storage';
+import { scheduleStorageWrite } from './storageQueue';
+import { STORAGE_KEYS } from './dataKeys';
+import { trackEvent } from './analytics';
 
-const STORAGE_KEY = 'guoman.theme';
+const STORAGE_KEY = STORAGE_KEYS.theme;
+const META_KEY = STORAGE_KEYS.themeMeta;
 
 export const THEMES = Object.freeze({
   dark: 'dark',
@@ -42,8 +46,13 @@ export const setTheme = (theme) => {
   const normalized = normalizeTheme(theme);
   if (!normalized || typeof window === 'undefined') return;
 
-  safeLocalStorageSet(STORAGE_KEY, normalized);
+  scheduleStorageWrite(STORAGE_KEY, normalized);
+  scheduleStorageWrite(
+    META_KEY,
+    JSON.stringify({ value: normalized, updatedAt: Date.now() }),
+  );
   applyTheme(normalized);
+  trackEvent('theme.change', { value: normalized });
 };
 
 export const getCurrentTheme = () => {

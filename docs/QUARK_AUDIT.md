@@ -124,3 +124,77 @@
 28. Docs：ARCHITECTURE 补齐 Meta/最近浏览说明
 29. Docs：DESIGN_TOKENS 补齐主色柔和 tokens
 30. Docs：QUARK_AUDIT + ITERATIONS 追加 R5 记录
+
+---
+
+## 4. 50 次原子迭代清单（R6 · 2025-12-20）
+
+1. 视觉：新增墨韵国风主色/副色/点缀色 tokens
+2. 视觉：新增字体 tokens（正文/标题）并落地
+3. 视觉：全局背景升级为墨韵 + 极光 Mesh
+4. 视觉：新增控制类 tokens（control/progress/overlay）
+5. 资源：引入 ZCOOL XiaoWei / Noto Serif SC 标题字体
+6. 缓存：更新 favicon/manifest 版本号
+7. Banner：遮罩改为 `--hero-overlay`
+8. Banner：分页/导航按钮 tokens 化
+9. Banner：CTA 渐变升级 + 阴影强化
+10. Banner：新增“题签式”标签
+11. Features：改为 Bento Grid 排布
+12. Features：卡片 hover/边框 tokens 化
+13. Features：图标改为“印章质感”胶囊
+14. AnimeCard：收藏按钮 tokens 化
+15. AnimeCard：收藏状态高亮统一
+16. AnimeCard：新增观看进度浮层
+17. ContinueWatching：新增组件骨架
+18. Home：接入“继续观看”入口
+19. watchProgress：新增持久化工具层
+20. watchProgress：新增事件订阅/跨页同步
+21. watchProgress：新增单元测试基线
+22. AnimeDetail：新增观看进度面板
+23. AnimeDetail：集数输入与进度滑块
+24. AnimeDetail：快捷进度按钮（半程/追到最新）
+25. AnimeDetail：进度清空入口
+26. AnimeDetail：封面遮罩 tokens 化
+27. AnimeList：查看更多按钮 tokens 化
+28. Header：主题切换按钮 tokens 化
+29. Header：移动登录按钮 hover tokens 化
+30. Footer：社交按钮 tokens 化
+31. EmptyState：图标渐变使用 accent tokens
+32. NewsPage：卡片 hover 边框 tokens 化
+33. NewsDetail：标签底色 tokens 化
+34. ForgotPassword：成功提示 tokens 化
+35. Toast：状态色 tokens 化
+36. AppErrorBoundary：按钮/代码块 tokens 化
+37. About：标题下划线渐变升级
+38. About：数据数字改为金色强调
+39. About：CTA 阴影与 hover 优化
+40. Global：新增 success/info/warning 语义色 tokens
+41. Global：新增 overlay/progress tokens
+42. Global：标题字体统一为 display font
+43. Global：背景噪点 + 纸张光晕层级化
+44. Global：body 渐变强化暗/亮主题对比度
+45. Docs：ARCHITECTURE 补齐观看进度说明
+46. Docs：DESIGN_TOKENS 补齐新 tokens 说明
+47. Docs：新增 1000 微任务清单
+48. Task_Status：更新 R6 执行清单
+49. ContinueWatching：区域语义与 aria-live 说明
+50. AnimeCard：进度条对比度优化
+
+---
+
+## 5. 250 次原子迭代清单（R7 · 2025-12-20）
+
+> 本轮采用“批次化”落地策略：详见 `docs/QUARK_BATCH_R7_250.md`（0001-0250）。
+
+已落地（批次收口摘要）：
+
+1. 主题层：新增 stamp/divider/scrollbar + text-on-primary/text-on-dark/品牌色 tokens
+2. 全局质感：纸张纹理、光晕渐变、阴影体系收敛并通过 WCAG 对比度校验
+3. Header：导航/搜索/操作区分区（Bento 栅格）
+4. Banner：主视觉拆分 + 右侧速览卡（含节奏与阅读焦点）
+5. AnimeDetail：封面/信息区 12 栅格重排 + 进度卡强化
+6. Features/About/Footer/PageShell：统一 Bento 层级与焦点密度
+7. 登录/找回密码：双栏结构 + 权益/安全提示侧栏
+8. NewsDetail：正文 + 侧栏信息卡 + 分享入口
+9. EmptyState/AppErrorBoundary/StaticPage/Toast：布局重组与视觉层级强化
+10. R7 批次 0001-0250 全量落地完成（详见 QUARK_BATCH_R7_250）

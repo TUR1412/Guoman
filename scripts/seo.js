@@ -20,7 +20,11 @@ export const buildRobotsTxt = (homepage) => {
   return `User-agent: *\nAllow: /\n\nSitemap: ${sitemap}\n`;
 };
 
-export const getDefaultSitemapRoutes = () => [
+export const getDefaultSitemapRoutes = ({
+  animeIds = [],
+  tags = [],
+  categorySlugs = [],
+} = {}) => [
   { path: '/', changefreq: 'weekly', priority: '1.0' },
   { path: '/#/', changefreq: 'weekly', priority: '0.9' },
   { path: '/#/recommendations', changefreq: 'weekly', priority: '0.8' },
@@ -29,6 +33,7 @@ export const getDefaultSitemapRoutes = () => [
   { path: '/#/favorites', changefreq: 'weekly', priority: '0.7' },
   { path: '/#/search', changefreq: 'weekly', priority: '0.6' },
   { path: '/#/about', changefreq: 'monthly', priority: '0.6' },
+  { path: '/#/profile', changefreq: 'monthly', priority: '0.5' },
 
   { path: '/#/help', changefreq: 'monthly', priority: '0.4' },
   { path: '/#/faq', changefreq: 'monthly', priority: '0.4' },
@@ -40,6 +45,21 @@ export const getDefaultSitemapRoutes = () => [
   { path: '/#/privacy', changefreq: 'yearly', priority: '0.3' },
   { path: '/#/cookies', changefreq: 'yearly', priority: '0.2' },
   { path: '/#/accessibility', changefreq: 'yearly', priority: '0.2' },
+  ...animeIds.map((id) => ({
+    path: `/#/anime/${id}`,
+    changefreq: 'monthly',
+    priority: '0.5',
+  })),
+  ...tags.map((tag) => ({
+    path: `/#/tag/${encodeURIComponent(tag)}`,
+    changefreq: 'monthly',
+    priority: '0.4',
+  })),
+  ...categorySlugs.map((slug) => ({
+    path: `/#/category/${slug}`,
+    changefreq: 'monthly',
+    priority: '0.4',
+  })),
 ];
 
 export const buildSitemapXml = ({ homepage, lastmod, routes }) => {

@@ -6,6 +6,34 @@ import EmptyState from '../components/EmptyState';
 import AnimeCard from '../components/anime/AnimeCard';
 import { AnimeGrid } from '../components/anime/AnimeGrid';
 import animeData from '../data/animeData';
+import styled from 'styled-components';
+import { usePersistedState } from '../utils/usePersistedState';
+import { trackEvent } from '../utils/analytics';
+import { STORAGE_KEYS } from '../utils/dataKeys';
+
+const ToggleGroup = styled.div.attrs({ 'data-divider': 'inline' })`
+  --divider-inline-gap: var(--spacing-xs);
+  display: inline-flex;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius-pill);
+  overflow: hidden;
+  background: var(--surface-soft);
+`;
+
+const Toggle = styled.button.attrs({ 'data-pressable': true })`
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md-tight);
+  color: ${(p) => (p.$active ? 'var(--text-on-primary)' : 'var(--text-secondary)')};
+  background: ${(p) => (p.$active ? 'var(--primary-color)' : 'transparent')};
+  border: 1px solid ${(p) => (p.$active ? 'transparent' : 'var(--border-subtle)')};
+  transition: var(--transition);
+
+  &:hover {
+    background: ${(p) => (p.$active ? 'var(--primary-color)' : 'var(--surface-soft-hover)')};
+  }
+`;
 
 const CATEGORY_MAP = {
   action: { title: '热血动作', tag: '热血' },
@@ -15,14 +43,31 @@ const CATEGORY_MAP = {
   comedy: { title: '轻松搞笑', tag: '搞笑' },
 };
 
+const SORTS = {
+  rating: {
+    id: 'rating',
+    label: '评分',
+    sortFn: (a, b) => b.rating - a.rating,
+  },
+  popularity: {
+    id: 'popularity',
+    label: '人气',
+    sortFn: (a, b) => b.popularity - a.popularity,
+  },
+};
+
 function CategoryPage() {
   const { category } = useParams();
   const meta = CATEGORY_MAP[category];
+  const [sortId, setSortId] = usePersistedState(STORAGE_KEYS.categorySort, SORTS.rating.id);
+
+  const sort = SORTS[sortId] || SORTS.rating;
 
   const results = useMemo(() => {
     if (!meta) return [];
-    return animeData.filter((anime) => (anime.tags || []).includes(meta.tag));
-  }, [meta]);
+    const list = animeData.filter((anime) => (anime.tags || []).includes(meta.tag));
+    return list.sort(sort.sortFn);
+  }, [meta, sort.sortFn]);
 
   if (!meta) {
     return (
@@ -42,9 +87,29 @@ function CategoryPage() {
     <PageShell
       title={`分类：${meta.title}`}
       subtitle={`当前分类标签映射为「${meta.tag}」，后续可接入更精细的分类体系。`}
+      badge="分类"
+      meta={<span>标签：{meta.tag}</span>}
+      actions={
+        <ToggleGroup aria-label="排序方式">
+          {Object.values(SORTS).map((item) => (
+            <Toggle
+              key={item.id}
+              type="button"
+              $active={sortId === item.id}
+              aria-pressed={sortId === item.id}
+              onClick={() => {
+                setSortId(item.id);
+                trackEvent('category.sort.change', { category, sort: item.id });
+              }}
+            >
+              {item.label}
+            </Toggle>
+          ))}
+        </ToggleGroup>
+      }
     >
       {results.length > 0 ? (
-        <AnimeGrid>
+        <AnimeGrid $bento>
           {results.map((anime) => (
             <AnimeCard key={anime.id} anime={anime} />
           ))}
@@ -63,3 +128,6 @@ function CategoryPage() {
 }
 
 export default CategoryPage;
+
+
+

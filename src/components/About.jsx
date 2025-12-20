@@ -13,7 +13,7 @@ const AboutInner = styled.div`
   margin: 0 auto;
   padding: 0 var(--spacing-lg);
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--spacing-2xl);
   align-items: center;
 
@@ -24,13 +24,16 @@ const AboutInner = styled.div`
 `;
 
 const AboutContent = styled.div`
+  grid-column: span 7;
+
   @media (max-width: 992px) {
+    grid-column: 1 / -1;
     order: 2;
   }
 `;
 
 const AboutTitle = styled.h2`
-  font-size: 2.5rem;
+  font-size: var(--text-9xl);
   font-weight: 700;
   margin-bottom: var(--spacing-lg);
   color: var(--text-primary);
@@ -44,56 +47,77 @@ const AboutTitle = styled.h2`
     left: 0;
     width: 60px;
     height: 3px;
-    background: var(--primary-color);
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
   }
 
   @media (max-width: 768px) {
-    font-size: 2rem;
+    font-size: var(--text-8xl);
   }
 `;
 
 const AboutDescription = styled.p`
   color: var(--text-secondary);
-  font-size: 1.1rem;
-  line-height: 1.8;
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
   margin-bottom: var(--spacing-lg);
 
   @media (max-width: 768px) {
-    font-size: 1rem;
+    font-size: var(--text-base);
   }
 `;
 
-const Stats = styled.div`
+const Stats = styled.div.attrs({
+  role: 'list',
+  'aria-label': '平台数据概览',
+  'data-divider': 'grid',
+})`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--spacing-lg);
   margin-top: var(--spacing-xl);
 `;
 
-const StatItem = styled(motion.div)`
+const StatItem = styled(motion.div).attrs({
+  role: 'listitem',
+  'data-card': true,
+  'data-divider': 'card',
+})`
   text-align: center;
+  grid-column: span 4;
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  background: var(--surface-glass);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(12px);
+
+  @media (max-width: 768px) {
+    grid-column: 1 / -1;
+  }
 `;
 
 const StatNumber = styled.div`
-  font-size: 2.5rem;
+  font-size: var(--text-9xl);
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--secondary-color);
   margin-bottom: var(--spacing-xs);
 
   @media (max-width: 768px) {
-    font-size: 2rem;
+    font-size: var(--text-8xl);
   }
 `;
 
 const StatTitle = styled.div`
-  font-size: 1rem;
+  font-size: var(--text-base);
   color: var(--text-tertiary);
 `;
 
-const AboutImage = styled(motion.div)`
+const AboutImage = styled(motion.div).attrs({ 'data-parallax': true })`
   position: relative;
+  grid-column: span 5;
 
   @media (max-width: 992px) {
+    grid-column: 1 / -1;
     order: 1;
   }
 
@@ -108,7 +132,7 @@ const AboutImage = styled(motion.div)`
     position: absolute;
     width: 100%;
     height: 100%;
-    border: 2px solid var(--primary-color);
+    border: 2px solid var(--secondary-color);
     border-radius: var(--border-radius-lg);
     top: 20px;
     left: 20px;
@@ -121,31 +145,39 @@ const AboutImage = styled(motion.div)`
   }
 `;
 
-const ContactButton = styled(Link)`
+const ContactButton = styled(Link).attrs({
+  'data-shimmer': true,
+  'data-pressable': true,
+  'data-focus-guide': true,
+})`
   display: inline-block;
   margin-top: var(--spacing-lg);
-  padding: 0.75rem 2rem;
+  padding: var(--spacing-sm-plus) var(--spacing-xl);
   background-color: var(--primary-color);
-  color: white;
+  color: var(--text-on-primary);
   border-radius: var(--border-radius-md);
   font-weight: 600;
   transition: var(--transition);
-  box-shadow: 0 4px 12px rgba(255, 77, 77, 0.3);
+  box-shadow: var(--shadow-primary);
 
   &:hover {
-    background-color: #e64545;
+    background-color: var(--primary-color);
+    filter: brightness(1.05);
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(255, 77, 77, 0.4);
+    box-shadow: var(--shadow-primary-hover);
   }
 `;
 
 function About({ cta = { to: '/about', label: '了解更多' } }) {
+  const titleId = 'about-title';
+  const descId = 'about-desc';
+
   return (
-    <AboutContainer>
+    <AboutContainer aria-labelledby={titleId} aria-describedby={descId}>
       <AboutInner>
         <AboutContent>
-          <AboutTitle>关于国漫世界</AboutTitle>
-          <AboutDescription>
+          <AboutTitle id={titleId}>关于国漫世界</AboutTitle>
+          <AboutDescription id={descId}>
             国漫世界是中国最大的国产动漫内容平台，致力于推广优质国漫作品，为广大动漫爱好者提供优质的观影体验。
           </AboutDescription>
           <AboutDescription>
@@ -191,7 +223,14 @@ function About({ cta = { to: '/about', label: '了解更多' } }) {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <img src={teamImage} alt="国漫世界团队" loading="lazy" decoding="async" />
+          <img
+            src={teamImage}
+            alt="国漫世界团队"
+            loading="lazy"
+            decoding="async"
+            width="600"
+            height="400"
+          />
         </AboutImage>
       </AboutInner>
     </AboutContainer>
@@ -199,3 +238,6 @@ function About({ cta = { to: '/about', label: '了解更多' } }) {
 }
 
 export default About;
+
+
+

@@ -21,21 +21,74 @@
 
 - `--primary-color`：主色
 - `--primary-rgb`：主色 RGB（用于 `rgba(var(--primary-rgb), alpha)`）
+- `--secondary-color / --secondary-rgb`：副色（偏金）
+- `--accent-color / --accent-rgb`：点缀色（偏青）
+- `--accent-soft`：点缀色柔和态（用于渐变/装饰光晕）
 - `--text-primary / --text-secondary / --text-tertiary`：文本层级
+- `--text-on-primary`：主色按钮反白文字
+- `--text-on-dark`：深色遮罩上文本（海报/进度条）
+- `--success-* / --info-* / --warning-*`：状态色（用于 Toast/表单提示）
 
-### 2.2 表面与边框（避免“死白/死黑”）
+### 2.2 字体与排版
 
-- `--surface-glass`：玻璃卡片底色
+- `--font-body`：正文字体（Noto Sans SC）
+- `--font-display`：标题字体（ZCOOL XiaoWei / Noto Serif SC）
+- `--text-xxs ~ --text-10xl`：统一字号体系（组件/页面一致）
+- `--leading-tight / snug / snug-plus / normal / loose / relaxed`：统一行高体系
+
+### 2.3 间距尺度（Spacing）
+
+- `--spacing-xs / sm / md / lg / xl / 2xl / 3xl`：主尺度
+- `--spacing-xs-plus / xs-wide / sm-compact / sm-mid / sm-wide / sm-plus / md-compact / md-tight / md-plus / lg-compact`：微调尺度
+
+### 2.4 表面与边框（避免“死白/死黑”）
+
+- `--surface-glass`：玻璃卡片底色（含纸张纹理渐变）
+- `--surface-ink / --surface-paper`：深浅层级底色（含纸张纹理渐变）
 - `--border-subtle`：微边框
 - `--surface-soft / --surface-soft-hover`：轻按钮/轻底色（Hover 状态）
 - `--primary-soft / --primary-soft-hover / --primary-soft-border`：主色柔和态（用于 CTA/强调按钮）
+- `--control-bg / --control-bg-hover / --control-border`：控件底色与边框（搜索/主题切换等）
+- `--button-disabled-bg / --button-disabled-text`：禁用按钮背景/文字
 
-### 2.3 Chip / Badge（筛选、标签、徽章）
+### 2.5 Chip / Badge（筛选、标签、徽章）
 
 - `--chip-bg / --chip-bg-hover`：Chip 背景
 - `--chip-border / --chip-border-hover`：Chip 边框
 - `--chip-bg-active / --chip-border-active`：Chip 选中态
 - `--badge-bg / --badge-border`：Badge 背景与边框
+
+### 2.6 视觉特效
+
+- `--app-bg`：全局墨韵 + Aurora 背景
+- `--hero-overlay`：英雄区遮罩渐变
+- `--overlay-strong`：图片/卡片上文字的对比遮罩
+- `--progress-track / --progress-fill`：进度条轨道/填充
+- `--stamp-*`：徽章/题签（Banner/页头 badge）
+- `--divider-gradient`：分割线渐变（用于标题下划线）
+- `--scrollbar-*`：滚动条轨道/滑块
+- `--text-glow-primary`：主色文字光晕
+- `--text-shadow-hero / --text-shadow-hero-soft`：英雄区标题阴影
+- `--shadow-primary / --shadow-primary-hover / --shadow-primary-soft`：主色阴影体系
+- `--shadow-ring`：强调环形阴影（徽标/状态点）
+
+### 2.7 圆角与形状
+
+- `--border-radius-sm / --border-radius-md / --border-radius-lg`：统一的圆角层级
+- `--border-radius-pill`：胶囊按钮/标签的满圆角
+
+### 2.8 品牌色（社交登录）
+
+- `--brand-google-blue / --brand-google-green / --brand-google-yellow / --brand-google-red`
+- `--brand-facebook-blue / --brand-twitter-blue`
+
+### 2.9 动效与交互
+
+- `--motion-fast / --motion-base / --motion-slow`：动效时长分级
+- `--ease-out / --ease-soft`：动效缓动曲线
+- `--stagger-step`：分层入场交错间隔
+- `--theme-transition`：主题切换的统一过渡策略
+- `--divider-inline-gap`：行内分割间距（可按组件覆盖）
 
 ## 3. 使用建议（团队约定）
 

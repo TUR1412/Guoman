@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FiAlertTriangle, FiRefreshCcw } from 'react-icons/fi';
+import { reportError } from '../utils/errorReporter';
 
 const Fullscreen = styled.div`
   min-height: 100vh;
@@ -11,7 +12,7 @@ const Fullscreen = styled.div`
   color: var(--text-primary);
 `;
 
-const Card = styled.div`
+const Card = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' })`
   width: min(720px, 100%);
   background: var(--surface-glass);
   border: 1px solid var(--border-subtle);
@@ -19,13 +20,82 @@ const Card = styled.div`
   box-shadow: var(--shadow-lg);
   padding: var(--spacing-2xl);
   backdrop-filter: blur(14px);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--spacing-lg);
+`;
+
+const MainPane = styled.div`
+  grid-column: span 8;
+  display: grid;
+  gap: var(--spacing-md);
+
+  @media (max-width: 768px) {
+    grid-column: 1 / -1;
+  }
+`;
+
+const SidePane = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' })`
+  grid-column: span 4;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-ink);
+  padding: var(--spacing-lg);
+  display: grid;
+  gap: var(--spacing-sm);
+  align-content: start;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      200px 140px at 10% 0%,
+      var(--primary-soft),
+      transparent 70%
+    );
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  @media (max-width: 768px) {
+    grid-column: 1 / -1;
+  }
+`;
+
+const SideTitle = styled.h3`
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  position: relative;
+  z-index: 1;
+`;
+
+const SideList = styled.ul.attrs({ 'data-divider': 'list' })`
+  display: grid;
+  gap: 0.45rem;
+  color: var(--text-secondary);
+  position: relative;
+  z-index: 1;
+`;
+
+const SideItem = styled.li`
+  position: relative;
+  padding-left: var(--spacing-md);
+
+  &::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--secondary-color);
+  }
 `;
 
 const TitleRow = styled.div`
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
 
   svg {
     color: var(--secondary-color);
@@ -34,35 +104,34 @@ const TitleRow = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 1.5rem;
-  line-height: 1.2;
+  font-size: var(--text-4xl);
+  line-height: var(--leading-tight);
 `;
 
 const Desc = styled.p`
   color: var(--text-secondary);
-  margin-bottom: var(--spacing-xl);
 `;
 
-const Actions = styled.div`
+const Actions = styled.div.attrs({ 'data-divider': 'inline' })`
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-md);
 `;
 
-const Button = styled.button`
+const Button = styled.button.attrs({ 'data-pressable': true })`
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm-plus) var(--spacing-lg-compact);
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--control-bg);
   color: var(--text-primary);
   transition: var(--transition);
 
   &:hover {
     transform: translateY(-1px);
-    background: rgba(255, 255, 255, 0.12);
+    background: var(--control-bg-hover);
   }
 
   &:active {
@@ -70,11 +139,11 @@ const Button = styled.button`
   }
 `;
 
-const HomeLink = styled.a`
+const HomeLink = styled.a.attrs({ 'data-pressable': true })`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.25rem;
+  padding: var(--spacing-sm-plus) var(--spacing-lg-compact);
   border-radius: var(--border-radius-md);
   border: 1px solid var(--primary-color);
   background: transparent;
@@ -83,7 +152,7 @@ const HomeLink = styled.a`
   transition: var(--transition);
 
   &:hover {
-    background: rgba(255, 77, 77, 0.12);
+    background: var(--primary-soft);
     transform: translateY(-1px);
   }
 `;
@@ -91,6 +160,7 @@ const HomeLink = styled.a`
 const DevDetails = styled.details`
   margin-top: var(--spacing-xl);
   color: var(--text-tertiary);
+  grid-column: 1 / -1;
 
   summary {
     cursor: pointer;
@@ -101,7 +171,7 @@ const DevDetails = styled.details`
     margin-top: var(--spacing-md);
     padding: var(--spacing-md);
     border-radius: var(--border-radius-md);
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--surface-ink);
     border: 1px solid var(--border-subtle);
     overflow: auto;
     color: var(--text-secondary);
@@ -119,6 +189,11 @@ class AppErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, info) {
+    reportError({
+      message: error?.message || 'Unknown error',
+      stack: error?.stack,
+      source: info?.componentStack,
+    });
     if (import.meta.env?.DEV) {
       console.error('[AppErrorBoundary] 捕获到未处理错误：', error, info);
     }
@@ -127,21 +202,38 @@ class AppErrorBoundary extends React.Component {
   render() {
     if (!this.state.hasError) return this.props.children;
 
+    const titleId = 'guoman-error-title';
+    const descId = 'guoman-error-desc';
+
     return (
       <Fullscreen>
-        <Card>
-          <TitleRow>
-            <FiAlertTriangle size={22} />
-            <Title>页面出了点小状况</Title>
-          </TitleRow>
-          <Desc>不用担心，刷新通常可以恢复。如果问题持续出现，建议清空缓存或稍后再试。</Desc>
-          <Actions>
-            <Button type="button" onClick={() => window.location.reload()}>
-              <FiRefreshCcw />
-              刷新页面
-            </Button>
-            <HomeLink href="#/">返回首页</HomeLink>
-          </Actions>
+        <Card aria-labelledby={titleId} aria-describedby={descId}>
+          <MainPane>
+            <TitleRow>
+              <FiAlertTriangle size={22} />
+              <Title id={titleId}>页面出了点小状况</Title>
+            </TitleRow>
+            <Desc id={descId}>
+              不用担心，刷新通常可以恢复。如果问题持续出现，建议清空缓存或稍后再试。
+            </Desc>
+            <Actions>
+              <Button type="button" onClick={() => window.location.reload()}>
+                <FiRefreshCcw />
+                刷新页面
+              </Button>
+              <HomeLink href="#/">返回首页</HomeLink>
+            </Actions>
+          </MainPane>
+
+          <SidePane>
+            <SideTitle>快速排查</SideTitle>
+            <SideList>
+              <SideItem>确认网络连接是否正常</SideItem>
+              <SideItem>尝试清空浏览器缓存</SideItem>
+              <SideItem>稍后刷新或重新打开页面</SideItem>
+              <SideItem>如持续出现，请联系维护人员</SideItem>
+            </SideList>
+          </SidePane>
 
           {import.meta.env?.DEV && this.state.error && (
             <DevDetails>
@@ -158,3 +250,6 @@ class AppErrorBoundary extends React.Component {
 }
 
 export default AppErrorBoundary;
+
+
+

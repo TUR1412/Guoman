@@ -1,23 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiHeart } from 'react-icons/fi';
 import { useFavorites } from '../FavoritesProvider';
 import { useToast } from '../ToastProvider';
+import { getWatchProgress, subscribeWatchProgress } from '../../utils/watchProgress';
+import { prefetchRoute } from '../../utils/routePrefetch';
+import { trackEvent } from '../../utils/analytics';
 
-const Card = styled(motion.article).attrs({ role: 'listitem' })`
+const Card = styled(motion.article).attrs({
+  role: 'listitem',
+  'data-card': true,
+  'data-divider': 'card',
+})`
   border-radius: var(--border-radius-md);
   overflow: hidden;
   background: var(--surface-glass);
   border: 1px solid var(--border-subtle);
   transition: var(--transition);
   box-shadow: var(--shadow-md);
+  backdrop-filter: blur(12px);
 
   &:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-lg), var(--shadow-glow);
-    border-color: rgba(255, 77, 77, 0.25);
+    border-color: var(--chip-border-hover);
+  }
+
+  &:focus-within {
+    box-shadow: var(--shadow-lg), var(--shadow-ring);
+    border-color: var(--primary-soft-border);
   }
 `;
 
@@ -50,7 +63,7 @@ const CoverImg = styled.img`
   z-index: 0;
 `;
 
-const FavButton = styled.button`
+const FavButton = styled.button.attrs({ 'data-pressable': true })`
   position: absolute;
   top: 10px;
   right: 10px;
@@ -60,10 +73,10 @@ const FavButton = styled.button`
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(0, 0, 0, 0.22);
-  color: rgba(255, 255, 255, 0.92);
+  border-radius: var(--border-radius-pill);
+  border: 1px solid var(--control-border);
+  background: var(--control-bg);
+  color: var(--text-primary);
   backdrop-filter: blur(10px);
   transition: var(--transition);
 
@@ -87,8 +100,8 @@ const FavButton = styled.button`
   }
 
   &:hover {
-    border-color: rgba(255, 77, 77, 0.45);
-    color: rgba(255, 77, 77, 0.95);
+    border-color: var(--chip-border-hover);
+    color: var(--primary-color);
   }
 
   &:active {
@@ -103,25 +116,62 @@ const FavDot = styled.div`
   z-index: 2;
   width: 10px;
   height: 10px;
-  border-radius: 999px;
-  background: rgba(255, 77, 77, 0.95);
-  box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.18);
+  border-radius: var(--border-radius-pill);
+  background: var(--primary-color);
+  box-shadow: var(--shadow-ring);
 `;
 
-const Body = styled.div`
+const ProgressPanel = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: var(--spacing-sm-compact) var(--spacing-sm-plus);
+  z-index: 2;
+  background: linear-gradient(0deg, var(--overlay-strong) 0%, transparent 100%);
+  color: var(--text-on-dark);
+`;
+
+const ProgressMeta = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--text-xxs);
+  font-weight: 600;
+`;
+
+const ProgressTrack = styled.div`
+  width: 100%;
+  height: 6px;
+  border-radius: var(--border-radius-pill);
+  background: var(--progress-track);
+  margin-top: var(--spacing-xs-plus);
+  overflow: hidden;
+`;
+
+const ProgressFill = styled.div`
+  height: 100%;
+  width: ${(props) => `${props.$value}%`};
+  background: var(--progress-fill);
+  border-radius: inherit;
+`;
+
+const CardLink = styled(Link).attrs({ 'data-pressable': true })`
+  display: block;
   padding: var(--spacing-md);
+  color: inherit;
 `;
 
 const Title = styled.h3`
-  font-size: 1.05rem;
+  font-size: var(--text-base-plus);
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--spacing-sm);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 
   @media (max-width: 576px) {
-    font-size: 0.98rem;
+    font-size: var(--text-base);
   }
 `;
 
@@ -130,7 +180,7 @@ const Meta = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: var(--spacing-md);
-  font-size: 0.9rem;
+  font-size: var(--text-sm);
   color: var(--text-tertiary);
 `;
 
@@ -149,41 +199,70 @@ const Rating = styled.span`
 
   &::before {
     content: '★';
-    margin-right: 0.25rem;
+    margin-right: var(--spacing-xs);
   }
 `;
 
 function AnimeCard({ anime }) {
   const favorites = useFavorites();
   const toast = useToast();
+  const reducedMotion = useReducedMotion();
+  const [progress, setProgress] = useState(() => getWatchProgress(anime?.id));
 
-  if (!anime) return null;
-
-  const favorited = favorites.isFavorite(anime.id);
+  const animeId = anime?.id;
+  const favorited = animeId ? favorites.isFavorite(animeId) : false;
   const typeShort = anime?.type?.split('、')?.[0] ?? '';
+  const descId = `anime-card-desc-${anime?.id ?? 'unknown'}`;
 
   const toggleFavorite = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    favorites.toggleFavorite(anime.id);
+    if (!animeId) return;
+    favorites.toggleFavorite(animeId);
     if (favorited) {
       toast.info('已取消收藏', `《${anime.title}》已从收藏移除。`);
     } else {
       toast.success('已加入收藏', `《${anime.title}》已加入收藏。`);
     }
+    trackEvent('favorites.toggle', { id: animeId, active: !favorited });
   };
+
+  useEffect(() => {
+    setProgress(getWatchProgress(anime?.id));
+    const unsubscribe = subscribeWatchProgress(() => {
+      setProgress(getWatchProgress(anime?.id));
+    });
+    return unsubscribe;
+  }, [anime?.id]);
+
+  const progressValue = progress?.progress ?? 0;
+
+  if (!anime) return null;
 
   return (
     <Card
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35 }}
-      whileHover={{ scale: 1.02 }}
+      initial={reducedMotion ? false : { opacity: 0, y: 16 }}
+      animate={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
+      transition={reducedMotion ? { duration: 0 } : { duration: 0.35 }}
+      whileHover={reducedMotion ? undefined : { scale: 1.02 }}
     >
       <Cover>
-        <CoverLink to={`/anime/${anime.id}`} aria-label={`查看《${anime.title}》详情`} />
-        <CoverImg src={anime.cover} alt={anime.title} loading="lazy" decoding="async" />
+        <CoverLink
+          to={`/anime/${anime.id}`}
+          aria-label={`查看《${anime.title}》详情`}
+          aria-describedby={descId}
+          onMouseEnter={() => prefetchRoute(`/anime/${anime.id}`)}
+          onFocus={() => prefetchRoute(`/anime/${anime.id}`)}
+        />
+        <CoverImg
+          src={anime.cover}
+          alt={anime.title}
+          loading="lazy"
+          decoding="async"
+          width="320"
+          height="448"
+        />
         <FavButton
           type="button"
           aria-label={favorited ? '取消收藏' : '加入收藏'}
@@ -192,9 +271,9 @@ function AnimeCard({ anime }) {
           style={
             favorited
               ? {
-                  borderColor: 'rgba(255, 77, 77, 0.55)',
-                  color: 'rgba(255, 77, 77, 0.95)',
-                  background: 'rgba(255, 77, 77, 0.14)',
+                  borderColor: 'var(--primary-soft-border)',
+                  color: 'var(--primary-color)',
+                  background: 'var(--primary-soft)',
                 }
               : undefined
           }
@@ -203,18 +282,40 @@ function AnimeCard({ anime }) {
           <FiHeart />
         </FavButton>
         {favorited ? <FavDot aria-hidden="true" /> : null}
+        {progress && (progress.progress > 0 || progress.episode > 1) ? (
+          <ProgressPanel aria-label={`观看进度 ${progressValue}%`}>
+            <ProgressMeta>
+              <span>继续观看</span>
+              <span>第 {progress.episode} 集 · {progressValue}%</span>
+            </ProgressMeta>
+            <ProgressTrack>
+              <ProgressFill $value={progressValue} />
+            </ProgressTrack>
+          </ProgressPanel>
+        ) : null}
       </Cover>
-      <Link to={`/anime/${anime.id}`} aria-label={`查看《${anime.title}》详情`}>
-        <Body>
-          <Title>{anime.title}</Title>
-          <Meta>
-            <Type>{typeShort}</Type>
-            <Rating>{anime.rating}</Rating>
-          </Meta>
-        </Body>
-      </Link>
+      <CardLink
+        to={`/anime/${anime.id}`}
+        aria-label={`查看《${anime.title}》详情`}
+        aria-describedby={descId}
+        onMouseEnter={() => prefetchRoute(`/anime/${anime.id}`)}
+        onFocus={() => prefetchRoute(`/anime/${anime.id}`)}
+      >
+        <span id={descId} className="sr-only">
+          {typeShort ? `类型：${typeShort}。` : ''}
+          评分：{anime.rating}。
+        </span>
+        <Title>{anime.title}</Title>
+        <Meta>
+          <Type>{typeShort}</Type>
+          <Rating>{anime.rating}</Rating>
+        </Meta>
+      </CardLink>
     </Card>
   );
 }
 
 export default AnimeCard;
+
+
+

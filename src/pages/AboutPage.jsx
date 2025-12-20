@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { FiHeart, FiFilm, FiUsers, FiGithub, FiMail } from 'react-icons/fi';
 import PageShell from '../components/PageShell';
 
-const Bento = styled.div`
+const Bento = styled.div.attrs({ 'data-divider': 'grid' })`
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: var(--spacing-lg);
@@ -13,7 +13,7 @@ const Bento = styled.div`
   }
 `;
 
-const Card = styled.div`
+const Card = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' })`
   border-radius: var(--border-radius-lg);
   background: var(--surface-glass);
   border: 1px solid var(--border-subtle);
@@ -27,26 +27,30 @@ const Card = styled.div`
 const CardTitle = styled.h2`
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  font-size: 1.25rem;
+  gap: var(--spacing-sm-mid);
+  font-size: var(--text-xl);
 `;
 
 const CardDesc = styled.p`
   color: var(--text-secondary);
-  line-height: 1.8;
+  line-height: var(--leading-relaxed);
 `;
 
-const Actions = styled.div`
+const Actions = styled.div.attrs({ 'data-divider': 'inline' })`
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-md);
 `;
 
-const LinkButton = styled.a`
+const LinkButton = styled.a.attrs({
+  'data-pressable': true,
+  'data-shimmer': true,
+  'data-focus-guide': true,
+})`
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.1rem;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm-plus) var(--spacing-md);
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-subtle);
   background: var(--surface-soft);
@@ -64,6 +68,8 @@ function AboutPage() {
     <PageShell
       title="关于我们"
       subtitle="国漫世界希望做一件简单但重要的事：让“找国漫”变得更快、更美、更有温度。"
+      badge="关于"
+      meta={<span>团队愿景 · 开源致谢</span>}
     >
       <Bento>
         <Card>
@@ -112,3 +118,6 @@ function AboutPage() {
 }
 
 export default AboutPage;
+
+
+

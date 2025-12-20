@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -8,7 +8,7 @@ const Wrap = styled.div`
   padding: var(--spacing-3xl) 0;
 `;
 
-const Card = styled.div`
+const Card = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' })`
   width: min(680px, 100%);
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--border-subtle);
@@ -16,47 +16,69 @@ const Card = styled.div`
   box-shadow: var(--shadow-md);
   padding: var(--spacing-2xl);
   backdrop-filter: blur(14px);
-  text-align: center;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--spacing-lg);
+  text-align: left;
 `;
 
 const Icon = styled.div`
   width: 56px;
   height: 56px;
-  margin: 0 auto var(--spacing-lg);
-  border-radius: 16px;
+  margin: 0;
+  border-radius: var(--border-radius-lg);
   display: grid;
   place-items: center;
   background: linear-gradient(
     135deg,
-    rgba(var(--primary-rgb), 0.18),
-    rgba(126, 34, 206, 0.14)
+    var(--primary-soft),
+    var(--accent-soft)
   );
   border: 1px solid var(--border-subtle);
   color: var(--text-primary);
+  grid-column: span 3;
+  justify-self: start;
+  align-self: start;
+
+  @media (max-width: 576px) {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+`;
+
+const CardContent = styled.div`
+  grid-column: span 9;
+  display: grid;
+  gap: var(--spacing-md);
+
+  @media (max-width: 576px) {
+    grid-column: 1 / -1;
+  }
 `;
 
 const Title = styled.h2`
-  font-size: 1.4rem;
-  margin-bottom: var(--spacing-sm);
+  font-size: var(--text-3xl);
 `;
 
 const Desc = styled.p`
   color: var(--text-secondary);
-  margin-bottom: var(--spacing-xl);
 `;
 
-const Actions = styled.div`
+const Actions = styled.div.attrs({ 'data-divider': 'inline' })`
   display: flex;
   justify-content: center;
   gap: var(--spacing-md);
   flex-wrap: wrap;
 `;
 
-const PrimaryLink = styled.a`
+const PrimaryLink = styled.a.attrs({
+  'data-pressable': true,
+  'data-focus-guide': true,
+})`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.25rem;
+  padding: var(--spacing-sm-plus) var(--spacing-lg-compact);
   border-radius: var(--border-radius-md);
   border: 1px solid var(--primary-soft-border);
   background: var(--primary-soft);
@@ -71,11 +93,11 @@ const PrimaryLink = styled.a`
   }
 `;
 
-const SecondaryLink = styled.a`
+const SecondaryLink = styled.a.attrs({ 'data-pressable': true })`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.25rem;
+  padding: var(--spacing-sm-plus) var(--spacing-lg-compact);
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-subtle);
   background: var(--surface-soft);
@@ -89,37 +111,45 @@ const SecondaryLink = styled.a`
 `;
 
 function EmptyState({ icon, title, description, primaryAction, secondaryAction }) {
+  const titleId = useId();
+  const descId = useId();
+
   return (
     <Wrap>
-      <Card>
+      <Card aria-labelledby={title ? titleId : undefined} aria-describedby={description ? descId : undefined}>
         {icon && <Icon>{icon}</Icon>}
-        {title && <Title>{title}</Title>}
-        {description && <Desc>{description}</Desc>}
-        {(primaryAction || secondaryAction) && (
-          <Actions>
-            {primaryAction && (
-              <PrimaryLink
-                as={primaryAction.to ? Link : 'a'}
-                to={primaryAction.to}
-                href={primaryAction.href}
-              >
-                {primaryAction.label}
-              </PrimaryLink>
-            )}
-            {secondaryAction && (
-              <SecondaryLink
-                as={secondaryAction.to ? Link : 'a'}
-                to={secondaryAction.to}
-                href={secondaryAction.href}
-              >
-                {secondaryAction.label}
-              </SecondaryLink>
-            )}
-          </Actions>
-        )}
+        <CardContent>
+          {title && <Title id={titleId}>{title}</Title>}
+          {description && <Desc id={descId}>{description}</Desc>}
+          {(primaryAction || secondaryAction) && (
+            <Actions>
+              {primaryAction && (
+                <PrimaryLink
+                  as={primaryAction.to ? Link : 'a'}
+                  to={primaryAction.to}
+                  href={primaryAction.href}
+                >
+                  {primaryAction.label}
+                </PrimaryLink>
+              )}
+              {secondaryAction && (
+                <SecondaryLink
+                  as={secondaryAction.to ? Link : 'a'}
+                  to={secondaryAction.to}
+                  href={secondaryAction.href}
+                >
+                  {secondaryAction.label}
+                </SecondaryLink>
+              )}
+            </Actions>
+          )}
+        </CardContent>
       </Card>
     </Wrap>
   );
 }
 
 export default EmptyState;
+
+
+

@@ -19,6 +19,7 @@ export default defineConfig(({ command }) => ({
       '@images': path.resolve(__dirname, './src/assets/images'),
       '@data': path.resolve(__dirname, './src/data'),
     },
+    dedupe: ['react', 'react-dom'],
   },
   server: {
     port: 3000,
@@ -26,6 +27,8 @@ export default defineConfig(({ command }) => ({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    manifest: true,
+    reportCompressedSize: true,
     rollupOptions: {
       output: {
         manualChunks: (id) => {

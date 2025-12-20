@@ -1,27 +1,33 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { FiStar, FiTrendingUp } from 'react-icons/fi';
 import PageShell from '../components/PageShell';
 import AnimeCard from '../components/anime/AnimeCard';
 import { AnimeGrid } from '../components/anime/AnimeGrid';
 import animeData from '../data/animeData';
-import { safeLocalStorageGet, safeLocalStorageSet } from '../utils/storage';
+import { Link } from 'react-router-dom';
+import { usePersistedState } from '../utils/usePersistedState';
+import { trackEvent } from '../utils/analytics';
+import { STORAGE_KEYS } from '../utils/dataKeys';
+import { recordInteraction } from '../utils/interactionStore';
 
-const ToggleGroup = styled.div`
+const ToggleGroup = styled.div.attrs({ 'data-divider': 'inline' })`
+  --divider-inline-gap: var(--spacing-xs);
   display: inline-flex;
   border: 1px solid var(--border-subtle);
-  border-radius: 999px;
+  border-radius: var(--border-radius-pill);
   overflow: hidden;
   background: var(--surface-soft);
 `;
 
-const Toggle = styled.button`
+const Toggle = styled.button.attrs({ 'data-pressable': true })`
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 0.9rem;
-  color: ${(p) => (p.$active ? 'white' : 'var(--text-secondary)')};
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm-mid) var(--spacing-md-tight);
+  color: ${(p) => (p.$active ? 'var(--text-on-primary)' : 'var(--text-secondary)')};
   background: ${(p) => (p.$active ? 'var(--primary-color)' : 'transparent')};
+  border: 1px solid ${(p) => (p.$active ? 'transparent' : 'var(--border-subtle)')};
   transition: var(--transition);
 
   &:hover {
@@ -29,23 +35,82 @@ const Toggle = styled.button`
   }
 `;
 
-const HighlightGrid = styled.div`
+const HighlightGrid = styled.div.attrs({
+  'data-divider': 'grid',
+  role: 'list',
+  'aria-label': '排行榜精选作品',
+})`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--spacing-lg);
+
+  & > *:nth-child(1) {
+    grid-column: span 7;
+  }
+
+  & > *:nth-child(2) {
+    grid-column: span 5;
+  }
+
+  & > *:nth-child(3) {
+    grid-column: span 12;
+  }
 
   @media (max-width: 992px) {
     grid-template-columns: 1fr;
+
+    & > * {
+      grid-column: span 1;
+    }
   }
 `;
 
-const HighlightCard = styled.div`
+const HighlightCard = styled(Link).attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-pressable': true,
+  'data-shimmer': true,
+  'data-focus-guide': true,
+  role: 'listitem',
+})`
   border-radius: var(--border-radius-lg);
   background: var(--surface-glass);
   border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-md);
   padding: var(--spacing-xl);
   backdrop-filter: blur(14px);
+  display: grid;
+  gap: var(--spacing-md);
+  position: relative;
+  overflow: hidden;
+  color: inherit;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-soft-border);
+  }
+`;
+
+const HighlightCover = styled.div`
+  position: absolute;
+  inset: 0;
+  background-image: url(${(p) => p.$image});
+  background-size: cover;
+  background-position: center;
+  opacity: 0.16;
+  filter: saturate(1.2);
+`;
+
+const HighlightOverlay = styled.div`
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, var(--overlay-strong) 0%, transparent 65%);
+`;
+
+const HighlightContent = styled.div`
+  position: relative;
+  z-index: 1;
   display: grid;
   gap: var(--spacing-md);
 `;
@@ -60,9 +125,9 @@ const HighlightTop = styled.div`
 const Badge = styled.div`
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs-plus) var(--spacing-sm-plus);
+  border-radius: var(--border-radius-pill);
   border: 1px solid var(--badge-border);
   background: var(--badge-bg);
   color: var(--text-secondary);
@@ -70,16 +135,17 @@ const Badge = styled.div`
 `;
 
 const Metric = styled.div`
-  font-size: 2rem;
+  font-size: var(--text-8xl);
   font-weight: 900;
   letter-spacing: -0.02em;
+  font-family: var(--font-display);
 `;
 
 const Subtitle = styled.div`
   color: var(--text-secondary);
 `;
 
-const STORAGE_KEY = 'guoman.rankings.sort';
+const STORAGE_KEY = STORAGE_KEYS.rankingsSort;
 
 const SORTS = {
   rating: {
@@ -99,10 +165,7 @@ const SORTS = {
 };
 
 function RankingsPage() {
-  const [sortId, setSortId] = useState(() => {
-    if (typeof window === 'undefined') return SORTS.rating.id;
-    return safeLocalStorageGet(STORAGE_KEY) || SORTS.rating.id;
-  });
+  const [sortId, setSortId] = usePersistedState(STORAGE_KEY, SORTS.rating.id);
 
   const sort = SORTS[sortId] || SORTS.rating;
 
@@ -117,15 +180,16 @@ function RankingsPage() {
 
   const setSortAndPersist = (nextId) => {
     setSortId(nextId);
-    if (typeof window !== 'undefined') {
-      safeLocalStorageSet(STORAGE_KEY, nextId);
-    }
+    trackEvent('rankings.sort.change', { sort: nextId });
+    recordInteraction(STORAGE_KEYS.rankingsActions, { sort: nextId });
   };
 
   return (
     <PageShell
       title="排行榜"
       subtitle={`一眼看懂：${sort.subtitle}。`}
+      badge="热榜"
+      meta={<span>Top 3 精选 · 可切换评分/人气</span>}
       actions={
         <ToggleGroup aria-label="切换排行榜排序方式">
           {Object.values(SORTS).map((item) => (
@@ -145,25 +209,29 @@ function RankingsPage() {
     >
       <HighlightGrid>
         {top3.map((anime, idx) => (
-          <HighlightCard key={anime.id}>
-            <HighlightTop>
-              <Badge>
-                #{idx + 1} {sort.label}榜
-              </Badge>
-              <Badge title={sort.label}>
-                {sort.icon}
-                {sortId === 'rating' ? `${anime.rating}/5` : anime.popularity.toLocaleString()}
-              </Badge>
-            </HighlightTop>
-            <Metric>{anime.title}</Metric>
-            <Subtitle>{anime.type}</Subtitle>
+          <HighlightCard key={anime.id} to={`/anime/${anime.id}`}>
+            <HighlightCover $image={anime.cover} aria-hidden="true" />
+            <HighlightOverlay aria-hidden="true" />
+            <HighlightContent>
+              <HighlightTop>
+                <Badge>
+                  #{idx + 1} {sort.label}榜
+                </Badge>
+                <Badge title={sort.label}>
+                  {sort.icon}
+                  {sortId === 'rating' ? `${anime.rating}/5` : anime.popularity.toLocaleString()}
+                </Badge>
+              </HighlightTop>
+              <Metric>{anime.title}</Metric>
+              <Subtitle>{anime.type}</Subtitle>
+            </HighlightContent>
           </HighlightCard>
         ))}
       </HighlightGrid>
 
       <div>
         <h2 className="section-title">Top 12</h2>
-        <AnimeGrid>
+        <AnimeGrid $bento>
           {rest.map((anime) => (
             <AnimeCard key={anime.id} anime={anime} />
           ))}
@@ -174,3 +242,6 @@ function RankingsPage() {
 }
 
 export default RankingsPage;
+
+
+

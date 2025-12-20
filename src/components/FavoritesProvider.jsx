@@ -1,8 +1,12 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { safeLocalStorageGet, safeLocalStorageSet } from '../utils/storage';
+import { safeLocalStorageGet } from '../utils/storage';
+import { scheduleStorageWrite } from '../utils/storageQueue';
+import { STORAGE_KEYS } from '../utils/dataKeys';
 import { parseFavoritesBackup, serializeFavoritesBackup } from '../utils/favoritesBackup';
+import { trackEvent } from '../utils/analytics';
 
-const STORAGE_KEY = 'guoman.favorites.v1';
+const STORAGE_KEY = STORAGE_KEYS.favorites;
+const UPDATED_KEY = STORAGE_KEYS.favoritesUpdatedAt;
 
 const normalizeId = (value) => {
   const id = Number(value);
@@ -27,11 +31,23 @@ const readFromStorage = () => {
   }
 };
 
+const readUpdatedAt = () => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = safeLocalStorageGet(UPDATED_KEY);
+    const parsed = raw ? Number.parseInt(raw, 10) : null;
+    return Number.isFinite(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+};
+
 const writeToStorage = (favoriteIds) => {
   if (typeof window === 'undefined') return;
 
   try {
-    safeLocalStorageSet(STORAGE_KEY, JSON.stringify(Array.from(favoriteIds)));
+    scheduleStorageWrite(STORAGE_KEY, JSON.stringify(Array.from(favoriteIds)));
+    scheduleStorageWrite(UPDATED_KEY, String(Date.now()));
   } catch {}
 };
 
@@ -39,11 +55,13 @@ const FavoritesContext = createContext(null);
 
 export function FavoritesProvider({ children }) {
   const [favoriteIds, setFavoriteIds] = useState(() => readFromStorage());
+  const [updatedAt, setUpdatedAt] = useState(() => readUpdatedAt());
 
   useEffect(() => {
     const onStorage = (e) => {
-      if (e.key !== STORAGE_KEY) return;
+      if (e.key !== STORAGE_KEY && e.key !== UPDATED_KEY) return;
       setFavoriteIds(readFromStorage());
+      setUpdatedAt(readUpdatedAt());
     };
 
     window.addEventListener('storage', onStorage);
@@ -67,11 +85,14 @@ export function FavoritesProvider({ children }) {
       const next = new Set(prev);
       if (next.has(normalized)) {
         next.delete(normalized);
+        trackEvent('favorites.remove', { id: normalized });
       } else {
         next.add(normalized);
+        trackEvent('favorites.add', { id: normalized });
       }
 
       writeToStorage(next);
+      setUpdatedAt(readUpdatedAt());
       return next;
     });
   }, []);
@@ -80,6 +101,8 @@ export function FavoritesProvider({ children }) {
     setFavoriteIds(() => {
       const next = new Set();
       writeToStorage(next);
+      setUpdatedAt(readUpdatedAt());
+      trackEvent('favorites.clear');
       return next;
     });
   }, []);
@@ -101,6 +124,7 @@ export function FavoritesProvider({ children }) {
 
       writeToStorage(next);
       setFavoriteIds(next);
+      setUpdatedAt(readUpdatedAt());
 
       return {
         before,
@@ -123,6 +147,7 @@ export function FavoritesProvider({ children }) {
       clearFavorites,
       exportFavoritesBackup,
       importFavoritesBackup,
+      updatedAt,
     }),
     [
       favoriteIds,
@@ -131,6 +156,7 @@ export function FavoritesProvider({ children }) {
       clearFavorites,
       exportFavoritesBackup,
       importFavoritesBackup,
+      updatedAt,
     ],
   );
 
@@ -144,3 +170,9 @@ export function useFavorites() {
   }
   return ctx;
 }
+
+export const FAVORITES_STORAGE_KEY = STORAGE_KEY;
+export const FAVORITES_UPDATED_KEY = UPDATED_KEY;
+
+
+
