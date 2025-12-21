@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { safeLocalStorageGet } from './storage';
 import { scheduleStorageWrite } from './storageQueue';
 
@@ -25,22 +25,40 @@ export const usePersistedState = (
   defaultValue,
   { serialize = identity, deserialize = identity, delay = 180 } = {},
 ) => {
-  const initial = useMemo(
-    () => readStoredValue(key, defaultValue, deserialize),
-    [key, defaultValue, deserialize],
-  );
-  const [state, setState] = useState(initial);
+  const defaultValueRef = useRef(defaultValue);
+  const deserializeRef = useRef(deserialize);
+  const serializeRef = useRef(serialize);
+  const hydratedKeyRef = useRef(key);
+  const lastSerializedRef = useRef(null);
+  const [state, setState] = useState(() => readStoredValue(key, defaultValue, deserialize));
+
+  useEffect(() => {
+    defaultValueRef.current = defaultValue;
+    deserializeRef.current = deserialize;
+    serializeRef.current = serialize;
+  }, [defaultValue, deserialize, serialize]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !key) return;
+    lastSerializedRef.current = safeLocalStorageGet(key);
+
+    if (hydratedKeyRef.current === key) return;
+    hydratedKeyRef.current = key;
+    setState(readStoredValue(key, defaultValueRef.current, deserializeRef.current));
+  }, [key]);
 
   useEffect(() => {
     if (!key) return;
     try {
-      const serialized = serialize(state);
+      const serialized = serializeRef.current(state);
+      if (serialized === lastSerializedRef.current) return;
+      lastSerializedRef.current = serialized;
       scheduleStorageWrite(key, serialized, { delay });
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('guoman:persist', { detail: { key, value: state } }));
       }
     } catch {}
-  }, [key, state, serialize, delay]);
+  }, [delay, key, state]);
 
   useEffect(() => {
     if (typeof window === 'undefined' || !key) return undefined;

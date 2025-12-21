@@ -255,37 +255,48 @@ function App() {
                 }
               >
                 <LayoutGroup id="guoman-routes">
-                  <AnimatePresence mode="wait">
-                    <Routes location={location} key={location.pathname}>
-                      <Route path="/" element={<HomePage />} />
-                      <Route path="/recommendations" element={<RecommendationsPage />} />
-                      <Route path="/favorites" element={<FavoritesPage />} />
-                      <Route path="/rankings" element={<RankingsPage />} />
-                      <Route path="/news" element={<NewsPage />} />
-                      <Route path="/news/:id" element={<NewsDetailPage />} />
-                      <Route path="/about" element={<AboutPage />} />
-                      <Route path="/search" element={<SearchPage />} />
-                      <Route path="/tag/:tag" element={<TagPage />} />
-                      <Route path="/category/:category" element={<CategoryPage />} />
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.div
+                      key={location.pathname}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <Routes location={location}>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/recommendations" element={<RecommendationsPage />} />
+                        <Route path="/favorites" element={<FavoritesPage />} />
+                        <Route path="/rankings" element={<RankingsPage />} />
+                        <Route path="/news" element={<NewsPage />} />
+                        <Route path="/news/:id" element={<NewsDetailPage />} />
+                        <Route path="/about" element={<AboutPage />} />
+                        <Route path="/search" element={<SearchPage />} />
+                        <Route path="/tag/:tag" element={<TagPage />} />
+                        <Route path="/category/:category" element={<CategoryPage />} />
 
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                      <Route path="/anime/:id" element={<AnimeDetail />} />
-                      <Route path="/profile" element={<UserCenterPage />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                        <Route path="/anime/:id" element={<AnimeDetail />} />
+                        <Route path="/profile" element={<UserCenterPage />} />
 
-                      <Route path="/help" element={<StaticPage page="help" />} />
-                      <Route path="/faq" element={<StaticPage page="faq" />} />
-                      <Route path="/contact" element={<StaticPage page="contact" />} />
-                      <Route path="/feedback" element={<StaticPage page="feedback" />} />
-                      <Route path="/app" element={<StaticPage page="app" />} />
+                        <Route path="/help" element={<StaticPage page="help" />} />
+                        <Route path="/faq" element={<StaticPage page="faq" />} />
+                        <Route path="/contact" element={<StaticPage page="contact" />} />
+                        <Route path="/feedback" element={<StaticPage page="feedback" />} />
+                        <Route path="/app" element={<StaticPage page="app" />} />
 
-                      <Route path="/terms" element={<StaticPage page="terms" />} />
-                      <Route path="/privacy" element={<StaticPage page="privacy" />} />
-                      <Route path="/cookies" element={<StaticPage page="cookies" />} />
-                      <Route path="/accessibility" element={<StaticPage page="accessibility" />} />
+                        <Route path="/terms" element={<StaticPage page="terms" />} />
+                        <Route path="/privacy" element={<StaticPage page="privacy" />} />
+                        <Route path="/cookies" element={<StaticPage page="cookies" />} />
+                        <Route
+                          path="/accessibility"
+                          element={<StaticPage page="accessibility" />}
+                        />
 
-                      <Route path="*" element={<NotFoundPage />} />
-                    </Routes>
+                        <Route path="*" element={<NotFoundPage />} />
+                      </Routes>
+                    </motion.div>
                   </AnimatePresence>
                 </LayoutGroup>
               </Suspense>

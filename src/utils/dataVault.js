@@ -252,7 +252,7 @@ export const importFeatureData = (featureKey, jsonText, { mode = 'merge' } = {})
       return;
     }
 
-    if (typeof current === 'object' || typeof incoming === 'object') {
+    if ((current && typeof current === 'object') || (incoming && typeof incoming === 'object')) {
       const merged = mergeObjects(current || {}, incoming || {});
       scheduleStorageWrite(key, JSON.stringify(merged));
       summary.after[key] = merged;
@@ -303,7 +303,7 @@ export const importAllData = (jsonText, { mode = 'merge' } = {}) => {
       return;
     }
 
-    if (typeof current === 'object' || typeof incoming === 'object') {
+    if ((current && typeof current === 'object') || (incoming && typeof incoming === 'object')) {
       const merged = mergeObjects(current || {}, incoming || {});
       scheduleStorageWrite(key, JSON.stringify(merged));
       return;

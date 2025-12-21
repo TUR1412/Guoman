@@ -46,9 +46,13 @@ const writeToStorage = (favoriteIds) => {
   if (typeof window === 'undefined') return;
 
   try {
+    const now = Date.now();
     scheduleStorageWrite(STORAGE_KEY, JSON.stringify(Array.from(favoriteIds)));
-    scheduleStorageWrite(UPDATED_KEY, String(Date.now()));
+    scheduleStorageWrite(UPDATED_KEY, String(now));
+    return now;
   } catch {}
+
+  return null;
 };
 
 const FavoritesContext = createContext(null);
@@ -105,8 +109,8 @@ export function FavoritesProvider({ children }) {
         trackEvent('favorites.add', { id: normalized });
       }
 
-      writeToStorage(next);
-      setUpdatedAt(readUpdatedAt());
+      const nextUpdatedAt = writeToStorage(next);
+      setUpdatedAt(nextUpdatedAt ?? readUpdatedAt());
       return next;
     });
   }, []);
@@ -114,8 +118,8 @@ export function FavoritesProvider({ children }) {
   const clearFavorites = useCallback(() => {
     setFavoriteIds(() => {
       const next = new Set();
-      writeToStorage(next);
-      setUpdatedAt(readUpdatedAt());
+      const nextUpdatedAt = writeToStorage(next);
+      setUpdatedAt(nextUpdatedAt ?? readUpdatedAt());
       trackEvent('favorites.clear');
       return next;
     });

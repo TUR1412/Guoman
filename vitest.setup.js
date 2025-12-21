@@ -1,4 +1,6 @@
 import '@testing-library/jest-dom/vitest';
+import { afterEach } from 'vitest';
+import { cleanup } from '@testing-library/react';
 
 const createMemoryStorage = () => {
   const store = new Map();
@@ -25,3 +27,20 @@ const createMemoryStorage = () => {
 // 统一覆盖为内存实现，避免环境差异导致的 flaky 测试。
 globalThis.localStorage = createMemoryStorage();
 globalThis.sessionStorage = createMemoryStorage();
+
+afterEach(() => {
+  cleanup();
+});
+
+if (!window.matchMedia) {
+  window.matchMedia = (query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    addListener: () => {},
+    removeListener: () => {},
+    dispatchEvent: () => false,
+  });
+}

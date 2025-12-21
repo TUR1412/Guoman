@@ -1,11 +1,17 @@
 import { safeLocalStorageGet } from './storage';
-import { scheduleStorageWrite } from './storageQueue';
+import {
+  getPendingStorageWriteValue,
+  hasPendingStorageWrite,
+  scheduleStorageWrite,
+} from './storageQueue';
 
 const STORAGE_KEY = 'guoman.errors.v1';
 const MAX_ERRORS = 50;
 
 const readErrors = () => {
-  const raw = safeLocalStorageGet(STORAGE_KEY);
+  const raw = hasPendingStorageWrite(STORAGE_KEY)
+    ? getPendingStorageWriteValue(STORAGE_KEY)
+    : safeLocalStorageGet(STORAGE_KEY);
   if (!raw) return [];
   try {
     const parsed = JSON.parse(raw);

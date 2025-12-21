@@ -1,7 +1,12 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { shareOrCopyLink } from './share';
 
 describe('shareOrCopyLink', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
   it('uses navigator.share when available', async () => {
     const share = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(globalThis.navigator, 'share', { value: share, configurable: true });
@@ -37,5 +42,59 @@ describe('shareOrCopyLink', () => {
     const res = await shareOrCopyLink({ title: 't', url: 'https://example.com' });
     expect(res).toEqual({ ok: true, method: 'clipboard' });
     expect(document.execCommand).toHaveBeenCalledWith('copy');
+  });
+
+  it('returns none when window is missing', async () => {
+    vi.stubGlobal('window', undefined);
+    const res = await shareOrCopyLink({ title: 't', url: 'https://example.com' });
+    expect(res).toEqual({ ok: false, method: 'none' });
+  });
+
+  it('returns none when resolved url is empty', async () => {
+    vi.stubGlobal('window', { location: { href: '', origin: '' } });
+    const res = await shareOrCopyLink({ title: 't' });
+    expect(res).toEqual({ ok: false, method: 'none' });
+  });
+
+  it('falls back to manual when clipboard + execCommand are unavailable', async () => {
+    Object.defineProperty(globalThis.navigator, 'share', { value: undefined, configurable: true });
+    Object.defineProperty(globalThis.navigator, 'clipboard', {
+      value: undefined,
+      configurable: true,
+    });
+    document.execCommand = vi.fn().mockReturnValue(false);
+
+    const res = await shareOrCopyLink({ title: 't', url: 'https://example.com' });
+    expect(res).toEqual({ ok: false, method: 'manual' });
+  });
+
+  it('falls back to execCommand when clipboard throws', async () => {
+    const writeText = vi.fn().mockRejectedValue(new Error('denied'));
+    Object.defineProperty(globalThis.navigator, 'share', { value: undefined, configurable: true });
+    Object.defineProperty(globalThis.navigator, 'clipboard', {
+      value: { writeText },
+      configurable: true,
+    });
+    document.execCommand = vi.fn().mockReturnValue(true);
+
+    const res = await shareOrCopyLink({ title: 't', url: 'https://example.com' });
+    expect(res).toEqual({ ok: true, method: 'clipboard' });
+    expect(document.execCommand).toHaveBeenCalledWith('copy');
+  });
+
+  it('returns manual when execCommand path throws', async () => {
+    Object.defineProperty(globalThis.navigator, 'share', { value: undefined, configurable: true });
+    Object.defineProperty(globalThis.navigator, 'clipboard', {
+      value: undefined,
+      configurable: true,
+    });
+
+    const spy = vi.spyOn(document, 'createElement').mockImplementation(() => {
+      throw new Error('boom');
+    });
+
+    const res = await shareOrCopyLink({ title: 't', url: 'https://example.com' });
+    expect(res).toEqual({ ok: false, method: 'manual' });
+    spy.mockRestore();
   });
 });

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FiPlay, FiTrash2 } from 'react-icons/fi';
-import animeData from '../data/animeData';
+import { animeIndex } from '../data/animeData';
 import { AnimeGrid } from './anime/AnimeGrid';
 import AnimeCard from './anime/AnimeCard';
 import {
@@ -112,7 +112,7 @@ function ContinueWatching() {
   }, []);
 
   const list = useMemo(
-    () => entries.map((entry) => animeData.find((anime) => anime.id === entry.id)).filter(Boolean),
+    () => entries.map((entry) => animeIndex.get(entry.id)).filter(Boolean),
     [entries],
   );
 

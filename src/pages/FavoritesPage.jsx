@@ -8,7 +8,7 @@ import { AnimeGrid } from '../components/anime/AnimeGrid';
 import { useFavorites } from '../components/FavoritesProvider';
 import { useToast } from '../components/ToastProvider';
 import { downloadTextFile } from '../utils/download';
-import animeData from '../data/animeData';
+import { animeIndex } from '../data/animeData';
 import {
   assignFavoriteToGroup,
   createFavoriteGroup,
@@ -198,7 +198,7 @@ function FavoritesPage() {
 
   const list = useMemo(() => {
     const ids = Array.from(favoriteIds);
-    return ids.map((id) => animeData.find((a) => a.id === id)).filter(Boolean);
+    return ids.map((id) => animeIndex.get(id)).filter(Boolean);
   }, [favoriteIds]);
 
   const groupMap = useMemo(() => {

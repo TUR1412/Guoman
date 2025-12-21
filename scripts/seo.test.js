@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { buildRobotsTxt, buildSitemapXml, formatDate, normalizeHomepage } from './seo';
+import {
+  buildRobotsTxt,
+  buildSitemapXml,
+  formatDate,
+  getDefaultSitemapRoutes,
+  normalizeHomepage,
+} from './seo';
 
 describe('seo helpers', () => {
   it('normalizeHomepage trims and removes trailing slash', () => {
@@ -32,5 +38,32 @@ describe('seo helpers', () => {
 
     expect(xml).toContain('<loc>https://example.com/site/#/</loc>');
     expect(xml).toContain('<lastmod>2025-12-18</lastmod>');
+  });
+
+  it('getDefaultSitemapRoutes expands anime/tag/category routes', () => {
+    const routes = getDefaultSitemapRoutes({
+      animeIds: [1, 2],
+      tags: ['热血'],
+      categorySlugs: ['action'],
+    });
+
+    expect(routes.some((r) => r.path === '/#/anime/1')).toBe(true);
+    expect(routes.some((r) => r.path === '/#/anime/2')).toBe(true);
+    expect(routes.some((r) => r.path === `/#/tag/${encodeURIComponent('热血')}`)).toBe(true);
+    expect(routes.some((r) => r.path === '/#/category/action')).toBe(true);
+  });
+
+  it('buildSitemapXml renders multiple url entries', () => {
+    const xml = buildSitemapXml({
+      homepage: 'https://example.com',
+      lastmod: '2025-12-18',
+      routes: [
+        { path: '/#/', changefreq: 'weekly', priority: '0.9' },
+        { path: '/#/about', changefreq: 'monthly', priority: '0.6' },
+      ],
+    });
+
+    expect(xml).toContain('<loc>https://example.com/#/</loc>');
+    expect(xml).toContain('<loc>https://example.com/#/about</loc>');
   });
 });

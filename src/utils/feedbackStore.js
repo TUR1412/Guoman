@@ -1,11 +1,17 @@
 import { safeLocalStorageGet } from './storage';
-import { scheduleStorageWrite } from './storageQueue';
+import {
+  getPendingStorageWriteValue,
+  hasPendingStorageWrite,
+  scheduleStorageWrite,
+} from './storageQueue';
 import { STORAGE_KEYS } from './dataKeys';
 
 const STORAGE_KEY = STORAGE_KEYS.feedback;
 
 const readStore = () => {
-  const raw = safeLocalStorageGet(STORAGE_KEY);
+  const raw = hasPendingStorageWrite(STORAGE_KEY)
+    ? getPendingStorageWriteValue(STORAGE_KEY)
+    : safeLocalStorageGet(STORAGE_KEY);
   if (!raw) return [];
   try {
     const parsed = JSON.parse(raw);

@@ -1,12 +1,18 @@
 import { safeLocalStorageGet } from './storage';
-import { scheduleStorageWrite } from './storageQueue';
+import {
+  getPendingStorageWriteValue,
+  hasPendingStorageWrite,
+  scheduleStorageWrite,
+} from './storageQueue';
 import { STORAGE_KEYS } from './dataKeys';
 
 const MAX_EVENTS = 200;
 const EVENT_KEY = STORAGE_KEYS.analyticsEvents;
 
 const readEvents = () => {
-  const raw = safeLocalStorageGet(EVENT_KEY);
+  const raw = hasPendingStorageWrite(EVENT_KEY)
+    ? getPendingStorageWriteValue(EVENT_KEY)
+    : safeLocalStorageGet(EVENT_KEY);
   if (!raw) return [];
   try {
     const parsed = JSON.parse(raw);

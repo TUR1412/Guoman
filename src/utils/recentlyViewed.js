@@ -1,5 +1,9 @@
 import { safeLocalStorageGet } from './storage';
-import { hasPendingStorageWrite, scheduleStorageWrite } from './storageQueue';
+import {
+  getPendingStorageWriteValue,
+  hasPendingStorageWrite,
+  scheduleStorageWrite,
+} from './storageQueue';
 import { STORAGE_KEYS } from './dataKeys';
 
 const STORAGE_KEY = STORAGE_KEYS.recentlyViewed;
@@ -18,7 +22,9 @@ let cachedRaw = null;
 
 const readIds = () => {
   if (typeof window === 'undefined') return [];
-  const raw = safeLocalStorageGet(STORAGE_KEY);
+  const raw = hasPendingStorageWrite(STORAGE_KEY)
+    ? getPendingStorageWriteValue(STORAGE_KEY)
+    : safeLocalStorageGet(STORAGE_KEY);
   if (!raw) {
     if (cachedIds && cachedRaw !== null && hasPendingStorageWrite(STORAGE_KEY)) {
       return cachedIds;

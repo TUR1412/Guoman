@@ -84,3 +84,8 @@ export const hasPendingStorageWrite = (key) => {
   if (!key) return false;
   return pendingWrites.has(key);
 };
+
+export const getPendingStorageWriteValue = (key) => {
+  if (!key) return undefined;
+  return pendingWrites.get(key);
+};

@@ -7,11 +7,3 @@ export const safeJsonParse = (raw, fallback) => {
     return fallback;
   }
 };
-
-export const safeJsonStringify = (value, fallback = '') => {
-  try {
-    return JSON.stringify(value);
-  } catch {
-    return fallback;
-  }
-};

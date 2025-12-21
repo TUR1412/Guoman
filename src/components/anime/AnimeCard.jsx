@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -63,7 +63,7 @@ const CoverImg = styled.img`
   z-index: 0;
 `;
 
-const FavButton = styled.button.attrs({ 'data-pressable': true })`
+const FavButton = styled(motion.button).attrs({ 'data-pressable': true })`
   position: absolute;
   top: 10px;
   right: 10px;
@@ -109,7 +109,7 @@ const FavButton = styled.button.attrs({ 'data-pressable': true })`
   }
 `;
 
-const FavDot = styled.div`
+const FavDot = styled(motion.div)`
   position: absolute;
   left: 10px;
   top: 10px;
@@ -119,6 +119,12 @@ const FavDot = styled.div`
   border-radius: var(--border-radius-pill);
   background: var(--primary-color);
   box-shadow: var(--shadow-ring);
+`;
+
+const FavIcon = styled(motion.span)`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const ProgressPanel = styled.div`
@@ -207,34 +213,40 @@ function AnimeCard({ anime }) {
   const favorites = useFavorites();
   const toast = useToast();
   const reducedMotion = useReducedMotion();
-  const [progress, setProgress] = useState(() => getWatchProgress(anime?.id));
-
   const animeId = anime?.id;
+  const [progress, setProgress] = useState(() => getWatchProgress(animeId));
+
   const favorited = animeId ? favorites.isFavorite(animeId) : false;
-  const typeShort = anime?.type?.split('、')?.[0] ?? '';
-  const descId = `anime-card-desc-${anime?.id ?? 'unknown'}`;
+  const typeShort = useMemo(() => anime?.type?.split('、')?.[0] ?? '', [anime?.type]);
+  const descId = useMemo(() => `anime-card-desc-${animeId ?? 'unknown'}`, [animeId]);
 
-  const toggleFavorite = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const toggleFavorite = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-    if (!animeId) return;
-    favorites.toggleFavorite(animeId);
-    if (favorited) {
-      toast.info('已取消收藏', `《${anime.title}》已从收藏移除。`);
-    } else {
-      toast.success('已加入收藏', `《${anime.title}》已加入收藏。`);
-    }
-    trackEvent('favorites.toggle', { id: animeId, active: !favorited });
-  };
+      if (!animeId) return;
+      favorites.toggleFavorite(animeId);
+      if (favorited) {
+        toast.info('已取消收藏', `《${anime.title}》已从收藏移除。`);
+      } else {
+        toast.success('已加入收藏', `《${anime.title}》已加入收藏。`);
+      }
+      trackEvent('favorites.toggle', { id: animeId, active: !favorited });
+    },
+    [anime?.title, animeId, favorited, favorites, toast],
+  );
 
   useEffect(() => {
-    setProgress(getWatchProgress(anime?.id));
-    const unsubscribe = subscribeWatchProgress(() => {
-      setProgress(getWatchProgress(anime?.id));
+    if (!animeId) return undefined;
+    setProgress(getWatchProgress(animeId));
+
+    const unsubscribe = subscribeWatchProgress((detail) => {
+      if (detail?.animeId && detail.animeId !== animeId) return;
+      setProgress(getWatchProgress(animeId));
     });
     return unsubscribe;
-  }, [anime?.id]);
+  }, [animeId]);
 
   const progressValue = progress?.progress ?? 0;
 
@@ -268,6 +280,8 @@ function AnimeCard({ anime }) {
           aria-label={favorited ? '取消收藏' : '加入收藏'}
           aria-pressed={favorited}
           onClick={toggleFavorite}
+          whileTap={reducedMotion ? undefined : { scale: 0.92 }}
+          whileHover={reducedMotion ? undefined : { scale: 1.02 }}
           style={
             favorited
               ? {
@@ -279,9 +293,28 @@ function AnimeCard({ anime }) {
           }
           title={favorited ? '已收藏' : '收藏'}
         >
-          <FiHeart />
+          <FavIcon
+            key={favorited ? 'on' : 'off'}
+            initial={reducedMotion ? false : { scale: 0.9, rotate: -10 }}
+            animate={reducedMotion ? { scale: 1, rotate: 0 } : { scale: 1, rotate: 0 }}
+            transition={
+              reducedMotion
+                ? { duration: 0 }
+                : { type: 'spring', stiffness: 620, damping: 32, mass: 0.6 }
+            }
+            aria-hidden="true"
+          >
+            <FiHeart />
+          </FavIcon>
         </FavButton>
-        {favorited ? <FavDot aria-hidden="true" /> : null}
+        {favorited ? (
+          <FavDot
+            aria-hidden="true"
+            initial={reducedMotion ? false : { scale: 0 }}
+            animate={reducedMotion ? { scale: 1 } : { scale: [0, 1.2, 1] }}
+            transition={reducedMotion ? { duration: 0 } : { duration: 0.35 }}
+          />
+        ) : null}
         {progress && (progress.progress > 0 || progress.episode > 1) ? (
           <ProgressPanel aria-label={`观看进度 ${progressValue}%`}>
             <ProgressMeta>
@@ -317,4 +350,4 @@ function AnimeCard({ anime }) {
   );
 }
 
-export default AnimeCard;
+export default memo(AnimeCard);

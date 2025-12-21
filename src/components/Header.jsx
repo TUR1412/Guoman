@@ -661,7 +661,6 @@ function Header() {
             alt="国漫世界 Logo"
             decoding="async"
             loading="eager"
-            fetchPriority="high"
             width="40"
             height="40"
           />
@@ -842,16 +841,18 @@ function Header() {
         )}
       </AnimatePresence>
 
-      <CommandPalette
-        open={isPaletteOpen}
-        onClose={() => setIsPaletteOpen(false)}
-        actions={paletteActions}
-        onSearch={(q) => {
-          const next = String(q || '').trim();
-          setSearchQuery(next);
-          navigate(next ? `/search?q=${encodeURIComponent(next)}` : '/search');
-        }}
-      />
+      {isPaletteOpen ? (
+        <CommandPalette
+          open={isPaletteOpen}
+          onClose={() => setIsPaletteOpen(false)}
+          actions={paletteActions}
+          onSearch={(q) => {
+            const next = String(q || '').trim();
+            setSearchQuery(next);
+            navigate(next ? `/search?q=${encodeURIComponent(next)}` : '/search');
+          }}
+        />
+      ) : null}
     </HeaderContainer>
   );
 }

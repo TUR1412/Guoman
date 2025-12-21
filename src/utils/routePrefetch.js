@@ -50,7 +50,7 @@ export const prefetchRoute = (path) => {
   const importer = routes[key];
   if (!importer) return;
   prefetched.add(key);
-  importer().catch(() => {
+  return importer().catch(() => {
     prefetched.delete(key);
   });
 };

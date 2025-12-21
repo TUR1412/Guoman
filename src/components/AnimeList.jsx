@@ -1,5 +1,6 @@
 import React, { useEffect, useId, useMemo, useState } from 'react';
 import styled from 'styled-components';
+import { motion, useReducedMotion } from 'framer-motion';
 import animeData, {
   categories,
   featuredAnime,
@@ -76,20 +77,39 @@ const TabsContainer = styled.div.attrs({ role: 'tablist', 'data-divider': 'inlin
 `;
 
 const Tab = styled.button.attrs({ 'data-pressable': true, role: 'tab' })`
+  position: relative;
+  overflow: hidden;
   padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--border-radius-md);
   font-weight: 500;
   font-size: var(--text-base);
   white-space: nowrap;
   transition: var(--transition);
-  background-color: ${(props) => (props.$active ? 'var(--primary-color)' : 'var(--surface-soft)')};
+  background-color: var(--surface-soft);
   color: ${(props) => (props.$active ? 'var(--text-on-primary)' : 'var(--text-secondary)')};
   border: 1px solid ${(props) => (props.$active ? 'transparent' : 'var(--border-subtle)')};
 
   &:hover {
-    background-color: ${(props) =>
-      props.$active ? 'var(--primary-color)' : 'var(--surface-soft-hover)'};
+    background-color: var(--surface-soft-hover);
   }
+`;
+
+const TabLabel = styled.span`
+  position: relative;
+  z-index: 1;
+`;
+
+const TabIndicator = styled(motion.span).attrs({ 'data-testid': 'anime-list-tab-indicator' })`
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    120deg,
+    rgba(var(--primary-rgb), 0.92),
+    rgba(var(--secondary-rgb), 0.78)
+  );
+  box-shadow: var(--shadow-primary-soft);
+  z-index: 0;
 `;
 
 const ShowMoreButton = styled.button.attrs({
@@ -132,9 +152,11 @@ function AnimeList({
 }) {
   const titleId = useId();
   const descId = useId();
+  const reducedMotion = useReducedMotion();
   const [activeTab, setActiveTab] = usePersistedState(storageKey, defaultTab);
 
   const [displayCount, setDisplayCount] = useState(initialDisplayCount);
+  const indicatorLayoutId = useMemo(() => `guoman-tab-indicator:${storageKey}`, [storageKey]);
 
   useEffect(() => {
     setDisplayCount(initialDisplayCount);
@@ -191,7 +213,17 @@ function AnimeList({
                 tabIndex={activeTab === category.id ? 0 : -1}
                 onClick={() => setActiveTab(category.id)}
               >
-                {category.name}
+                {activeTab === category.id ? (
+                  <TabIndicator
+                    layoutId={indicatorLayoutId}
+                    transition={
+                      reducedMotion
+                        ? { duration: 0 }
+                        : { type: 'spring', stiffness: 520, damping: 40 }
+                    }
+                  />
+                ) : null}
+                <TabLabel>{category.name}</TabLabel>
               </Tab>
             ))}
           </TabsContainer>

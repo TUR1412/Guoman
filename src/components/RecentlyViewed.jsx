@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FiClock, FiTrash2 } from 'react-icons/fi';
-import animeData from '../data/animeData';
+import { animeIndex } from '../data/animeData';
 import { AnimeGrid } from './anime/AnimeGrid';
 import AnimeCard from './anime/AnimeCard';
 import { clearRecentlyViewed, getRecentlyViewed } from '../utils/recentlyViewed';
@@ -101,10 +101,7 @@ function RecentlyViewed() {
   const toast = useToast();
   const [ids, setIds] = useState(() => getRecentlyViewed());
 
-  const list = useMemo(
-    () => ids.map((id) => animeData.find((anime) => anime.id === id)).filter(Boolean),
-    [ids],
-  );
+  const list = useMemo(() => ids.map((id) => animeIndex.get(id)).filter(Boolean), [ids]);
 
   const onClear = () => {
     clearRecentlyViewed();

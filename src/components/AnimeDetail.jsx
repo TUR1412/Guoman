@@ -12,7 +12,7 @@ import {
   FiShare2,
   FiHeart,
 } from 'react-icons/fi';
-import animeData from '../data/animeData';
+import { animeIndex } from '../data/animeData';
 import EmptyState from './EmptyState';
 import { useFavorites } from './FavoritesProvider';
 import { useToast } from './ToastProvider';
@@ -706,17 +706,23 @@ function AnimeDetail() {
 
     const fetchAnime = () => {
       try {
-        const foundAnime = animeData.find((anime) => anime.id === Number.parseInt(id, 10));
+        const numericId = Number.parseInt(id, 10);
+        const foundAnime = Number.isFinite(numericId) ? animeIndex.get(numericId) : null;
         if (foundAnime) {
           setAnime(foundAnime);
 
           // 获取相关动漫
           if (foundAnime.relatedAnime && foundAnime.relatedAnime.length > 0) {
             const related = foundAnime.relatedAnime
-              .map((relId) => animeData.find((a) => a.id === relId))
+              .map((relId) => animeIndex.get(relId))
               .filter(Boolean);
             setRelatedAnimes(related);
+          } else {
+            setRelatedAnimes([]);
           }
+        } else {
+          setAnime(null);
+          setRelatedAnimes([]);
         }
       } catch (error) {
         if (import.meta.env?.DEV) {
@@ -739,7 +745,8 @@ function AnimeDetail() {
   useEffect(() => {
     if (!anime?.id) return;
     setWatchProgress(getWatchProgress(anime.id) || { episode: 1, progress: 0 });
-    const unsubscribe = subscribeWatchProgress(() => {
+    const unsubscribe = subscribeWatchProgress((detail) => {
+      if (detail?.animeId && detail.animeId !== anime.id) return;
       setWatchProgress(getWatchProgress(anime.id) || { episode: 1, progress: 0 });
     });
     return unsubscribe;
@@ -930,7 +937,6 @@ function AnimeDetail() {
                 alt={anime.title}
                 loading="eager"
                 decoding="async"
-                fetchPriority="high"
                 width="400"
                 height="600"
               />
