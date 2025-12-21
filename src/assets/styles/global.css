@@ -93,6 +93,19 @@
   --brand-twitter-blue: #1da1f2;
 }
 
+/* PRO 模式：仅增强氛围与层级（不影响可读性） */
+:root[data-pro='true'] {
+  --shadow-glow:
+    0 0 0 1px rgba(var(--primary-rgb), 0.18), 0 14px 40px rgba(var(--primary-rgb), 0.16);
+  --divider-gradient: linear-gradient(
+    90deg,
+    rgba(var(--primary-rgb), 0.85) 0%,
+    rgba(var(--secondary-rgb), 0.75) 50%,
+    rgba(var(--accent-rgb), 0.75) 100%
+  );
+  --stagger-step: 70ms;
+}
+
 /* 主题色板（避免“只换背景不换文字”的灾难） */
 :root[data-theme='dark'] {
   --primary-color: #e85445;

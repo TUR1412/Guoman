@@ -47,6 +47,12 @@ describe('usePersistedState', () => {
     expect(screen.getByRole('button')).toHaveTextContent('B');
   });
 
+  it('returns raw stored value when deserialize is falsy', () => {
+    window.localStorage.setItem('k-raw', 'RAW');
+    render(<Harness storageKey="k-raw" options={{ deserialize: null }} />);
+    expect(screen.getByRole('button')).toHaveTextContent('RAW');
+  });
+
   it('falls back when deserialize throws', () => {
     window.localStorage.setItem('k3', 'BAD');
 

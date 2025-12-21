@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="480" viewBox="0 0 1200 480" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B0F14" />
+      <stop offset="100%" stop-color="#101722" />
+    </linearGradient>
+    <linearGradient id="poster" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#141D29" />
+      <stop offset="100%" stop-color="#0B0F14" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#E85445" />
+      <stop offset="100%" stop-color="#CAA45A" />
+    </linearGradient>
+    <linearGradient id="shimmer" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="rgba(255,255,255,0)" />
+      <stop offset="45%" stop-color="rgba(255,255,255,0.20)" />
+      <stop offset="75%" stop-color="rgba(255,255,255,0)" />
+    </linearGradient>
+    <filter id="blur" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="22" />
+    </filter>
+  </defs>
+
+  <rect width="1200" height="480" fill="url(#bg)" />
+  <circle cx="220" cy="100" r="150" fill="rgba(232,84,69,0.32)" filter="url(#blur)" />
+  <circle cx="980" cy="380" r="220" fill="rgba(202,164,90,0.20)" filter="url(#blur)" />
+
+  <text x="70" y="74" fill="rgba(244,242,238,0.92)" font-size="24" font-family="Noto Sans SC, sans-serif">
+    动效演示：海报工坊 Shimmer + SVG 导出
+  </text>
+  <text x="70" y="106" fill="rgba(213,208,199,0.75)" font-size="16" font-family="Noto Sans SC, sans-serif">
+    生成预览 → 下载 SVG → 写入历史（本地保存）
+  </text>
+
+  <!-- poster frame -->
+  <g>
+    <rect x="120" y="150" width="320" height="310" rx="28" fill="rgba(255,255,255,0.06)" stroke="rgba(244,242,238,0.12)" />
+    <rect x="160" y="186" width="240" height="260" rx="22" fill="url(#poster)" stroke="rgba(244,242,238,0.14)" />
+    <rect x="182" y="214" width="196" height="16" rx="8" fill="rgba(244,242,238,0.20)" />
+    <rect x="182" y="242" width="156" height="12" rx="6" fill="rgba(244,242,238,0.14)" />
+    <rect x="182" y="278" width="120" height="36" rx="18" fill="url(#accent)" />
+    <text x="202" y="302" fill="#FFFFFF" font-size="14" font-family="Noto Sans SC, sans-serif">评分 4.8</text>
+  </g>
+
+  <!-- shimmer sweep -->
+  <rect id="sweep" x="-380" y="150" width="380" height="310" fill="url(#shimmer)" opacity="0.8">
+    <animate attributeName="x" values="-380;1280" dur="2.8s" repeatCount="indefinite" />
+  </rect>
+
+  <!-- right side copy -->
+  <rect x="520" y="168" width="610" height="260" rx="28" fill="rgba(255,255,255,0.06)" stroke="rgba(244,242,238,0.12)" />
+  <text x="560" y="222" fill="rgba(244,242,238,0.92)" font-size="20" font-family="Noto Sans SC, sans-serif">
+    1) 输入标题 / 副标题 / 评分
+  </text>
+  <text x="560" y="258" fill="rgba(213,208,199,0.75)" font-size="16" font-family="Noto Sans SC, sans-serif">
+    2) 生成预览并下载 SVG（可直接用于分享/二次编辑）
+  </text>
+  <text x="560" y="294" fill="rgba(213,208,199,0.75)" font-size="16" font-family="Noto Sans SC, sans-serif">
+    3) 历史管理：一键重新导出 / 清空
+  </text>
+  <rect x="560" y="330" width="180" height="48" rx="24" fill="rgba(232,84,69,0.16)" stroke="rgba(232,84,69,0.55)" />
+  <text x="610" y="360" fill="rgba(244,242,238,0.92)" font-size="16" font-family="Noto Sans SC, sans-serif">
+    下载海报
+  </text>
+</svg>
+

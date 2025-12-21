@@ -1,8 +1,18 @@
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { AnimatePresence, motion } from 'framer-motion';
 import {
+  AnimatePresence,
+  LayoutGroup,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+} from 'framer-motion';
+import {
+  FiActivity,
+  FiBell,
+  FiAward,
   FiBookOpen,
   FiCommand,
   FiCompass,
@@ -13,6 +23,7 @@ import {
   FiMenu,
   FiMoon,
   FiSearch,
+  FiShare2,
   FiSun,
   FiTrendingUp,
   FiUser,
@@ -24,6 +35,7 @@ import { usePersistedState } from '../utils/usePersistedState';
 import { STORAGE_KEYS } from '../utils/dataKeys';
 import { prefetchRoute } from '../utils/routePrefetch';
 import { safeJsonParse } from '../utils/json';
+import { useIsProEnabled } from '../utils/useProMembership';
 import CommandPalette from './CommandPalette';
 
 const HeaderContainer = styled.header`
@@ -76,14 +88,14 @@ const Logo = styled(Link)`
     height: 32px;
   }
 
-  span {
+  .logo-title {
     font-weight: 800;
     letter-spacing: -0.02em;
     font-family: var(--font-display);
   }
 
   @media (max-width: 576px) {
-    span {
+    .logo-title {
       display: none;
     }
   }
@@ -95,6 +107,21 @@ const Logo = styled(Link)`
   @media (max-width: 768px) {
     grid-column: 1 / span 10;
   }
+`;
+
+const ProBadge = styled(motion.span).attrs({ 'data-shimmer': true })`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: var(--border-radius-pill);
+  border: 1px solid var(--primary-soft-border);
+  background: rgba(var(--primary-rgb), 0.16);
+  color: var(--primary-color);
+  font-size: var(--text-xxs);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 `;
 
 const Nav = styled.nav`
@@ -128,27 +155,37 @@ const NavLinks = styled.ul.attrs({ 'data-divider': 'inline', role: 'list' })`
 
 const NavLink = styled(Link).attrs({ 'data-pressable': true })`
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--border-radius-pill);
+  overflow: hidden;
   font-weight: 500;
-  color: ${(props) => (props.$active ? 'var(--primary-color)' : 'var(--text-secondary)')};
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: ${(props) => (props.$active ? '100%' : '0')};
-    height: 2px;
-    background-color: var(--primary-color);
-    transition: var(--transition);
-  }
+  color: ${(props) => (props.$active ? 'var(--text-on-primary)' : 'var(--text-secondary)')};
+  transition: var(--transition);
 
   &:hover {
-    color: var(--primary-color);
-
-    &::after {
-      width: 100%;
-    }
+    color: ${(props) => (props.$active ? 'var(--text-on-primary)' : 'var(--primary-color)')};
+    background: ${(props) => (props.$active ? 'transparent' : 'var(--surface-soft-hover)')};
   }
+`;
+
+const NavPill = styled(motion.span)`
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    120deg,
+    rgba(var(--primary-rgb), 0.86),
+    rgba(var(--secondary-rgb), 0.72)
+  );
+  box-shadow: var(--shadow-primary-soft);
+  z-index: 0;
+`;
+
+const NavLabel = styled.span`
+  position: relative;
+  z-index: 1;
 `;
 
 const DesktopSearch = styled.div`
@@ -227,6 +264,18 @@ const SearchIcon = styled(FiSearch)`
   left: var(--spacing-sm-plus);
   transform: translateY(-50%);
   color: var(--text-tertiary);
+  pointer-events: none;
+`;
+
+const ScrollProgress = styled(motion.div)`
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  transform-origin: 0 50%;
+  background: var(--divider-gradient);
+  opacity: 0;
   pointer-events: none;
 `;
 
@@ -348,9 +397,11 @@ const navItems = [
   { title: '首页', path: '/' },
   { title: '国漫推荐', path: '/recommendations' },
   { title: '收藏', path: '/favorites' },
+  { title: '追更', path: '/following' },
   { title: '排行榜', path: '/rankings' },
   { title: '最新资讯', path: '/news' },
   { title: '关于我们', path: '/about' },
+  { title: 'PRO', path: '/pro' },
   { title: '用户中心', path: '/profile' },
 ];
 
@@ -360,6 +411,14 @@ function Header() {
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [theme, setTheme] = useState(() => getCurrentTheme());
+  const proEnabled = useIsProEnabled();
+  const reducedMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll();
+  const springScrollProgress = useSpring(scrollYProgress, {
+    stiffness: 240,
+    damping: 40,
+    mass: 0.2,
+  });
   const [shortcutSettings] = usePersistedState(
     STORAGE_KEYS.shortcuts,
     { enabled: true },
@@ -597,6 +656,46 @@ function Header() {
         navigate('/favorites'),
       ),
       action(
+        'nav.following',
+        '追更中心',
+        '管理追更与提醒设置',
+        ['追更', 'following', 'reminder', '通知'],
+        <FiBell />,
+        () => navigate('/following'),
+      ),
+      action(
+        'nav.pro',
+        '会员与赞助',
+        '开启 PRO 视觉与权益模型（本地演示）',
+        ['pro', '会员', '赞助', 'pricing', 'support'],
+        <FiAward />,
+        () => navigate('/pro'),
+      ),
+      action(
+        'nav.insights',
+        '足迹中心',
+        '查看播放/下载/分享足迹与留存概览',
+        ['足迹', 'insights', 'activity', '留存', '增长'],
+        <FiActivity />,
+        () => navigate('/insights'),
+      ),
+      action(
+        'nav.posters',
+        '海报工坊',
+        '生成分享海报并管理历史（SVG）',
+        ['海报', 'poster', 'share', 'svg', '裂变'],
+        <FiShare2 />,
+        () => navigate('/posters'),
+      ),
+      action(
+        'nav.achievements',
+        '成就中心',
+        '查看成就进度条与解锁状态',
+        ['成就', 'achievements', 'badge'],
+        <FiAward />,
+        () => navigate('/achievements'),
+      ),
+      action(
         'nav.rankings',
         '排行榜',
         '查看评分/人气排行',
@@ -651,6 +750,13 @@ function Header() {
       aria-label="站点顶部导航"
       aria-describedby="guoman-header-desc"
     >
+      <ScrollProgress
+        aria-hidden="true"
+        style={{ scaleX: reducedMotion ? scrollYProgress : springScrollProgress }}
+        initial={false}
+        animate={{ opacity: isScrolled ? 1 : 0 }}
+        transition={reducedMotion ? { duration: 0 } : { duration: 0.2 }}
+      />
       <span id="guoman-header-desc" className="sr-only">
         包含主导航、站内搜索、登录入口与主题切换。
       </span>
@@ -664,29 +770,52 @@ function Header() {
             width="40"
             height="40"
           />
-          <span>国漫世界</span>
+          <span className="logo-title">国漫世界</span>
+          {proEnabled ? (
+            <ProBadge
+              initial={reducedMotion ? false : { opacity: 0, y: -4 }}
+              animate={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
+              transition={reducedMotion ? { duration: 0 } : { duration: 0.25 }}
+              aria-label="PRO 已启用"
+              title="PRO 模式已启用"
+            >
+              PRO
+            </ProBadge>
+          ) : null}
         </Logo>
 
         <Nav aria-label="主导航">
-          <NavLinks>
-            {navItems.map((item) => {
-              const active = isRouteActive(item.path);
+          <LayoutGroup id="guoman-nav">
+            <NavLinks>
+              {navItems.map((item) => {
+                const active = isRouteActive(item.path);
 
-              return (
-                <li key={item.path}>
-                  <NavLink
-                    to={item.path}
-                    $active={active}
-                    aria-current={active ? 'page' : undefined}
-                    onMouseEnter={() => prefetchRoute(item.path)}
-                    onFocus={() => prefetchRoute(item.path)}
-                  >
-                    {item.title}
-                  </NavLink>
-                </li>
-              );
-            })}
-          </NavLinks>
+                return (
+                  <li key={item.path}>
+                    <NavLink
+                      to={item.path}
+                      $active={active}
+                      aria-current={active ? 'page' : undefined}
+                      onMouseEnter={() => prefetchRoute(item.path)}
+                      onFocus={() => prefetchRoute(item.path)}
+                    >
+                      {active ? (
+                        <NavPill
+                          layoutId="guoman-nav-pill"
+                          transition={
+                            reducedMotion
+                              ? { duration: 0 }
+                              : { type: 'spring', stiffness: 560, damping: 46 }
+                          }
+                        />
+                      ) : null}
+                      <NavLabel>{item.title}</NavLabel>
+                    </NavLink>
+                  </li>
+                );
+              })}
+            </NavLinks>
+          </LayoutGroup>
         </Nav>
 
         <DesktopSearch>

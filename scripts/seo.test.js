@@ -47,6 +47,12 @@ describe('seo helpers', () => {
       categorySlugs: ['action'],
     });
 
+    expect(routes.some((r) => r.path === '/#/following')).toBe(true);
+    expect(routes.some((r) => r.path === '/#/pro')).toBe(true);
+    expect(routes.some((r) => r.path === '/#/insights')).toBe(true);
+    expect(routes.some((r) => r.path === '/#/posters')).toBe(true);
+    expect(routes.some((r) => r.path === '/#/achievements')).toBe(true);
+
     expect(routes.some((r) => r.path === '/#/anime/1')).toBe(true);
     expect(routes.some((r) => r.path === '/#/anime/2')).toBe(true);
     expect(routes.some((r) => r.path === `/#/tag/${encodeURIComponent('热血')}`)).toBe(true);

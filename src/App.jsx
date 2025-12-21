@@ -12,6 +12,7 @@ import { ToastProvider } from './components/ToastProvider';
 import { safeSessionStorageGet, safeSessionStorageSet } from './utils/storage';
 import { prefetchRoutes } from './utils/routePrefetch';
 import { trackEvent } from './utils/analytics';
+import { useIsProEnabled } from './utils/useProMembership';
 
 // 页面
 import HomePage from './pages/HomePage';
@@ -24,6 +25,11 @@ const SearchPage = lazy(() => import('./pages/SearchPage'));
 const TagPage = lazy(() => import('./pages/TagPage'));
 const CategoryPage = lazy(() => import('./pages/CategoryPage'));
 const FavoritesPage = lazy(() => import('./pages/FavoritesPage'));
+const FollowingPage = lazy(() => import('./pages/FollowingPage'));
+const PricingPage = lazy(() => import('./pages/PricingPage'));
+const InsightsPage = lazy(() => import('./pages/InsightsPage'));
+const PostersPage = lazy(() => import('./pages/PostersPage'));
+const AchievementsPage = lazy(() => import('./pages/AchievementsPage'));
 const StaticPage = lazy(() => import('./pages/StaticPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
@@ -84,6 +90,12 @@ function App() {
     return !safeSessionStorageGet(INTRO_KEY);
   });
   const location = useLocation();
+  const proEnabled = useIsProEnabled();
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    document.documentElement.dataset.pro = proEnabled ? 'true' : 'false';
+  }, [proEnabled]);
 
   useEffect(() => {
     if (!loading) return undefined;
@@ -114,10 +126,15 @@ function App() {
         '/rankings',
         '/news',
         '/favorites',
+        '/following',
+        '/pro',
         '/search',
         '/about',
         '/login',
         '/profile',
+        '/insights',
+        '/posters',
+        '/achievements',
       ]);
     };
 
@@ -267,6 +284,11 @@ function App() {
                         <Route path="/" element={<HomePage />} />
                         <Route path="/recommendations" element={<RecommendationsPage />} />
                         <Route path="/favorites" element={<FavoritesPage />} />
+                        <Route path="/following" element={<FollowingPage />} />
+                        <Route path="/pro" element={<PricingPage />} />
+                        <Route path="/insights" element={<InsightsPage />} />
+                        <Route path="/posters" element={<PostersPage />} />
+                        <Route path="/achievements" element={<AchievementsPage />} />
                         <Route path="/rankings" element={<RankingsPage />} />
                         <Route path="/news" element={<NewsPage />} />
                         <Route path="/news/:id" element={<NewsDetailPage />} />

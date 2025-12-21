@@ -39,6 +39,11 @@ export const recordSharePoster = ({ title, subtitle }) => {
 
 export const getSharePosters = () => readStore();
 
+export const clearSharePosters = () => {
+  writeStore([]);
+  return [];
+};
+
 export const buildPosterSvg = ({ title, subtitle, rating }) => {
   const safeTitle = String(title || '').slice(0, 18);
   const safeSubtitle = String(subtitle || '').slice(0, 28);

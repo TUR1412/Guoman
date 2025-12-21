@@ -26,4 +26,6 @@ export const STORAGE_KEYS = Object.freeze({
   recommendationsActions: 'guoman.recommendations.actions.v1',
   rankingsActions: 'guoman.rankings.actions.v1',
   newsHistory: 'guoman.news.history.v1',
+  following: 'guoman.following.v1',
+  proMembership: 'guoman.pro.membership.v1',
 });

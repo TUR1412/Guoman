@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="480" viewBox="0 0 1200 480" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B0F14" />
+      <stop offset="55%" stop-color="#131B26" />
+      <stop offset="100%" stop-color="#0B0F14" />
+    </linearGradient>
+    <linearGradient id="aurora" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="rgba(232,84,69,0.35)" />
+      <stop offset="50%" stop-color="rgba(202,164,90,0.28)" />
+      <stop offset="100%" stop-color="rgba(31,143,122,0.28)" />
+      <animate attributeName="x1" values="0;0.2;0" dur="6s" repeatCount="indefinite" />
+      <animate attributeName="x2" values="1;0.8;1" dur="6s" repeatCount="indefinite" />
+    </linearGradient>
+    <filter id="blur" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="18" />
+    </filter>
+  </defs>
+
+  <rect width="1200" height="480" fill="url(#bg)" />
+  <circle cx="170" cy="110" r="120" fill="rgba(232,84,69,0.35)" filter="url(#blur)" />
+  <circle cx="1010" cy="120" r="160" fill="rgba(31,143,122,0.26)" filter="url(#blur)" />
+  <circle cx="900" cy="380" r="220" fill="rgba(202,164,90,0.22)" filter="url(#blur)" />
+
+  <text x="70" y="74" fill="rgba(244,242,238,0.92)" font-size="24" font-family="Noto Sans SC, sans-serif">
+    动效演示：卡片封面 Shared Layout 过渡
+  </text>
+  <text x="70" y="106" fill="rgba(213,208,199,0.75)" font-size="16" font-family="Noto Sans SC, sans-serif">
+    列表卡片 → 详情页封面：同一个 layoutId 的“形变飞入”
+  </text>
+
+  <rect x="70" y="160" width="340" height="260" rx="28" fill="rgba(255,255,255,0.06)" stroke="rgba(244,242,238,0.12)" />
+  <rect x="790" y="140" width="340" height="300" rx="28" fill="rgba(255,255,255,0.06)" stroke="rgba(244,242,238,0.12)" />
+  <text x="150" y="310" fill="rgba(244,242,238,0.62)" font-size="14" font-family="Noto Sans SC, sans-serif">列表</text>
+  <text x="930" y="310" fill="rgba(244,242,238,0.62)" font-size="14" font-family="Noto Sans SC, sans-serif">详情</text>
+
+  <!-- morphing card -->
+  <g>
+    <rect id="card" x="120" y="208" width="220" height="240" rx="22" fill="rgba(255,255,255,0.08)" stroke="rgba(244,242,238,0.16)" />
+    <rect id="cover" x="138" y="226" width="184" height="158" rx="16" fill="url(#aurora)" />
+    <rect id="meta" x="138" y="396" width="184" height="10" rx="6" fill="rgba(244,242,238,0.22)" />
+
+    <animate href="#card" attributeName="x" values="120;120;840;840;120" dur="7.2s" repeatCount="indefinite" />
+    <animate href="#card" attributeName="y" values="208;208;176;176;208" dur="7.2s" repeatCount="indefinite" />
+    <animate href="#card" attributeName="width" values="220;220;260;260;220" dur="7.2s" repeatCount="indefinite" />
+    <animate href="#card" attributeName="height" values="240;240;300;300;240" dur="7.2s" repeatCount="indefinite" />
+
+    <animate href="#cover" attributeName="x" values="138;138;862;862;138" dur="7.2s" repeatCount="indefinite" />
+    <animate href="#cover" attributeName="y" values="226;226;194;194;226" dur="7.2s" repeatCount="indefinite" />
+    <animate href="#cover" attributeName="width" values="184;184;216;216;184" dur="7.2s" repeatCount="indefinite" />
+    <animate href="#cover" attributeName="height" values="158;158;188;188;158" dur="7.2s" repeatCount="indefinite" />
+
+    <animate href="#meta" attributeName="x" values="138;138;862;862;138" dur="7.2s" repeatCount="indefinite" />
+    <animate href="#meta" attributeName="y" values="396;396;404;404;396" dur="7.2s" repeatCount="indefinite" />
+    <animate href="#meta" attributeName="width" values="184;184;216;216;184" dur="7.2s" repeatCount="indefinite" />
+  </g>
+</svg>

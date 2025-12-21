@@ -6,7 +6,7 @@ import {
   subscribeWatchProgress,
   updateWatchProgress,
 } from './watchProgress';
-import { flushStorageQueue } from './storageQueue';
+import { flushStorageQueue, hasPendingStorageWrite, scheduleStorageWrite } from './storageQueue';
 
 describe('watchProgress utils', () => {
   beforeEach(() => {
@@ -55,6 +55,15 @@ describe('watchProgress utils', () => {
     updateWatchProgress({ animeId: 9, episode: 2, progress: 10 });
     // 不 flush：依赖 hasPendingStorageWrite + 内存缓存
     expect(getWatchProgress(9)).toEqual(expect.objectContaining({ episode: 2, progress: 10 }));
+  });
+
+  it('returns cached payload when pending write removes key', () => {
+    updateWatchProgress({ animeId: 17, episode: 2, progress: 10 });
+    expect(getWatchProgress(17)).toEqual(expect.objectContaining({ episode: 2, progress: 10 }));
+
+    scheduleStorageWrite('guoman.watchProgress.v1', null);
+    expect(hasPendingStorageWrite('guoman.watchProgress.v1')).toBe(true);
+    expect(getWatchProgress(17)).toEqual(expect.objectContaining({ episode: 2, progress: 10 }));
   });
 
   it('clears all entries when animeId is omitted', () => {

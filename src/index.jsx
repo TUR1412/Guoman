@@ -8,11 +8,17 @@ import AppErrorBoundary from './components/AppErrorBoundary';
 import { initTheme } from './utils/theme';
 import { initPerformanceMonitor } from './utils/performance';
 import { initErrorMonitor } from './utils/errorReporter';
+import { fireDueFollowingReminders } from './utils/followingStore';
+import { isProEnabled } from './utils/proMembership';
 
 // 尽量在首帧渲染前初始化主题，避免闪烁
 initTheme();
 initPerformanceMonitor();
 initErrorMonitor();
+fireDueFollowingReminders();
+try {
+  document.documentElement.dataset.pro = isProEnabled() ? 'true' : 'false';
+} catch {}
 
 // 创建路由器并添加未来标志 - 使用HashRouter适配GitHub Pages
 const router = createHashRouter(

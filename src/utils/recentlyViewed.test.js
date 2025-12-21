@@ -5,7 +5,7 @@ import {
   RECENTLY_VIEWED_STORAGE_KEY,
   recordRecentlyViewed,
 } from './recentlyViewed';
-import { flushStorageQueue } from './storageQueue';
+import { flushStorageQueue, hasPendingStorageWrite, scheduleStorageWrite } from './storageQueue';
 
 describe('recentlyViewed utils', () => {
   beforeEach(() => {
@@ -26,6 +26,15 @@ describe('recentlyViewed utils', () => {
     expect(getRecentlyViewed()).toEqual([7]);
     flushStorageQueue();
     expect(getRecentlyViewed()).toEqual([7]);
+  });
+
+  it('returns cached list when pending write removes key', () => {
+    recordRecentlyViewed(11);
+    expect(getRecentlyViewed()).toEqual([11]);
+
+    scheduleStorageWrite(RECENTLY_VIEWED_STORAGE_KEY, null);
+    expect(hasPendingStorageWrite(RECENTLY_VIEWED_STORAGE_KEY)).toBe(true);
+    expect(getRecentlyViewed()).toEqual([11]);
   });
 
   it('ignores invalid ids', () => {

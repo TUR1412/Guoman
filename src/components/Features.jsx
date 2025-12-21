@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
-import { FiPlay, FiDownload, FiWifi, FiMonitor, FiHeart, FiUsers } from 'react-icons/fi';
+import { FiActivity, FiAward, FiBell, FiHeart, FiShare2, FiStar } from 'react-icons/fi';
 import featuresBackground from '../assets/images/features-background.svg';
 
 const FeaturesContainer = styled.section`
@@ -142,36 +143,59 @@ const FeatureDescription = styled.p`
   line-height: var(--leading-normal);
 `;
 
+const FeatureAction = styled(Link).attrs({ 'data-pressable': true })`
+  width: fit-content;
+  padding: 0.55rem 0.9rem;
+  border-radius: var(--border-radius-pill);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-soft);
+  color: var(--text-primary);
+  font-weight: 800;
+  transition: var(--transition);
+  margin-top: var(--spacing-md);
+
+  &:hover {
+    border-color: var(--chip-border-hover);
+    background: var(--surface-soft-hover);
+  }
+`;
+
 const features = [
   {
-    icon: <FiPlay />,
-    title: '高清播放',
-    description: '支持最高4K超清画质，流畅播放无卡顿，享受震撼视听盛宴',
-  },
-  {
-    icon: <FiDownload />,
-    title: '离线观看',
-    description: '下载喜爱的国漫作品，随时随地无网络也能尽情观看',
-  },
-  {
-    icon: <FiWifi />,
-    title: '免流量服务',
-    description: '与多家运营商合作，观看国漫世界的内容不消耗您的流量',
-  },
-  {
-    icon: <FiMonitor />,
-    title: '多端同步',
-    description: '手机、平板、电脑、电视多端账号同步，记录您的观看进度',
-  },
-  {
     icon: <FiHeart />,
-    title: '个性化推荐',
-    description: '基于您的观看习惯和偏好，智能推荐符合您口味的国漫作品',
+    title: '本地收藏与分组',
+    description: '收藏/分组/导入导出一体化：刷新不丢、离线可用。',
+    to: '/favorites',
   },
   {
-    icon: <FiUsers />,
-    title: '互动社区',
-    description: '与其他国漫爱好者一起讨论、分享，结交志同道合的朋友',
+    icon: <FiBell />,
+    title: '追更中心',
+    description: '一键追更 + 提醒时间 + 通知中心：把追番变成习惯。',
+    to: '/following',
+  },
+  {
+    icon: <FiStar />,
+    title: '口味画像推荐',
+    description: '基于收藏/观看进度/搜索词构建 Taste Engine 并排序推荐。',
+    to: '/recommendations',
+  },
+  {
+    icon: <FiShare2 />,
+    title: '海报工坊',
+    description: '一键生成 SVG 分享海报 + 历史管理：把推荐做成传播。',
+    to: '/posters',
+  },
+  {
+    icon: <FiActivity />,
+    title: '足迹中心',
+    description: '播放/下载/分享行为的本地足迹与留存概览，支持一键清理。',
+    to: '/insights',
+  },
+  {
+    icon: <FiAward />,
+    title: '成就系统',
+    description: '进度条化反馈：让每一次互动都可见，让留存更有“可玩性”。',
+    to: '/achievements',
   },
 ];
 
@@ -229,6 +253,7 @@ function Features() {
                 <FeatureIcon>{feature.icon}</FeatureIcon>
                 <FeatureTitle>{feature.title}</FeatureTitle>
                 <FeatureDescription>{feature.description}</FeatureDescription>
+                {feature.to ? <FeatureAction to={feature.to}>打开</FeatureAction> : null}
               </FeatureCard>
             ))}
           </FeaturesGrid>

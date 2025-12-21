@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import animeData, {
   categories,
   featuredAnime,
@@ -233,9 +233,24 @@ function AnimeList({
         </span>
 
         <AnimeGrid $bento={bento}>
-          {displayedAnime.slice(0, displayCount).map((anime) => (
-            <AnimeCard key={anime.id} anime={anime} />
-          ))}
+          <AnimatePresence initial={false}>
+            {displayedAnime.slice(0, displayCount).map((anime) => (
+              <motion.div
+                key={anime.id}
+                layout
+                initial={reducedMotion ? false : { opacity: 0, y: 10, scale: 0.98 }}
+                animate={
+                  reducedMotion ? { opacity: 1, y: 0, scale: 1 } : { opacity: 1, y: 0, scale: 1 }
+                }
+                exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -10, scale: 0.98 }}
+                transition={
+                  reducedMotion ? { duration: 0 } : { duration: 0.22, ease: [0.22, 1, 0.36, 1] }
+                }
+              >
+                <AnimeCard anime={anime} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </AnimeGrid>
 
         {displayCount < displayedAnime.length && (

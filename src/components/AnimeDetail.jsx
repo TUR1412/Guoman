@@ -1,5 +1,5 @@
 import React, { useId, useMemo, useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useLocation, useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
@@ -10,12 +10,16 @@ import {
   FiUsers,
   FiDownload,
   FiShare2,
+  FiBell,
   FiHeart,
 } from 'react-icons/fi';
 import { animeIndex } from '../data/animeData';
 import EmptyState from './EmptyState';
-import { useFavorites } from './FavoritesProvider';
 import { useToast } from './ToastProvider';
+import { toggleFavorite } from '../utils/favoritesStore';
+import { toggleFollowing } from '../utils/followingStore';
+import { useIsFavorite } from '../utils/useIsFavorite';
+import { useIsFollowing } from '../utils/useIsFollowing';
 import { shareOrCopyLink } from '../utils/share';
 import { recordRecentlyViewed } from '../utils/recentlyViewed';
 import { usePageMeta } from '../utils/pageMeta';
@@ -670,6 +674,7 @@ const CommentButton = styled.button.attrs({ 'data-pressable': true })`
 
 function AnimeDetail() {
   const { id } = useParams();
+  const location = useLocation();
   const [anime, setAnime] = useState(null);
   const [relatedAnimes, setRelatedAnimes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -684,8 +689,11 @@ function AnimeDetail() {
   const progressRangeId = useId();
   const progressMetaId = useId();
   const reducedMotion = useReducedMotion();
-  const favorites = useFavorites();
   const toast = useToast();
+  const favorited = useIsFavorite(anime?.id);
+  const following = useIsFollowing(anime?.id);
+  const sharedCoverLayoutId =
+    typeof location?.state?.coverLayoutId === 'string' ? location.state.coverLayoutId : undefined;
   usePageMeta({
     title: anime ? anime.title : '作品详情',
     description: anime?.description || '查看国漫详情、评分、剧情与角色信息。',
@@ -800,12 +808,11 @@ function AnimeDetail() {
     );
   }
 
-  const favorited = favorites.isFavorite(anime.id);
   const watchHref = anime.watchLinks?.[0]?.url;
   const isWatchDisabled = !watchHref;
 
   const handleToggleFavorite = () => {
-    favorites.toggleFavorite(anime.id);
+    toggleFavorite(anime.id);
 
     if (favorited) {
       toast.info('已取消收藏', '你可以随时再次加入收藏。');
@@ -813,6 +820,19 @@ function AnimeDetail() {
       toast.success('已加入收藏', '已为你保存到「收藏」页。');
     }
     trackEvent('anime.favorite.toggle', { id: anime.id, active: !favorited });
+  };
+
+  const handleToggleFollowing = () => {
+    const result = toggleFollowing({ animeId: anime.id, title: anime.title });
+    if (!result.ok) return;
+
+    if (result.action === 'followed') {
+      toast.success('已加入追更', '可在「追更中心」为本片设置提醒。');
+    } else if (result.action === 'unfollowed') {
+      toast.info('已取消追更', '你可以随时重新加入追更。');
+    }
+
+    trackEvent('anime.follow.toggle', { id: anime.id, active: result.action === 'followed' });
   };
 
   const handleDownload = () => {
@@ -928,9 +948,16 @@ function AnimeDetail() {
         <ContentContainer>
           <CoverContainer>
             <CoverImage
-              initial={reducedMotion ? false : { opacity: 0, y: 20 }}
+              layoutId={sharedCoverLayoutId}
+              initial={sharedCoverLayoutId ? false : reducedMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={reducedMotion ? { duration: 0 } : { duration: 0.5 }}
+              transition={
+                reducedMotion
+                  ? { duration: 0 }
+                  : sharedCoverLayoutId
+                    ? { type: 'spring', stiffness: 260, damping: 28, mass: 0.4 }
+                    : { duration: 0.5 }
+              }
             >
               <img
                 src={anime.cover}
@@ -1016,6 +1043,14 @@ function AnimeDetail() {
                 onClick={handleToggleFavorite}
               >
                 <FiHeart /> {favorited ? '已收藏' : '收藏'}
+              </SecondaryButton>
+              <SecondaryButton
+                type="button"
+                $active={following}
+                aria-pressed={following}
+                onClick={handleToggleFollowing}
+              >
+                <FiBell /> {following ? '已追更' : '追更'}
               </SecondaryButton>
               <SecondaryButton type="button" onClick={handleShare}>
                 <FiShare2 /> 分享

@@ -6,6 +6,11 @@ const routes = {
   news: () => import('../pages/NewsPage'),
   newsDetail: () => import('../pages/NewsDetailPage'),
   favorites: () => import('../pages/FavoritesPage'),
+  following: () => import('../pages/FollowingPage'),
+  pro: () => import('../pages/PricingPage'),
+  insights: () => import('../pages/InsightsPage'),
+  posters: () => import('../pages/PostersPage'),
+  achievements: () => import('../pages/AchievementsPage'),
   about: () => import('../pages/AboutPage'),
   search: () => import('../pages/SearchPage'),
   tag: () => import('../pages/TagPage'),
@@ -20,26 +25,32 @@ const routes = {
 
 const matchRouteKey = (path = '') => {
   if (!path) return null;
-  if (path === '/') return null;
-  if (path.startsWith('/recommendations')) return 'recommendations';
-  if (path.startsWith('/rankings')) return 'rankings';
-  if (path.startsWith('/news/')) return 'newsDetail';
-  if (path.startsWith('/news')) return 'news';
-  if (path.startsWith('/favorites')) return 'favorites';
-  if (path.startsWith('/about')) return 'about';
-  if (path.startsWith('/search')) return 'search';
-  if (path.startsWith('/tag/')) return 'tag';
-  if (path.startsWith('/category/')) return 'category';
-  if (path.startsWith('/login')) return 'login';
-  if (path.startsWith('/forgot-password')) return 'forgot';
-  if (path.startsWith('/anime/')) return 'animeDetail';
-  if (path.startsWith('/help') || path.startsWith('/faq') || path.startsWith('/contact'))
+  const clean = String(path).split('#')[0].split('?')[0];
+  if (clean === '/') return null;
+  if (clean.startsWith('/recommendations')) return 'recommendations';
+  if (clean.startsWith('/rankings')) return 'rankings';
+  if (clean.startsWith('/news/')) return 'newsDetail';
+  if (clean.startsWith('/news')) return 'news';
+  if (clean.startsWith('/favorites')) return 'favorites';
+  if (clean.startsWith('/following')) return 'following';
+  if (clean === '/pro' || clean.startsWith('/pro/')) return 'pro';
+  if (clean.startsWith('/insights')) return 'insights';
+  if (clean.startsWith('/posters')) return 'posters';
+  if (clean.startsWith('/achievements')) return 'achievements';
+  if (clean.startsWith('/about')) return 'about';
+  if (clean.startsWith('/search')) return 'search';
+  if (clean.startsWith('/tag/')) return 'tag';
+  if (clean.startsWith('/category/')) return 'category';
+  if (clean.startsWith('/login')) return 'login';
+  if (clean.startsWith('/forgot-password')) return 'forgot';
+  if (clean.startsWith('/anime/')) return 'animeDetail';
+  if (clean.startsWith('/help') || clean.startsWith('/faq') || clean.startsWith('/contact'))
     return 'staticPage';
-  if (path.startsWith('/feedback') || path.startsWith('/app')) return 'staticPage';
-  if (path.startsWith('/terms') || path.startsWith('/privacy') || path.startsWith('/cookies'))
+  if (clean.startsWith('/feedback') || clean.startsWith('/app')) return 'staticPage';
+  if (clean.startsWith('/terms') || clean.startsWith('/privacy') || clean.startsWith('/cookies'))
     return 'staticPage';
-  if (path.startsWith('/accessibility')) return 'staticPage';
-  if (path.startsWith('/profile')) return 'userCenter';
+  if (clean.startsWith('/accessibility')) return 'staticPage';
+  if (clean.startsWith('/profile')) return 'userCenter';
   return 'notFound';
 };
 

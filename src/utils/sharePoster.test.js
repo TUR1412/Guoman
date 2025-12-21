@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import {
   buildPosterSvg,
+  clearSharePosters,
   getSharePosters,
   recordSharePoster,
   SHARE_POSTER_STORAGE_KEY,
@@ -37,6 +38,13 @@ describe('sharePoster', () => {
     expect(getSharePosters().length).toBe(1);
     flushStorageQueue();
     expect(getSharePosters().length).toBe(1);
+  });
+
+  it('can clear poster history', () => {
+    recordSharePoster({ title: 'A', subtitle: 'B' });
+    expect(getSharePosters().length).toBe(1);
+    clearSharePosters();
+    expect(getSharePosters()).toEqual([]);
   });
 
   it('buildPosterSvg sanitizes inputs and uses fallback rating text', () => {

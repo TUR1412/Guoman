@@ -61,6 +61,13 @@ const FEATURE_MAP = [
     emptyHint: '点作品卡片上的收藏按钮即可加入。',
   },
   {
+    key: 'following',
+    label: '追更中心',
+    keys: [STORAGE_KEYS.following],
+    getCount: () => Object.keys(readKey(STORAGE_KEYS.following, { items: {} }).items || {}).length,
+    emptyHint: '在作品卡片/详情页点“追更”即可加入。',
+  },
+  {
     key: 'favoriteGroups',
     label: '收藏分组',
     keys: [STORAGE_KEYS.favoriteGroups],
@@ -129,6 +136,13 @@ const FEATURE_MAP = [
     keys: [STORAGE_KEYS.shortcuts],
     getCount: () => (safeLocalStorageGet(STORAGE_KEYS.shortcuts) ? 1 : 0),
     emptyHint: '在用户中心打开快捷键偏好。',
+  },
+  {
+    key: 'proMembership',
+    label: 'PRO 会员',
+    keys: [STORAGE_KEYS.proMembership],
+    getCount: () => (safeLocalStorageGet(STORAGE_KEYS.proMembership) ? 1 : 0),
+    emptyHint: '在会员页开启 PRO（本地演示）。',
   },
   {
     key: 'recentlyViewed',

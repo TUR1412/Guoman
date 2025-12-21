@@ -25,6 +25,11 @@ describe('routePrefetch', () => {
       '../pages/NewsPage',
       '../pages/NewsDetailPage',
       '../pages/FavoritesPage',
+      '../pages/FollowingPage',
+      '../pages/PricingPage',
+      '../pages/InsightsPage',
+      '../pages/PostersPage',
+      '../pages/AchievementsPage',
       '../pages/AboutPage',
       '../pages/SearchPage',
       '../pages/TagPage',
@@ -44,6 +49,11 @@ describe('routePrefetch', () => {
     await prefetchRoute('/news');
     await prefetchRoute('/news/123');
     await prefetchRoute('/favorites');
+    await prefetchRoute('/following');
+    await prefetchRoute('/pro');
+    await prefetchRoute('/insights');
+    await prefetchRoute('/posters');
+    await prefetchRoute('/achievements');
     await prefetchRoute('/about');
     await prefetchRoute('/search');
     await prefetchRoute('/tag/%E7%83%AD%E8%A1%80');
