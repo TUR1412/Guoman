@@ -11,12 +11,12 @@ npx lighthouse https://tur1412.github.io/Guoman/ --only-categories=performance,a
 
 ## 基线记录（待更新）
 
-| 指标 | 目标 | 记录值 |
-| --- | --- | --- |
-| Performance | 90+ | TBD |
-| Accessibility | 95+ | TBD |
-| Best Practices | 95+ | TBD |
-| SEO | 95+ | TBD |
+| 指标           | 目标 | 记录值 |
+| -------------- | ---- | ------ |
+| Performance    | 90+  | TBD    |
+| Accessibility  | 95+  | TBD    |
+| Best Practices | 95+  | TBD    |
+| SEO            | 95+  | TBD    |
 
 ## 更新说明
 

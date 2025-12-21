@@ -286,7 +286,9 @@ function AnimeCard({ anime }) {
           <ProgressPanel aria-label={`观看进度 ${progressValue}%`}>
             <ProgressMeta>
               <span>继续观看</span>
-              <span>第 {progress.episode} 集 · {progressValue}%</span>
+              <span>
+                第 {progress.episode} 集 · {progressValue}%
+              </span>
             </ProgressMeta>
             <ProgressTrack>
               <ProgressFill $value={progressValue} />
@@ -316,6 +318,3 @@ function AnimeCard({ anime }) {
 }
 
 export default AnimeCard;
-
-
-

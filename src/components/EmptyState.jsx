@@ -29,11 +29,7 @@ const Icon = styled.div`
   border-radius: var(--border-radius-lg);
   display: grid;
   place-items: center;
-  background: linear-gradient(
-    135deg,
-    var(--primary-soft),
-    var(--accent-soft)
-  );
+  background: linear-gradient(135deg, var(--primary-soft), var(--accent-soft));
   border: 1px solid var(--border-subtle);
   color: var(--text-primary);
   grid-column: span 3;
@@ -116,7 +112,10 @@ function EmptyState({ icon, title, description, primaryAction, secondaryAction }
 
   return (
     <Wrap>
-      <Card aria-labelledby={title ? titleId : undefined} aria-describedby={description ? descId : undefined}>
+      <Card
+        aria-labelledby={title ? titleId : undefined}
+        aria-describedby={description ? descId : undefined}
+      >
         {icon && <Icon>{icon}</Icon>}
         <CardContent>
           {title && <Title id={titleId}>{title}</Title>}
@@ -150,6 +149,3 @@ function EmptyState({ icon, title, description, primaryAction, secondaryAction }
 }
 
 export default EmptyState;
-
-
-

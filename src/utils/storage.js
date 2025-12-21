@@ -1,63 +1,52 @@
-export const safeLocalStorageGet = (key) => {
+const resolveStorage = (kind) => {
   if (typeof window === 'undefined') return null;
 
   try {
-    return window.localStorage.getItem(key);
+    return kind === 'local' ? window.localStorage : window.sessionStorage;
   } catch {
     return null;
   }
 };
 
-export const safeLocalStorageSet = (key, value) => {
-  if (typeof window === 'undefined') return false;
+const safeGetItem = (kind, key) => {
+  const storage = resolveStorage(kind);
+  if (!storage) return null;
 
   try {
-    window.localStorage.setItem(key, value);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
-export const safeLocalStorageRemove = (key) => {
-  if (typeof window === 'undefined') return false;
-
-  try {
-    window.localStorage.removeItem(key);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
-export const safeSessionStorageGet = (key) => {
-  if (typeof window === 'undefined') return null;
-
-  try {
-    return window.sessionStorage.getItem(key);
+    return storage.getItem(key);
   } catch {
     return null;
   }
 };
 
-export const safeSessionStorageSet = (key, value) => {
-  if (typeof window === 'undefined') return false;
+const safeSetItem = (kind, key, value) => {
+  const storage = resolveStorage(kind);
+  if (!storage) return false;
 
   try {
-    window.sessionStorage.setItem(key, value);
+    storage.setItem(key, value);
     return true;
   } catch {
     return false;
   }
 };
 
-export const safeSessionStorageRemove = (key) => {
-  if (typeof window === 'undefined') return false;
+const safeRemoveItem = (kind, key) => {
+  const storage = resolveStorage(kind);
+  if (!storage) return false;
 
   try {
-    window.sessionStorage.removeItem(key);
+    storage.removeItem(key);
     return true;
   } catch {
     return false;
   }
 };
+
+export const safeLocalStorageGet = (key) => safeGetItem('local', key);
+export const safeLocalStorageSet = (key, value) => safeSetItem('local', key, value);
+export const safeLocalStorageRemove = (key) => safeRemoveItem('local', key);
+
+export const safeSessionStorageGet = (key) => safeGetItem('session', key);
+export const safeSessionStorageSet = (key, value) => safeSetItem('session', key, value);
+export const safeSessionStorageRemove = (key) => safeRemoveItem('session', key);

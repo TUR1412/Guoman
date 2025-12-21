@@ -162,6 +162,3 @@ function RecentlyViewed() {
 }
 
 export default RecentlyViewed;
-
-
-

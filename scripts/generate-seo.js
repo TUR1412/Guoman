@@ -11,7 +11,19 @@ import {
   normalizeHomepage,
 } from './seo.js';
 const CATEGORY_SLUGS = ['action', 'fantasy', 'ancient', 'scifi', 'comedy'];
-const TAGS = ['热血', '古风', '玄幻', '科幻', '奇幻', '仙侠', '武侠', '悬疑', '推理', '冒险', '搞笑'];
+const TAGS = [
+  '热血',
+  '古风',
+  '玄幻',
+  '科幻',
+  '奇幻',
+  '仙侠',
+  '武侠',
+  '悬疑',
+  '推理',
+  '冒险',
+  '搞笑',
+];
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

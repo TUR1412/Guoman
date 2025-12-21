@@ -390,11 +390,7 @@ function FavoritesPage() {
       title="我的收藏"
       subtitle="你点过心动的作品都会留在这里（本地保存，刷新不丢）。"
       badge="收藏"
-      meta={
-        <span>
-          最近更新：{formatDateTime(updatedAt)} · 支持导入/导出
-        </span>
-      }
+      meta={<span>最近更新：{formatDateTime(updatedAt)} · 支持导入/导出</span>}
       actions={
         <ActionRow>
           <ToggleGroup aria-label="收藏排序">
@@ -518,6 +514,3 @@ function FavoritesPage() {
 }
 
 export default FavoritesPage;
-
-
-

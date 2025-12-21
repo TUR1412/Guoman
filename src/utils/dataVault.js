@@ -1,17 +1,9 @@
 import { safeLocalStorageGet } from './storage';
 import { scheduleStorageWrite } from './storageQueue';
 import { STORAGE_KEYS } from './dataKeys';
+import { safeJsonParse } from './json';
 
-const parseJson = (raw, fallback) => {
-  if (!raw) return fallback;
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return fallback;
-  }
-};
-
-const readKey = (key, fallback) => parseJson(safeLocalStorageGet(key), fallback);
+const readKey = (key, fallback) => safeJsonParse(safeLocalStorageGet(key), fallback);
 
 const mergeArrays = (prev, next) => {
   const set = new Set([...(Array.isArray(prev) ? prev : []), ...(Array.isArray(next) ? next : [])]);
@@ -34,25 +26,37 @@ const mergeObjects = (prev, next) => {
   return output;
 };
 
+const estimateBytes = (value) => {
+  if (typeof value !== 'string') return 0;
+  if (typeof TextEncoder !== 'undefined') {
+    try {
+      return new TextEncoder().encode(value).length;
+    } catch {}
+  }
+  return value.length * 2;
+};
+
 const FEATURE_MAP = [
   {
     key: 'watchProgress',
     label: '观看进度',
     keys: [STORAGE_KEYS.watchProgress],
-    getCount: () => Object.keys(readKey(STORAGE_KEYS.watchProgress, { items: {} }).items || {}).length,
+    getCount: () =>
+      Object.keys(readKey(STORAGE_KEYS.watchProgress, { items: {} }).items || {}).length,
     emptyHint: '在详情页调整进度后会自动保存。',
   },
   {
     key: 'continueWatching',
     label: '继续观看',
     keys: [STORAGE_KEYS.watchProgress],
-    getCount: () => Object.keys(readKey(STORAGE_KEYS.watchProgress, { items: {} }).items || {}).length,
+    getCount: () =>
+      Object.keys(readKey(STORAGE_KEYS.watchProgress, { items: {} }).items || {}).length,
     emptyHint: '有进度记录时会自动出现。',
   },
   {
     key: 'favorites',
     label: '收藏体系',
-    keys: [STORAGE_KEYS.favorites],
+    keys: [STORAGE_KEYS.favorites, STORAGE_KEYS.favoritesUpdatedAt],
     getCount: () => readKey(STORAGE_KEYS.favorites, []).length,
     emptyHint: '点作品卡片上的收藏按钮即可加入。',
   },
@@ -69,6 +73,13 @@ const FEATURE_MAP = [
     keys: [STORAGE_KEYS.searchHistory],
     getCount: () => readKey(STORAGE_KEYS.searchHistory, []).length,
     emptyHint: '完成一次搜索即可记录。',
+  },
+  {
+    key: 'searchCache',
+    label: '搜索缓存',
+    keys: [STORAGE_KEYS.searchCache],
+    getCount: () => Object.keys(readKey(STORAGE_KEYS.searchCache, {})).length,
+    emptyHint: '搜索过的关键词会自动缓存结果。',
   },
   {
     key: 'recommendations',
@@ -131,9 +142,10 @@ const FEATURE_MAP = [
     label: '标签/分类',
     keys: [STORAGE_KEYS.tagSort, STORAGE_KEYS.categorySort],
     getCount: () =>
-      [safeLocalStorageGet(STORAGE_KEYS.tagSort), safeLocalStorageGet(STORAGE_KEYS.categorySort)]
-        .filter(Boolean)
-        .length,
+      [
+        safeLocalStorageGet(STORAGE_KEYS.tagSort),
+        safeLocalStorageGet(STORAGE_KEYS.categorySort),
+      ].filter(Boolean).length,
     emptyHint: '切换标签/分类排序即可记录。',
   },
   {
@@ -185,6 +197,10 @@ export const getFeatureSummaries = () =>
     key: feature.key,
     label: feature.label,
     count: feature.getCount(),
+    bytes: feature.keys.reduce(
+      (sum, key) => sum + estimateBytes(safeLocalStorageGet(key) || ''),
+      0,
+    ),
     emptyHint: feature.emptyHint,
   }));
 
@@ -209,7 +225,7 @@ export const importFeatureData = (featureKey, jsonText, { mode = 'merge' } = {})
   const feature = FEATURE_MAP.find((item) => item.key === featureKey);
   if (!feature) throw new Error('未知的数据模块');
 
-  const parsed = parseJson(jsonText, null);
+  const parsed = safeJsonParse(jsonText, null);
   if (!parsed || typeof parsed !== 'object') throw new Error('导入数据格式错误');
 
   const payload = parsed.payload || {};
@@ -217,9 +233,9 @@ export const importFeatureData = (featureKey, jsonText, { mode = 'merge' } = {})
 
   feature.keys.forEach((key) => {
     const currentRaw = safeLocalStorageGet(key);
-    const current = parseJson(currentRaw, currentRaw);
+    const current = safeJsonParse(currentRaw, currentRaw);
     const incomingRaw = payload[key];
-    const incoming = parseJson(incomingRaw, incomingRaw);
+    const incoming = safeJsonParse(incomingRaw, incomingRaw);
 
     summary.before[key] = current;
 
@@ -265,16 +281,16 @@ export const exportAllData = () => {
 };
 
 export const importAllData = (jsonText, { mode = 'merge' } = {}) => {
-  const parsed = parseJson(jsonText, null);
+  const parsed = safeJsonParse(jsonText, null);
   if (!parsed || typeof parsed !== 'object') throw new Error('导入数据格式错误');
   const payload = parsed.payload || {};
 
   const keys = Object.keys(payload);
   keys.forEach((key) => {
     const currentRaw = safeLocalStorageGet(key);
-    const current = parseJson(currentRaw, currentRaw);
+    const current = safeJsonParse(currentRaw, currentRaw);
     const incomingRaw = payload[key];
-    const incoming = parseJson(incomingRaw, incomingRaw);
+    const incoming = safeJsonParse(incomingRaw, incomingRaw);
 
     if (mode === 'replace') {
       scheduleStorageWrite(key, incomingRaw ?? null);
@@ -300,3 +316,17 @@ export const importAllData = (jsonText, { mode = 'merge' } = {}) => {
 };
 
 export const FEATURE_KEYS = FEATURE_MAP.map((feature) => feature.key);
+
+export const clearFeatureData = (featureKey) => {
+  const feature = FEATURE_MAP.find((item) => item.key === featureKey);
+  if (!feature) throw new Error('未知的数据模块');
+
+  feature.keys.forEach((key) => scheduleStorageWrite(key, null));
+  return { clearedKeys: feature.keys.length, feature: feature.key };
+};
+
+export const clearAllData = () => {
+  const keys = Array.from(new Set(FEATURE_MAP.flatMap((feature) => feature.keys)));
+  keys.forEach((key) => scheduleStorageWrite(key, null));
+  return { clearedKeys: keys.length };
+};

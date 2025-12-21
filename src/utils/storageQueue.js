@@ -1,5 +1,7 @@
 import { safeLocalStorageRemove, safeLocalStorageSet } from './storage';
 
+const STORAGE_EVENT = 'guoman:storage';
+
 const pendingWrites = new Map();
 let scheduled = false;
 let idleHandle = null;
@@ -25,6 +27,12 @@ const flushWrites = () => {
       safeLocalStorageRemove(key);
     } else {
       safeLocalStorageSet(key, value);
+    }
+
+    if (typeof window !== 'undefined') {
+      try {
+        window.dispatchEvent(new CustomEvent(STORAGE_EVENT, { detail: { key, value } }));
+      } catch {}
     }
   });
 };

@@ -47,10 +47,7 @@ export const setTheme = (theme) => {
   if (!normalized || typeof window === 'undefined') return;
 
   scheduleStorageWrite(STORAGE_KEY, normalized);
-  scheduleStorageWrite(
-    META_KEY,
-    JSON.stringify({ value: normalized, updatedAt: Date.now() }),
-  );
+  scheduleStorageWrite(META_KEY, JSON.stringify({ value: normalized, updatedAt: Date.now() }));
   applyTheme(normalized);
   trackEvent('theme.change', { value: normalized });
 };

@@ -72,11 +72,7 @@ const SidePane = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' })
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(
-      240px 160px at 10% 0%,
-      var(--primary-soft),
-      transparent 70%
-    );
+    background: radial-gradient(240px 160px at 10% 0%, var(--primary-soft), transparent 70%);
     opacity: 0.55;
     pointer-events: none;
   }
@@ -630,7 +626,3 @@ function Login() {
 }
 
 export default Login;
-
-
-
-

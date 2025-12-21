@@ -242,6 +242,3 @@ function RankingsPage() {
 }
 
 export default RankingsPage;
-
-
-

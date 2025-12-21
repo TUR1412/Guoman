@@ -238,6 +238,3 @@ function About({ cta = { to: '/about', label: '了解更多' } }) {
 }
 
 export default About;
-
-
-

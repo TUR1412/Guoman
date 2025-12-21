@@ -1,5 +1,5 @@
 import { safeLocalStorageGet } from './storage';
-import { scheduleStorageWrite } from './storageQueue';
+import { hasPendingStorageWrite, scheduleStorageWrite } from './storageQueue';
 import { STORAGE_KEYS } from './dataKeys';
 import { trackEvent } from './analytics';
 
@@ -15,6 +15,7 @@ const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
 let lastUpdatedAt = 0;
 let cachedPayload = null;
+let cachedRaw = null;
 
 const getMonotonicNow = () => {
   const now = Date.now();
@@ -23,34 +24,42 @@ const getMonotonicNow = () => {
 };
 
 const readStorage = () => {
-  if (cachedPayload) return cachedPayload;
-
   const raw = safeLocalStorageGet(STORAGE_KEY);
   if (!raw) {
+    if (cachedPayload && cachedRaw !== null && hasPendingStorageWrite(STORAGE_KEY)) {
+      return cachedPayload;
+    }
     cachedPayload = { version: 1, items: {} };
+    cachedRaw = null;
     return cachedPayload;
   }
 
   try {
+    if (cachedPayload && cachedRaw === raw) return cachedPayload;
+
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== 'object') {
       cachedPayload = { version: 1, items: {} };
+      cachedRaw = null;
       return cachedPayload;
     }
     cachedPayload = {
       version: 1,
       items: parsed.items && typeof parsed.items === 'object' ? parsed.items : {},
     };
+    cachedRaw = raw;
     return cachedPayload;
   } catch {
     cachedPayload = { version: 1, items: {} };
+    cachedRaw = null;
     return cachedPayload;
   }
 };
 
 const writeStorage = (payload) => {
   cachedPayload = payload;
-  scheduleStorageWrite(STORAGE_KEY, JSON.stringify(payload));
+  cachedRaw = JSON.stringify(payload);
+  scheduleStorageWrite(STORAGE_KEY, cachedRaw);
 };
 
 const notify = (detail) => {
@@ -94,7 +103,11 @@ export const updateWatchProgress = ({ animeId, episode, progress }) => {
   };
   writeStorage(payload);
   notify({ animeId: id });
-  trackEvent('watchProgress.update', { id, episode: normalizedEpisode, progress: normalizedProgress });
+  trackEvent('watchProgress.update', {
+    id,
+    episode: normalizedEpisode,
+    progress: normalizedProgress,
+  });
   return payload.items[String(id)];
 };
 

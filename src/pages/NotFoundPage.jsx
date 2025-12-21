@@ -5,11 +5,7 @@ import EmptyState from '../components/EmptyState';
 
 function NotFoundPage() {
   return (
-    <PageShell
-      title="页面不存在"
-      subtitle="你访问的地址可能拼写错误或已被移动。"
-      badge="404"
-    >
+    <PageShell title="页面不存在" subtitle="你访问的地址可能拼写错误或已被移动。" badge="404">
       <EmptyState
         icon={<FiCompass size={22} />}
         title="404：迷路了"
@@ -22,6 +18,3 @@ function NotFoundPage() {
 }
 
 export default NotFoundPage;
-
-
-

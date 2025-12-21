@@ -11,10 +11,9 @@
   --header-height: 70px;
   --max-width: 1200px;
   --transition: all 0.3s ease;
-  --theme-transition: background-color var(--motion-base) var(--ease-out),
-    color var(--motion-base) var(--ease-out),
-    border-color var(--motion-base) var(--ease-out),
-    box-shadow var(--motion-base) var(--ease-out);
+  --theme-transition:
+    background-color var(--motion-base) var(--ease-out), color var(--motion-base) var(--ease-out),
+    border-color var(--motion-base) var(--ease-out), box-shadow var(--motion-base) var(--ease-out);
   --font-body: 'Noto Sans SC', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
 
@@ -455,7 +454,8 @@ img {
   height: auto;
   object-fit: cover;
   opacity: 0.96;
-  transition: opacity var(--motion-base) var(--ease-out),
+  transition:
+    opacity var(--motion-base) var(--ease-out),
     filter var(--motion-base) var(--ease-out);
 }
 
@@ -683,7 +683,8 @@ ol {
 
 :where([data-card]) {
   position: relative;
-  transition: transform var(--motion-base) var(--ease-out),
+  transition:
+    transform var(--motion-base) var(--ease-out),
     box-shadow var(--motion-base) var(--ease-out),
     border-color var(--motion-base) var(--ease-out);
   will-change: transform;
@@ -763,7 +764,8 @@ ol {
 }
 
 [data-pressable] {
-  transition: transform var(--motion-fast) var(--ease-out),
+  transition:
+    transform var(--motion-fast) var(--ease-out),
     box-shadow var(--motion-fast) var(--ease-out);
 }
 

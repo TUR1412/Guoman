@@ -320,15 +320,15 @@ function SearchPage() {
         <>
           <HistoryRow>
             <Label>最近搜索</Label>
-              <HistoryClear
-                type="button"
-                onClick={() => {
-                  setHistory([]);
-                  trackEvent('search.history.clear');
-                }}
-              >
-                清空
-              </HistoryClear>
+            <HistoryClear
+              type="button"
+              onClick={() => {
+                setHistory([]);
+                trackEvent('search.history.clear');
+              }}
+            >
+              清空
+            </HistoryClear>
           </HistoryRow>
           <TagRow aria-label="搜索历史">
             {history.map((item) => (
@@ -379,6 +379,3 @@ function SearchPage() {
 }
 
 export default SearchPage;
-
-
-

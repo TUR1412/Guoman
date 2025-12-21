@@ -4,6 +4,7 @@ import {
   FiBell,
   FiDownload,
   FiInfo,
+  FiTrash2,
   FiToggleLeft,
   FiToggleRight,
   FiUpload,
@@ -14,6 +15,8 @@ import EmptyState from '../components/EmptyState';
 import { useToast } from '../components/ToastProvider';
 import { downloadTextFile } from '../utils/download';
 import {
+  clearAllData,
+  clearFeatureData,
   exportAllData,
   exportFeatureData,
   getFeatureSummaries,
@@ -31,6 +34,8 @@ import { usePersistedState } from '../utils/usePersistedState';
 import { STORAGE_KEYS } from '../utils/dataKeys';
 import { getEventStats, trackEvent } from '../utils/analytics';
 import { getPerformanceSnapshot } from '../utils/performance';
+import { safeJsonParse } from '../utils/json';
+import { flushStorageQueue } from '../utils/storageQueue';
 
 const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
   display: grid;
@@ -148,15 +153,24 @@ const ToggleButton = styled.button.attrs({ 'data-pressable': true })`
   color: var(--text-primary);
 `;
 
-const parseJson = (raw, fallback) => {
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return fallback;
-  }
-};
-
 const buildExportFilename = (prefix) => `${prefix}-${Date.now()}.json`;
+
+const formatBytes = (bytes) => {
+  const value = Number(bytes);
+  if (!Number.isFinite(value) || value <= 0) return '0 B';
+
+  const units = ['B', 'KB', 'MB', 'GB'];
+  let unitIndex = 0;
+  let next = value;
+
+  while (next >= 1024 && unitIndex < units.length - 1) {
+    next /= 1024;
+    unitIndex += 1;
+  }
+
+  const digits = unitIndex === 0 ? 0 : 1;
+  return `${next.toFixed(digits)} ${units[unitIndex]}`;
+};
 
 function UserCenterPage() {
   const toast = useToast();
@@ -169,7 +183,7 @@ function UserCenterPage() {
     { name: '', signature: '' },
     {
       serialize: (value) => JSON.stringify(value),
-      deserialize: (raw) => parseJson(raw, { name: '', signature: '' }),
+      deserialize: (raw) => safeJsonParse(raw, { name: '', signature: '' }),
     },
   );
 
@@ -178,7 +192,7 @@ function UserCenterPage() {
     { token: '', lastSync: null },
     {
       serialize: (value) => JSON.stringify(value),
-      deserialize: (raw) => parseJson(raw, { token: '', lastSync: null }),
+      deserialize: (raw) => safeJsonParse(raw, { token: '', lastSync: null }),
     },
   );
 
@@ -187,7 +201,7 @@ function UserCenterPage() {
     { enabled: true },
     {
       serialize: (value) => JSON.stringify(value),
-      deserialize: (raw) => parseJson(raw, { enabled: true }),
+      deserialize: (raw) => safeJsonParse(raw, { enabled: true }),
     },
   );
 
@@ -226,6 +240,7 @@ function UserCenterPage() {
       } else if (importTarget.feature) {
         importFeatureData(importTarget.feature, text, { mode: importTarget.mode });
       }
+      flushStorageQueue();
       toast.success('导入完成', '数据已写入本地存储。');
       trackEvent('data.import', { scope: importTarget.scope, feature: importTarget.feature });
       triggerRefresh();
@@ -268,6 +283,38 @@ function UserCenterPage() {
 
     toast.success('已导出数据', `文件已保存：${filename}`);
     trackEvent('data.export', { scope: 'feature', feature: featureKey });
+  };
+
+  const clearFeature = (featureKey, label) => {
+    const ok = window.confirm?.(`确定清理「${label}」的本地数据吗？此操作不可撤销。`);
+    if (!ok) return;
+
+    try {
+      clearFeatureData(featureKey);
+      flushStorageQueue();
+      toast.success('已清理', `「${label}」数据已从本地移除。`);
+      trackEvent('data.clear', { scope: 'feature', feature: featureKey });
+      triggerRefresh();
+    } catch (error) {
+      toast.warning('清理失败', error instanceof Error ? error.message : '请稍后再试。');
+    }
+  };
+
+  const clearAll = () => {
+    const ok = window.confirm?.(
+      '确定清空全部本地数据吗？包含收藏、进度、搜索、通知等。此操作不可撤销，完成后将刷新页面。',
+    );
+    if (!ok) return;
+
+    try {
+      clearAllData();
+      flushStorageQueue();
+      trackEvent('data.clear', { scope: 'all' });
+      toast.success('已清空本地数据', '正在刷新页面以应用变更...');
+      window.setTimeout(() => window.location.reload(), 650);
+    } catch (error) {
+      toast.warning('清理失败', error instanceof Error ? error.message : '请稍后再试。');
+    }
   };
 
   const onCreateNotification = () => {
@@ -350,6 +397,10 @@ function UserCenterPage() {
             <FiUpload />
             覆盖导入
           </ActionButton>
+          <ActionButton type="button" onClick={clearAll}>
+            <FiTrash2 />
+            清空全部
+          </ActionButton>
         </Actions>
       }
     >
@@ -375,15 +426,23 @@ function UserCenterPage() {
             <CardCount>{feature.count}</CardCount>
             <CardMeta>
               {feature.count > 0 ? '数据已记录，可随时导出。' : feature.emptyHint}
+              <div style={{ marginTop: '6px' }}>占用：{formatBytes(feature.bytes)}</div>
             </CardMeta>
             <Actions>
               <ActionButton type="button" onClick={() => exportFeature(feature.key)}>
                 <FiDownload />
                 导出
               </ActionButton>
-              <ActionButton type="button" onClick={() => startImport('feature', 'merge', feature.key)}>
+              <ActionButton
+                type="button"
+                onClick={() => startImport('feature', 'merge', feature.key)}
+              >
                 <FiUpload />
                 导入
+              </ActionButton>
+              <ActionButton type="button" onClick={() => clearFeature(feature.key, feature.label)}>
+                <FiTrash2 />
+                清理
               </ActionButton>
             </Actions>
           </Card>
@@ -413,7 +472,7 @@ function UserCenterPage() {
         <CardTitle>
           <FiToggleRight /> 快捷键设置
         </CardTitle>
-        <CardMeta>控制 Ctrl/⌘ + K 快速搜索是否启用。</CardMeta>
+        <CardMeta>控制 Ctrl/⌘ + K 命令面板是否启用。</CardMeta>
         <ToggleButton type="button" onClick={toggleShortcuts}>
           {shortcuts?.enabled ? <FiToggleRight /> : <FiToggleLeft />}
           {shortcuts?.enabled ? '已启用' : '已停用'}

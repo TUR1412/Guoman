@@ -4,7 +4,11 @@ import { FiPlay, FiTrash2 } from 'react-icons/fi';
 import animeData from '../data/animeData';
 import { AnimeGrid } from './anime/AnimeGrid';
 import AnimeCard from './anime/AnimeCard';
-import { clearWatchProgress, getContinueWatchingList, subscribeWatchProgress } from '../utils/watchProgress';
+import {
+  clearWatchProgress,
+  getContinueWatchingList,
+  subscribeWatchProgress,
+} from '../utils/watchProgress';
 import { useToast } from './ToastProvider';
 import EmptyState from './EmptyState';
 import { trackEvent } from '../utils/analytics';
@@ -108,10 +112,7 @@ function ContinueWatching() {
   }, []);
 
   const list = useMemo(
-    () =>
-      entries
-        .map((entry) => animeData.find((anime) => anime.id === entry.id))
-        .filter(Boolean),
+    () => entries.map((entry) => animeData.find((anime) => anime.id === entry.id)).filter(Boolean),
     [entries],
   );
 
@@ -184,6 +185,3 @@ function ContinueWatching() {
 }
 
 export default ContinueWatching;
-
-
-

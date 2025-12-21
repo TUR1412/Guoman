@@ -454,8 +454,7 @@ export const categories = [
 
 export const animeIndex = new Map(animeData.map((anime) => [anime.id, anime]));
 
-export const selectAnimeByIds = (ids = []) =>
-  ids.map((id) => animeIndex.get(id)).filter(Boolean);
+export const selectAnimeByIds = (ids = []) => ids.map((id) => animeIndex.get(id)).filter(Boolean);
 
 export const selectAnimeByCategory = (categoryName) =>
   animeData.filter((anime) => anime.tags.some((tag) => tag === categoryName));

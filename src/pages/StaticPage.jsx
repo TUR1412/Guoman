@@ -285,10 +285,7 @@ function StaticPage({ page }) {
             </span>
             提交反馈
           </H2>
-          <form
-            onSubmit={onSubmitFeedback}
-            style={{ display: 'grid', gap: 'var(--spacing-md)' }}
-          >
+          <form onSubmit={onSubmitFeedback} style={{ display: 'grid', gap: 'var(--spacing-md)' }}>
             <input
               type="text"
               placeholder="联系方式（可选）"
@@ -361,6 +358,3 @@ function StaticPage({ page }) {
 }
 
 export default StaticPage;
-
-
-

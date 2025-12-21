@@ -58,14 +58,28 @@ export function FavoritesProvider({ children }) {
   const [updatedAt, setUpdatedAt] = useState(() => readUpdatedAt());
 
   useEffect(() => {
-    const onStorage = (e) => {
-      if (e.key !== STORAGE_KEY && e.key !== UPDATED_KEY) return;
+    const syncFromStorage = () => {
       setFavoriteIds(readFromStorage());
       setUpdatedAt(readUpdatedAt());
     };
 
+    const onStorage = (e) => {
+      if (e.key !== STORAGE_KEY && e.key !== UPDATED_KEY) return;
+      syncFromStorage();
+    };
+
+    const onInternalStorage = (event) => {
+      const key = event?.detail?.key;
+      if (key !== STORAGE_KEY && key !== UPDATED_KEY) return;
+      syncFromStorage();
+    };
+
     window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
+    window.addEventListener('guoman:storage', onInternalStorage);
+    return () => {
+      window.removeEventListener('storage', onStorage);
+      window.removeEventListener('guoman:storage', onInternalStorage);
+    };
   }, []);
 
   const isFavorite = useCallback(
@@ -173,6 +187,3 @@ export function useFavorites() {
 
 export const FAVORITES_STORAGE_KEY = STORAGE_KEY;
 export const FAVORITES_UPDATED_KEY = UPDATED_KEY;
-
-
-

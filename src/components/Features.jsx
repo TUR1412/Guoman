@@ -109,11 +109,7 @@ const FeatureCard = styled(motion.div).attrs({
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(
-      180px 120px at 85% 0%,
-      var(--primary-soft),
-      transparent 70%
-    );
+    background: radial-gradient(180px 120px at 85% 0%, var(--primary-soft), transparent 70%);
     opacity: 0.6;
     pointer-events: none;
   }
@@ -229,10 +225,7 @@ function Features() {
         <motion.div {...containerMotionProps}>
           <FeaturesGrid>
             {features.map((feature) => (
-              <FeatureCard
-                key={feature.title}
-                variants={reducedMotion ? undefined : itemVariants}
-              >
+              <FeatureCard key={feature.title} variants={reducedMotion ? undefined : itemVariants}>
                 <FeatureIcon>{feature.icon}</FeatureIcon>
                 <FeatureTitle>{feature.title}</FeatureTitle>
                 <FeatureDescription>{feature.description}</FeatureDescription>
@@ -246,6 +239,3 @@ function Features() {
 }
 
 export default Features;
-
-
-

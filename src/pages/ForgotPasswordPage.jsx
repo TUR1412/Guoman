@@ -108,11 +108,7 @@ const AsideCard = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' }
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(
-      200px 140px at 10% 0%,
-      var(--primary-soft),
-      transparent 70%
-    );
+    background: radial-gradient(200px 140px at 10% 0%, var(--primary-soft), transparent 70%);
     opacity: 0.55;
     pointer-events: none;
   }
@@ -199,7 +195,9 @@ function ForgotPasswordPage() {
             </Button>
           </InputRow>
 
-          {sent && <Success>已发送（模拟）：「{email}」请查收邮件（演示环境不会真的发送）。</Success>}
+          {sent && (
+            <Success>已发送（模拟）：「{email}」请查收邮件（演示环境不会真的发送）。</Success>
+          )}
         </Card>
 
         <AsideCard aria-labelledby={asideTitleId}>
@@ -217,6 +215,3 @@ function ForgotPasswordPage() {
 }
 
 export default ForgotPasswordPage;
-
-
-

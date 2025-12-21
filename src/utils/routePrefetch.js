@@ -33,9 +33,11 @@ const matchRouteKey = (path = '') => {
   if (path.startsWith('/login')) return 'login';
   if (path.startsWith('/forgot-password')) return 'forgot';
   if (path.startsWith('/anime/')) return 'animeDetail';
-  if (path.startsWith('/help') || path.startsWith('/faq') || path.startsWith('/contact')) return 'staticPage';
+  if (path.startsWith('/help') || path.startsWith('/faq') || path.startsWith('/contact'))
+    return 'staticPage';
   if (path.startsWith('/feedback') || path.startsWith('/app')) return 'staticPage';
-  if (path.startsWith('/terms') || path.startsWith('/privacy') || path.startsWith('/cookies')) return 'staticPage';
+  if (path.startsWith('/terms') || path.startsWith('/privacy') || path.startsWith('/cookies'))
+    return 'staticPage';
   if (path.startsWith('/accessibility')) return 'staticPage';
   if (path.startsWith('/profile')) return 'userCenter';
   return 'notFound';

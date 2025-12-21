@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { exportFeatureData, importFeatureData } from './dataVault';
+import { clearFeatureData, exportFeatureData, importFeatureData } from './dataVault';
 import { STORAGE_KEYS } from './dataKeys';
 import { flushStorageQueue } from './storageQueue';
 
@@ -26,5 +26,12 @@ describe('dataVault', () => {
     importFeatureData('favorites', incoming, { mode: 'replace' });
     flushStorageQueue();
     expect(JSON.parse(window.localStorage.getItem(STORAGE_KEYS.favorites))).toEqual([2, 3]);
+  });
+
+  it('clears feature data', () => {
+    window.localStorage.setItem(STORAGE_KEYS.searchHistory, JSON.stringify(['a', 'b']));
+    clearFeatureData('searchHistory');
+    flushStorageQueue();
+    expect(window.localStorage.getItem(STORAGE_KEYS.searchHistory)).toBeNull();
   });
 });

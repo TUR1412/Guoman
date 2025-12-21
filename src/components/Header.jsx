@@ -1,13 +1,30 @@
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
-import { FiMenu, FiX, FiSearch, FiSun, FiMoon, FiUser } from 'react-icons/fi';
+import {
+  FiBookOpen,
+  FiCommand,
+  FiCompass,
+  FiHeart,
+  FiHome,
+  FiInfo,
+  FiLogIn,
+  FiMenu,
+  FiMoon,
+  FiSearch,
+  FiSun,
+  FiTrendingUp,
+  FiUser,
+  FiX,
+} from 'react-icons/fi';
 import logoSvg from '../assets/images/logo.svg';
 import { getCurrentTheme, toggleTheme } from '../utils/theme';
 import { usePersistedState } from '../utils/usePersistedState';
 import { STORAGE_KEYS } from '../utils/dataKeys';
 import { prefetchRoute } from '../utils/routePrefetch';
+import { safeJsonParse } from '../utils/json';
+import CommandPalette from './CommandPalette';
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -255,6 +272,12 @@ const ThemeButton = styled.button.attrs({ 'data-pressable': true, 'data-focus-gu
   }
 `;
 
+const CommandButton = styled(ThemeButton)`
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
 const MobileMenuButton = styled.button.attrs({ 'data-pressable': true })`
   display: none;
   font-size: var(--text-4xl);
@@ -266,7 +289,6 @@ const MobileMenuButton = styled.button.attrs({ 'data-pressable': true })`
     grid-column: 11 / -1;
   }
 `;
-
 
 const MobileMenu = styled(motion.nav)`
   position: fixed;
@@ -335,18 +357,17 @@ const navItems = [
 function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [theme, setTheme] = useState(() => getCurrentTheme());
-  const [shortcutSettings] = usePersistedState(STORAGE_KEYS.shortcuts, { enabled: true }, {
-    serialize: (value) => JSON.stringify(value),
-    deserialize: (raw) => {
-      try {
-        return JSON.parse(raw);
-      } catch {
-        return { enabled: true };
-      }
+  const [shortcutSettings] = usePersistedState(
+    STORAGE_KEYS.shortcuts,
+    { enabled: true },
+    {
+      serialize: (value) => JSON.stringify(value),
+      deserialize: (raw) => safeJsonParse(raw, { enabled: true }),
     },
-  });
+  );
   const desktopSearchRef = useRef(null);
   const mobileSearchRef = useRef(null);
   const mobileMenuRef = useRef(null);
@@ -375,6 +396,7 @@ function Header() {
   useEffect(() => {
     // 关闭移动菜单当路由改变时
     setIsMobileMenuOpen(false);
+    setIsPaletteOpen(false);
   }, [location]);
 
   useEffect(() => {
@@ -511,7 +533,7 @@ function Header() {
         return;
       }
 
-      desktopSearchRef.current?.focus?.();
+      setIsPaletteOpen((prev) => !prev);
     };
 
     window.addEventListener('keydown', onKeyDown);
@@ -543,10 +565,85 @@ function Header() {
     runSearch();
   };
 
-  const handleToggleTheme = () => {
+  const handleToggleTheme = useCallback(() => {
     const next = toggleTheme();
     setTheme(next);
-  };
+  }, []);
+
+  const paletteActions = useMemo(() => {
+    const action = (id, title, description, keywords, icon, run) => ({
+      id,
+      title,
+      description,
+      keywords,
+      icon,
+      meta: 'Enter',
+      run,
+    });
+
+    return [
+      action('nav.home', '前往首页', '回到精选首页', ['首页', 'home', '/'], <FiHome />, () =>
+        navigate('/'),
+      ),
+      action(
+        'nav.recommendations',
+        '国漫推荐',
+        '打开推荐页面',
+        ['推荐', 'recommendations'],
+        <FiCompass />,
+        () => navigate('/recommendations'),
+      ),
+      action('nav.favorites', '收藏', '查看我的收藏列表', ['收藏', 'favorites'], <FiHeart />, () =>
+        navigate('/favorites'),
+      ),
+      action(
+        'nav.rankings',
+        '排行榜',
+        '查看评分/人气排行',
+        ['排行', 'rankings'],
+        <FiTrendingUp />,
+        () => navigate('/rankings'),
+      ),
+      action('nav.news', '最新资讯', '打开资讯列表', ['资讯', 'news'], <FiBookOpen />, () =>
+        navigate('/news'),
+      ),
+      action(
+        'nav.search',
+        '打开搜索',
+        '前往搜索页（也可直接输入关键词）',
+        ['搜索', 'search'],
+        <FiSearch />,
+        () => navigate('/search'),
+      ),
+      action(
+        'nav.profile',
+        '用户中心',
+        '管理本地数据与偏好',
+        ['用户中心', 'profile', '设置', 'settings'],
+        <FiUser />,
+        () => navigate('/profile'),
+      ),
+      action('nav.about', '关于我们', '项目介绍与设计理念', ['关于', 'about'], <FiInfo />, () =>
+        navigate('/about'),
+      ),
+      action(
+        'nav.login',
+        '登录 / 注册',
+        '进入账号页（占位）',
+        ['登录', '注册', 'login'],
+        <FiLogIn />,
+        () => navigate('/login'),
+      ),
+      action(
+        'theme.toggle',
+        theme === 'dark' ? '切换到浅色主题' : '切换到深色主题',
+        '立即切换主题并持久化',
+        ['主题', 'theme', 'dark', 'light'],
+        theme === 'dark' ? <FiSun /> : <FiMoon />,
+        handleToggleTheme,
+      ),
+    ];
+  }, [handleToggleTheme, navigate, theme]);
 
   return (
     <HeaderContainer
@@ -599,14 +696,14 @@ function Header() {
               搜索国漫
             </label>
             <span id="guoman-search-hint-desktop" className="sr-only">
-              快捷键 Ctrl/? + K 可以快速聚焦搜索框
+              快捷键 Ctrl/⌘ + K 打开命令面板，可快速搜索与跳转页面
             </span>
             <SearchInput
               ref={desktopSearchRef}
               id={desktopSearchId}
               type="search"
               name="q"
-              placeholder="搜索国漫...（Ctrl/? + K）"
+              placeholder="搜索国漫...（Ctrl/⌘ + K 命令面板）"
               aria-label="搜索国漫"
               aria-keyshortcuts="Control+K Meta+K"
               aria-describedby="guoman-search-hint-desktop"
@@ -619,6 +716,16 @@ function Header() {
         </DesktopSearch>
 
         <ActionGroup>
+          <CommandButton
+            type="button"
+            onClick={() => setIsPaletteOpen(true)}
+            aria-label="打开命令面板"
+            title="命令面板（Ctrl/⌘ + K）"
+            aria-pressed={isPaletteOpen}
+          >
+            <FiCommand />
+          </CommandButton>
+
           <LoginButton
             to="/login"
             onMouseEnter={() => prefetchRoute('/login')}
@@ -673,14 +780,14 @@ function Header() {
                 搜索国漫
               </label>
               <span id="guoman-search-hint-mobile" className="sr-only">
-                快捷键 Ctrl/⌘ + K 可以快速聚焦搜索框
+                快捷键 Ctrl/⌘ + K 打开命令面板，可快速搜索与跳转页面
               </span>
               <SearchInput
                 ref={mobileSearchRef}
                 id={mobileSearchId}
                 type="search"
                 name="q"
-                placeholder="搜索国漫...（Ctrl/⌘ + K）"
+                placeholder="搜索国漫...（Ctrl/⌘ + K 命令面板）"
                 aria-label="搜索国漫"
                 aria-keyshortcuts="Control+K Meta+K"
                 aria-describedby="guoman-search-hint-mobile"
@@ -734,12 +841,19 @@ function Header() {
           </MobileMenu>
         )}
       </AnimatePresence>
+
+      <CommandPalette
+        open={isPaletteOpen}
+        onClose={() => setIsPaletteOpen(false)}
+        actions={paletteActions}
+        onSearch={(q) => {
+          const next = String(q || '').trim();
+          setSearchQuery(next);
+          navigate(next ? `/search?q=${encodeURIComponent(next)}` : '/search');
+        }}
+      />
     </HeaderContainer>
   );
 }
 
 export default Header;
-
-
-
-

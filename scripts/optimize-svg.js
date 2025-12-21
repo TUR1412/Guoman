@@ -6,10 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '..');
 
-const SVG_DIRS = [
-  path.join(repoRoot, 'src', 'assets', 'images'),
-  path.join(repoRoot, 'public'),
-];
+const SVG_DIRS = [path.join(repoRoot, 'src', 'assets', 'images'), path.join(repoRoot, 'public')];
 
 const optimizeSvg = (content) =>
   content

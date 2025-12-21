@@ -71,6 +71,3 @@ export const AnimeGrid = styled.div.attrs({
       }
     `}
 `;
-
-
-

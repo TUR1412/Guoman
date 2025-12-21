@@ -31,11 +31,7 @@ const Header = styled.div.attrs({ 'data-parallax': true })`
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(
-      240px 160px at 10% 0%,
-      var(--primary-soft),
-      transparent 60%
-    );
+    background: radial-gradient(240px 160px at 10% 0%, var(--primary-soft), transparent 60%);
     opacity: 0.6;
     pointer-events: none;
   }
@@ -188,6 +184,3 @@ function PageShell({ title, subtitle, actions, badge, meta, children }) {
 }
 
 export default PageShell;
-
-
-

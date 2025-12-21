@@ -35,9 +35,7 @@ export const createFavoriteGroup = (name) => {
 };
 
 export const renameFavoriteGroup = (groupId, name) => {
-  const groups = readGroups().map((group) =>
-    group.id === groupId ? { ...group, name } : group,
-  );
+  const groups = readGroups().map((group) => (group.id === groupId ? { ...group, name } : group));
   writeGroups(groups);
 };
 

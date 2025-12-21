@@ -20,11 +20,7 @@ export const buildRobotsTxt = (homepage) => {
   return `User-agent: *\nAllow: /\n\nSitemap: ${sitemap}\n`;
 };
 
-export const getDefaultSitemapRoutes = ({
-  animeIds = [],
-  tags = [],
-  categorySlugs = [],
-} = {}) => [
+export const getDefaultSitemapRoutes = ({ animeIds = [], tags = [], categorySlugs = [] } = {}) => [
   { path: '/', changefreq: 'weekly', priority: '1.0' },
   { path: '/#/', changefreq: 'weekly', priority: '0.9' },
   { path: '/#/recommendations', changefreq: 'weekly', priority: '0.8' },

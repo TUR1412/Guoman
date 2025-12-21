@@ -37,9 +37,7 @@ export const usePersistedState = (
       const serialized = serialize(state);
       scheduleStorageWrite(key, serialized, { delay });
       if (typeof window !== 'undefined') {
-        window.dispatchEvent(
-          new CustomEvent('guoman:persist', { detail: { key, value: state } }),
-        );
+        window.dispatchEvent(new CustomEvent('guoman:persist', { detail: { key, value: state } }));
       }
     } catch {}
   }, [key, state, serialize, delay]);

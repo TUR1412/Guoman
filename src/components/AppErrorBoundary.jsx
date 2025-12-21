@@ -51,11 +51,7 @@ const SidePane = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' })
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(
-      200px 140px at 10% 0%,
-      var(--primary-soft),
-      transparent 70%
-    );
+    background: radial-gradient(200px 140px at 10% 0%, var(--primary-soft), transparent 70%);
     opacity: 0.55;
     pointer-events: none;
   }
@@ -250,6 +246,3 @@ class AppErrorBoundary extends React.Component {
 }
 
 export default AppErrorBoundary;
-
-
-

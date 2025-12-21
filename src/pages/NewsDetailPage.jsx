@@ -105,11 +105,7 @@ const SideCard = styled.aside.attrs({
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(
-      200px 140px at 10% 0%,
-      var(--primary-soft),
-      transparent 70%
-    );
+    background: radial-gradient(200px 140px at 10% 0%, var(--primary-soft), transparent 70%);
     opacity: 0.55;
     pointer-events: none;
   }
@@ -287,6 +283,3 @@ function NewsDetailPage() {
 }
 
 export default NewsDetailPage;
-
-
-

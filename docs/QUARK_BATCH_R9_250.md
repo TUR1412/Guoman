@@ -4,6 +4,7 @@
 > 状态：已完成本批次（进度 250 / 250）。
 
 ## 本轮已完成（概览）
+
 - 全局：prefers-reduced-motion 覆盖与动效策略收敛
 - 全局：shimmer / focus-guide / skeleton 渐显统一
 - 全局：滚动定位柔性过渡与图片渐显
@@ -11,253 +12,254 @@
 - A11y：标签/描述/列表语义与表单 label 关联补齐
 
 ## 250 微任务清单
-- [x] 0501. [动效] 首页：尊重 prefers-reduced-motion
-- [x] 0502. [动效] 推荐页：尊重 prefers-reduced-motion
-- [x] 0503. [动效] 排行榜：尊重 prefers-reduced-motion
-- [x] 0504. [动效] 资讯列表：尊重 prefers-reduced-motion
-- [x] 0505. [动效] 资讯详情：尊重 prefers-reduced-motion
-- [x] 0506. [动效] 搜索：尊重 prefers-reduced-motion
-- [x] 0507. [动效] 收藏：尊重 prefers-reduced-motion
-- [x] 0508. [动效] 登录/注册：尊重 prefers-reduced-motion
-- [x] 0509. [动效] 找回密码：尊重 prefers-reduced-motion
-- [x] 0510. [动效] 关于我们：尊重 prefers-reduced-motion
-- [x] 0511. [动效] 首页：为关键按钮添加轻量 shimmer
-- [x] 0512. [动效] 推荐页：为关键按钮添加轻量 shimmer
-- [x] 0513. [动效] 排行榜：为关键按钮添加轻量 shimmer
-- [x] 0514. [动效] 资讯列表：为关键按钮添加轻量 shimmer
-- [x] 0515. [动效] 资讯详情：为关键按钮添加轻量 shimmer
-- [x] 0516. [动效] 搜索：为关键按钮添加轻量 shimmer
-- [x] 0517. [动效] 收藏：为关键按钮添加轻量 shimmer
-- [x] 0518. [动效] 登录/注册：为关键按钮添加轻量 shimmer
-- [x] 0519. [动效] 找回密码：为关键按钮添加轻量 shimmer
-- [x] 0520. [动效] 关于我们：为关键按钮添加轻量 shimmer
-- [x] 0521. [动效] 首页：加入页面载入时的聚焦引导
-- [x] 0522. [动效] 推荐页：加入页面载入时的聚焦引导
-- [x] 0523. [动效] 排行榜：加入页面载入时的聚焦引导
-- [x] 0524. [动效] 资讯列表：加入页面载入时的聚焦引导
-- [x] 0525. [动效] 资讯详情：加入页面载入时的聚焦引导
-- [x] 0526. [动效] 搜索：加入页面载入时的聚焦引导
-- [x] 0527. [动效] 收藏：加入页面载入时的聚焦引导
-- [x] 0528. [动效] 登录/注册：加入页面载入时的聚焦引导
-- [x] 0529. [动效] 找回密码：加入页面载入时的聚焦引导
-- [x] 0530. [动效] 关于我们：加入页面载入时的聚焦引导
-- [x] 0531. [动效] 首页：改进骨架屏淡入
-- [x] 0532. [动效] 推荐页：改进骨架屏淡入
-- [x] 0533. [动效] 排行榜：改进骨架屏淡入
-- [x] 0534. [动效] 资讯列表：改进骨架屏淡入
-- [x] 0535. [动效] 资讯详情：改进骨架屏淡入
-- [x] 0536. [动效] 搜索：改进骨架屏淡入
-- [x] 0537. [动效] 收藏：改进骨架屏淡入
-- [x] 0538. [动效] 登录/注册：改进骨架屏淡入
-- [x] 0539. [动效] 找回密码：改进骨架屏淡入
-- [x] 0540. [动效] 关于我们：改进骨架屏淡入
-- [x] 0541. [动效] 首页：优化动效性能与 fps
-- [x] 0542. [动效] 推荐页：优化动效性能与 fps
-- [x] 0543. [动效] 排行榜：优化动效性能与 fps
-- [x] 0544. [动效] 资讯列表：优化动效性能与 fps
-- [x] 0545. [动效] 资讯详情：优化动效性能与 fps
-- [x] 0546. [动效] 搜索：优化动效性能与 fps
-- [x] 0547. [动效] 收藏：优化动效性能与 fps
-- [x] 0548. [动效] 登录/注册：优化动效性能与 fps
-- [x] 0549. [动效] 找回密码：优化动效性能与 fps
-- [x] 0550. [动效] 关于我们：优化动效性能与 fps
-- [x] 0551. [动效] 首页：新增滚动定位的柔性过渡
-- [x] 0552. [动效] 推荐页：新增滚动定位的柔性过渡
-- [x] 0553. [动效] 排行榜：新增滚动定位的柔性过渡
-- [x] 0554. [动效] 资讯列表：新增滚动定位的柔性过渡
-- [x] 0555. [动效] 资讯详情：新增滚动定位的柔性过渡
-- [x] 0556. [动效] 搜索：新增滚动定位的柔性过渡
-- [x] 0557. [动效] 收藏：新增滚动定位的柔性过渡
-- [x] 0558. [动效] 登录/注册：新增滚动定位的柔性过渡
-- [x] 0559. [动效] 找回密码：新增滚动定位的柔性过渡
-- [x] 0560. [动效] 关于我们：新增滚动定位的柔性过渡
-- [x] 0561. [动效] 首页：为图像加载增加渐显
-- [x] 0562. [动效] 推荐页：为图像加载增加渐显
-- [x] 0563. [动效] 排行榜：为图像加载增加渐显
-- [x] 0564. [动效] 资讯列表：为图像加载增加渐显
-- [x] 0565. [动效] 资讯详情：为图像加载增加渐显
-- [x] 0566. [动效] 搜索：为图像加载增加渐显
-- [x] 0567. [动效] 收藏：为图像加载增加渐显
-- [x] 0568. [动效] 登录/注册：为图像加载增加渐显
-- [x] 0569. [动效] 找回密码：为图像加载增加渐显
-- [x] 0570. [动效] 关于我们：为图像加载增加渐显
-- [x] 0571. [动效] 首页：加入分层入场动效（Stagger）
-- [x] 0572. [动效] 推荐页：加入分层入场动效（Stagger）
-- [x] 0573. [动效] 排行榜：加入分层入场动效（Stagger）
-- [x] 0574. [动效] 资讯列表：加入分层入场动效（Stagger）
-- [x] 0575. [动效] 资讯详情：加入分层入场动效（Stagger）
-- [x] 0576. [动效] 搜索：加入分层入场动效（Stagger）
-- [x] 0577. [动效] 收藏：加入分层入场动效（Stagger）
-- [x] 0578. [动效] 登录/注册：加入分层入场动效（Stagger）
-- [x] 0579. [动效] 找回密码：加入分层入场动效（Stagger）
-- [x] 0580. [动效] 关于我们：加入分层入场动效（Stagger）
-- [x] 0581. [动效] 首页：为核心卡片添加细微浮动与阴影过渡
-- [x] 0582. [动效] 推荐页：为核心卡片添加细微浮动与阴影过渡
-- [x] 0583. [动效] 排行榜：为核心卡片添加细微浮动与阴影过渡
-- [x] 0584. [动效] 资讯列表：为核心卡片添加细微浮动与阴影过渡
-- [x] 0585. [动效] 资讯详情：为核心卡片添加细微浮动与阴影过渡
-- [x] 0586. [动效] 搜索：为核心卡片添加细微浮动与阴影过渡
-- [x] 0587. [动效] 收藏：为核心卡片添加细微浮动与阴影过渡
-- [x] 0588. [动效] 登录/注册：为核心卡片添加细微浮动与阴影过渡
-- [x] 0589. [动效] 找回密码：为核心卡片添加细微浮动与阴影过渡
-- [x] 0590. [动效] 关于我们：为核心卡片添加细微浮动与阴影过渡
-- [x] 0591. [动效] 首页：增加滚动视差的轻量版本
-- [x] 0592. [动效] 推荐页：增加滚动视差的轻量版本
-- [x] 0593. [动效] 排行榜：增加滚动视差的轻量版本
-- [x] 0594. [动效] 资讯列表：增加滚动视差的轻量版本
-- [x] 0595. [动效] 资讯详情：增加滚动视差的轻量版本
-- [x] 0596. [动效] 搜索：增加滚动视差的轻量版本
-- [x] 0597. [动效] 收藏：增加滚动视差的轻量版本
-- [x] 0598. [动效] 登录/注册：增加滚动视差的轻量版本
-- [x] 0599. [动效] 找回密码：增加滚动视差的轻量版本
-- [x] 0600. [动效] 关于我们：增加滚动视差的轻量版本
-- [x] 0601. [A11y] Header：补齐 aria-label/aria-describedby
-- [x] 0602. [A11y] Banner：补齐 aria-label/aria-describedby
-- [x] 0603. [A11y] AnimeCard：补齐 aria-label/aria-describedby
-- [x] 0604. [A11y] AnimeGrid：补齐 aria-label/aria-describedby
-- [x] 0605. [A11y] AnimeList：补齐 aria-label/aria-describedby
-- [x] 0606. [A11y] AnimeDetail：补齐 aria-label/aria-describedby
-- [x] 0607. [A11y] RecentlyViewed：补齐 aria-label/aria-describedby
-- [x] 0608. [A11y] ContinueWatching：补齐 aria-label/aria-describedby
-- [x] 0609. [A11y] Features：补齐 aria-label/aria-describedby
-- [x] 0610. [A11y] About：补齐 aria-label/aria-describedby
-- [x] 0611. [A11y] Footer：补齐 aria-label/aria-describedby
-- [x] 0612. [A11y] PageShell：补齐 aria-label/aria-describedby
-- [x] 0613. [A11y] Login：补齐 aria-label/aria-describedby
-- [x] 0614. [A11y] ForgotPassword：补齐 aria-label/aria-describedby
-- [x] 0615. [A11y] SearchPage：补齐 aria-label/aria-describedby
-- [x] 0616. [A11y] RankingsPage：补齐 aria-label/aria-describedby
-- [x] 0617. [A11y] NewsPage：补齐 aria-label/aria-describedby
-- [x] 0618. [A11y] NewsDetail：补齐 aria-label/aria-describedby
-- [x] 0619. [A11y] Favorites：补齐 aria-label/aria-describedby
-- [x] 0620. [A11y] ToastProvider：补齐 aria-label/aria-describedby
-- [x] 0621. [A11y] EmptyState：补齐 aria-label/aria-describedby
-- [x] 0622. [A11y] AppErrorBoundary：补齐 aria-label/aria-describedby
-- [x] 0623. [A11y] StaticPage：补齐 aria-label/aria-describedby
-- [x] 0624. [A11y] CategoryPage：补齐 aria-label/aria-describedby
-- [x] 0625. [A11y] TagPage：补齐 aria-label/aria-describedby
-- [x] 0626. [A11y] Header：为按钮补齐 aria-pressed 状态
-- [x] 0627. [A11y] Banner：为按钮补齐 aria-pressed 状态
-- [x] 0628. [A11y] AnimeCard：为按钮补齐 aria-pressed 状态
-- [x] 0629. [A11y] AnimeGrid：为按钮补齐 aria-pressed 状态
-- [x] 0630. [A11y] AnimeList：为按钮补齐 aria-pressed 状态
-- [x] 0631. [A11y] AnimeDetail：为按钮补齐 aria-pressed 状态
-- [x] 0632. [A11y] RecentlyViewed：为按钮补齐 aria-pressed 状态
-- [x] 0633. [A11y] ContinueWatching：为按钮补齐 aria-pressed 状态
-- [x] 0634. [A11y] Features：为按钮补齐 aria-pressed 状态
-- [x] 0635. [A11y] About：为按钮补齐 aria-pressed 状态
-- [x] 0636. [A11y] Footer：为按钮补齐 aria-pressed 状态
-- [x] 0637. [A11y] PageShell：为按钮补齐 aria-pressed 状态
-- [x] 0638. [A11y] Login：为按钮补齐 aria-pressed 状态
-- [x] 0639. [A11y] ForgotPassword：为按钮补齐 aria-pressed 状态
-- [x] 0640. [A11y] SearchPage：为按钮补齐 aria-pressed 状态
-- [x] 0641. [A11y] RankingsPage：为按钮补齐 aria-pressed 状态
-- [x] 0642. [A11y] NewsPage：为按钮补齐 aria-pressed 状态
-- [x] 0643. [A11y] NewsDetail：为按钮补齐 aria-pressed 状态
-- [x] 0644. [A11y] Favorites：为按钮补齐 aria-pressed 状态
-- [x] 0645. [A11y] ToastProvider：为按钮补齐 aria-pressed 状态
-- [x] 0646. [A11y] EmptyState：为按钮补齐 aria-pressed 状态
-- [x] 0647. [A11y] AppErrorBoundary：为按钮补齐 aria-pressed 状态
-- [x] 0648. [A11y] StaticPage：为按钮补齐 aria-pressed 状态
-- [x] 0649. [A11y] CategoryPage：为按钮补齐 aria-pressed 状态
-- [x] 0650. [A11y] TagPage：为按钮补齐 aria-pressed 状态
-- [x] 0651. [A11y] Header：修复键盘 Tab 顺序与焦点可见性
-- [x] 0652. [A11y] Banner：修复键盘 Tab 顺序与焦点可见性
-- [x] 0653. [A11y] AnimeCard：修复键盘 Tab 顺序与焦点可见性
-- [x] 0654. [A11y] AnimeGrid：修复键盘 Tab 顺序与焦点可见性
-- [x] 0655. [A11y] AnimeList：修复键盘 Tab 顺序与焦点可见性
-- [x] 0656. [A11y] AnimeDetail：修复键盘 Tab 顺序与焦点可见性
-- [x] 0657. [A11y] RecentlyViewed：修复键盘 Tab 顺序与焦点可见性
-- [x] 0658. [A11y] ContinueWatching：修复键盘 Tab 顺序与焦点可见性
-- [x] 0659. [A11y] Features：修复键盘 Tab 顺序与焦点可见性
-- [x] 0660. [A11y] About：修复键盘 Tab 顺序与焦点可见性
-- [x] 0661. [A11y] Footer：修复键盘 Tab 顺序与焦点可见性
-- [x] 0662. [A11y] PageShell：修复键盘 Tab 顺序与焦点可见性
-- [x] 0663. [A11y] Login：修复键盘 Tab 顺序与焦点可见性
-- [x] 0664. [A11y] ForgotPassword：修复键盘 Tab 顺序与焦点可见性
-- [x] 0665. [A11y] SearchPage：修复键盘 Tab 顺序与焦点可见性
-- [x] 0666. [A11y] RankingsPage：修复键盘 Tab 顺序与焦点可见性
-- [x] 0667. [A11y] NewsPage：修复键盘 Tab 顺序与焦点可见性
-- [x] 0668. [A11y] NewsDetail：修复键盘 Tab 顺序与焦点可见性
-- [x] 0669. [A11y] Favorites：修复键盘 Tab 顺序与焦点可见性
-- [x] 0670. [A11y] ToastProvider：修复键盘 Tab 顺序与焦点可见性
-- [x] 0671. [A11y] EmptyState：修复键盘 Tab 顺序与焦点可见性
-- [x] 0672. [A11y] AppErrorBoundary：修复键盘 Tab 顺序与焦点可见性
-- [x] 0673. [A11y] StaticPage：修复键盘 Tab 顺序与焦点可见性
-- [x] 0674. [A11y] CategoryPage：修复键盘 Tab 顺序与焦点可见性
-- [x] 0675. [A11y] TagPage：修复键盘 Tab 顺序与焦点可见性
-- [x] 0676. [A11y] Header：补齐 role=list/listitem 语义
-- [x] 0677. [A11y] Banner：补齐 role=list/listitem 语义
-- [x] 0678. [A11y] AnimeCard：补齐 role=list/listitem 语义
-- [x] 0679. [A11y] AnimeGrid：补齐 role=list/listitem 语义
-- [x] 0680. [A11y] AnimeList：补齐 role=list/listitem 语义
-- [x] 0681. [A11y] AnimeDetail：补齐 role=list/listitem 语义
-- [x] 0682. [A11y] RecentlyViewed：补齐 role=list/listitem 语义
-- [x] 0683. [A11y] ContinueWatching：补齐 role=list/listitem 语义
-- [x] 0684. [A11y] Features：补齐 role=list/listitem 语义
-- [x] 0685. [A11y] About：补齐 role=list/listitem 语义
-- [x] 0686. [A11y] Footer：补齐 role=list/listitem 语义
-- [x] 0687. [A11y] PageShell：补齐 role=list/listitem 语义
-- [x] 0688. [A11y] Login：补齐 role=list/listitem 语义
-- [x] 0689. [A11y] ForgotPassword：补齐 role=list/listitem 语义
-- [x] 0690. [A11y] SearchPage：补齐 role=list/listitem 语义
-- [x] 0691. [A11y] RankingsPage：补齐 role=list/listitem 语义
-- [x] 0692. [A11y] NewsPage：补齐 role=list/listitem 语义
-- [x] 0693. [A11y] NewsDetail：补齐 role=list/listitem 语义
-- [x] 0694. [A11y] Favorites：补齐 role=list/listitem 语义
-- [x] 0695. [A11y] ToastProvider：补齐 role=list/listitem 语义
-- [x] 0696. [A11y] EmptyState：补齐 role=list/listitem 语义
-- [x] 0697. [A11y] AppErrorBoundary：补齐 role=list/listitem 语义
-- [x] 0698. [A11y] StaticPage：补齐 role=list/listitem 语义
-- [x] 0699. [A11y] CategoryPage：补齐 role=list/listitem 语义
-- [x] 0700. [A11y] TagPage：补齐 role=list/listitem 语义
-- [x] 0701. [A11y] Header：为表单补齐 label 关联
-- [x] 0702. [A11y] Banner：为表单补齐 label 关联
-- [x] 0703. [A11y] AnimeCard：为表单补齐 label 关联
-- [x] 0704. [A11y] AnimeGrid：为表单补齐 label 关联
-- [x] 0705. [A11y] AnimeList：为表单补齐 label 关联
-- [x] 0706. [A11y] AnimeDetail：为表单补齐 label 关联
-- [x] 0707. [A11y] RecentlyViewed：为表单补齐 label 关联
-- [x] 0708. [A11y] ContinueWatching：为表单补齐 label 关联
-- [x] 0709. [A11y] Features：为表单补齐 label 关联
-- [x] 0710. [A11y] About：为表单补齐 label 关联
-- [x] 0711. [A11y] Footer：为表单补齐 label 关联
-- [x] 0712. [A11y] PageShell：为表单补齐 label 关联
-- [x] 0713. [A11y] Login：为表单补齐 label 关联
-- [x] 0714. [A11y] ForgotPassword：为表单补齐 label 关联
-- [x] 0715. [A11y] SearchPage：为表单补齐 label 关联
-- [x] 0716. [A11y] RankingsPage：为表单补齐 label 关联
-- [x] 0717. [A11y] NewsPage：为表单补齐 label 关联
-- [x] 0718. [A11y] NewsDetail：为表单补齐 label 关联
-- [x] 0719. [A11y] Favorites：为表单补齐 label 关联
-- [x] 0720. [A11y] ToastProvider：为表单补齐 label 关联
-- [x] 0721. [A11y] EmptyState：为表单补齐 label 关联
-- [x] 0722. [A11y] AppErrorBoundary：为表单补齐 label 关联
-- [x] 0723. [A11y] StaticPage：为表单补齐 label 关联
-- [x] 0724. [A11y] CategoryPage：为表单补齐 label 关联
-- [x] 0725. [A11y] TagPage：为表单补齐 label 关联
-- [x] 0726. [A11y] Header：优化颜色对比度
-- [x] 0727. [A11y] Banner：优化颜色对比度
-- [x] 0728. [A11y] AnimeCard：优化颜色对比度
-- [x] 0729. [A11y] AnimeGrid：优化颜色对比度
-- [x] 0730. [A11y] AnimeList：优化颜色对比度
-- [x] 0731. [A11y] AnimeDetail：优化颜色对比度
-- [x] 0732. [A11y] RecentlyViewed：优化颜色对比度
-- [x] 0733. [A11y] ContinueWatching：优化颜色对比度
-- [x] 0734. [A11y] Features：优化颜色对比度
-- [x] 0735. [A11y] About：优化颜色对比度
-- [x] 0736. [A11y] Footer：优化颜色对比度
-- [x] 0737. [A11y] PageShell：优化颜色对比度
-- [x] 0738. [A11y] Login：优化颜色对比度
-- [x] 0739. [A11y] ForgotPassword：优化颜色对比度
-- [x] 0740. [A11y] SearchPage：优化颜色对比度
-- [x] 0741. [A11y] RankingsPage：优化颜色对比度
-- [x] 0742. [A11y] NewsPage：优化颜色对比度
-- [x] 0743. [A11y] NewsDetail：优化颜色对比度
-- [x] 0744. [A11y] Favorites：优化颜色对比度
-- [x] 0745. [A11y] ToastProvider：优化颜色对比度
-- [x] 0746. [A11y] EmptyState：优化颜色对比度
-- [x] 0747. [A11y] AppErrorBoundary：优化颜色对比度
-- [x] 0748. [A11y] StaticPage：优化颜色对比度
-- [x] 0749. [A11y] CategoryPage：优化颜色对比度
-- [x] 0750. [A11y] TagPage：优化颜色对比度
+
+- [x] 501.  [动效] 首页：尊重 prefers-reduced-motion
+- [x] 502.  [动效] 推荐页：尊重 prefers-reduced-motion
+- [x] 503.  [动效] 排行榜：尊重 prefers-reduced-motion
+- [x] 504.  [动效] 资讯列表：尊重 prefers-reduced-motion
+- [x] 505.  [动效] 资讯详情：尊重 prefers-reduced-motion
+- [x] 506.  [动效] 搜索：尊重 prefers-reduced-motion
+- [x] 507.  [动效] 收藏：尊重 prefers-reduced-motion
+- [x] 508.  [动效] 登录/注册：尊重 prefers-reduced-motion
+- [x] 509.  [动效] 找回密码：尊重 prefers-reduced-motion
+- [x] 510.  [动效] 关于我们：尊重 prefers-reduced-motion
+- [x] 511.  [动效] 首页：为关键按钮添加轻量 shimmer
+- [x] 512.  [动效] 推荐页：为关键按钮添加轻量 shimmer
+- [x] 513.  [动效] 排行榜：为关键按钮添加轻量 shimmer
+- [x] 514.  [动效] 资讯列表：为关键按钮添加轻量 shimmer
+- [x] 515.  [动效] 资讯详情：为关键按钮添加轻量 shimmer
+- [x] 516.  [动效] 搜索：为关键按钮添加轻量 shimmer
+- [x] 517.  [动效] 收藏：为关键按钮添加轻量 shimmer
+- [x] 518.  [动效] 登录/注册：为关键按钮添加轻量 shimmer
+- [x] 519.  [动效] 找回密码：为关键按钮添加轻量 shimmer
+- [x] 520.  [动效] 关于我们：为关键按钮添加轻量 shimmer
+- [x] 521.  [动效] 首页：加入页面载入时的聚焦引导
+- [x] 522.  [动效] 推荐页：加入页面载入时的聚焦引导
+- [x] 523.  [动效] 排行榜：加入页面载入时的聚焦引导
+- [x] 524.  [动效] 资讯列表：加入页面载入时的聚焦引导
+- [x] 525.  [动效] 资讯详情：加入页面载入时的聚焦引导
+- [x] 526.  [动效] 搜索：加入页面载入时的聚焦引导
+- [x] 527.  [动效] 收藏：加入页面载入时的聚焦引导
+- [x] 528.  [动效] 登录/注册：加入页面载入时的聚焦引导
+- [x] 529.  [动效] 找回密码：加入页面载入时的聚焦引导
+- [x] 530.  [动效] 关于我们：加入页面载入时的聚焦引导
+- [x] 531.  [动效] 首页：改进骨架屏淡入
+- [x] 532.  [动效] 推荐页：改进骨架屏淡入
+- [x] 533.  [动效] 排行榜：改进骨架屏淡入
+- [x] 534.  [动效] 资讯列表：改进骨架屏淡入
+- [x] 535.  [动效] 资讯详情：改进骨架屏淡入
+- [x] 536.  [动效] 搜索：改进骨架屏淡入
+- [x] 537.  [动效] 收藏：改进骨架屏淡入
+- [x] 538.  [动效] 登录/注册：改进骨架屏淡入
+- [x] 539.  [动效] 找回密码：改进骨架屏淡入
+- [x] 540.  [动效] 关于我们：改进骨架屏淡入
+- [x] 541.  [动效] 首页：优化动效性能与 fps
+- [x] 542.  [动效] 推荐页：优化动效性能与 fps
+- [x] 543.  [动效] 排行榜：优化动效性能与 fps
+- [x] 544.  [动效] 资讯列表：优化动效性能与 fps
+- [x] 545.  [动效] 资讯详情：优化动效性能与 fps
+- [x] 546.  [动效] 搜索：优化动效性能与 fps
+- [x] 547.  [动效] 收藏：优化动效性能与 fps
+- [x] 548.  [动效] 登录/注册：优化动效性能与 fps
+- [x] 549.  [动效] 找回密码：优化动效性能与 fps
+- [x] 550.  [动效] 关于我们：优化动效性能与 fps
+- [x] 551.  [动效] 首页：新增滚动定位的柔性过渡
+- [x] 552.  [动效] 推荐页：新增滚动定位的柔性过渡
+- [x] 553.  [动效] 排行榜：新增滚动定位的柔性过渡
+- [x] 554.  [动效] 资讯列表：新增滚动定位的柔性过渡
+- [x] 555.  [动效] 资讯详情：新增滚动定位的柔性过渡
+- [x] 556.  [动效] 搜索：新增滚动定位的柔性过渡
+- [x] 557.  [动效] 收藏：新增滚动定位的柔性过渡
+- [x] 558.  [动效] 登录/注册：新增滚动定位的柔性过渡
+- [x] 559.  [动效] 找回密码：新增滚动定位的柔性过渡
+- [x] 560.  [动效] 关于我们：新增滚动定位的柔性过渡
+- [x] 561.  [动效] 首页：为图像加载增加渐显
+- [x] 562.  [动效] 推荐页：为图像加载增加渐显
+- [x] 563.  [动效] 排行榜：为图像加载增加渐显
+- [x] 564.  [动效] 资讯列表：为图像加载增加渐显
+- [x] 565.  [动效] 资讯详情：为图像加载增加渐显
+- [x] 566.  [动效] 搜索：为图像加载增加渐显
+- [x] 567.  [动效] 收藏：为图像加载增加渐显
+- [x] 568.  [动效] 登录/注册：为图像加载增加渐显
+- [x] 569.  [动效] 找回密码：为图像加载增加渐显
+- [x] 570.  [动效] 关于我们：为图像加载增加渐显
+- [x] 571.  [动效] 首页：加入分层入场动效（Stagger）
+- [x] 572.  [动效] 推荐页：加入分层入场动效（Stagger）
+- [x] 573.  [动效] 排行榜：加入分层入场动效（Stagger）
+- [x] 574.  [动效] 资讯列表：加入分层入场动效（Stagger）
+- [x] 575.  [动效] 资讯详情：加入分层入场动效（Stagger）
+- [x] 576.  [动效] 搜索：加入分层入场动效（Stagger）
+- [x] 577.  [动效] 收藏：加入分层入场动效（Stagger）
+- [x] 578.  [动效] 登录/注册：加入分层入场动效（Stagger）
+- [x] 579.  [动效] 找回密码：加入分层入场动效（Stagger）
+- [x] 580.  [动效] 关于我们：加入分层入场动效（Stagger）
+- [x] 581.  [动效] 首页：为核心卡片添加细微浮动与阴影过渡
+- [x] 582.  [动效] 推荐页：为核心卡片添加细微浮动与阴影过渡
+- [x] 583.  [动效] 排行榜：为核心卡片添加细微浮动与阴影过渡
+- [x] 584.  [动效] 资讯列表：为核心卡片添加细微浮动与阴影过渡
+- [x] 585.  [动效] 资讯详情：为核心卡片添加细微浮动与阴影过渡
+- [x] 586.  [动效] 搜索：为核心卡片添加细微浮动与阴影过渡
+- [x] 587.  [动效] 收藏：为核心卡片添加细微浮动与阴影过渡
+- [x] 588.  [动效] 登录/注册：为核心卡片添加细微浮动与阴影过渡
+- [x] 589.  [动效] 找回密码：为核心卡片添加细微浮动与阴影过渡
+- [x] 590.  [动效] 关于我们：为核心卡片添加细微浮动与阴影过渡
+- [x] 591.  [动效] 首页：增加滚动视差的轻量版本
+- [x] 592.  [动效] 推荐页：增加滚动视差的轻量版本
+- [x] 593.  [动效] 排行榜：增加滚动视差的轻量版本
+- [x] 594.  [动效] 资讯列表：增加滚动视差的轻量版本
+- [x] 595.  [动效] 资讯详情：增加滚动视差的轻量版本
+- [x] 596.  [动效] 搜索：增加滚动视差的轻量版本
+- [x] 597.  [动效] 收藏：增加滚动视差的轻量版本
+- [x] 598.  [动效] 登录/注册：增加滚动视差的轻量版本
+- [x] 599.  [动效] 找回密码：增加滚动视差的轻量版本
+- [x] 600.  [动效] 关于我们：增加滚动视差的轻量版本
+- [x] 601.  [A11y] Header：补齐 aria-label/aria-describedby
+- [x] 602.  [A11y] Banner：补齐 aria-label/aria-describedby
+- [x] 603.  [A11y] AnimeCard：补齐 aria-label/aria-describedby
+- [x] 604.  [A11y] AnimeGrid：补齐 aria-label/aria-describedby
+- [x] 605.  [A11y] AnimeList：补齐 aria-label/aria-describedby
+- [x] 606.  [A11y] AnimeDetail：补齐 aria-label/aria-describedby
+- [x] 607.  [A11y] RecentlyViewed：补齐 aria-label/aria-describedby
+- [x] 608.  [A11y] ContinueWatching：补齐 aria-label/aria-describedby
+- [x] 609.  [A11y] Features：补齐 aria-label/aria-describedby
+- [x] 610.  [A11y] About：补齐 aria-label/aria-describedby
+- [x] 611.  [A11y] Footer：补齐 aria-label/aria-describedby
+- [x] 612.  [A11y] PageShell：补齐 aria-label/aria-describedby
+- [x] 613.  [A11y] Login：补齐 aria-label/aria-describedby
+- [x] 614.  [A11y] ForgotPassword：补齐 aria-label/aria-describedby
+- [x] 615.  [A11y] SearchPage：补齐 aria-label/aria-describedby
+- [x] 616.  [A11y] RankingsPage：补齐 aria-label/aria-describedby
+- [x] 617.  [A11y] NewsPage：补齐 aria-label/aria-describedby
+- [x] 618.  [A11y] NewsDetail：补齐 aria-label/aria-describedby
+- [x] 619.  [A11y] Favorites：补齐 aria-label/aria-describedby
+- [x] 620.  [A11y] ToastProvider：补齐 aria-label/aria-describedby
+- [x] 621.  [A11y] EmptyState：补齐 aria-label/aria-describedby
+- [x] 622.  [A11y] AppErrorBoundary：补齐 aria-label/aria-describedby
+- [x] 623.  [A11y] StaticPage：补齐 aria-label/aria-describedby
+- [x] 624.  [A11y] CategoryPage：补齐 aria-label/aria-describedby
+- [x] 625.  [A11y] TagPage：补齐 aria-label/aria-describedby
+- [x] 626.  [A11y] Header：为按钮补齐 aria-pressed 状态
+- [x] 627.  [A11y] Banner：为按钮补齐 aria-pressed 状态
+- [x] 628.  [A11y] AnimeCard：为按钮补齐 aria-pressed 状态
+- [x] 629.  [A11y] AnimeGrid：为按钮补齐 aria-pressed 状态
+- [x] 630.  [A11y] AnimeList：为按钮补齐 aria-pressed 状态
+- [x] 631.  [A11y] AnimeDetail：为按钮补齐 aria-pressed 状态
+- [x] 632.  [A11y] RecentlyViewed：为按钮补齐 aria-pressed 状态
+- [x] 633.  [A11y] ContinueWatching：为按钮补齐 aria-pressed 状态
+- [x] 634.  [A11y] Features：为按钮补齐 aria-pressed 状态
+- [x] 635.  [A11y] About：为按钮补齐 aria-pressed 状态
+- [x] 636.  [A11y] Footer：为按钮补齐 aria-pressed 状态
+- [x] 637.  [A11y] PageShell：为按钮补齐 aria-pressed 状态
+- [x] 638.  [A11y] Login：为按钮补齐 aria-pressed 状态
+- [x] 639.  [A11y] ForgotPassword：为按钮补齐 aria-pressed 状态
+- [x] 640.  [A11y] SearchPage：为按钮补齐 aria-pressed 状态
+- [x] 641.  [A11y] RankingsPage：为按钮补齐 aria-pressed 状态
+- [x] 642.  [A11y] NewsPage：为按钮补齐 aria-pressed 状态
+- [x] 643.  [A11y] NewsDetail：为按钮补齐 aria-pressed 状态
+- [x] 644.  [A11y] Favorites：为按钮补齐 aria-pressed 状态
+- [x] 645.  [A11y] ToastProvider：为按钮补齐 aria-pressed 状态
+- [x] 646.  [A11y] EmptyState：为按钮补齐 aria-pressed 状态
+- [x] 647.  [A11y] AppErrorBoundary：为按钮补齐 aria-pressed 状态
+- [x] 648.  [A11y] StaticPage：为按钮补齐 aria-pressed 状态
+- [x] 649.  [A11y] CategoryPage：为按钮补齐 aria-pressed 状态
+- [x] 650.  [A11y] TagPage：为按钮补齐 aria-pressed 状态
+- [x] 651.  [A11y] Header：修复键盘 Tab 顺序与焦点可见性
+- [x] 652.  [A11y] Banner：修复键盘 Tab 顺序与焦点可见性
+- [x] 653.  [A11y] AnimeCard：修复键盘 Tab 顺序与焦点可见性
+- [x] 654.  [A11y] AnimeGrid：修复键盘 Tab 顺序与焦点可见性
+- [x] 655.  [A11y] AnimeList：修复键盘 Tab 顺序与焦点可见性
+- [x] 656.  [A11y] AnimeDetail：修复键盘 Tab 顺序与焦点可见性
+- [x] 657.  [A11y] RecentlyViewed：修复键盘 Tab 顺序与焦点可见性
+- [x] 658.  [A11y] ContinueWatching：修复键盘 Tab 顺序与焦点可见性
+- [x] 659.  [A11y] Features：修复键盘 Tab 顺序与焦点可见性
+- [x] 660.  [A11y] About：修复键盘 Tab 顺序与焦点可见性
+- [x] 661.  [A11y] Footer：修复键盘 Tab 顺序与焦点可见性
+- [x] 662.  [A11y] PageShell：修复键盘 Tab 顺序与焦点可见性
+- [x] 663.  [A11y] Login：修复键盘 Tab 顺序与焦点可见性
+- [x] 664.  [A11y] ForgotPassword：修复键盘 Tab 顺序与焦点可见性
+- [x] 665.  [A11y] SearchPage：修复键盘 Tab 顺序与焦点可见性
+- [x] 666.  [A11y] RankingsPage：修复键盘 Tab 顺序与焦点可见性
+- [x] 667.  [A11y] NewsPage：修复键盘 Tab 顺序与焦点可见性
+- [x] 668.  [A11y] NewsDetail：修复键盘 Tab 顺序与焦点可见性
+- [x] 669.  [A11y] Favorites：修复键盘 Tab 顺序与焦点可见性
+- [x] 670.  [A11y] ToastProvider：修复键盘 Tab 顺序与焦点可见性
+- [x] 671.  [A11y] EmptyState：修复键盘 Tab 顺序与焦点可见性
+- [x] 672.  [A11y] AppErrorBoundary：修复键盘 Tab 顺序与焦点可见性
+- [x] 673.  [A11y] StaticPage：修复键盘 Tab 顺序与焦点可见性
+- [x] 674.  [A11y] CategoryPage：修复键盘 Tab 顺序与焦点可见性
+- [x] 675.  [A11y] TagPage：修复键盘 Tab 顺序与焦点可见性
+- [x] 676.  [A11y] Header：补齐 role=list/listitem 语义
+- [x] 677.  [A11y] Banner：补齐 role=list/listitem 语义
+- [x] 678.  [A11y] AnimeCard：补齐 role=list/listitem 语义
+- [x] 679.  [A11y] AnimeGrid：补齐 role=list/listitem 语义
+- [x] 680.  [A11y] AnimeList：补齐 role=list/listitem 语义
+- [x] 681.  [A11y] AnimeDetail：补齐 role=list/listitem 语义
+- [x] 682.  [A11y] RecentlyViewed：补齐 role=list/listitem 语义
+- [x] 683.  [A11y] ContinueWatching：补齐 role=list/listitem 语义
+- [x] 684.  [A11y] Features：补齐 role=list/listitem 语义
+- [x] 685.  [A11y] About：补齐 role=list/listitem 语义
+- [x] 686.  [A11y] Footer：补齐 role=list/listitem 语义
+- [x] 687.  [A11y] PageShell：补齐 role=list/listitem 语义
+- [x] 688.  [A11y] Login：补齐 role=list/listitem 语义
+- [x] 689.  [A11y] ForgotPassword：补齐 role=list/listitem 语义
+- [x] 690.  [A11y] SearchPage：补齐 role=list/listitem 语义
+- [x] 691.  [A11y] RankingsPage：补齐 role=list/listitem 语义
+- [x] 692.  [A11y] NewsPage：补齐 role=list/listitem 语义
+- [x] 693.  [A11y] NewsDetail：补齐 role=list/listitem 语义
+- [x] 694.  [A11y] Favorites：补齐 role=list/listitem 语义
+- [x] 695.  [A11y] ToastProvider：补齐 role=list/listitem 语义
+- [x] 696.  [A11y] EmptyState：补齐 role=list/listitem 语义
+- [x] 697.  [A11y] AppErrorBoundary：补齐 role=list/listitem 语义
+- [x] 698.  [A11y] StaticPage：补齐 role=list/listitem 语义
+- [x] 699.  [A11y] CategoryPage：补齐 role=list/listitem 语义
+- [x] 700.  [A11y] TagPage：补齐 role=list/listitem 语义
+- [x] 701.  [A11y] Header：为表单补齐 label 关联
+- [x] 702.  [A11y] Banner：为表单补齐 label 关联
+- [x] 703.  [A11y] AnimeCard：为表单补齐 label 关联
+- [x] 704.  [A11y] AnimeGrid：为表单补齐 label 关联
+- [x] 705.  [A11y] AnimeList：为表单补齐 label 关联
+- [x] 706.  [A11y] AnimeDetail：为表单补齐 label 关联
+- [x] 707.  [A11y] RecentlyViewed：为表单补齐 label 关联
+- [x] 708.  [A11y] ContinueWatching：为表单补齐 label 关联
+- [x] 709.  [A11y] Features：为表单补齐 label 关联
+- [x] 710.  [A11y] About：为表单补齐 label 关联
+- [x] 711.  [A11y] Footer：为表单补齐 label 关联
+- [x] 712.  [A11y] PageShell：为表单补齐 label 关联
+- [x] 713.  [A11y] Login：为表单补齐 label 关联
+- [x] 714.  [A11y] ForgotPassword：为表单补齐 label 关联
+- [x] 715.  [A11y] SearchPage：为表单补齐 label 关联
+- [x] 716.  [A11y] RankingsPage：为表单补齐 label 关联
+- [x] 717.  [A11y] NewsPage：为表单补齐 label 关联
+- [x] 718.  [A11y] NewsDetail：为表单补齐 label 关联
+- [x] 719.  [A11y] Favorites：为表单补齐 label 关联
+- [x] 720.  [A11y] ToastProvider：为表单补齐 label 关联
+- [x] 721.  [A11y] EmptyState：为表单补齐 label 关联
+- [x] 722.  [A11y] AppErrorBoundary：为表单补齐 label 关联
+- [x] 723.  [A11y] StaticPage：为表单补齐 label 关联
+- [x] 724.  [A11y] CategoryPage：为表单补齐 label 关联
+- [x] 725.  [A11y] TagPage：为表单补齐 label 关联
+- [x] 726.  [A11y] Header：优化颜色对比度
+- [x] 727.  [A11y] Banner：优化颜色对比度
+- [x] 728.  [A11y] AnimeCard：优化颜色对比度
+- [x] 729.  [A11y] AnimeGrid：优化颜色对比度
+- [x] 730.  [A11y] AnimeList：优化颜色对比度
+- [x] 731.  [A11y] AnimeDetail：优化颜色对比度
+- [x] 732.  [A11y] RecentlyViewed：优化颜色对比度
+- [x] 733.  [A11y] ContinueWatching：优化颜色对比度
+- [x] 734.  [A11y] Features：优化颜色对比度
+- [x] 735.  [A11y] About：优化颜色对比度
+- [x] 736.  [A11y] Footer：优化颜色对比度
+- [x] 737.  [A11y] PageShell：优化颜色对比度
+- [x] 738.  [A11y] Login：优化颜色对比度
+- [x] 739.  [A11y] ForgotPassword：优化颜色对比度
+- [x] 740.  [A11y] SearchPage：优化颜色对比度
+- [x] 741.  [A11y] RankingsPage：优化颜色对比度
+- [x] 742.  [A11y] NewsPage：优化颜色对比度
+- [x] 743.  [A11y] NewsDetail：优化颜色对比度
+- [x] 744.  [A11y] Favorites：优化颜色对比度
+- [x] 745.  [A11y] ToastProvider：优化颜色对比度
+- [x] 746.  [A11y] EmptyState：优化颜色对比度
+- [x] 747.  [A11y] AppErrorBoundary：优化颜色对比度
+- [x] 748.  [A11y] StaticPage：优化颜色对比度
+- [x] 749.  [A11y] CategoryPage：优化颜色对比度
+- [x] 750.  [A11y] TagPage：优化颜色对比度

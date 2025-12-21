@@ -81,11 +81,7 @@ const FooterBrand = styled(FooterColumn).attrs({ 'data-card': true, 'data-divide
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(
-      200px 120px at 10% 0%,
-      var(--primary-soft),
-      transparent 70%
-    );
+    background: radial-gradient(200px 120px at 10% 0%, var(--primary-soft), transparent 70%);
     opacity: 0.6;
     pointer-events: none;
     z-index: 0;
@@ -341,6 +337,3 @@ function Footer() {
 }
 
 export default Footer;
-
-
-

@@ -329,7 +329,8 @@ const SecondaryButton = styled.button.attrs({ 'data-pressable': true })`
   border: 1px solid ${(p) => (p.$active ? 'var(--primary-soft-border)' : 'var(--border-subtle)')};
 
   &:hover {
-    background-color: ${(p) => (p.$active ? 'var(--primary-soft-hover)' : 'var(--surface-soft-hover)')};
+    background-color: ${(p) =>
+      p.$active ? 'var(--primary-soft-hover)' : 'var(--surface-soft-hover)'};
     transform: translateY(-2px);
   }
 `;
@@ -438,7 +439,11 @@ const CharactersGrid = styled.div.attrs({ role: 'list' })`
   gap: var(--spacing-md);
 `;
 
-const CharacterCard = styled.div.attrs({ role: 'listitem', 'data-card': true, 'data-divider': 'card' })`
+const CharacterCard = styled.div.attrs({
+  role: 'listitem',
+  'data-card': true,
+  'data-divider': 'card',
+})`
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
@@ -885,7 +890,6 @@ function AnimeDetail() {
     toast.info('已清空本地评论', '随时可以重新发表。');
   };
 
-
   const handleProgressUpdate = (next) => {
     if (!anime?.id) return;
     const nextEpisode = Math.min(Math.max(Number(next.episode || 1), 1), anime.episodes);
@@ -984,7 +988,10 @@ function AnimeDetail() {
                       title: anime.title,
                       platform: anime.watchLinks?.[0]?.platform,
                     });
-                    trackEvent('anime.play', { id: anime.id, platform: anime.watchLinks?.[0]?.platform });
+                    trackEvent('anime.play', {
+                      id: anime.id,
+                      platform: anime.watchLinks?.[0]?.platform,
+                    });
                     return;
                   }
                   event.preventDefault();
@@ -1235,6 +1242,3 @@ function AnimeDetail() {
 }
 
 export default AnimeDetail;
-
-
-
