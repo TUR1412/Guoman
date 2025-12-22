@@ -2,7 +2,7 @@
 
 > **环境**: Windows 11 + pwsh (-NoLogo -NoProfile wrapper) | **框架**: React + Vite | **档位**: 4档 (架构重构)
 > **已激活矩阵**: [模块 A: 视觉矫正] + [模块 B: 逻辑直通] + [模块 E: 幽灵防御] + [模块 F: 需求镜像/靶向验证]
-> **最后更新**: 2025-12-22 | **最新提交**: 6ae5f37 (已推送 origin/master)
+> **最后更新**: 2025-12-22 | **最新提交**: f9d8484 (已推送 origin/master)
 
 ## 1. 需求镜像 (Requirement Mirroring)
 
@@ -46,4 +46,8 @@
 - [x] 已推送到远程：origin/master（commit 7115178）
 - [x] 极限熵减：watchProgress 订阅支持按 animeId 精准分发（避免大量 AnimeCard 时 O(n) 回调扇出）
 - [x] 已推送到远程：origin/master（commit 6ae5f37）
+- [x] 极限熵减：favorites/following 按 animeId 精准订阅（避免 AnimeCard 大量 fan-out）
+- [x] 已推送到远程：origin/master（commit 2c7d4c8）
+- [x] 极限熵减：删掉 favorites/following 未使用事件分发 + followingStore 冗余 fallback + 补齐覆盖率分支（`npm run test:coverage` 全绿）
+- [x] 已推送到远程：origin/master（commit f9d8484）
 - [x] 本地仓库保留（用户已取消删除）
