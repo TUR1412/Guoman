@@ -2,7 +2,7 @@
 
 > **环境**: Windows 11 + pwsh (-NoLogo -NoProfile wrapper) | **框架**: React + Vite | **档位**: 4档 (架构重构)
 > **已激活矩阵**: [模块 A: 视觉矫正] + [模块 B: 逻辑直通] + [模块 E: 幽灵防御] + [模块 F: 需求镜像/靶向验证]
-> **最后更新**: 2025-12-22 | **最新提交**: 999b43e (待推送 origin/master)
+> **最后更新**: 2025-12-22 | **最新提交**: 999b43e (已推送 origin/master)
 
 ## 1. 需求镜像 (Requirement Mirroring)
 
@@ -39,5 +39,5 @@
 - [x] 全路径融合飞升：watchProgress 订阅单例化（O(1) window listeners）+ 兼容 `guoman:storage`
 - [x] 全路径融合飞升：收藏拖拽排序持久化降噪（拖拽中仅更新 draft，DragEnd 才写入 localStorage）
 - [x] 全路径融合飞升：路由转场电影级升级（spring + curtain overlay，reduced-motion safe）
-- [ ] 已推送到远程：origin/master（commit 999b43e）
+- [x] 已推送到远程：origin/master（commit 999b43e）
 - [x] 本地仓库保留（用户已取消删除）
