@@ -1,7 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { motion, useReducedMotion } from 'framer-motion';
 import { FiAward, FiBell, FiHeart, FiMessageSquare, FiPlay, FiShare2 } from 'react-icons/fi';
 import PageShell from '../components/PageShell';
+import { useToast } from '../components/ToastProvider';
 import { STORAGE_KEYS } from '../utils/dataKeys';
 import { getDownloadHistory, getPlayHistory } from '../utils/engagementStore';
 import { getFeedbackList } from '../utils/feedbackStore';
@@ -9,6 +11,8 @@ import { getSharePosters } from '../utils/sharePoster';
 import { useFavoriteIds } from '../utils/useIsFavorite';
 import { useFollowingEntries } from '../utils/useIsFollowing';
 import { useProMembership } from '../utils/useProMembership';
+import { safeJsonParse } from '../utils/json';
+import { usePersistedState } from '../utils/usePersistedState';
 import { getContinueWatchingList, subscribeWatchProgress } from '../utils/watchProgress';
 
 const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
@@ -17,7 +21,7 @@ const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
   gap: var(--spacing-lg);
 `;
 
-const Card = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' })`
+const Card = styled(motion.div).attrs({ 'data-card': true, 'data-divider': 'card' })`
   grid-column: span 4;
   padding: var(--spacing-xl);
   border-radius: var(--border-radius-lg);
@@ -29,6 +33,7 @@ const Card = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' })`
   gap: var(--spacing-md);
   position: relative;
   overflow: hidden;
+  transition: var(--transition);
 
   &::before {
     content: '';
@@ -50,6 +55,19 @@ const Card = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' })`
   @media (max-width: 576px) {
     grid-column: 1 / -1;
   }
+`;
+
+const UnlockGlow = styled(motion.div)`
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    260px 140px at 20% 0%,
+    rgba(var(--primary-rgb), 0.34),
+    transparent 70%
+  );
+  mix-blend-mode: screen;
 `;
 
 const TitleRow = styled.div`
@@ -133,10 +151,22 @@ const totalToPercent = (current, target) => {
 };
 
 function AchievementsPage() {
+  const toast = useToast();
+  const reducedMotion = useReducedMotion();
   const favoriteIds = useFavoriteIds();
   const followingEntries = useFollowingEntries();
   const pro = useProMembership();
   const [signal, setSignal] = useState(0);
+  const [hotUnlockedIds, setHotUnlockedIds] = useState([]);
+  const [seenUnlockedIds, setSeenUnlockedIds] = usePersistedState(
+    STORAGE_KEYS.achievementsUnlocked,
+    [],
+    {
+      serialize: (value) => JSON.stringify(Array.isArray(value) ? value : []),
+      deserialize: (raw) => safeJsonParse(raw, []),
+    },
+  );
+  const didInitRef = useRef(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
@@ -264,7 +294,47 @@ function AchievementsPage() {
     [counts],
   );
 
-  const unlocked = items.filter((item) => item.current >= item.target).length;
+  const unlockedIds = useMemo(
+    () => items.filter((item) => item.current >= item.target).map((item) => item.id),
+    [items],
+  );
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const prev = Array.isArray(seenUnlockedIds) ? seenUnlockedIds : [];
+    const prevSet = new Set(prev);
+    const sameLength = prev.length === unlockedIds.length;
+    const same = sameLength && unlockedIds.every((id) => prevSet.has(id));
+
+    if (same) return undefined;
+
+    if (!didInitRef.current) {
+      didInitRef.current = true;
+      setSeenUnlockedIds(unlockedIds);
+      return undefined;
+    }
+
+    const newly = unlockedIds.filter((id) => !prevSet.has(id));
+    setSeenUnlockedIds(unlockedIds);
+
+    if (newly.length === 0) return undefined;
+
+    const titleMap = new Map(items.map((i) => [i.id, i.title]));
+    const titles = newly.map((id) => titleMap.get(id)).filter(Boolean);
+
+    toast.success(
+      '成就解锁',
+      titles.length ? `已解锁：${titles.join('、')}` : `已解锁 ${newly.length} 项成就。`,
+      { celebrate: true, durationMs: 3200 },
+    );
+
+    setHotUnlockedIds(newly);
+    const t = window.setTimeout(() => setHotUnlockedIds([]), 4200);
+    return () => window.clearTimeout(t);
+  }, [didInitRef, items, seenUnlockedIds, setSeenUnlockedIds, toast, unlockedIds]);
+
+  const unlocked = unlockedIds.length;
 
   return (
     <PageShell
@@ -283,9 +353,31 @@ function AchievementsPage() {
         {items.map((item) => {
           const ok = item.current >= item.target;
           const percent = totalToPercent(item.current, item.target);
+          const hot = ok && hotUnlockedIds.includes(item.id);
 
           return (
-            <Card key={item.id} aria-label={`${item.title} 成就`}>
+            <Card
+              key={item.id}
+              aria-label={`${item.title} 成就`}
+              whileHover={reducedMotion ? undefined : { y: -2, scale: 1.01 }}
+              transition={reducedMotion ? { duration: 0 } : { duration: 0.22 }}
+              style={
+                ok
+                  ? {
+                      borderColor: 'var(--primary-soft-border)',
+                      boxShadow: 'var(--shadow-glow)',
+                    }
+                  : undefined
+              }
+            >
+              {hot && !reducedMotion ? (
+                <UnlockGlow
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 0.95, 0] }}
+                  transition={{ duration: 1.15, ease: [0.22, 1, 0.36, 1] }}
+                  aria-hidden="true"
+                />
+              ) : null}
               <TitleRow>
                 <Title>
                   {item.icon} {item.title}

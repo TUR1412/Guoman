@@ -28,4 +28,5 @@ export const STORAGE_KEYS = Object.freeze({
   newsHistory: 'guoman.news.history.v1',
   following: 'guoman.following.v1',
   proMembership: 'guoman.pro.membership.v1',
+  achievementsUnlocked: 'guoman.achievements.unlocked.v1',
 });

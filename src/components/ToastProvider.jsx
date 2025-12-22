@@ -8,8 +8,10 @@ import React, {
   useState,
 } from 'react';
 import styled from 'styled-components';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { FiAlertTriangle, FiCheckCircle, FiInfo, FiX } from 'react-icons/fi';
+
+import ConfettiBurst from './ConfettiBurst';
 
 const ToastContext = createContext(null);
 
@@ -32,6 +34,8 @@ const ToastCard = styled(motion.div).attrs({ 'data-card': true, 'data-divider': 
   box-shadow: var(--shadow-lg);
   backdrop-filter: blur(14px);
   padding: 12px 12px;
+  position: relative;
+  overflow: visible;
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 10px;
@@ -99,6 +103,35 @@ const motionProps = {
   transition: { duration: 0.22 },
 };
 
+function ToastItem({ toast, meta, onRemove }) {
+  const reducedMotion = useReducedMotion();
+  const [burstKey, setBurstKey] = useState(null);
+
+  useEffect(() => {
+    if (reducedMotion) return undefined;
+    if (toast.variant !== 'success') return undefined;
+    if (!toast.celebrate) return undefined;
+
+    setBurstKey(`${toast.id}:${Date.now()}`);
+    const t = window.setTimeout(() => setBurstKey(null), 900);
+    return () => window.clearTimeout(t);
+  }, [reducedMotion, toast.celebrate, toast.id, toast.variant]);
+
+  return (
+    <ToastCard {...motionProps} style={{ borderColor: meta.color }}>
+      {burstKey ? <ConfettiBurst seed={toast.id} /> : null}
+      <IconWrap style={{ borderColor: meta.color, color: meta.color }}>{meta.icon}</IconWrap>
+      <ToastContent>
+        <Title>{toast.title}</Title>
+        {toast.message ? <Message>{toast.message}</Message> : null}
+      </ToastContent>
+      <CloseButton type="button" aria-label="关闭提示" onClick={() => onRemove(toast.id)}>
+        <FiX />
+      </CloseButton>
+    </ToastCard>
+  );
+}
+
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
   const nextIdRef = useRef(1);
@@ -124,9 +157,10 @@ export function ToastProvider({ children }) {
   }, []);
 
   const push = useCallback(
-    ({ title, message, variant = 'info', durationMs = 2400 }) => {
+    ({ title, message, variant = 'info', durationMs = 2400, celebrate = false } = {}) => {
+      if (!title) return;
       const id = nextIdRef.current++;
-      const toast = { id, title, message, variant };
+      const toast = { id, title, message, variant, celebrate: Boolean(celebrate) };
 
       setToasts((prev) => {
         const next = [toast, ...prev];
@@ -153,9 +187,12 @@ export function ToastProvider({ children }) {
   const api = useMemo(
     () => ({
       push,
-      success: (title, message) => push({ title, message, variant: 'success' }),
-      info: (title, message) => push({ title, message, variant: 'info' }),
-      warning: (title, message) => push({ title, message, variant: 'warning' }),
+      success: (title, message, options) =>
+        push({ title, message, variant: 'success', ...(options || {}) }),
+      info: (title, message, options) =>
+        push({ title, message, variant: 'info', ...(options || {}) }),
+      warning: (title, message, options) =>
+        push({ title, message, variant: 'warning', ...(options || {}) }),
     }),
     [push],
   );
@@ -174,20 +211,7 @@ export function ToastProvider({ children }) {
           {toasts.map((t) => {
             const meta = VARIANTS[t.variant] || VARIANTS.info;
 
-            return (
-              <ToastCard key={t.id} {...motionProps} style={{ borderColor: meta.color }}>
-                <IconWrap style={{ borderColor: meta.color, color: meta.color }}>
-                  {meta.icon}
-                </IconWrap>
-                <ToastContent>
-                  <Title>{t.title}</Title>
-                  {t.message ? <Message>{t.message}</Message> : null}
-                </ToastContent>
-                <CloseButton type="button" aria-label="关闭提示" onClick={() => remove(t.id)}>
-                  <FiX />
-                </CloseButton>
-              </ToastCard>
-            );
+            return <ToastItem key={t.id} toast={t} meta={meta} onRemove={remove} />;
           })}
         </AnimatePresence>
       </Host>

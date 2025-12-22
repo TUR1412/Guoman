@@ -880,7 +880,7 @@ function AnimeDetail() {
     }
 
     recordSharePoster({ title: anime.title, subtitle: anime.originalTitle });
-    toast.success('海报已生成', '分享卡片已下载到本地。');
+    toast.success('海报已生成', '分享卡片已下载到本地。', { celebrate: true });
     trackEvent('anime.poster', { id: anime.id });
   };
 

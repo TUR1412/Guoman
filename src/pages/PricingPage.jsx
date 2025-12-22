@@ -187,7 +187,9 @@ function PricingPage() {
     if (plan === 'free') {
       toast.info('已切换到 Free', 'PRO 状态已关闭。');
     } else {
-      toast.success('PRO 已开启', '这是本地演示开关：不会产生真实支付。');
+      toast.success('PRO 已开启', '这是本地演示开关：不会产生真实支付。', {
+        celebrate: true,
+      });
     }
   };
 

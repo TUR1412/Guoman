@@ -272,7 +272,9 @@ function PostersPage() {
     downloadTextFile(svg, file, 'image/svg+xml;charset=utf-8');
     recordSharePoster({ title, subtitle });
     setSignal((prev) => prev + 1);
-    toast.success('海报已下载', '已为你生成 SVG 海报，可直接用于社交分享。');
+    toast.success('海报已下载', '已为你生成 SVG 海报，可直接用于社交分享。', {
+      celebrate: true,
+    });
     trackEvent('poster.download', { title: String(title || '').slice(0, 30) });
   };
 
@@ -402,7 +404,9 @@ function PostersPage() {
                       <Button
                         onClick={() => {
                           downloadTextFile(itemSvg, filename, 'image/svg+xml;charset=utf-8');
-                          toast.success('已下载历史海报', '已为你重新导出 SVG。');
+                          toast.success('已下载历史海报', '已为你重新导出 SVG。', {
+                            celebrate: true,
+                          });
                           trackEvent('poster.history.download', { id: item.id });
                         }}
                         title="下载该海报"
