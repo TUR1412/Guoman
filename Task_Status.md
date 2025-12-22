@@ -2,7 +2,7 @@
 
 > **环境**: Windows 11 + pwsh (-NoLogo -NoProfile wrapper) | **框架**: React + Vite | **档位**: 4档 (架构重构)
 > **已激活矩阵**: [模块 A: 视觉矫正] + [模块 B: 逻辑直通] + [模块 E: 幽灵防御] + [模块 F: 需求镜像/靶向验证]
-> **最后更新**: 2025-12-22 | **最新提交**: 999b43e (已推送 origin/master)
+> **最后更新**: 2025-12-22 | **最新提交**: 7115178 (待推送 origin/master)
 
 ## 1. 需求镜像 (Requirement Mirroring)
 
@@ -14,6 +14,8 @@
 > **补充（视觉与功能裂变模式 123）**: 聚焦“更惊艳的微交互”：收藏页 **拖拽排序 + 分组拖放**、成就解锁 **全屏庆祝叠层**、全局 **Pointer Glow**（RAF 节流避免 React 重渲染）；并补齐 README 动效演示与单测。明确：**不删除本地仓库**，允许推送。
 
 > **补充（全路径融合飞升模式）**: 合并 A/B/D 与潜在优化项：以“渲染成本压榨”为主线（减少不必要重渲染与事件监听数量），并增强“电影级转场”观感；所有改动保持 reduced-motion 护栏与质量闸门闭环。
+
+> **补充（极限熵减循环模式）**: 红蓝对抗打击“体积膨胀与卡顿源”：优先移除 Banner 轮播的重型依赖（Swiper），用自研轻量轮播（Autoplay + Fade + Bullets + Nav + Keyboard）替代；目标是把 vendor chunk 直接从产物中抹掉。
 
 ## 2. 审计发现 (Atomic Findings)
 
@@ -40,4 +42,6 @@
 - [x] 全路径融合飞升：收藏拖拽排序持久化降噪（拖拽中仅更新 draft，DragEnd 才写入 localStorage）
 - [x] 全路径融合飞升：路由转场电影级升级（spring + curtain overlay，reduced-motion safe）
 - [x] 已推送到远程：origin/master（commit 999b43e）
+- [x] 极限熵减：移除 Swiper 依赖，Banner 轮播改为自研轻量 Carousel（减少 bundle 体积与构建模块数）
+- [ ] 已推送到远程：origin/master（commit 7115178）
 - [x] 本地仓库保留（用户已取消删除）
