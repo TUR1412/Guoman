@@ -6,6 +6,9 @@
 # 测试
 /coverage
 
+# 报告
+/reports
+
 # 生产
 /build
 /dist

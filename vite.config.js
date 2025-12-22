@@ -45,7 +45,6 @@ export default defineConfig(({ command }) => ({
           if (id.includes('node_modules/framer-motion')) return 'vendor-motion';
           if (id.includes('node_modules/styled-components')) return 'vendor-styled';
           if (id.includes('node_modules/react-icons')) return 'vendor-icons';
-          if (id.includes('node_modules/swiper')) return 'vendor-swiper';
 
           return 'vendor';
         },
