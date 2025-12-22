@@ -2,7 +2,7 @@
 
 > **环境**: Windows 11 + pwsh (-NoLogo -NoProfile wrapper) | **框架**: React + Vite | **档位**: 4档 (架构重构)
 > **已激活矩阵**: [模块 A: 视觉矫正] + [模块 B: 逻辑直通] + [模块 E: 幽灵防御] + [模块 F: 需求镜像/靶向验证]
-> **最后更新**: 2025-12-22 | **最新提交**: 7115178 (已推送 origin/master)
+> **最后更新**: 2025-12-22 | **最新提交**: 6ae5f37 (待推送 origin/master)
 
 ## 1. 需求镜像 (Requirement Mirroring)
 
@@ -44,4 +44,6 @@
 - [x] 已推送到远程：origin/master（commit 999b43e）
 - [x] 极限熵减：移除 Swiper 依赖，Banner 轮播改为自研轻量 Carousel（减少 bundle 体积与构建模块数）
 - [x] 已推送到远程：origin/master（commit 7115178）
+- [x] 极限熵减：watchProgress 订阅支持按 animeId 精准分发（避免大量 AnimeCard 时 O(n) 回调扇出）
+- [ ] 已推送到远程：origin/master（commit 6ae5f37）
 - [x] 本地仓库保留（用户已取消删除）
