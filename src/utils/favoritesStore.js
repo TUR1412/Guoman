@@ -29,7 +29,10 @@ let cachedUpdatedRaw = undefined;
 let cachedState = null;
 let cachedStateKey = undefined;
 let windowBound = false;
-const listeners = new Set();
+let windowCleanup = null;
+const globalListeners = new Set();
+const perIdListeners = new Map();
+let subscriberCount = 0;
 
 const readRaw = (key) => {
   if (typeof window === 'undefined') return null;
@@ -96,16 +99,35 @@ const clearCache = () => {
   cachedStateKey = undefined;
 };
 
-const emit = () => {
-  listeners.forEach((listener) => {
+const emit = ({ id = null } = {}) => {
+  globalListeners.forEach((listener) => {
     try {
       listener();
     } catch {}
   });
 
+  if (id) {
+    const set = perIdListeners.get(String(id));
+    if (set) {
+      set.forEach((listener) => {
+        try {
+          listener();
+        } catch {}
+      });
+    }
+  } else {
+    perIdListeners.forEach((set) => {
+      set.forEach((listener) => {
+        try {
+          listener();
+        } catch {}
+      });
+    });
+  }
+
   if (typeof window !== 'undefined') {
     try {
-      window.dispatchEvent(new CustomEvent(EVENT_KEY));
+      window.dispatchEvent(new CustomEvent(EVENT_KEY, { detail: { id: id || null } }));
     } catch {}
   }
 };
@@ -124,12 +146,63 @@ const ensureWindowListeners = () => {
 
   window.addEventListener('storage', onStorage);
   window.addEventListener('guoman:storage', onStorage);
+  windowCleanup = () => {
+    window.removeEventListener('storage', onStorage);
+    window.removeEventListener('guoman:storage', onStorage);
+  };
 };
 
 export const subscribeFavorites = (listener) => {
+  if (typeof window === 'undefined') return () => {};
+  if (typeof listener !== 'function') return () => {};
+
   ensureWindowListeners();
-  listeners.add(listener);
-  return () => listeners.delete(listener);
+  if (!globalListeners.has(listener)) {
+    globalListeners.add(listener);
+    subscriberCount += 1;
+  }
+
+  return () => {
+    if (globalListeners.delete(listener)) {
+      subscriberCount = Math.max(0, subscriberCount - 1);
+    }
+
+    if (subscriberCount === 0) {
+      windowCleanup?.();
+      windowCleanup = null;
+      windowBound = false;
+    }
+  };
+};
+
+export const subscribeFavoriteById = (animeId, listener) => {
+  if (typeof window === 'undefined') return () => {};
+  if (typeof listener !== 'function') return () => {};
+
+  const id = normalizeId(animeId);
+  if (id === null) return () => {};
+  const key = String(id);
+
+  ensureWindowListeners();
+  const set = perIdListeners.get(key) || new Set();
+  const existed = set.has(listener);
+  set.add(listener);
+  perIdListeners.set(key, set);
+  if (!existed) subscriberCount += 1;
+
+  return () => {
+    const existing = perIdListeners.get(key);
+    if (!existing) return;
+    const removed = existing.delete(listener);
+    if (existing.size === 0) perIdListeners.delete(key);
+    if (removed) subscriberCount = Math.max(0, subscriberCount - 1);
+
+    if (subscriberCount === 0) {
+      windowCleanup?.();
+      windowCleanup = null;
+      windowBound = false;
+    }
+  };
 };
 
 export const getFavoriteIds = () => readIds();
@@ -153,7 +226,7 @@ export const isFavorite = (animeId) => {
   return readIds().has(id);
 };
 
-const writeFavorites = ({ nextIds, now = Date.now() } = {}) => {
+const writeFavorites = ({ nextIds, now = Date.now(), changedId = null } = {}) => {
   const serialized = serializeIds(nextIds);
   const updatedRaw = String(now);
 
@@ -166,7 +239,7 @@ const writeFavorites = ({ nextIds, now = Date.now() } = {}) => {
 
   scheduleStorageWrite(IDS_KEY, serialized);
   scheduleStorageWrite(UPDATED_KEY, updatedRaw);
-  emit();
+  emit({ id: changedId });
 
   return { serialized, updatedAt: now };
 };
@@ -185,7 +258,7 @@ export const toggleFavorite = (animeId) => {
     next.add(id);
   }
 
-  writeFavorites({ nextIds: next });
+  writeFavorites({ nextIds: next, changedId: id });
 
   if (exists) {
     trackEvent('favorites.remove', { id });
@@ -200,7 +273,7 @@ export const clearFavorites = () => {
   const current = readIds();
   if (current.size === 0) return { ok: true, cleared: 0 };
   const cleared = current.size;
-  writeFavorites({ nextIds: new Set() });
+  writeFavorites({ nextIds: new Set(), changedId: null });
   trackEvent('favorites.clear', { cleared });
   return { ok: true, cleared };
 };
@@ -220,7 +293,7 @@ export const importFavoritesBackup = (jsonText, { mode = 'merge' } = {}) => {
     if (normalized !== null) next.add(normalized);
   });
 
-  writeFavorites({ nextIds: next });
+  writeFavorites({ nextIds: next, changedId: null });
   trackEvent('favorites.import', { mode: normalizedMode, imported: incoming.length });
 
   return {

@@ -7,6 +7,7 @@ import {
   getDueFollowingReminders,
   getFollowingEntries,
   isFollowing,
+  subscribeFollowingById,
   subscribeFollowing,
   toggleFollowing,
   updateFollowingReminder,
@@ -43,6 +44,35 @@ describe('followingStore', () => {
     expect(removed.action).toBe('unfollowed');
     expect(isFollowing(101)).toBe(false);
     expect(getFollowingEntries()).toEqual([]);
+  });
+
+  it('supports per-anime subscriptions to avoid fan-out', () => {
+    window.localStorage.clear();
+    flushStorageQueue();
+    clearFollowing();
+
+    let hitsA = 0;
+    let hitsB = 0;
+    const unsubA = subscribeFollowingById(1, () => {
+      hitsA += 1;
+    });
+    const unsubB = subscribeFollowingById(2, () => {
+      hitsB += 1;
+    });
+
+    toggleFollowing({ animeId: 1, title: 'a' });
+    expect(hitsA).toBeGreaterThan(0);
+    expect(hitsB).toBe(0);
+
+    toggleFollowing({ animeId: 2, title: 'b' });
+    expect(hitsB).toBeGreaterThan(0);
+
+    const beforeA = hitsA;
+    unsubA();
+    toggleFollowing({ animeId: 1, title: 'a' });
+    expect(hitsA).toBe(beforeA);
+
+    unsubB();
   });
 
   it('updates reminder settings and clamps values', () => {

@@ -24,7 +24,10 @@ let cachedRaw = null;
 let cachedEntries = null;
 let cachedEntriesRaw = null;
 let boundWindowListeners = false;
-const listeners = new Set();
+let windowCleanup = null;
+const globalListeners = new Set();
+const perIdListeners = new Map();
+let subscriberCount = 0;
 
 const getMonotonicNow = () => {
   const now = Date.now();
@@ -81,16 +84,35 @@ const writeStorage = (payload) => {
   scheduleStorageWrite(STORAGE_KEY, cachedRaw);
 };
 
-const emit = () => {
-  listeners.forEach((listener) => {
+const emit = ({ animeId = null } = {}) => {
+  globalListeners.forEach((listener) => {
     try {
       listener();
     } catch {}
   });
 
+  if (animeId) {
+    const set = perIdListeners.get(String(animeId));
+    if (set) {
+      set.forEach((listener) => {
+        try {
+          listener();
+        } catch {}
+      });
+    }
+  } else {
+    perIdListeners.forEach((set) => {
+      set.forEach((listener) => {
+        try {
+          listener();
+        } catch {}
+      });
+    });
+  }
+
   if (typeof window !== 'undefined') {
     try {
-      window.dispatchEvent(new CustomEvent(EVENT_KEY));
+      window.dispatchEvent(new CustomEvent(EVENT_KEY, { detail: { animeId: animeId || null } }));
     } catch {}
   }
 };
@@ -99,16 +121,16 @@ const ensureWindowListeners = () => {
   if (boundWindowListeners || typeof window === 'undefined') return;
   boundWindowListeners = true;
 
-  window.addEventListener('storage', (event) => {
+  const onStorage = (event) => {
     if (event?.key !== STORAGE_KEY) return;
     cachedRaw = event?.newValue ?? null;
     cachedPayload = null;
     cachedEntries = null;
     cachedEntriesRaw = null;
     emit();
-  });
+  };
 
-  window.addEventListener('guoman:storage', (event) => {
+  const onGuomanStorage = (event) => {
     const key = event?.detail?.key;
     if (key !== STORAGE_KEY) return;
     cachedRaw = typeof event?.detail?.value === 'string' ? event.detail.value : null;
@@ -116,14 +138,63 @@ const ensureWindowListeners = () => {
     cachedEntries = null;
     cachedEntriesRaw = null;
     emit();
-  });
+  };
+
+  window.addEventListener('storage', onStorage);
+  window.addEventListener('guoman:storage', onGuomanStorage);
+  windowCleanup = () => {
+    window.removeEventListener('storage', onStorage);
+    window.removeEventListener('guoman:storage', onGuomanStorage);
+  };
 };
 
 export const subscribeFollowing = (listener) => {
+  if (typeof window === 'undefined') return () => {};
+  if (typeof listener !== 'function') return () => {};
   ensureWindowListeners();
-  listeners.add(listener);
+  if (!globalListeners.has(listener)) {
+    globalListeners.add(listener);
+    subscriberCount += 1;
+  }
   return () => {
-    listeners.delete(listener);
+    if (globalListeners.delete(listener)) {
+      subscriberCount = Math.max(0, subscriberCount - 1);
+    }
+
+    if (subscriberCount === 0) {
+      windowCleanup?.();
+      windowCleanup = null;
+      boundWindowListeners = false;
+    }
+  };
+};
+
+export const subscribeFollowingById = (animeId, listener) => {
+  if (typeof window === 'undefined') return () => {};
+  if (typeof listener !== 'function') return () => {};
+  const id = normalizeId(animeId);
+  if (id === null) return () => {};
+  const key = String(id);
+
+  ensureWindowListeners();
+  const set = perIdListeners.get(key) || new Set();
+  const existed = set.has(listener);
+  set.add(listener);
+  perIdListeners.set(key, set);
+  if (!existed) subscriberCount += 1;
+
+  return () => {
+    const existing = perIdListeners.get(key);
+    if (!existing) return;
+    const removed = existing.delete(listener);
+    if (existing.size === 0) perIdListeners.delete(key);
+    if (removed) subscriberCount = Math.max(0, subscriberCount - 1);
+
+    if (subscriberCount === 0) {
+      windowCleanup?.();
+      windowCleanup = null;
+      boundWindowListeners = false;
+    }
   };
 };
 
@@ -174,7 +245,7 @@ export const toggleFollowing = ({ animeId, title } = {}) => {
     payload.meta.lastWriteAt = now;
     writeStorage(payload);
     trackEvent('following.remove', { id });
-    emit();
+    emit({ animeId: id });
     return { ok: true, action: 'unfollowed', entry: null };
   }
 
@@ -193,7 +264,7 @@ export const toggleFollowing = ({ animeId, title } = {}) => {
   payload.meta.lastWriteAt = now;
   writeStorage(payload);
   trackEvent('following.add', { id });
-  emit();
+  emit({ animeId: id });
   return { ok: true, action: 'followed', entry: { animeId: id, ...entry } };
 };
 
@@ -230,7 +301,7 @@ export const updateFollowingReminder = (
     minutes: normalizedMinutes,
     hasAt: Boolean(payload.items[key].reminderAt),
   });
-  emit();
+  emit({ animeId: id });
   return { animeId: id, ...payload.items[key] };
 };
 

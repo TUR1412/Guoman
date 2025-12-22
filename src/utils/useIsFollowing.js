@@ -1,10 +1,15 @@
-import { useSyncExternalStore } from 'react';
-import { getFollowingEntries, isFollowing, subscribeFollowing } from './followingStore';
+import { useCallback, useSyncExternalStore } from 'react';
+import {
+  getFollowingEntries,
+  isFollowing,
+  subscribeFollowing,
+  subscribeFollowingById,
+} from './followingStore';
 
 export const useIsFollowing = (animeId) =>
   useSyncExternalStore(
-    subscribeFollowing,
-    () => isFollowing(animeId),
+    useCallback((cb) => subscribeFollowingById(animeId, cb), [animeId]),
+    useCallback(() => isFollowing(animeId), [animeId]),
     () => false,
   );
 

@@ -1,14 +1,16 @@
-import { useSyncExternalStore } from 'react';
+import { useCallback, useSyncExternalStore } from 'react';
 import {
   getFavoriteIds,
   getFavoritesUpdatedAt,
   isFavorite,
+  subscribeFavoriteById,
   subscribeFavorites,
 } from './favoritesStore';
 
 export const useIsFavorite = (animeId) => {
-  const getSnapshot = () => isFavorite(animeId);
-  return useSyncExternalStore(subscribeFavorites, getSnapshot, getSnapshot);
+  const getSnapshot = useCallback(() => isFavorite(animeId), [animeId]);
+  const subscribe = useCallback((cb) => subscribeFavoriteById(animeId, cb), [animeId]);
+  return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 };
 
 export const useFavoriteIds = () =>

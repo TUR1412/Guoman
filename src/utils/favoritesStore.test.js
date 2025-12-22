@@ -9,6 +9,7 @@ import {
   getFavoritesUpdatedAt,
   importFavoritesBackup,
   isFavorite,
+  subscribeFavoriteById,
   subscribeFavorites,
   toggleFavorite,
 } from './favoritesStore';
@@ -57,6 +58,35 @@ describe('favoritesStore', () => {
 
     toggleFavorite(2);
     expect(hits).toBe(before);
+  });
+
+  it('supports per-id subscriptions to avoid fan-out', () => {
+    window.localStorage.clear();
+    flushStorageQueue();
+    clearFavorites();
+
+    let hitsA = 0;
+    let hitsB = 0;
+    const unsubA = subscribeFavoriteById(1, () => {
+      hitsA += 1;
+    });
+    const unsubB = subscribeFavoriteById(2, () => {
+      hitsB += 1;
+    });
+
+    toggleFavorite(1);
+    expect(hitsA).toBeGreaterThan(0);
+    expect(hitsB).toBe(0);
+
+    toggleFavorite(2);
+    expect(hitsB).toBeGreaterThan(0);
+
+    const beforeA = hitsA;
+    unsubA();
+    toggleFavorite(1);
+    expect(hitsA).toBe(beforeA);
+
+    unsubB();
   });
 
   it('exports and imports favorites backups', () => {
