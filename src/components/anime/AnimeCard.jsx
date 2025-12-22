@@ -8,7 +8,7 @@ import { toggleFavorite as toggleFavoriteInStore } from '../../utils/favoritesSt
 import { toggleFollowing } from '../../utils/followingStore';
 import { useIsFavorite } from '../../utils/useIsFavorite';
 import { useIsFollowing } from '../../utils/useIsFollowing';
-import { getWatchProgress, subscribeWatchProgress } from '../../utils/watchProgress';
+import { getWatchProgress, subscribeWatchProgressById } from '../../utils/watchProgress';
 import { prefetchRoute } from '../../utils/routePrefetch';
 import { trackEvent } from '../../utils/analytics';
 
@@ -274,8 +274,7 @@ function AnimeCard({ anime }) {
     if (!animeId) return undefined;
     setProgress(getWatchProgress(animeId));
 
-    const unsubscribe = subscribeWatchProgress((detail) => {
-      if (detail?.animeId && detail.animeId !== animeId) return;
+    const unsubscribe = subscribeWatchProgressById(animeId, () => {
       setProgress(getWatchProgress(animeId));
     });
     return unsubscribe;

@@ -21,7 +21,9 @@ let lastUpdatedAt = 0;
 let cachedPayload = null;
 let cachedRaw = null;
 let boundWindowListeners = false;
-const subscribers = new Set();
+const globalSubscribers = new Set();
+const perAnimeSubscribers = new Map();
+let subscriberCount = 0;
 let windowCleanup = null;
 
 const getMonotonicNow = () => {
@@ -77,10 +79,32 @@ const notify = (detail) => {
 };
 
 const emitToSubscribers = (payload) => {
-  subscribers.forEach((callback) => {
+  globalSubscribers.forEach((callback) => {
     try {
       callback(payload);
     } catch {}
+  });
+
+  const id = payload?.animeId;
+  if (id) {
+    const set = perAnimeSubscribers.get(String(id));
+    if (set) {
+      set.forEach((callback) => {
+        try {
+          callback(payload);
+        } catch {}
+      });
+    }
+    return;
+  }
+
+  // 无法精确定位具体 animeId（例如：storage 同步、清空全部等）→ 广播到所有按 id 订阅者。
+  perAnimeSubscribers.forEach((set) => {
+    set.forEach((callback) => {
+      try {
+        callback(payload);
+      } catch {}
+    });
   });
 };
 
@@ -170,11 +194,45 @@ export const subscribeWatchProgress = (callback) => {
   if (typeof window === 'undefined') return () => {};
   if (typeof callback !== 'function') return () => {};
   ensureWindowListeners();
-  subscribers.add(callback);
+  if (!globalSubscribers.has(callback)) {
+    globalSubscribers.add(callback);
+    subscriberCount += 1;
+  }
 
   return () => {
-    subscribers.delete(callback);
-    if (subscribers.size === 0) {
+    if (globalSubscribers.delete(callback)) {
+      subscriberCount = Math.max(0, subscriberCount - 1);
+    }
+    if (subscriberCount === 0) {
+      windowCleanup?.();
+      boundWindowListeners = false;
+      windowCleanup = null;
+    }
+  };
+};
+
+export const subscribeWatchProgressById = (animeId, callback) => {
+  if (typeof window === 'undefined') return () => {};
+  if (typeof callback !== 'function') return () => {};
+  const id = toNumber(animeId);
+  if (!id) return () => {};
+
+  ensureWindowListeners();
+  const key = String(id);
+  const set = perAnimeSubscribers.get(key) || new Set();
+  const existed = set.has(callback);
+  set.add(callback);
+  perAnimeSubscribers.set(key, set);
+  if (!existed) subscriberCount += 1;
+
+  return () => {
+    const existing = perAnimeSubscribers.get(key);
+    if (!existing) return;
+    const removed = existing.delete(callback);
+    if (existing.size === 0) perAnimeSubscribers.delete(key);
+    if (removed) subscriberCount = Math.max(0, subscriberCount - 1);
+
+    if (subscriberCount === 0) {
       windowCleanup?.();
       boundWindowListeners = false;
       windowCleanup = null;

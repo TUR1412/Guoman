@@ -4,6 +4,7 @@ import {
   getContinueWatchingList,
   getWatchProgress,
   subscribeWatchProgress,
+  subscribeWatchProgressById,
   updateWatchProgress,
 } from './watchProgress';
 import { flushStorageQueue, hasPendingStorageWrite, scheduleStorageWrite } from './storageQueue';
@@ -97,6 +98,30 @@ describe('watchProgress utils', () => {
     unsubscribe();
     callback.mockClear();
     updateWatchProgress({ animeId: 4, episode: 2, progress: 60 });
+    expect(callback).not.toHaveBeenCalled();
+  });
+
+  it('supports per-anime subscriptions to avoid extra fan-out', () => {
+    const callback = vi.fn();
+    const unsubscribe = subscribeWatchProgressById(10, callback);
+
+    updateWatchProgress({ animeId: 9, episode: 1, progress: 10 });
+    expect(callback).not.toHaveBeenCalled();
+
+    updateWatchProgress({ animeId: 10, episode: 2, progress: 20 });
+    expect(callback).toHaveBeenCalledWith(expect.objectContaining({ animeId: 10 }));
+
+    callback.mockClear();
+    window.dispatchEvent(
+      new CustomEvent('guoman:storage', {
+        detail: { key: 'guoman.watchProgress.v1', value: '{}' },
+      }),
+    );
+    expect(callback).toHaveBeenCalledWith({ source: 'storage' });
+
+    unsubscribe();
+    callback.mockClear();
+    updateWatchProgress({ animeId: 10, episode: 3, progress: 30 });
     expect(callback).not.toHaveBeenCalled();
   });
 

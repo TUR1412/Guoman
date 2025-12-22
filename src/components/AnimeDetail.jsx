@@ -31,7 +31,7 @@ import { trackEvent } from '../utils/analytics';
 import {
   clearWatchProgress,
   getWatchProgress,
-  subscribeWatchProgress,
+  subscribeWatchProgressById,
   updateWatchProgress,
 } from '../utils/watchProgress';
 
@@ -753,8 +753,7 @@ function AnimeDetail() {
   useEffect(() => {
     if (!anime?.id) return;
     setWatchProgress(getWatchProgress(anime.id) || { episode: 1, progress: 0 });
-    const unsubscribe = subscribeWatchProgress((detail) => {
-      if (detail?.animeId && detail.animeId !== anime.id) return;
+    const unsubscribe = subscribeWatchProgressById(anime.id, () => {
       setWatchProgress(getWatchProgress(anime.id) || { episode: 1, progress: 0 });
     });
     return unsubscribe;
