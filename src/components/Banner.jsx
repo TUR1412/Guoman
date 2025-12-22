@@ -1,14 +1,9 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Navigation, Autoplay, EffectFade } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-import 'swiper/css/effect-fade';
-import 'swiper/css/autoplay';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { prefetchRoute } from '../utils/routePrefetch';
 
 // 导入本地图片
 import placeholder1 from '../assets/images/placeholder-1.svg';
@@ -109,47 +104,96 @@ const BannerContainer = styled.section`
   @media (max-width: 576px) {
     height: calc(60svh - var(--header-height));
   }
+`;
 
-  .swiper {
-    width: 100%;
-    height: 100%;
+const CarouselViewport = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+`;
+
+const Slide = styled(motion.div)`
+  position: absolute;
+  inset: 0;
+`;
+
+const ControlsLayer = styled.div`
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+`;
+
+const NavButton = styled.button.attrs({ type: 'button', 'data-pressable': true })`
+  pointer-events: auto;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--control-border);
+  background: var(--control-bg);
+  color: var(--primary-color);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+
+  &:hover {
+    background: var(--control-bg-hover);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-50%) scale(1.02);
   }
 
-  .swiper-slide {
-    width: 100%;
-    height: 100%;
-    position: relative;
+  &:active {
+    transform: translateY(-50%) scale(0.96);
   }
 
-  .swiper-pagination-bullet {
-    width: 12px;
-    height: 12px;
-    background-color: var(--control-bg);
-    border: 1px solid var(--control-border);
-    opacity: 0.7;
-
-    &-active {
-      background-color: var(--primary-color);
-      opacity: 1;
-    }
+  &:focus-visible {
+    outline: 2px solid rgba(var(--primary-rgb), 0.65);
+    outline-offset: 2px;
   }
+`;
 
-  .swiper-button-prev,
-  .swiper-button-next {
-    color: var(--primary-color);
-    background-color: var(--control-bg);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    transition: var(--transition);
+const PrevButton = styled(NavButton)`
+  left: 16px;
+`;
 
-    &::after {
-      font-size: var(--text-lg-plus);
-    }
+const NextButton = styled(NavButton)`
+  right: 16px;
+`;
 
-    &:hover {
-      background-color: var(--control-bg-hover);
-    }
+const PaginationRow = styled.div`
+  pointer-events: auto;
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--border-radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(10px);
+`;
+
+const Dot = styled.button.attrs({ type: 'button', 'data-pressable': true })`
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--control-border);
+  background: ${(p) => (p.$active ? 'var(--primary-color)' : 'var(--control-bg)')};
+  opacity: ${(p) => (p.$active ? 1 : 0.75)};
+  transition: var(--transition);
+
+  &:hover {
+    opacity: 1;
+    transform: scale(1.08);
   }
 `;
 
@@ -355,127 +399,237 @@ const BannerButton = styled(motion(Link)).attrs({
 `;
 
 function Banner() {
-  const [activeIndex, setActiveIndex] = useState(0);
   const reducedMotion = useReducedMotion();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const slideCount = bannerData.length;
 
-  const swiperModules = reducedMotion
-    ? [Pagination, Navigation]
-    : [Pagination, Navigation, Autoplay, EffectFade];
+  const active = useMemo(() => {
+    if (slideCount <= 0) return null;
+    const index = Math.min(Math.max(Number(activeIndex) || 0, 0), slideCount - 1);
+    return bannerData[index];
+  }, [activeIndex, slideCount]);
+
+  const goTo = useCallback(
+    (nextIndex) => {
+      if (slideCount <= 0) return;
+      const raw = Number(nextIndex) || 0;
+      const normalized = ((raw % slideCount) + slideCount) % slideCount;
+      setActiveIndex(normalized);
+    },
+    [slideCount],
+  );
+
+  const goPrev = useCallback(() => {
+    setActiveIndex((prev) => {
+      if (slideCount <= 0) return 0;
+      return (prev - 1 + slideCount) % slideCount;
+    });
+  }, [slideCount]);
+
+  const goNext = useCallback(() => {
+    setActiveIndex((prev) => {
+      if (slideCount <= 0) return 0;
+      return (prev + 1) % slideCount;
+    });
+  }, [slideCount]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    if (reducedMotion) return undefined;
+    if (paused) return undefined;
+    if (slideCount <= 1) return undefined;
+
+    const id = window.setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % slideCount);
+    }, 5000);
+
+    return () => window.clearInterval(id);
+  }, [paused, reducedMotion, slideCount]);
+
+  useEffect(() => {
+    if (!active?.link) return;
+    if (typeof window === 'undefined') return;
+
+    const connection =
+      navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+    if (connection?.saveData) return;
+    if (connection?.effectiveType && ['slow-2g', '2g'].includes(connection.effectiveType)) return;
+
+    if (typeof window.requestIdleCallback === 'function') {
+      const handle = window.requestIdleCallback(() => prefetchRoute(active.link), {
+        timeout: 1200,
+      });
+      return () => window.cancelIdleCallback?.(handle);
+    }
+
+    const timeoutId = window.setTimeout(() => prefetchRoute(active.link), 350);
+    return () => window.clearTimeout(timeoutId);
+  }, [active?.link]);
+
+  const onKeyDownCapture = (event) => {
+    if (!event) return;
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      goPrev();
+    }
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      goNext();
+    }
+  };
 
   return (
-    <BannerContainer aria-label="首页精选轮播" aria-describedby="banner-desc">
+    <BannerContainer
+      aria-label="首页精选轮播"
+      aria-describedby="banner-desc"
+      onKeyDownCapture={onKeyDownCapture}
+      onPointerEnter={() => setPaused(true)}
+      onPointerLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          setPaused(false);
+        }
+      }}
+    >
       <span id="banner-desc" className="sr-only">
         轮播展示国漫精选推荐与播放入口。
       </span>
-      <Swiper
-        modules={swiperModules}
-        slidesPerView={1}
-        effect={reducedMotion ? 'slide' : 'fade'}
-        pagination={{ clickable: true }}
-        navigation
-        autoplay={
-          reducedMotion
-            ? false
-            : {
-                delay: 5000,
-                disableOnInteraction: false,
-              }
-        }
-        loop={true}
-        role="list"
-        aria-label="精选轮播列表"
-        onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-      >
-        {bannerData.map((banner, index) => (
-          <SwiperSlide key={banner.id} role="listitem">
-            <BannerImage $image={banner.image} />
-            <BannerOverlay />
-            <BannerContent>
-              <BannerMain>
-                <BannerTag
-                  initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-                  animate={{
-                    opacity: activeIndex === index ? 1 : 0,
-                    y: reducedMotion ? 0 : activeIndex === index ? 0 : 20,
-                  }}
-                  transition={reducedMotion ? { duration: 0 } : { duration: 0.6 }}
-                >
-                  {banner.tag}
-                </BannerTag>
-                <BannerTitle
-                  initial={reducedMotion ? false : { opacity: 0, y: 30 }}
-                  animate={{
-                    opacity: activeIndex === index ? 1 : 0,
-                    y: reducedMotion ? 0 : activeIndex === index ? 0 : 30,
-                  }}
-                  transition={reducedMotion ? { duration: 0 } : { duration: 0.6, delay: 0.2 }}
-                >
-                  {banner.title}
-                </BannerTitle>
-                <BannerSubtitle
-                  initial={reducedMotion ? false : { opacity: 0, y: 30 }}
-                  animate={{
-                    opacity: activeIndex === index ? 1 : 0,
-                    y: reducedMotion ? 0 : activeIndex === index ? 0 : 30,
-                  }}
-                  transition={reducedMotion ? { duration: 0 } : { duration: 0.6, delay: 0.4 }}
-                >
-                  {banner.subtitle}
-                </BannerSubtitle>
-                <BannerDescription
-                  initial={reducedMotion ? false : { opacity: 0, y: 30 }}
-                  animate={{
-                    opacity: activeIndex === index ? 1 : 0,
-                    y: reducedMotion ? 0 : activeIndex === index ? 0 : 30,
-                  }}
-                  transition={reducedMotion ? { duration: 0 } : { duration: 0.6, delay: 0.6 }}
-                >
-                  {banner.desc}
-                </BannerDescription>
-                <BannerActions
-                  initial={reducedMotion ? false : { opacity: 0, y: 30 }}
-                  animate={{
-                    opacity: activeIndex === index ? 1 : 0,
-                    y: reducedMotion ? 0 : activeIndex === index ? 0 : 30,
-                  }}
-                  transition={reducedMotion ? { duration: 0 } : { duration: 0.6, delay: 0.8 }}
-                >
-                  <BannerButton
-                    to={banner.link}
-                    aria-label={banner.buttonText}
-                    whileHover={reducedMotion ? undefined : { scale: 1.05 }}
-                    whileTap={reducedMotion ? undefined : { scale: 0.95 }}
-                  >
-                    {banner.buttonText}
-                  </BannerButton>
-                </BannerActions>
-              </BannerMain>
 
-              <BannerMetaCard
-                initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-                animate={{
-                  opacity: activeIndex === index ? 1 : 0,
-                  y: reducedMotion ? 0 : activeIndex === index ? 0 : 20,
-                }}
-                transition={reducedMotion ? { duration: 0 } : { duration: 0.6, delay: 0.4 }}
-              >
-                <BannerMetaBadge>
-                  第 {index + 1} / {bannerData.length} 帧
-                </BannerMetaBadge>
-                <BannerMetaTitle>剧集速览</BannerMetaTitle>
-                <BannerMetaList>
-                  {banner.meta?.map((meta) => (
-                    <BannerMetaItem key={`${banner.id}-${meta.label}`}>
-                      <span>{meta.label}</span>
-                      <strong>{meta.value}</strong>
-                    </BannerMetaItem>
-                  ))}
-                </BannerMetaList>
-              </BannerMetaCard>
-            </BannerContent>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      <CarouselViewport role="list" aria-label="精选轮播列表">
+        <AnimatePresence initial={false} mode="wait">
+          {active ? (
+            <Slide
+              key={active.id}
+              role="listitem"
+              initial={reducedMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
+              transition={
+                reducedMotion ? { duration: 0 } : { duration: 0.35, ease: [0.22, 1, 0.36, 1] }
+              }
+            >
+              <BannerImage $image={active.image} />
+              <BannerOverlay />
+              <BannerContent>
+                <BannerMain>
+                  <BannerTag
+                    initial={reducedMotion ? false : { opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={
+                      reducedMotion ? { duration: 0 } : { duration: 0.55, ease: [0.22, 1, 0.36, 1] }
+                    }
+                  >
+                    {active.tag}
+                  </BannerTag>
+                  <BannerTitle
+                    initial={reducedMotion ? false : { opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={
+                      reducedMotion
+                        ? { duration: 0 }
+                        : { duration: 0.6, delay: 0.12, ease: [0.22, 1, 0.36, 1] }
+                    }
+                  >
+                    {active.title}
+                  </BannerTitle>
+                  <BannerSubtitle
+                    initial={reducedMotion ? false : { opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={
+                      reducedMotion
+                        ? { duration: 0 }
+                        : { duration: 0.6, delay: 0.22, ease: [0.22, 1, 0.36, 1] }
+                    }
+                  >
+                    {active.subtitle}
+                  </BannerSubtitle>
+                  <BannerDescription
+                    initial={reducedMotion ? false : { opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={
+                      reducedMotion
+                        ? { duration: 0 }
+                        : { duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }
+                    }
+                  >
+                    {active.desc}
+                  </BannerDescription>
+                  <BannerActions
+                    initial={reducedMotion ? false : { opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={
+                      reducedMotion
+                        ? { duration: 0 }
+                        : { duration: 0.6, delay: 0.42, ease: [0.22, 1, 0.36, 1] }
+                    }
+                  >
+                    <BannerButton
+                      to={active.link}
+                      aria-label={active.buttonText}
+                      whileHover={reducedMotion ? undefined : { scale: 1.05 }}
+                      whileTap={reducedMotion ? undefined : { scale: 0.95 }}
+                      onMouseEnter={() => prefetchRoute(active.link)}
+                      onFocus={() => prefetchRoute(active.link)}
+                    >
+                      {active.buttonText}
+                    </BannerButton>
+                  </BannerActions>
+                </BannerMain>
+
+                <BannerMetaCard
+                  initial={reducedMotion ? false : { opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={
+                    reducedMotion
+                      ? { duration: 0 }
+                      : { duration: 0.6, delay: 0.24, ease: [0.22, 1, 0.36, 1] }
+                  }
+                >
+                  <BannerMetaBadge>
+                    第 {activeIndex + 1} / {slideCount} 帧
+                  </BannerMetaBadge>
+                  <BannerMetaTitle>剧集速览</BannerMetaTitle>
+                  <BannerMetaList>
+                    {active.meta?.map((meta) => (
+                      <BannerMetaItem key={`${active.id}-${meta.label}`}>
+                        <span>{meta.label}</span>
+                        <strong>{meta.value}</strong>
+                      </BannerMetaItem>
+                    ))}
+                  </BannerMetaList>
+                </BannerMetaCard>
+              </BannerContent>
+            </Slide>
+          ) : null}
+        </AnimatePresence>
+
+        <ControlsLayer>
+          <PrevButton aria-label="上一帧" onClick={goPrev} title="上一帧">
+            <FiChevronLeft />
+          </PrevButton>
+          <NextButton aria-label="下一帧" onClick={goNext} title="下一帧">
+            <FiChevronRight />
+          </NextButton>
+
+          {slideCount > 1 ? (
+            <PaginationRow aria-label="轮播分页">
+              {bannerData.map((item, idx) => (
+                <Dot
+                  key={item.id}
+                  $active={idx === activeIndex}
+                  aria-label={`切换到第 ${idx + 1} 帧：${item.tag}`}
+                  aria-pressed={idx === activeIndex}
+                  tabIndex={idx === activeIndex ? 0 : -1}
+                  onClick={() => goTo(idx)}
+                />
+              ))}
+            </PaginationRow>
+          ) : null}
+        </ControlsLayer>
+      </CarouselViewport>
     </BannerContainer>
   );
 }
