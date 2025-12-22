@@ -826,6 +826,31 @@ ol {
   pointer-events: none;
 }
 
+[data-pointer-glow] {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-pointer-glow]::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  opacity: calc(var(--pointer-active, 0) * 1);
+  transition: opacity var(--motion-fast) var(--ease-out);
+  background:
+    radial-gradient(
+      520px 260px at var(--pointer-x, 50%) var(--pointer-y, 0%),
+      rgba(var(--primary-rgb), 0.22),
+      transparent 65%
+    ),
+    radial-gradient(
+      420px 220px at calc(var(--pointer-x, 50%) + 40px) calc(var(--pointer-y, 0%) + 20px),
+      rgba(var(--secondary-rgb), 0.14),
+      transparent 70%
+    );
+}
+
 [data-focus-guide] {
   animation: focusPulse 2.4s ease-out 1;
 }

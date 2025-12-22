@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="480" viewBox="0 0 1200 480" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B0F14" />
+      <stop offset="100%" stop-color="#101722" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#E85445" />
+      <stop offset="100%" stop-color="#CAA45A" />
+    </linearGradient>
+    <filter id="blur" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="22" />
+    </filter>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="rgba(0,0,0,0.35)" />
+    </filter>
+  </defs>
+
+  <rect width="1200" height="480" fill="url(#bg)" />
+  <circle cx="210" cy="120" r="160" fill="rgba(31,143,122,0.25)" filter="url(#blur)" />
+  <circle cx="1020" cy="120" r="190" fill="rgba(232,84,69,0.25)" filter="url(#blur)" />
+
+  <text x="70" y="74" fill="rgba(244,242,238,0.92)" font-size="24" font-family="Noto Sans SC, sans-serif">
+    动效演示：收藏页 Drag &amp; Drop（自定义排序 + 分组拖放）
+  </text>
+  <text x="70" y="106" fill="rgba(213,208,199,0.75)" font-size="16" font-family="Noto Sans SC, sans-serif">
+    拖拽排序会“即时反馈”，并在结束后自动保存到本地（localStorage）。
+  </text>
+
+  <!-- group chips -->
+  <g transform="translate(80,128)">
+    <rect x="0" y="0" width="110" height="36" rx="18" fill="rgba(255,255,255,0.06)" stroke="rgba(244,242,238,0.16)" />
+    <text x="55" y="24" text-anchor="middle" fill="rgba(244,242,238,0.88)" font-size="14" font-weight="700" font-family="Noto Sans SC, sans-serif">全部</text>
+
+    <rect x="120" y="0" width="120" height="36" rx="18" fill="rgba(255,255,255,0.05)" stroke="rgba(244,242,238,0.14)" />
+    <text x="180" y="24" text-anchor="middle" fill="rgba(213,208,199,0.8)" font-size="14" font-weight="700" font-family="Noto Sans SC, sans-serif">未分组</text>
+
+    <g id="chip-drop">
+      <rect x="252" y="0" width="120" height="36" rx="18" fill="rgba(232,84,69,0.10)" stroke="rgba(232,84,69,0.45)">
+        <animate attributeName="fill" values="rgba(232,84,69,0.10);rgba(232,84,69,0.22);rgba(232,84,69,0.22);rgba(232,84,69,0.10)" dur="6s" repeatCount="indefinite" />
+        <animate attributeName="stroke-opacity" values="0.45;0.95;0.95;0.45" dur="6s" repeatCount="indefinite" />
+      </rect>
+      <text x="312" y="24" text-anchor="middle" fill="rgba(244,242,238,0.9)" font-size="14" font-weight="800" font-family="Noto Sans SC, sans-serif">玄幻</text>
+    </g>
+
+    <rect x="384" y="0" width="120" height="36" rx="18" fill="rgba(255,255,255,0.05)" stroke="rgba(244,242,238,0.14)" />
+    <text x="444" y="24" text-anchor="middle" fill="rgba(213,208,199,0.8)" font-size="14" font-weight="700" font-family="Noto Sans SC, sans-serif">热血</text>
+  </g>
+
+  <!-- list -->
+  <g transform="translate(80,190)">
+    <rect x="0" y="0" width="1040" height="250" rx="26" fill="rgba(255,255,255,0.04)" stroke="rgba(244,242,238,0.12)" />
+
+    <!-- card 1 -->
+    <g filter="url(#shadow)">
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 130;0 130;0 0" dur="6s" repeatCount="indefinite" />
+        <rect x="18" y="18" width="1004" height="112" rx="22" fill="rgba(255,255,255,0.06)" stroke="rgba(244,242,238,0.12)" />
+        <rect x="36" y="40" width="88" height="32" rx="16" fill="rgba(255,255,255,0.06)" stroke="rgba(244,242,238,0.12)" />
+        <text x="80" y="61" text-anchor="middle" fill="rgba(244,242,238,0.82)" font-size="12" font-weight="900" font-family="Noto Sans SC, sans-serif">拖拽</text>
+        <rect x="134" y="40" width="110" height="32" rx="16" fill="rgba(255,255,255,0.05)" stroke="rgba(244,242,238,0.12)" />
+        <text x="189" y="61" text-anchor="middle" fill="rgba(213,208,199,0.78)" font-size="12" font-weight="900" font-family="Noto Sans SC, sans-serif">拖到分组</text>
+        <text x="36" y="98" fill="rgba(244,242,238,0.92)" font-size="18" font-weight="800" font-family="Noto Sans SC, sans-serif">《斗罗大陆》</text>
+        <text x="200" y="98" fill="rgba(213,208,199,0.7)" font-size="14" font-family="Noto Sans SC, sans-serif">自定义排序 · 手柄拖拽</text>
+      </g>
+    </g>
+
+    <!-- card 2 (dragging up) -->
+    <g filter="url(#shadow)">
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 130;0 0;0 0;0 130" dur="6s" repeatCount="indefinite" />
+        <rect x="18" y="18" width="1004" height="112" rx="22" fill="rgba(255,255,255,0.06)" stroke="rgba(244,242,238,0.12)" />
+        <rect x="36" y="40" width="88" height="32" rx="16" fill="rgba(232,84,69,0.14)" stroke="rgba(232,84,69,0.42)" />
+        <text x="80" y="61" text-anchor="middle" fill="rgba(244,242,238,0.92)" font-size="12" font-weight="900" font-family="Noto Sans SC, sans-serif">拖拽</text>
+        <rect x="134" y="40" width="110" height="32" rx="16" fill="rgba(31,143,122,0.12)" stroke="rgba(31,143,122,0.4)" />
+        <text x="189" y="61" text-anchor="middle" fill="rgba(244,242,238,0.9)" font-size="12" font-weight="900" font-family="Noto Sans SC, sans-serif">拖到分组</text>
+        <text x="36" y="98" fill="rgba(244,242,238,0.92)" font-size="18" font-weight="800" font-family="Noto Sans SC, sans-serif">《吞噬星空》</text>
+        <text x="200" y="98" fill="rgba(213,208,199,0.7)" font-size="14" font-family="Noto Sans SC, sans-serif">拖动中 · 目标分组高亮</text>
+      </g>
+    </g>
+
+    <!-- card 3 -->
+    <g transform="translate(0,260)" filter="url(#shadow)">
+      <rect x="18" y="18" width="1004" height="112" rx="22" fill="rgba(255,255,255,0.06)" stroke="rgba(244,242,238,0.12)" />
+      <rect x="36" y="40" width="88" height="32" rx="16" fill="rgba(255,255,255,0.06)" stroke="rgba(244,242,238,0.12)" />
+      <text x="80" y="61" text-anchor="middle" fill="rgba(244,242,238,0.82)" font-size="12" font-weight="900" font-family="Noto Sans SC, sans-serif">拖拽</text>
+      <rect x="134" y="40" width="110" height="32" rx="16" fill="rgba(255,255,255,0.05)" stroke="rgba(244,242,238,0.12)" />
+      <text x="189" y="61" text-anchor="middle" fill="rgba(213,208,199,0.78)" font-size="12" font-weight="900" font-family="Noto Sans SC, sans-serif">拖到分组</text>
+      <text x="36" y="98" fill="rgba(244,242,238,0.92)" font-size="18" font-weight="800" font-family="Noto Sans SC, sans-serif">《雾山五行》</text>
+      <text x="200" y="98" fill="rgba(213,208,199,0.7)" font-size="14" font-family="Noto Sans SC, sans-serif">组内拖放 · Toast 反馈</text>
+    </g>
+
+    <!-- subtle arrow to chip -->
+    <path d="M 320 10 C 360 -36 410 -52 452 -64" fill="none" stroke="url(#accent)" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 6" opacity="0.0">
+      <animate attributeName="opacity" values="0;0.8;0.8;0" dur="6s" repeatCount="indefinite" begin="1s" />
+    </path>
+  </g>
+
+  <text x="70" y="458" fill="rgba(213,208,199,0.72)" font-size="14" font-family="Noto Sans SC, sans-serif">
+    Tips：自定义排序仅在“全部分组”下启用，避免与分组过滤/网格布局冲突。
+  </text>
+</svg>
+

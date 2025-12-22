@@ -1,0 +1,56 @@
+import { useEffect } from 'react';
+
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+export const usePointerGlow = (ref, { disabled = false } = {}) => {
+  useEffect(() => {
+    const el = ref?.current;
+    if (!el) return undefined;
+    if (disabled) return undefined;
+
+    const rafFn =
+      typeof requestAnimationFrame === 'function'
+        ? requestAnimationFrame
+        : (cb) => window.setTimeout(cb, 16);
+    const cancelRafFn =
+      typeof cancelAnimationFrame === 'function'
+        ? cancelAnimationFrame
+        : (id) => window.clearTimeout(id);
+
+    let raf = 0;
+    const setVars = (x, y, active) => {
+      el.style.setProperty('--pointer-x', `${Math.round(x)}px`);
+      el.style.setProperty('--pointer-y', `${Math.round(y)}px`);
+      el.style.setProperty('--pointer-active', active ? '1' : '0');
+    };
+
+    const onMove = (event) => {
+      if (!event) return;
+      const rect = el.getBoundingClientRect();
+      const x = clamp(event.clientX - rect.left, 0, rect.width || 0);
+      const y = clamp(event.clientY - rect.top, 0, rect.height || 0);
+
+      if (raf) cancelRafFn(raf);
+      raf = rafFn(() => {
+        setVars(x, y, true);
+        raf = 0;
+      });
+    };
+
+    const onLeave = () => {
+      if (raf) cancelRafFn(raf);
+      raf = 0;
+      setVars(0, 0, false);
+    };
+
+    el.addEventListener('pointermove', onMove, { passive: true });
+    el.addEventListener('pointerleave', onLeave, { passive: true });
+    onLeave();
+
+    return () => {
+      el.removeEventListener('pointermove', onMove);
+      el.removeEventListener('pointerleave', onLeave);
+      if (raf) cancelRafFn(raf);
+    };
+  }, [disabled, ref]);
+};

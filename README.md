@@ -80,6 +80,7 @@
 - **本地优先 (Local-first)**：收藏 / 观看进度 / 搜索 / 偏好等全量写入 `localStorage`
 - **命令面板**：`Ctrl/⌘ + K` 全局命令入口（搜索 / 跳转 / 快捷动作）
 - **影院级微交互**：Shared Layout 过渡、悬浮/按压反馈、Shimmer/Focus 动效护栏
+- **指针高光**：导航/命令面板光标跟随高光（RAF 节流，避免 React 重渲染）
 - **增长裂变模块**：海报工坊（SVG 导出 + 历史管理）+ 足迹中心 + 成就系统
 - **数据管理**：用户中心支持导入/导出/清理，并显示本地占用体积
 - **弱网/离线提示**：自动识别离线/省流/2G 环境，提供友好提示
@@ -94,6 +95,7 @@
 - ⏱️ **观看进度**：集数 + 进度滑条 + 继续观看入口（本地保存）
 - 🔍 **站内搜索**：多关键词搜索（标题/原名/类型/标签/制作方）+ 搜索缓存管理
 - ❤️ **收藏系统**：收藏页、卡片角标、分组管理、导入/导出、本地持久化
+- 🧲 **收藏自定义排序**：拖拽排序（自动保存）+ 拖拽到分组（Chip Drop）
 - 🔔 **追更中心**：一键追更 + 提醒时间（站内通知）+ 测试通知
 - ⭐ **Taste Engine 推荐**：基于收藏/进度/搜索词生成本地口味画像并排序推荐
 - 🖼️ **海报工坊**：生成可分享的 SVG 海报 + Shimmer 预览 + 历史管理
@@ -114,6 +116,8 @@
   <img src="docs/demo-shared-cover.svg" alt="Shared Layout 过渡演示" width="100%" />
   <img src="docs/demo-poster-studio.svg" alt="海报工坊 Shimmer 演示" width="100%" />
   <img src="docs/demo-achievements.svg" alt="成就中心 Progress Bar 演示" width="100%" />
+  <img src="docs/demo-favorites-dnd.svg" alt="收藏页 Drag & Drop 演示" width="100%" />
+  <img src="docs/demo-pointer-glow.svg" alt="Pointer Glow 高光演示" width="100%" />
 </div>
 
 ## 🧠 架构一览

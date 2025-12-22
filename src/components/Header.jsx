@@ -37,6 +37,7 @@ import { prefetchRoute } from '../utils/routePrefetch';
 import { safeJsonParse } from '../utils/json';
 import { useIsProEnabled } from '../utils/useProMembership';
 import CommandPalette from './CommandPalette';
+import { usePointerGlow } from './usePointerGlow';
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -430,10 +431,13 @@ function Header() {
   const desktopSearchRef = useRef(null);
   const mobileSearchRef = useRef(null);
   const mobileMenuRef = useRef(null);
+  const navGlowRef = useRef(null);
   const desktopSearchId = useId();
   const mobileSearchId = useId();
   const location = useLocation();
   const navigate = useNavigate();
+
+  usePointerGlow(navGlowRef, { disabled: reducedMotion });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -784,7 +788,7 @@ function Header() {
           ) : null}
         </Logo>
 
-        <Nav aria-label="主导航">
+        <Nav ref={navGlowRef} data-pointer-glow aria-label="主导航">
           <LayoutGroup id="guoman-nav">
             <NavLinks>
               {navItems.map((item) => {

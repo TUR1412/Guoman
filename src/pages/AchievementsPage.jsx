@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { FiAward, FiBell, FiHeart, FiMessageSquare, FiPlay, FiShare2 } from 'react-icons/fi';
 import PageShell from '../components/PageShell';
+import ConfettiBurst from '../components/ConfettiBurst';
 import { useToast } from '../components/ToastProvider';
 import { STORAGE_KEYS } from '../utils/dataKeys';
 import { getDownloadHistory, getPlayHistory } from '../utils/engagementStore';
@@ -68,6 +69,106 @@ const UnlockGlow = styled(motion.div)`
     transparent 70%
   );
   mix-blend-mode: screen;
+`;
+
+const CelebrationOverlay = styled(motion.div)`
+  position: fixed;
+  inset: 0;
+  z-index: 10002;
+  display: grid;
+  place-items: center;
+  padding: var(--spacing-xl);
+  background:
+    radial-gradient(1200px 520px at 50% 15%, rgba(var(--primary-rgb), 0.22), transparent 60%),
+    radial-gradient(900px 460px at 20% 100%, rgba(var(--secondary-rgb), 0.18), transparent 70%),
+    rgba(0, 0, 0, 0.46);
+  backdrop-filter: blur(10px);
+`;
+
+const CelebrationDialog = styled(motion.div).attrs({ 'data-card': true, 'data-divider': 'card' })`
+  width: min(680px, calc(100vw - 32px));
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-glass);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  backdrop-filter: blur(14px);
+  padding: var(--spacing-xl);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      320px 180px at 18% 0%,
+      rgba(var(--primary-rgb), 0.28),
+      transparent 70%
+    );
+    opacity: 0.9;
+    pointer-events: none;
+  }
+`;
+
+const CelebrationTitle = styled.div`
+  font-family: var(--font-display);
+  font-size: var(--text-6xl);
+  font-weight: 900;
+  color: var(--text-primary);
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.02em;
+
+  @media (max-width: 576px) {
+    font-size: var(--text-5xl);
+  }
+`;
+
+const CelebrationMeta = styled.div`
+  margin-top: 8px;
+  color: var(--text-secondary);
+  position: relative;
+  z-index: 1;
+`;
+
+const ComboBadge = styled(motion.div)`
+  margin-top: var(--spacing-md);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs-plus);
+  padding: 6px 12px;
+  border-radius: var(--border-radius-pill);
+  border: 1px solid var(--primary-soft-border);
+  background: rgba(var(--primary-rgb), 0.16);
+  color: var(--primary-color);
+  font-size: var(--text-xs);
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+`;
+
+const TitleList = styled.ul.attrs({ role: 'list' })`
+  margin-top: var(--spacing-lg);
+  display: grid;
+  gap: var(--spacing-sm);
+  position: relative;
+  z-index: 1;
+  list-style: none;
+`;
+
+const TitleItem = styled.li`
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 10px 12px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-paper);
+  box-shadow: var(--shadow-sm);
+  color: var(--text-primary);
+  font-weight: 800;
 `;
 
 const TitleRow = styled.div`
@@ -167,6 +268,17 @@ function AchievementsPage() {
     },
   );
   const didInitRef = useRef(false);
+  const celebrationTimerRef = useRef(null);
+  const [celebration, setCelebration] = useState(null);
+
+  useEffect(() => {
+    return () => {
+      if (celebrationTimerRef.current) {
+        window.clearTimeout(celebrationTimerRef.current);
+        celebrationTimerRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
@@ -329,6 +441,15 @@ function AchievementsPage() {
       { celebrate: true, durationMs: 3200 },
     );
 
+    setCelebration({ titles, count: newly.length, seed: Date.now() });
+    if (celebrationTimerRef.current) {
+      window.clearTimeout(celebrationTimerRef.current);
+    }
+    celebrationTimerRef.current = window.setTimeout(() => {
+      setCelebration(null);
+      celebrationTimerRef.current = null;
+    }, 2200);
+
     setHotUnlockedIds(newly);
     const t = window.setTimeout(() => setHotUnlockedIds([]), 4200);
     return () => window.clearTimeout(t);
@@ -337,77 +458,140 @@ function AchievementsPage() {
   const unlocked = unlockedIds.length;
 
   return (
-    <PageShell
-      title="成就中心"
-      subtitle="把“使用行为”做成可见的进度条：更强的留存、更强的反馈、更强的可玩性。"
-      badge="增长模块"
-      meta={
-        <span>
-          已解锁 <strong>{unlocked}</strong> / {items.length} · 收藏 {counts.favorites} · 追更{' '}
-          {counts.following}
-        </span>
-      }
-      actions={null}
-    >
-      <Grid>
-        {items.map((item) => {
-          const ok = item.current >= item.target;
-          const percent = totalToPercent(item.current, item.target);
-          const hot = ok && hotUnlockedIds.includes(item.id);
+    <>
+      <AnimatePresence>
+        {celebration ? (
+          <CelebrationOverlay
+            role="dialog"
+            aria-modal="true"
+            aria-label="成就解锁弹窗"
+            initial={reducedMotion ? false : { opacity: 0 }}
+            animate={reducedMotion ? { opacity: 1 } : { opacity: 1 }}
+            exit={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
+            transition={reducedMotion ? { duration: 0 } : { duration: 0.18 }}
+            onClick={() => setCelebration(null)}
+          >
+            {!reducedMotion ? (
+              <>
+                <ConfettiBurst seed={celebration.seed} originX="50%" originY="42%" count={26} />
+                <ConfettiBurst seed={celebration.seed + 1} originX="28%" originY="52%" count={16} />
+                <ConfettiBurst seed={celebration.seed + 2} originX="72%" originY="52%" count={16} />
+              </>
+            ) : null}
 
-          return (
-            <Card
-              key={item.id}
-              aria-label={`${item.title} 成就`}
-              whileHover={reducedMotion ? undefined : { y: -2, scale: 1.01 }}
-              transition={reducedMotion ? { duration: 0 } : { duration: 0.22 }}
-              style={
-                ok
-                  ? {
-                      borderColor: 'var(--primary-soft-border)',
-                      boxShadow: 'var(--shadow-glow)',
-                    }
-                  : undefined
+            <CelebrationDialog
+              initial={reducedMotion ? false : { opacity: 0, y: 12, scale: 0.98 }}
+              animate={
+                reducedMotion ? { opacity: 1, y: 0, scale: 1 } : { opacity: 1, y: 0, scale: 1 }
               }
+              transition={
+                reducedMotion
+                  ? { duration: 0 }
+                  : { type: 'spring', stiffness: 520, damping: 40, mass: 0.7 }
+              }
+              onClick={(event) => event.stopPropagation()}
             >
-              {hot && !reducedMotion ? (
-                <UnlockGlow
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 0.95, 0] }}
-                  transition={{ duration: 1.15, ease: [0.22, 1, 0.36, 1] }}
-                  aria-hidden="true"
-                />
-              ) : null}
-              <TitleRow>
-                <Title>
-                  {item.icon} {item.title}
-                </Title>
-                {ok ? <Badge>已解锁</Badge> : <Badge>进行中</Badge>}
-              </TitleRow>
+              <CelebrationTitle>成就解锁</CelebrationTitle>
+              <CelebrationMeta>继续保持：你的每一次互动都会被记录并转化为进度。</CelebrationMeta>
 
-              <Desc>{item.desc}</Desc>
-
-              <ProgressRow>
-                <ProgressMeta>
-                  <span>
-                    {item.current} / {item.target}
-                  </span>
-                  <span>{Math.round(percent)}%</span>
-                </ProgressMeta>
-                <ProgressTrack
-                  role="progressbar"
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                  aria-valuenow={percent}
+              {celebration.count > 1 ? (
+                <ComboBadge
+                  initial={reducedMotion ? false : { scale: 0.96, opacity: 0 }}
+                  animate={reducedMotion ? { scale: 1, opacity: 1 } : { scale: 1, opacity: 1 }}
+                  transition={reducedMotion ? { duration: 0 } : { duration: 0.2 }}
                 >
-                  <ProgressFill $percent={percent} />
-                </ProgressTrack>
-              </ProgressRow>
-            </Card>
-          );
-        })}
-      </Grid>
-    </PageShell>
+                  连击 ×{celebration.count}
+                </ComboBadge>
+              ) : (
+                <ComboBadge>解锁成功</ComboBadge>
+              )}
+
+              {celebration.titles?.length ? (
+                <TitleList aria-label="本次解锁成就">
+                  {celebration.titles.slice(0, 6).map((t) => (
+                    <TitleItem key={t}>
+                      <FiAward aria-hidden="true" /> {t}
+                    </TitleItem>
+                  ))}
+                </TitleList>
+              ) : null}
+            </CelebrationDialog>
+          </CelebrationOverlay>
+        ) : null}
+      </AnimatePresence>
+
+      <PageShell
+        title="成就中心"
+        subtitle="把“使用行为”做成可见的进度条：更强的留存、更强的反馈、更强的可玩性。"
+        badge="增长模块"
+        meta={
+          <span>
+            已解锁 <strong>{unlocked}</strong> / {items.length} · 收藏 {counts.favorites} · 追更{' '}
+            {counts.following}
+          </span>
+        }
+        actions={null}
+      >
+        <Grid>
+          {items.map((item) => {
+            const ok = item.current >= item.target;
+            const percent = totalToPercent(item.current, item.target);
+            const hot = ok && hotUnlockedIds.includes(item.id);
+
+            return (
+              <Card
+                key={item.id}
+                aria-label={`${item.title} 成就`}
+                whileHover={reducedMotion ? undefined : { y: -2, scale: 1.01 }}
+                transition={reducedMotion ? { duration: 0 } : { duration: 0.22 }}
+                style={
+                  ok
+                    ? {
+                        borderColor: 'var(--primary-soft-border)',
+                        boxShadow: 'var(--shadow-glow)',
+                      }
+                    : undefined
+                }
+              >
+                {hot && !reducedMotion ? (
+                  <UnlockGlow
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 0.95, 0] }}
+                    transition={{ duration: 1.15, ease: [0.22, 1, 0.36, 1] }}
+                    aria-hidden="true"
+                  />
+                ) : null}
+                <TitleRow>
+                  <Title>
+                    {item.icon} {item.title}
+                  </Title>
+                  {ok ? <Badge>已解锁</Badge> : <Badge>进行中</Badge>}
+                </TitleRow>
+
+                <Desc>{item.desc}</Desc>
+
+                <ProgressRow>
+                  <ProgressMeta>
+                    <span>
+                      {item.current} / {item.target}
+                    </span>
+                    <span>{Math.round(percent)}%</span>
+                  </ProgressMeta>
+                  <ProgressTrack
+                    role="progressbar"
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={percent}
+                  >
+                    <ProgressFill $percent={percent} />
+                  </ProgressTrack>
+                </ProgressRow>
+              </Card>
+            );
+          })}
+        </Grid>
+      </PageShell>
+    </>
   );
 }
 

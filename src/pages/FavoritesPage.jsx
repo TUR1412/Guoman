@@ -1,6 +1,7 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { FiDownload, FiFolder, FiHeart, FiTrash2, FiUpload } from 'react-icons/fi';
+import { Reorder, useDragControls, useReducedMotion } from 'framer-motion';
+import { FiDownload, FiFolder, FiHeart, FiMove, FiTrash2, FiUpload } from 'react-icons/fi';
 import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import AnimeCard from '../components/anime/AnimeCard';
@@ -19,6 +20,8 @@ import {
 import { trackEvent } from '../utils/analytics';
 import { scheduleStorageWrite } from '../utils/storageQueue';
 import { STORAGE_KEYS } from '../utils/dataKeys';
+import { safeJsonParse } from '../utils/json';
+import { usePersistedState } from '../utils/usePersistedState';
 
 const ToggleGroup = styled.div.attrs({ 'data-divider': 'inline' })`
   --divider-inline-gap: var(--spacing-xs);
@@ -138,6 +141,23 @@ const GroupChip = styled.button.attrs({ 'data-pressable': true })`
     background: var(--chip-bg-hover);
     color: var(--text-primary);
   }
+
+  ${(p) =>
+    p.$droppable
+      ? `
+    box-shadow: var(--shadow-ring);
+  `
+      : ''}
+
+  ${(p) =>
+    p.$dragOver
+      ? `
+    border-color: var(--primary-soft-border);
+    background: rgba(var(--primary-rgb), 0.18);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+  `
+      : ''}
 `;
 
 const GroupSelect = styled.select`
@@ -154,6 +174,61 @@ const FavoriteItem = styled.div`
   gap: var(--spacing-sm);
 `;
 
+const SortableList = styled(Reorder.Group).attrs({
+  as: 'div',
+  axis: 'y',
+  role: 'list',
+  'aria-label': '自定义排序列表',
+})`
+  display: grid;
+  gap: var(--spacing-lg);
+`;
+
+const SortableItem = styled(Reorder.Item).attrs({ as: 'div', role: 'listitem' })`
+  position: relative;
+  display: grid;
+  gap: var(--spacing-sm);
+`;
+
+const HandleRow = styled.div.attrs({ 'data-divider': 'inline', 'aria-label': '拖拽操作' })`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+  align-items: center;
+`;
+
+const Handle = styled.button.attrs({ type: 'button', 'data-pressable': true })`
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs-plus);
+  padding: 6px 10px;
+  border-radius: var(--border-radius-pill);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+  font-weight: 800;
+  transition: var(--transition);
+
+  &:hover {
+    border-color: var(--chip-border-hover);
+    color: var(--text-primary);
+    background: var(--surface-soft-hover);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
+  }
+`;
+
+const DragGroupHandle = styled(Handle).attrs({ draggable: true })`
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+`;
+
 const formatDateTime = (value) => {
   if (!value) return '暂无记录';
   return new Intl.DateTimeFormat('zh-CN', {
@@ -165,7 +240,33 @@ const formatDateTime = (value) => {
   }).format(new Date(value));
 };
 
+const normalizeIdList = (value) => {
+  if (!Array.isArray(value)) return [];
+  const out = [];
+  const seen = new Set();
+  value.forEach((item) => {
+    const id = Number(item);
+    if (!Number.isFinite(id) || !Number.isInteger(id) || id <= 0) return;
+    if (seen.has(id)) return;
+    seen.add(id);
+    out.push(id);
+  });
+  return out;
+};
+
+const arraysEqual = (a, b) => {
+  if (a === b) return true;
+  if (!Array.isArray(a) || !Array.isArray(b)) return false;
+  if (a.length !== b.length) return false;
+  return a.every((item, idx) => item === b[idx]);
+};
+
 const SORTS = {
+  custom: {
+    id: 'custom',
+    label: '自定义',
+    sortFn: null,
+  },
   rating: {
     id: 'rating',
     label: '评分',
@@ -183,18 +284,86 @@ const SORTS = {
   },
 };
 
+function SortableFavoriteRow({
+  anime,
+  reducedMotion,
+  groups,
+  groupMap,
+  updateGroupAssignment,
+  startGroupDrag,
+  endGroupDrag,
+}) {
+  const controls = useDragControls();
+
+  return (
+    <SortableItem
+      value={anime.id}
+      dragListener={false}
+      dragControls={controls}
+      transition={reducedMotion ? { duration: 0 } : { type: 'spring', stiffness: 520, damping: 44 }}
+    >
+      <HandleRow>
+        <Handle
+          aria-label="拖拽排序"
+          title="拖拽排序（仅自定义排序）"
+          onPointerDown={(event) => controls.start(event)}
+        >
+          <FiMove /> 拖拽排序
+        </Handle>
+        {groups.length > 0 ? (
+          <DragGroupHandle
+            aria-label="拖拽到分组"
+            title="拖拽到上方分组标签：移动分组"
+            onDragStart={startGroupDrag(anime.id)}
+            onDragEnd={endGroupDrag}
+            onClick={(event) => event.preventDefault()}
+          >
+            <FiFolder /> 拖到分组
+          </DragGroupHandle>
+        ) : null}
+      </HandleRow>
+
+      <AnimeCard anime={anime} />
+
+      <GroupSelect
+        value={groupMap.get(anime.id) || 'none'}
+        onChange={(event) => updateGroupAssignment(anime.id, event.target.value)}
+      >
+        <option value="none">未分组</option>
+        {groups.map((group) => (
+          <option key={group.id} value={group.id}>
+            {group.name}
+          </option>
+        ))}
+      </GroupSelect>
+    </SortableItem>
+  );
+}
+
 function FavoritesPage() {
   const { favoriteIds, clearFavorites, exportFavoritesBackup, importFavoritesBackup, updatedAt } =
     useFavorites();
   const toast = useToast();
+  const reducedMotion = useReducedMotion();
   const fileInputRef = useRef(null);
   const importModeRef = useRef('merge');
   const importTypeRef = useRef('favorites');
   const [sortId, setSortId] = useState(SORTS.rating.id);
   const [groups, setGroups] = useState(() => getFavoriteGroups());
   const [activeGroupId, setActiveGroupId] = useState('all');
+  const [draggingId, setDraggingId] = useState(null);
+  const [dragOverGroupId, setDragOverGroupId] = useState(null);
+  const [favoritesOrder, setFavoritesOrder] = usePersistedState(STORAGE_KEYS.favoritesOrder, [], {
+    serialize: (value) => JSON.stringify(normalizeIdList(value)),
+    deserialize: (raw) => safeJsonParse(raw, []),
+  });
 
   const sort = SORTS[sortId] || SORTS.rating;
+  const activeGroupLabel = useMemo(() => {
+    if (activeGroupId === 'all') return '全部';
+    if (activeGroupId === 'none') return '未分组';
+    return groups.find((group) => group.id === activeGroupId)?.name || '全部';
+  }, [activeGroupId, groups]);
 
   const list = useMemo(() => {
     const ids = Array.from(favoriteIds);
@@ -211,17 +380,133 @@ function FavoritesPage() {
 
   const filteredList = useMemo(() => {
     if (activeGroupId === 'all') return list;
+    if (activeGroupId === 'none') {
+      return list.filter((anime) => !groupMap.has(anime.id));
+    }
     const group = groups.find((item) => item.id === activeGroupId);
     if (!group) return list;
     const idSet = new Set(group.itemIds || []);
     return list.filter((anime) => idSet.has(anime.id));
-  }, [activeGroupId, groups, list]);
+  }, [activeGroupId, groupMap, groups, list]);
+
+  const mergedFavoritesOrder = useMemo(() => {
+    const current = list.map((anime) => anime.id);
+    const currentSet = new Set(current);
+    const normalized = normalizeIdList(favoritesOrder);
+    const keep = normalized.filter((id) => currentSet.has(id));
+    const seen = new Set(keep);
+    const missing = current.filter((id) => !seen.has(id));
+    return [...keep, ...missing];
+  }, [favoritesOrder, list]);
+
+  useEffect(() => {
+    const currentSet = new Set(list.map((anime) => anime.id));
+    const normalizedStored = normalizeIdList(favoritesOrder).filter((id) => currentSet.has(id));
+    if (arraysEqual(normalizedStored, mergedFavoritesOrder)) return;
+    setFavoritesOrder(mergedFavoritesOrder);
+  }, [favoritesOrder, list, mergedFavoritesOrder, setFavoritesOrder]);
+
+  const customList = useMemo(() => {
+    const map = new Map(list.map((anime) => [anime.id, anime]));
+    const ordered = mergedFavoritesOrder.map((id) => map.get(id)).filter(Boolean);
+
+    if (activeGroupId === 'all') return ordered;
+    if (activeGroupId === 'none') return ordered.filter((anime) => !groupMap.has(anime.id));
+    const group = groups.find((item) => item.id === activeGroupId);
+    if (!group) return ordered;
+    const idSet = new Set(group.itemIds || []);
+    return ordered.filter((anime) => idSet.has(anime.id));
+  }, [activeGroupId, groupMap, groups, list, mergedFavoritesOrder]);
 
   const sortedList = useMemo(() => {
+    if (sortId === SORTS.custom.id) return customList;
     const next = [...filteredList];
     next.sort(sort.sortFn);
     return next;
-  }, [filteredList, sort.sortFn]);
+  }, [customList, filteredList, sort.sortFn, sortId]);
+
+  const updateGroupAssignment = useCallback(
+    (animeId, nextGroupId) => {
+      const currentGroupId = groupMap.get(animeId);
+      if (currentGroupId) {
+        removeFavoriteFromGroup(currentGroupId, animeId);
+      }
+      if (nextGroupId && nextGroupId !== 'none' && nextGroupId !== 'all') {
+        assignFavoriteToGroup(nextGroupId, animeId);
+      }
+      setGroups(getFavoriteGroups());
+      trackEvent('favorites.groups.assign', { id: animeId, group: nextGroupId });
+    },
+    [groupMap],
+  );
+
+  const clearDragState = useCallback(() => {
+    setDraggingId(null);
+    setDragOverGroupId(null);
+  }, []);
+
+  const getDragIdFromEvent = (event) => {
+    if (!event) return null;
+    const raw = event.dataTransfer?.getData?.('text/plain');
+    const parsed = Number.parseInt(raw, 10);
+    if (!Number.isFinite(parsed) || parsed <= 0) return null;
+    return parsed;
+  };
+
+  const startGroupDrag = useCallback(
+    (animeId) => (event) => {
+      const id = Number(animeId);
+      if (!Number.isFinite(id) || id <= 0) return;
+      setDraggingId(id);
+      setDragOverGroupId(null);
+      try {
+        event.dataTransfer?.setData?.('text/plain', String(id));
+        event.dataTransfer.effectAllowed = 'move';
+      } catch {}
+      trackEvent('favorites.dragGroup.start', { id });
+    },
+    [],
+  );
+
+  const endGroupDrag = useCallback(() => {
+    clearDragState();
+  }, [clearDragState]);
+
+  const dropToGroup = useCallback(
+    (groupId) => (event) => {
+      if (!draggingId) return;
+      event.preventDefault();
+
+      const id = draggingId || getDragIdFromEvent(event);
+      if (!id) return;
+
+      clearDragState();
+
+      updateGroupAssignment(id, groupId);
+
+      const groupName =
+        groupId === 'none' ? '未分组' : groups.find((g) => g.id === groupId)?.name || '分组';
+
+      toast.success('已移动分组', `《${animeIndex.get(id)?.title || `#${id}`}》 → ${groupName}`, {
+        celebrate: true,
+        durationMs: 2200,
+      });
+      trackEvent('favorites.dragGroup.drop', { id, group: groupId });
+    },
+    [clearDragState, draggingId, groups, toast, updateGroupAssignment],
+  );
+
+  const allowDrop = useCallback(
+    (groupId) => (event) => {
+      if (!draggingId) return;
+      event.preventDefault();
+      setDragOverGroupId(groupId);
+      try {
+        event.dataTransfer.dropEffect = 'move';
+      } catch {}
+    },
+    [draggingId],
+  );
 
   const onExport = () => {
     if (favoriteIds.size === 0) {
@@ -364,18 +649,6 @@ function FavoritesPage() {
     trackEvent('favorites.groups.delete', { id: target.id });
   };
 
-  const updateGroupAssignment = (animeId, nextGroupId) => {
-    const currentGroupId = groupMap.get(animeId);
-    if (currentGroupId) {
-      removeFavoriteFromGroup(currentGroupId, animeId);
-    }
-    if (nextGroupId && nextGroupId !== 'none' && nextGroupId !== 'all') {
-      assignFavoriteToGroup(nextGroupId, animeId);
-    }
-    setGroups(getFavoriteGroups());
-    trackEvent('favorites.groups.assign', { id: animeId, group: nextGroupId });
-  };
-
   const onClear = () => {
     if (favoriteIds.size === 0) return;
     const ok = window.confirm('确定要清空收藏吗？此操作不可撤销。');
@@ -450,7 +723,7 @@ function FavoritesPage() {
     >
       <Summary role="status" aria-live="polite">
         共收藏 <strong>{favoriteIds.size}</strong> 部作品 · 当前分组{' '}
-        <strong>{activeGroupId === 'all' ? '全部' : '自定义'}</strong>
+        <strong>{activeGroupLabel}</strong>
       </Summary>
 
       <GroupRow>
@@ -461,12 +734,35 @@ function FavoritesPage() {
         >
           全部
         </GroupChip>
+        <GroupChip
+          type="button"
+          $active={activeGroupId === 'none'}
+          $droppable={Boolean(draggingId)}
+          $dragOver={dragOverGroupId === 'none'}
+          onClick={() => setActiveGroupId('none')}
+          onDragOver={allowDrop('none')}
+          onDragEnter={allowDrop('none')}
+          onDragLeave={() => {
+            if (dragOverGroupId === 'none') setDragOverGroupId(null);
+          }}
+          onDrop={dropToGroup('none')}
+        >
+          未分组
+        </GroupChip>
         {groups.map((group) => (
           <GroupChip
             key={group.id}
             type="button"
             $active={activeGroupId === group.id}
             onClick={() => setActiveGroupId(group.id)}
+            $droppable={Boolean(draggingId)}
+            $dragOver={dragOverGroupId === group.id}
+            onDragOver={allowDrop(group.id)}
+            onDragEnter={allowDrop(group.id)}
+            onDragLeave={() => {
+              if (dragOverGroupId === group.id) setDragOverGroupId(null);
+            }}
+            onDrop={dropToGroup(group.id)}
           >
             {group.name} ({group.itemIds?.length || 0})
           </GroupChip>
@@ -482,24 +778,69 @@ function FavoritesPage() {
       </GroupRow>
 
       {sortedList.length > 0 ? (
-        <AnimeGrid $bento>
-          {sortedList.map((anime) => (
-            <FavoriteItem key={anime.id}>
-              <AnimeCard anime={anime} />
-              <GroupSelect
-                value={groupMap.get(anime.id) || 'none'}
-                onChange={(event) => updateGroupAssignment(anime.id, event.target.value)}
-              >
-                <option value="none">未分组</option>
-                {groups.map((group) => (
-                  <option key={group.id} value={group.id}>
-                    {group.name}
-                  </option>
-                ))}
-              </GroupSelect>
-            </FavoriteItem>
-          ))}
-        </AnimeGrid>
+        sortId === SORTS.custom.id && activeGroupId === 'all' ? (
+          <div data-divider="list">
+            <Summary style={{ marginBottom: 'var(--spacing-sm)' }}>
+              提示：使用“自定义”排序后，拖拽 <FiMove style={{ verticalAlign: 'middle' }} />{' '}
+              即可调整顺序（自动保存）。
+            </Summary>
+
+            <SortableList
+              values={mergedFavoritesOrder}
+              onReorder={(next) => {
+                setFavoritesOrder(next);
+              }}
+              onDragEnd={() => {
+                trackEvent('favorites.reorder', { count: mergedFavoritesOrder.length });
+              }}
+            >
+              {customList.map((anime) => (
+                <SortableFavoriteRow
+                  key={anime.id}
+                  anime={anime}
+                  reducedMotion={reducedMotion}
+                  groups={groups}
+                  groupMap={groupMap}
+                  updateGroupAssignment={updateGroupAssignment}
+                  startGroupDrag={startGroupDrag}
+                  endGroupDrag={endGroupDrag}
+                />
+              ))}
+            </SortableList>
+          </div>
+        ) : (
+          <AnimeGrid $bento>
+            {sortedList.map((anime) => (
+              <FavoriteItem key={anime.id}>
+                <AnimeCard anime={anime} />
+                <HandleRow aria-label="分组拖拽">
+                  {groups.length > 0 ? (
+                    <DragGroupHandle
+                      aria-label="拖拽到分组"
+                      title="拖拽到上方分组标签：移动分组"
+                      onDragStart={startGroupDrag(anime.id)}
+                      onDragEnd={endGroupDrag}
+                      onClick={(event) => event.preventDefault()}
+                    >
+                      <FiFolder /> 拖到分组
+                    </DragGroupHandle>
+                  ) : null}
+                </HandleRow>
+                <GroupSelect
+                  value={groupMap.get(anime.id) || 'none'}
+                  onChange={(event) => updateGroupAssignment(anime.id, event.target.value)}
+                >
+                  <option value="none">未分组</option>
+                  {groups.map((group) => (
+                    <option key={group.id} value={group.id}>
+                      {group.name}
+                    </option>
+                  ))}
+                </GroupSelect>
+              </FavoriteItem>
+            ))}
+          </AnimeGrid>
+        )
       ) : (
         <EmptyState
           icon={<FiHeart size={22} />}

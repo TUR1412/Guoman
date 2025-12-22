@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="480" viewBox="0 0 1200 480" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B0F14" />
+      <stop offset="100%" stop-color="#101722" />
+    </linearGradient>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="18" />
+    </filter>
+    <clipPath id="clipNav">
+      <rect x="70" y="120" width="1060" height="68" rx="22" />
+    </clipPath>
+    <clipPath id="clipPanel">
+      <rect x="250" y="220" width="700" height="200" rx="26" />
+    </clipPath>
+  </defs>
+
+  <rect width="1200" height="480" fill="url(#bg)" />
+  <circle cx="210" cy="120" r="160" fill="rgba(31,143,122,0.22)" filter="url(#blur)" />
+  <circle cx="1020" cy="120" r="190" fill="rgba(232,84,69,0.22)" filter="url(#blur)" />
+
+  <text x="70" y="74" fill="rgba(244,242,238,0.92)" font-size="24" font-family="Noto Sans SC, sans-serif">
+    动效演示：Pointer Glow（光标跟随高光）
+  </text>
+  <text x="70" y="106" fill="rgba(213,208,199,0.75)" font-size="16" font-family="Noto Sans SC, sans-serif">
+    RAF 节流 + reduced-motion 护栏：只动 DOM，不触发 React 重渲染。
+  </text>
+
+  <!-- nav -->
+  <rect x="70" y="120" width="1060" height="68" rx="22" fill="rgba(255,255,255,0.05)" stroke="rgba(244,242,238,0.12)" />
+  <g clip-path="url(#clipNav)">
+    <circle id="glow1" cx="260" cy="138" r="140" fill="rgba(232,84,69,0.20)" filter="url(#blur)">
+      <animate attributeName="cx" values="220;980;980;220" dur="6s" repeatCount="indefinite" />
+      <animate attributeName="cy" values="138;154;154;138" dur="6s" repeatCount="indefinite" />
+    </circle>
+    <circle id="glow2" cx="320" cy="152" r="120" fill="rgba(31,143,122,0.16)" filter="url(#blur)">
+      <animate attributeName="cx" values="300;920;920;300" dur="6s" repeatCount="indefinite" begin="0.1s" />
+      <animate attributeName="cy" values="152;140;140;152" dur="6s" repeatCount="indefinite" begin="0.1s" />
+    </circle>
+  </g>
+  <text x="108" y="163" fill="rgba(244,242,238,0.86)" font-size="14" font-weight="800" font-family="Noto Sans SC, sans-serif">首页</text>
+  <text x="206" y="163" fill="rgba(213,208,199,0.7)" font-size="14" font-weight="800" font-family="Noto Sans SC, sans-serif">推荐</text>
+  <text x="304" y="163" fill="rgba(213,208,199,0.7)" font-size="14" font-weight="800" font-family="Noto Sans SC, sans-serif">收藏</text>
+  <text x="402" y="163" fill="rgba(213,208,199,0.7)" font-size="14" font-weight="800" font-family="Noto Sans SC, sans-serif">追更</text>
+  <text x="500" y="163" fill="rgba(213,208,199,0.7)" font-size="14" font-weight="800" font-family="Noto Sans SC, sans-serif">成就</text>
+
+  <!-- panel -->
+  <rect x="250" y="220" width="700" height="200" rx="26" fill="rgba(255,255,255,0.06)" stroke="rgba(244,242,238,0.12)" />
+  <g clip-path="url(#clipPanel)">
+    <circle cx="360" cy="280" r="180" fill="rgba(232,84,69,0.16)" filter="url(#blur)">
+      <animate attributeName="cx" values="340;860;860;340" dur="6s" repeatCount="indefinite" begin="0.2s" />
+      <animate attributeName="cy" values="280;340;340;280" dur="6s" repeatCount="indefinite" begin="0.2s" />
+    </circle>
+    <circle cx="430" cy="320" r="150" fill="rgba(31,143,122,0.14)" filter="url(#blur)">
+      <animate attributeName="cx" values="420;790;790;420" dur="6s" repeatCount="indefinite" begin="0.25s" />
+      <animate attributeName="cy" values="320;300;300;320" dur="6s" repeatCount="indefinite" begin="0.25s" />
+    </circle>
+  </g>
+  <text x="286" y="258" fill="rgba(244,242,238,0.9)" font-size="16" font-weight="900" font-family="Noto Sans SC, sans-serif">命令面板</text>
+  <text x="286" y="282" fill="rgba(213,208,199,0.75)" font-size="12" font-family="Noto Sans SC, sans-serif">Ctrl/⌘ + K · 输入关键词</text>
+  <rect x="286" y="300" width="628" height="40" rx="16" fill="rgba(0,0,0,0.25)" stroke="rgba(244,242,238,0.10)" />
+  <text x="306" y="326" fill="rgba(213,208,199,0.72)" font-size="12" font-family="Noto Sans SC, sans-serif">搜索 / 跳转 / 快捷动作…</text>
+
+  <rect x="286" y="354" width="628" height="44" rx="16" fill="rgba(255,255,255,0.05)" stroke="rgba(244,242,238,0.10)" />
+  <text x="306" y="382" fill="rgba(244,242,238,0.86)" font-size="13" font-weight="800" font-family="Noto Sans SC, sans-serif">前往收藏页</text>
+  <text x="874" y="382" text-anchor="end" fill="rgba(213,208,199,0.66)" font-size="12" font-family="Noto Sans SC, sans-serif">Enter</text>
+
+  <text x="70" y="458" fill="rgba(213,208,199,0.72)" font-size="14" font-family="Noto Sans SC, sans-serif">
+    Tips：光标离开时会自动淡出，避免持续闪烁；prefers-reduced-motion 时自动禁用。
+  </text>
+</svg>
+

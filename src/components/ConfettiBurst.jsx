@@ -11,8 +11,8 @@ const Layer = styled.div`
 
 const Particle = styled(motion.span)`
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: var(--confetti-x, 50%);
+  top: var(--confetti-y, 50%);
   width: var(--size);
   height: var(--size);
   border-radius: var(--radius);
@@ -33,7 +33,14 @@ const mulberry32 = (seed) => {
 
 const pick = (arr, rand) => arr[Math.floor(rand() * arr.length)] || arr[0];
 
-function ConfettiBurst({ seed = 1, count = 18, spread = 84, maxDistance = 120 }) {
+function ConfettiBurst({
+  seed = 1,
+  count = 18,
+  spread = 84,
+  maxDistance = 120,
+  originX = '50%',
+  originY = '50%',
+}) {
   const reducedMotion = useReducedMotion();
 
   const particles = useMemo(() => {
@@ -73,7 +80,11 @@ function ConfettiBurst({ seed = 1, count = 18, spread = 84, maxDistance = 120 })
   if (reducedMotion) return null;
 
   return (
-    <Layer data-testid="confetti-burst" aria-hidden="true">
+    <Layer
+      data-testid="confetti-burst"
+      aria-hidden="true"
+      style={{ '--confetti-x': originX, '--confetti-y': originY }}
+    >
       {particles.map((p) => (
         <Particle
           key={p.id}

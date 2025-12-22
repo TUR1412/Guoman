@@ -2,6 +2,7 @@ export const STORAGE_KEYS = Object.freeze({
   favorites: 'guoman.favorites.v1',
   favoritesUpdatedAt: 'guoman.favorites.updatedAt',
   favoriteGroups: 'guoman.favorites.groups.v1',
+  favoritesOrder: 'guoman.favorites.order.v1',
   watchProgress: 'guoman.watchProgress.v1',
   recentlyViewed: 'guoman.recent.v1',
   searchHistory: 'guoman.search.history.v1',

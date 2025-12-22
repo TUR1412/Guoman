@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { FiCornerDownLeft, FiSearch } from 'react-icons/fi';
 
+import { usePointerGlow } from './usePointerGlow';
+
 const Backdrop = styled(motion.div)`
   position: fixed;
   inset: 0;
@@ -190,7 +192,10 @@ export default function CommandPalette({ open, onClose, actions, onSearch }) {
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef(null);
+  const panelRef = useRef(null);
   const lastActiveElementRef = useRef(null);
+
+  usePointerGlow(panelRef, { disabled: reducedMotion });
 
   const results = useMemo(() => {
     const normalizedQuery = normalize(query);
@@ -310,7 +315,14 @@ export default function CommandPalette({ open, onClose, actions, onSearch }) {
             }
           }}
         >
-          <Panel {...motionPanel} role="dialog" aria-modal="true" aria-label="命令面板">
+          <Panel
+            ref={panelRef}
+            data-pointer-glow
+            {...motionPanel}
+            role="dialog"
+            aria-modal="true"
+            aria-label="命令面板"
+          >
             <Header>
               <TitleRow>
                 <Title>命令面板</Title>
