@@ -75,6 +75,28 @@ describe('followingStore', () => {
     unsubB();
   });
 
+  it('broadcasts to all per-anime subscribers when emitting without an id', () => {
+    window.localStorage.clear();
+    flushStorageQueue();
+    clearFollowing();
+
+    let hitsA = 0;
+    let hitsB = 0;
+    const unsubA = subscribeFollowingById(1, () => {
+      hitsA += 1;
+    });
+    const unsubB = subscribeFollowingById(2, () => {
+      hitsB += 1;
+    });
+
+    clearFollowing();
+    expect(hitsA).toBeGreaterThan(0);
+    expect(hitsB).toBeGreaterThan(0);
+
+    unsubA();
+    unsubB();
+  });
+
   it('updates reminder settings and clamps values', () => {
     window.localStorage.clear();
     flushStorageQueue();

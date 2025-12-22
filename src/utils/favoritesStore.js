@@ -10,7 +10,6 @@ import { parseFavoritesBackup, serializeFavoritesBackup } from './favoritesBacku
 
 const IDS_KEY = STORAGE_KEYS.favorites;
 const UPDATED_KEY = STORAGE_KEYS.favoritesUpdatedAt;
-const EVENT_KEY = 'guoman:favorites';
 
 const normalizeId = (value) => {
   const id = Number(value);
@@ -123,12 +122,6 @@ const emit = ({ id = null } = {}) => {
         } catch {}
       });
     });
-  }
-
-  if (typeof window !== 'undefined') {
-    try {
-      window.dispatchEvent(new CustomEvent(EVENT_KEY, { detail: { id: id || null } }));
-    } catch {}
   }
 };
 
@@ -309,4 +302,3 @@ export const importFavoritesBackup = (jsonText, { mode = 'merge' } = {}) => {
 
 export const FAVORITES_STORAGE_KEY = IDS_KEY;
 export const FAVORITES_UPDATED_KEY = UPDATED_KEY;
-export const FAVORITES_EVENT_KEY = EVENT_KEY;

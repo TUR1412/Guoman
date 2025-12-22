@@ -9,7 +9,6 @@ import { pushNotification } from './notificationsStore';
 import { trackEvent } from './analytics';
 
 const STORAGE_KEY = STORAGE_KEYS.following;
-const EVENT_KEY = 'guoman:following';
 
 const normalizeId = (value) => {
   const id = Number(value);
@@ -109,12 +108,6 @@ const emit = ({ animeId = null } = {}) => {
       });
     });
   }
-
-  if (typeof window !== 'undefined') {
-    try {
-      window.dispatchEvent(new CustomEvent(EVENT_KEY, { detail: { animeId: animeId || null } }));
-    } catch {}
-  }
 };
 
 const ensureWindowListeners = () => {
@@ -210,7 +203,7 @@ export const getFollowingEntries = () => {
   const raw = cachedRaw;
   if (cachedEntries && cachedEntriesRaw === raw) return cachedEntries;
 
-  const items = payload.items || {};
+  const items = payload.items;
   const next = Object.entries(items)
     .map(([id, value]) => ({
       animeId: Number.parseInt(id, 10),
@@ -316,7 +309,7 @@ export const clearFollowing = () => {
 
 export const getDueFollowingReminders = ({ now = Date.now() } = {}) => {
   const payload = readStorage();
-  const items = payload.items || {};
+  const items = payload.items;
   const timestamp = Number(now) || Date.now();
 
   return Object.entries(items)
@@ -374,4 +367,3 @@ export const fireDueFollowingReminders = ({ now = Date.now() } = {}) => {
 };
 
 export const FOLLOWING_STORAGE_KEY = STORAGE_KEY;
-export const FOLLOWING_EVENT_KEY = EVENT_KEY;

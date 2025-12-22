@@ -125,6 +125,64 @@ describe('watchProgress utils', () => {
     expect(callback).not.toHaveBeenCalled();
   });
 
+  it('guards subscriptions against invalid inputs and double-unsubscribe', () => {
+    const originalWindow = globalThis.window;
+    globalThis.window = undefined;
+
+    const unsubNoWindow = subscribeWatchProgressById(1, () => {});
+    expect(typeof unsubNoWindow).toBe('function');
+    expect(() => unsubNoWindow()).not.toThrow();
+
+    globalThis.window = originalWindow;
+
+    const unsubBadCb = subscribeWatchProgressById(1, null);
+    expect(typeof unsubBadCb).toBe('function');
+    expect(() => unsubBadCb()).not.toThrow();
+
+    const unsubBadId = subscribeWatchProgressById('bad', () => {});
+    expect(typeof unsubBadId).toBe('function');
+    expect(() => unsubBadId()).not.toThrow();
+
+    const callback = vi.fn();
+    const unsubscribe = subscribeWatchProgressById(1, callback);
+    unsubscribe();
+    expect(() => unsubscribe()).not.toThrow();
+  });
+
+  it('isolates subscriber exceptions so others still receive updates', () => {
+    const explode = vi.fn(() => {
+      throw new Error('boom');
+    });
+    const ok = vi.fn();
+
+    const unsubExplode = subscribeWatchProgress(explode);
+    const unsubOk = subscribeWatchProgress(ok);
+
+    expect(() => updateWatchProgress({ animeId: 21, episode: 1, progress: 10 })).not.toThrow();
+    expect(explode).toHaveBeenCalled();
+    expect(ok).toHaveBeenCalledWith(expect.objectContaining({ animeId: 21 }));
+
+    unsubExplode();
+    unsubOk();
+  });
+
+  it('isolates per-anime subscriber exceptions and keeps notifying others', () => {
+    const explode = vi.fn(() => {
+      throw new Error('boom');
+    });
+    const ok = vi.fn();
+
+    const unsubExplode = subscribeWatchProgressById(31, explode);
+    const unsubOk = subscribeWatchProgressById(31, ok);
+
+    expect(() => updateWatchProgress({ animeId: 31, episode: 2, progress: 20 })).not.toThrow();
+    expect(explode).toHaveBeenCalled();
+    expect(ok).toHaveBeenCalledWith(expect.objectContaining({ animeId: 31 }));
+
+    unsubExplode();
+    unsubOk();
+  });
+
   it('reads from persisted storage payload and caches parsed result', () => {
     window.localStorage.setItem(
       'guoman.watchProgress.v1',
