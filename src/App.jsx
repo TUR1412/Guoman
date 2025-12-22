@@ -1,7 +1,13 @@
 import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { motion, AnimatePresence, LayoutGroup, MotionConfig } from 'framer-motion';
+import {
+  motion,
+  AnimatePresence,
+  LayoutGroup,
+  MotionConfig,
+  useReducedMotion,
+} from 'framer-motion';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -82,6 +88,19 @@ const RouteFallback = styled(motion.div)`
   color: var(--text-secondary);
 `;
 
+const RouteCurtain = styled(motion.div)`
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  pointer-events: none;
+  background:
+    radial-gradient(900px 380px at 12% 0%, rgba(var(--primary-rgb), 0.22), transparent 60%),
+    radial-gradient(900px 420px at 88% 100%, rgba(var(--secondary-rgb), 0.18), transparent 65%),
+    linear-gradient(120deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0) 100%);
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+`;
+
 const INTRO_KEY = 'guoman.introSeen';
 
 function App() {
@@ -90,6 +109,7 @@ function App() {
     return !safeSessionStorageGet(INTRO_KEY);
   });
   const location = useLocation();
+  const reducedMotion = useReducedMotion();
   const proEnabled = useIsProEnabled();
 
   useEffect(() => {
@@ -275,10 +295,22 @@ function App() {
                   <AnimatePresence mode="wait" initial={false}>
                     <motion.div
                       key={location.pathname}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+                      initial={
+                        reducedMotion
+                          ? { opacity: 1, y: 0, scale: 1 }
+                          : { opacity: 0, y: 14, scale: 0.985 }
+                      }
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={
+                        reducedMotion
+                          ? { opacity: 1, y: 0, scale: 1 }
+                          : { opacity: 0, y: -12, scale: 0.985 }
+                      }
+                      transition={
+                        reducedMotion
+                          ? { duration: 0 }
+                          : { type: 'spring', stiffness: 420, damping: 42, mass: 0.8 }
+                      }
                     >
                       <Routes location={location}>
                         <Route path="/" element={<HomePage />} />
@@ -321,6 +353,16 @@ function App() {
                     </motion.div>
                   </AnimatePresence>
                 </LayoutGroup>
+
+                {!loading && !reducedMotion ? (
+                  <RouteCurtain
+                    key={`curtain:${location.pathname}`}
+                    initial={{ opacity: 0, y: -18, scale: 1.02 }}
+                    animate={{ opacity: [0, 0.9, 0], y: [-18, 0, 18], scale: [1.02, 1, 0.99] }}
+                    transition={{ duration: 0.62, ease: [0.22, 1, 0.36, 1], times: [0, 0.45, 1] }}
+                    aria-hidden="true"
+                  />
+                ) : null}
               </Suspense>
             </MainContent>
 

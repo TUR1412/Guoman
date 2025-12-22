@@ -292,6 +292,7 @@ function SortableFavoriteRow({
   updateGroupAssignment,
   startGroupDrag,
   endGroupDrag,
+  onStartReorder,
 }) {
   const controls = useDragControls();
 
@@ -306,7 +307,10 @@ function SortableFavoriteRow({
         <Handle
           aria-label="拖拽排序"
           title="拖拽排序（仅自定义排序）"
-          onPointerDown={(event) => controls.start(event)}
+          onPointerDown={(event) => {
+            onStartReorder?.();
+            controls.start(event);
+          }}
         >
           <FiMove /> 拖拽排序
         </Handle>
@@ -357,6 +361,10 @@ function FavoritesPage() {
     serialize: (value) => JSON.stringify(normalizeIdList(value)),
     deserialize: (raw) => safeJsonParse(raw, []),
   });
+  const [draftFavoritesOrder, setDraftFavoritesOrder] = useState(() =>
+    normalizeIdList(favoritesOrder),
+  );
+  const [isReordering, setIsReordering] = useState(false);
 
   const sort = SORTS[sortId] || SORTS.rating;
   const activeGroupLabel = useMemo(() => {
@@ -406,9 +414,22 @@ function FavoritesPage() {
     setFavoritesOrder(mergedFavoritesOrder);
   }, [favoritesOrder, list, mergedFavoritesOrder, setFavoritesOrder]);
 
+  useEffect(() => {
+    if (sortId !== SORTS.custom.id || activeGroupId !== 'all') {
+      setIsReordering(false);
+    }
+
+    if (isReordering) return;
+    setDraftFavoritesOrder(mergedFavoritesOrder);
+  }, [activeGroupId, isReordering, mergedFavoritesOrder, sortId]);
+
   const customList = useMemo(() => {
     const map = new Map(list.map((anime) => [anime.id, anime]));
-    const ordered = mergedFavoritesOrder.map((id) => map.get(id)).filter(Boolean);
+    const order =
+      sortId === SORTS.custom.id && activeGroupId === 'all' && draftFavoritesOrder.length > 0
+        ? draftFavoritesOrder
+        : mergedFavoritesOrder;
+    const ordered = order.map((id) => map.get(id)).filter(Boolean);
 
     if (activeGroupId === 'all') return ordered;
     if (activeGroupId === 'none') return ordered.filter((anime) => !groupMap.has(anime.id));
@@ -416,7 +437,11 @@ function FavoritesPage() {
     if (!group) return ordered;
     const idSet = new Set(group.itemIds || []);
     return ordered.filter((anime) => idSet.has(anime.id));
-  }, [activeGroupId, groupMap, groups, list, mergedFavoritesOrder]);
+  }, [activeGroupId, draftFavoritesOrder, groupMap, groups, list, mergedFavoritesOrder, sortId]);
+
+  const beginReorder = useCallback(() => {
+    setIsReordering(true);
+  }, []);
 
   const sortedList = useMemo(() => {
     if (sortId === SORTS.custom.id) return customList;
@@ -500,7 +525,7 @@ function FavoritesPage() {
     (groupId) => (event) => {
       if (!draggingId) return;
       event.preventDefault();
-      setDragOverGroupId(groupId);
+      setDragOverGroupId((prev) => (prev === groupId ? prev : groupId));
       try {
         event.dataTransfer.dropEffect = 'move';
       } catch {}
@@ -786,12 +811,12 @@ function FavoritesPage() {
             </Summary>
 
             <SortableList
-              values={mergedFavoritesOrder}
-              onReorder={(next) => {
-                setFavoritesOrder(next);
-              }}
+              values={draftFavoritesOrder.length > 0 ? draftFavoritesOrder : mergedFavoritesOrder}
+              onReorder={(next) => setDraftFavoritesOrder(next)}
               onDragEnd={() => {
-                trackEvent('favorites.reorder', { count: mergedFavoritesOrder.length });
+                setIsReordering(false);
+                setFavoritesOrder(normalizeIdList(draftFavoritesOrder));
+                trackEvent('favorites.reorder', { count: draftFavoritesOrder.length });
               }}
             >
               {customList.map((anime) => (
@@ -804,6 +829,7 @@ function FavoritesPage() {
                   updateGroupAssignment={updateGroupAssignment}
                   startGroupDrag={startGroupDrag}
                   endGroupDrag={endGroupDrag}
+                  onStartReorder={beginReorder}
                 />
               ))}
             </SortableList>

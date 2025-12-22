@@ -20,6 +20,9 @@ const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 let lastUpdatedAt = 0;
 let cachedPayload = null;
 let cachedRaw = null;
+let boundWindowListeners = false;
+const subscribers = new Set();
+let windowCleanup = null;
 
 const getMonotonicNow = () => {
   const now = Date.now();
@@ -71,6 +74,39 @@ const writeStorage = (payload) => {
 const notify = (detail) => {
   if (typeof window === 'undefined') return;
   window.dispatchEvent(new CustomEvent(EVENT_KEY, { detail }));
+};
+
+const emitToSubscribers = (payload) => {
+  subscribers.forEach((callback) => {
+    try {
+      callback(payload);
+    } catch {}
+  });
+};
+
+const ensureWindowListeners = () => {
+  if (boundWindowListeners || typeof window === 'undefined') return;
+  boundWindowListeners = true;
+
+  const onEvent = (event) => {
+    emitToSubscribers(event?.detail ?? null);
+  };
+
+  const onStorage = (event) => {
+    const key = event?.detail?.key ?? event?.key;
+    if (key !== STORAGE_KEY) return;
+    emitToSubscribers({ source: 'storage' });
+  };
+
+  window.addEventListener(EVENT_KEY, onEvent);
+  window.addEventListener('storage', onStorage);
+  window.addEventListener('guoman:storage', onStorage);
+
+  windowCleanup = () => {
+    window.removeEventListener(EVENT_KEY, onEvent);
+    window.removeEventListener('storage', onStorage);
+    window.removeEventListener('guoman:storage', onStorage);
+  };
 };
 
 export const getWatchProgress = (animeId) => {
@@ -132,19 +168,17 @@ export const clearWatchProgress = (animeId) => {
 
 export const subscribeWatchProgress = (callback) => {
   if (typeof window === 'undefined') return () => {};
-  const handler = (event) => callback?.(event?.detail ?? null);
-  const onStorage = (event) => {
-    if (event?.key === STORAGE_KEY) {
-      callback?.({ source: 'storage' });
-    }
-  };
-
-  window.addEventListener(EVENT_KEY, handler);
-  window.addEventListener('storage', onStorage);
+  if (typeof callback !== 'function') return () => {};
+  ensureWindowListeners();
+  subscribers.add(callback);
 
   return () => {
-    window.removeEventListener(EVENT_KEY, handler);
-    window.removeEventListener('storage', onStorage);
+    subscribers.delete(callback);
+    if (subscribers.size === 0) {
+      windowCleanup?.();
+      boundWindowListeners = false;
+      windowCleanup = null;
+    }
   };
 };
 

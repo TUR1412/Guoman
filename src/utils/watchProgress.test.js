@@ -88,6 +88,12 @@ describe('watchProgress utils', () => {
     window.dispatchEvent(storageEvent);
     expect(callback).toHaveBeenCalledWith({ source: 'storage' });
 
+    const sameTabStorage = new CustomEvent('guoman:storage', {
+      detail: { key: 'guoman.watchProgress.v1', value: '{}' },
+    });
+    window.dispatchEvent(sameTabStorage);
+    expect(callback).toHaveBeenCalledWith({ source: 'storage' });
+
     unsubscribe();
     callback.mockClear();
     updateWatchProgress({ animeId: 4, episode: 2, progress: 60 });
