@@ -113,6 +113,19 @@
   --stagger-step: 70ms;
 }
 
+/* 省流/弱网：降低 GPU 压力与视觉噪声（仍保持层级与可读性） */
+:root[data-low-data='true'] body::before {
+  opacity: 0.04;
+}
+
+:root[data-low-data='true'] body::after {
+  opacity: 0.65;
+}
+
+:root[data-low-data='true'] :where([data-card]) {
+  backdrop-filter: none;
+}
+
 /* 主题色板（避免“只换背景不换文字”的灾难） */
 :root[data-theme='dark'] {
   --primary-color: #e85445;
@@ -840,6 +853,11 @@ ol {
   transform: translateX(-120%);
   animation: shimmer 2.8s var(--ease-soft) infinite;
   pointer-events: none;
+}
+
+:root[data-low-data='true'] [data-shimmer]::after {
+  opacity: 0.12;
+  animation-duration: 4.2s;
 }
 
 [data-pointer-glow] {

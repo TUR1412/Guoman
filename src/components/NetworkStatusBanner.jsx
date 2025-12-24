@@ -114,6 +114,20 @@ export default function NetworkStatusBanner() {
   const [swRegistration, setSwRegistration] = useState(null);
 
   useEffect(() => {
+    if (typeof document === 'undefined') return;
+
+    const lowData =
+      connection.saveData ||
+      (connection.effectiveType && ['slow-2g', '2g'].includes(connection.effectiveType));
+
+    if (lowData) {
+      document.documentElement.dataset.lowData = 'true';
+    } else {
+      delete document.documentElement.dataset.lowData;
+    }
+  }, [connection.effectiveType, connection.saveData]);
+
+  useEffect(() => {
     if (typeof window === 'undefined') return undefined;
 
     const onOnline = () => setOnline(true);
