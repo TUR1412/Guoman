@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { FiAlertTriangle, FiCheckCircle, FiInfo, FiX } from 'react-icons/fi';
+import { FiAlertTriangle, FiCheckCircle, FiInfo, FiX } from './icons/feather';
 
 import ConfettiBurst from './ConfettiBurst';
 

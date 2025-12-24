@@ -1,6 +1,6 @@
 import React, { useId, useState } from 'react';
 import styled from 'styled-components';
-import { FiMail } from 'react-icons/fi';
+import { FiMail } from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 
 const Grid = styled.div`

@@ -6,11 +6,14 @@
 
 - 墨韵国风 UI 升级：新字体与极光背景
 - 观看进度：集数 + 进度条 + 继续观看入口
+- PWA：Service Worker 离线缓存 + 新版本可用提示
 - Tokens 收口：控制/状态色/Overlay 统一
 - 批次优化：PageShell 徽章/Meta、搜索热门标签、资讯 Bento 首卡
 - 搜索历史：最近搜索记录与一键清空
 - 收藏/分类/标签：新增排序切换
 - 资讯详情：分享入口
+- Icons 熵减：移除 react-icons，内置 Feather Icons（减少依赖面）
+- 时间格式化：缓存 Intl.DateTimeFormat，收敛重复实现
 
 ## [1.1.0] - 2025-12-19
 

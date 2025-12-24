@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { FiGithub, FiTwitter, FiInstagram, FiYoutube, FiMail } from 'react-icons/fi';
+import { FiGithub, FiTwitter, FiInstagram, FiYoutube, FiMail } from './icons/feather';
 
 const FooterContainer = styled.footer`
   background-color: var(--darker-color);

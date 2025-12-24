@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
-import { FiStar, FiTrendingUp } from 'react-icons/fi';
+import { FiStar, FiTrendingUp } from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import AnimeCard from '../components/anime/AnimeCard';
 import { AnimeGrid } from '../components/anime/AnimeGrid';

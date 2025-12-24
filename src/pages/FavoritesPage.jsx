@@ -1,7 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Reorder, useDragControls, useReducedMotion } from 'framer-motion';
-import { FiDownload, FiFolder, FiHeart, FiMove, FiTrash2, FiUpload } from 'react-icons/fi';
+import {
+  FiDownload,
+  FiFolder,
+  FiHeart,
+  FiMove,
+  FiTrash2,
+  FiUpload,
+} from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import AnimeCard from '../components/anime/AnimeCard';
@@ -21,6 +28,7 @@ import { trackEvent } from '../utils/analytics';
 import { scheduleStorageWrite } from '../utils/storageQueue';
 import { STORAGE_KEYS } from '../utils/dataKeys';
 import { safeJsonParse } from '../utils/json';
+import { formatZhDateTime } from '../utils/datetime';
 import { usePersistedState } from '../utils/usePersistedState';
 
 const ToggleGroup = styled.div.attrs({ 'data-divider': 'inline' })`
@@ -228,17 +236,6 @@ const DragGroupHandle = styled(Handle).attrs({ draggable: true })`
     cursor: grabbing;
   }
 `;
-
-const formatDateTime = (value) => {
-  if (!value) return '暂无记录';
-  return new Intl.DateTimeFormat('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(value));
-};
 
 const normalizeIdList = (value) => {
   if (!Array.isArray(value)) return [];
@@ -688,7 +685,7 @@ function FavoritesPage() {
       title="我的收藏"
       subtitle="你点过心动的作品都会留在这里（本地保存，刷新不丢）。"
       badge="收藏"
-      meta={<span>最近更新：{formatDateTime(updatedAt)} · 支持导入/导出</span>}
+      meta={<span>最近更新：{formatZhDateTime(updatedAt, '暂无记录')} · 支持导入/导出</span>}
       actions={
         <ActionRow>
           <ToggleGroup aria-label="收藏排序">

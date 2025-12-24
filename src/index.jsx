@@ -10,6 +10,7 @@ import { initPerformanceMonitor } from './utils/performance';
 import { initErrorMonitor } from './utils/errorReporter';
 import { fireDueFollowingReminders } from './utils/followingStore';
 import { isProEnabled } from './utils/proMembership';
+import { registerServiceWorker } from './utils/serviceWorker';
 
 // 尽量在首帧渲染前初始化主题，避免闪烁
 initTheme();
@@ -44,3 +45,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </AppErrorBoundary>
   </React.StrictMode>,
 );
+
+void registerServiceWorker();

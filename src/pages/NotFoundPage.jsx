@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiCompass } from 'react-icons/fi';
+import { FiCompass } from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 

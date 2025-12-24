@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { FiArrowLeft, FiShare2 } from 'react-icons/fi';
+import { FiArrowLeft, FiShare2 } from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import newsData from '../data/newsData';
@@ -9,6 +9,7 @@ import { useToast } from '../components/ToastProvider';
 import { shareOrCopyLink } from '../utils/share';
 import { recordNewsRead } from '../utils/newsHistory';
 import { trackEvent } from '../utils/analytics';
+import { formatZhDate } from '../utils/datetime';
 
 const DetailGrid = styled.div.attrs({ 'data-stagger': true, 'data-divider': 'grid' })`
   display: grid;
@@ -146,11 +147,6 @@ const SideActions = styled.div`
   z-index: 1;
 `;
 
-const formatDate = (value) =>
-  new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(
-    new Date(value),
-  );
-
 const estimateReadTime = (paragraphs = []) => {
   const text = paragraphs.join('');
   const minutes = Math.max(1, Math.ceil(text.length / 300));
@@ -226,7 +222,7 @@ function NewsDetailPage() {
       <DetailGrid>
         <Article>
           <Meta>
-            <span role="listitem">{formatDate(item.date)}</span>
+            <span role="listitem">{formatZhDate(item.date, '')}</span>
             {item.tags.map((t) => (
               <Tag key={t}>{t}</Tag>
             ))}
@@ -239,7 +235,7 @@ function NewsDetailPage() {
         <SideCard aria-label="资讯详情侧栏">
           <SideTitle>文章信息</SideTitle>
           <SideMeta>
-            <span>发布时间：{formatDate(item.date)}</span>
+            <span>发布时间：{formatZhDate(item.date, '')}</span>
             <span>阅读时长：{estimateReadTime(item.content)}</span>
           </SideMeta>
           <SideTags>

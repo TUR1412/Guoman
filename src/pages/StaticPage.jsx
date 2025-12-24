@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { FiMail, FiShield, FiHelpCircle, FiMessageSquare, FiDownload } from 'react-icons/fi';
+import {
+  FiMail,
+  FiShield,
+  FiHelpCircle,
+  FiMessageSquare,
+  FiDownload,
+} from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import { useToast } from '../components/ToastProvider';
 import { clearFeedback, getFeedbackList, submitFeedback } from '../utils/feedbackStore';

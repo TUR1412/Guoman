@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
-import { FiAward, FiCheck, FiGift, FiShield, FiStar, FiZap } from 'react-icons/fi';
+import { FiAward, FiCheck, FiGift, FiShield, FiStar, FiZap } from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import { useToast } from '../components/ToastProvider';
 import { setProMembership } from '../utils/proMembership';

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FiAlertTriangle, FiRefreshCcw } from 'react-icons/fi';
+import { FiAlertTriangle, FiRefreshCcw } from './icons/feather';
 import { reportError } from '../utils/errorReporter';
 
 const Fullscreen = styled.div`

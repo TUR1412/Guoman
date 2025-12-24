@@ -2,7 +2,7 @@ import React, { memo, useCallback, useEffect, useId, useMemo, useState } from 'r
 import styled from 'styled-components';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FiBell, FiHeart } from 'react-icons/fi';
+import { FiBell, FiHeart } from '../icons/feather';
 import { useToast } from '../ToastProvider';
 import { toggleFavorite as toggleFavoriteInStore } from '../../utils/favoritesStore';
 import { toggleFollowing } from '../../utils/followingStore';

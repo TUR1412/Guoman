@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { FiClock, FiTrash2 } from 'react-icons/fi';
+import { FiClock, FiTrash2 } from './icons/feather';
 import { animeIndex } from '../data/animeData';
 import { AnimeGrid } from './anime/AnimeGrid';
 import AnimeCard from './anime/AnimeCard';

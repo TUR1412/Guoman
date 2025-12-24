@@ -1,7 +1,7 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useSearchParams } from 'react-router-dom';
-import { FiSearch } from 'react-icons/fi';
+import { FiSearch } from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import AnimeCard from '../components/anime/AnimeCard';

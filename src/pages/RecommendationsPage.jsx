@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { motion, useReducedMotion } from 'framer-motion';
-import { FiStar } from 'react-icons/fi';
+import { FiStar } from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import AnimeList from '../components/AnimeList';
 import AnimeCard from '../components/anime/AnimeCard';
@@ -11,6 +11,7 @@ import { STORAGE_KEYS } from '../utils/dataKeys';
 import { getPersonalizedRecommendations } from '../utils/personalization';
 import { subscribeWatchProgress } from '../utils/watchProgress';
 import { useFavoritesUpdatedAt } from '../utils/useIsFavorite';
+import { useStorageSignal } from '../utils/useStorageSignal';
 
 const PersonalizeCard = styled(motion.section).attrs({ 'data-card': true, 'data-divider': 'card' })`
   padding: var(--spacing-xl);
@@ -110,31 +111,14 @@ const Grid = styled(AnimeGrid)`
 function RecommendationsPage() {
   const reducedMotion = useReducedMotion();
   const favoritesUpdatedAt = useFavoritesUpdatedAt();
-  const [signal, setSignal] = useState(0);
+  const { signal, bump } = useStorageSignal([
+    STORAGE_KEYS.recentlyViewed,
+    STORAGE_KEYS.searchHistory,
+  ]);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-
-    const unsubscribeWatch = subscribeWatchProgress(() => {
-      setSignal((prev) => prev + 1);
-    });
-
-    const onStorage = (event) => {
-      const key = event?.detail?.key || event?.key;
-      if (key === STORAGE_KEYS.recentlyViewed || key === STORAGE_KEYS.searchHistory) {
-        setSignal((prev) => prev + 1);
-      }
-    };
-
-    window.addEventListener('guoman:storage', onStorage);
-    window.addEventListener('storage', onStorage);
-
-    return () => {
-      unsubscribeWatch?.();
-      window.removeEventListener('guoman:storage', onStorage);
-      window.removeEventListener('storage', onStorage);
-    };
-  }, []);
+    return subscribeWatchProgress(bump);
+  }, [bump]);
 
   const personalized = useMemo(() => {
     void favoritesUpdatedAt;

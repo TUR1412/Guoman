@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { FiCornerDownLeft, FiSearch } from 'react-icons/fi';
+import { FiCornerDownLeft, FiSearch } from './icons/feather';
 
 import { usePointerGlow } from './usePointerGlow';
 

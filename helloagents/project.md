@@ -1,0 +1,38 @@
+# 项目技术约定
+
+## 技术栈
+
+- **运行环境:** Node.js >= 18
+- **前端框架:** React 18
+- **构建工具:** Vite 6
+- **路由:** React Router（Hash Router / `createHashRouter`，GitHub Pages 友好）
+- **样式:** styled-components + CSS Variables Design Tokens
+- **动效:** Framer Motion（尊重 `prefers-reduced-motion`）
+- **PWA:** Web App Manifest + Service Worker（离线缓存/更新提示）
+
+---
+
+## 开发约定
+
+- **代码规范:** ESLint + Prettier（以 `npm run check` 为质量闸门）
+- **命名约定:**
+  - React 组件：`PascalCase`（如 `NetworkStatusBanner.jsx`）
+  - 工具函数：`camelCase`（如 `formatZhDateTime`）
+  - 文件夹：`kebab-case` 或语义化分组（如 `src/components/icons/`）
+- **依赖策略:** 优先剔除“仅提供展示层能力但可内置实现”的依赖；核心框架依赖保持稳定。
+
+---
+
+## 错误与日志
+
+- **全局兜底:** `src/components/AppErrorBoundary.jsx`
+- **错误采集:** `src/utils/errorReporter.js`（本地安全容错，避免阻塞）
+- **行为埋点:** `src/utils/analytics.js`（本地记录为主，便于后续接入真实分析）
+
+---
+
+## 测试与流程
+
+- **单测:** Vitest（`npm run test`）
+- **质量闸门:** `npm run check`（Prettier → ESLint → Vitest → Build）
+- **部署:** GitHub Actions → GitHub Pages（见 `.github/workflows/static.yml`）

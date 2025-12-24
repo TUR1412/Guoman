@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "prebuild": "node ./scripts/generate-seo.js && echo \"Creating .nojekyll file...\" && echo \"\" > .nojekyll",
+    "prebuild": "node ./scripts/generate-seo.js && node -e \"require('fs').writeFileSync('.nojekyll',''); console.log('Ensured .nojekyll');\"",
     "build": "vite build && node -e \"require('fs').copyFileSync('.nojekyll', 'dist/.nojekyll'); require('fs').copyFileSync('404.html', 'dist/404.html');\"",
     "build:report": "npm run build && node ./scripts/bundle-report.js",
     "preview": "vite preview",
@@ -29,7 +29,6 @@
     "framer-motion": "^10.18.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-icons": "^4.12.0",
     "react-router-dom": "^6.30.2",
     "styled-components": "^6.1.19"
   },

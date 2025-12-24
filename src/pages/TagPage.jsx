@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { FiTag } from 'react-icons/fi';
+import { FiTag } from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import AnimeCard from '../components/anime/AnimeCard';

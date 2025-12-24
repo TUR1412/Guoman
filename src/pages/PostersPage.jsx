@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { FiDownload, FiImage, FiShare2, FiTrash2 } from 'react-icons/fi';
+import { FiDownload, FiImage, FiShare2, FiTrash2 } from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import { useToast } from '../components/ToastProvider';
@@ -13,6 +13,8 @@ import {
 } from '../utils/sharePoster';
 import { STORAGE_KEYS } from '../utils/dataKeys';
 import { trackEvent } from '../utils/analytics';
+import { formatZhDateTime } from '../utils/datetime';
+import { useStorageSignal } from '../utils/useStorageSignal';
 
 const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
   display: grid;
@@ -212,21 +214,6 @@ const HistoryMeta = styled.div`
   font-size: var(--text-sm);
 `;
 
-const formatTime = (timestamp) => {
-  if (!timestamp) return '未知时间';
-  try {
-    return new Intl.DateTimeFormat('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(new Date(timestamp));
-  } catch {
-    return new Date(timestamp).toLocaleString('zh-CN');
-  }
-};
-
 const svgToDataUri = (svg) => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 
 const safeFilename = (value) =>
@@ -237,28 +224,10 @@ const safeFilename = (value) =>
 
 function PostersPage() {
   const toast = useToast();
-  const [signal, setSignal] = useState(0);
+  const { signal, bump } = useStorageSignal([STORAGE_KEYS.sharePoster]);
   const [title, setTitle] = useState('凡人修仙传');
   const [subtitle, setSubtitle] = useState('一口气追到上头的国漫推荐');
   const [rating, setRating] = useState('4.8');
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-
-    const onStorage = (event) => {
-      const key = event?.detail?.key || event?.key;
-      if (key === STORAGE_KEYS.sharePoster) {
-        setSignal((prev) => prev + 1);
-      }
-    };
-
-    window.addEventListener('guoman:storage', onStorage);
-    window.addEventListener('storage', onStorage);
-    return () => {
-      window.removeEventListener('guoman:storage', onStorage);
-      window.removeEventListener('storage', onStorage);
-    };
-  }, []);
 
   const svg = useMemo(() => buildPosterSvg({ title, subtitle, rating }), [rating, subtitle, title]);
   const previewSrc = useMemo(() => svgToDataUri(svg), [svg]);
@@ -271,7 +240,7 @@ function PostersPage() {
     const file = `guoman-poster-${safeFilename(title)}.svg`;
     downloadTextFile(svg, file, 'image/svg+xml;charset=utf-8');
     recordSharePoster({ title, subtitle });
-    setSignal((prev) => prev + 1);
+    bump();
     toast.success('海报已下载', '已为你生成 SVG 海报，可直接用于社交分享。', {
       celebrate: true,
     });
@@ -282,7 +251,7 @@ function PostersPage() {
     const ok = window.confirm('确定要清空海报历史吗？此操作不可撤销。');
     if (!ok) return;
     clearSharePosters();
-    setSignal((prev) => prev + 1);
+    bump();
     toast.info('已清空海报历史', '你可以随时重新生成。');
     trackEvent('poster.history.clear');
   };
@@ -397,7 +366,8 @@ function PostersPage() {
                     <HistoryMain>
                       <HistoryTitle>{item.title || '分享海报'}</HistoryTitle>
                       <HistoryMeta>
-                        {item.subtitle || '无副标题'} · {formatTime(item.createdAt)}
+                        {item.subtitle || '无副标题'} ·{' '}
+                        {formatZhDateTime(item.createdAt, '未知时间')}
                       </HistoryMeta>
                     </HistoryMain>
                     <Actions>

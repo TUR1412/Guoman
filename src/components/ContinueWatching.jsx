@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { FiPlay, FiTrash2 } from 'react-icons/fi';
+import { FiPlay, FiTrash2 } from './icons/feather';
 import { animeIndex } from '../data/animeData';
 import { AnimeGrid } from './anime/AnimeGrid';
 import AnimeCard from './anime/AnimeCard';
@@ -9,6 +9,7 @@ import {
   getContinueWatchingList,
   subscribeWatchProgress,
 } from '../utils/watchProgress';
+import { formatZhMonthDayTime } from '../utils/datetime';
 import { useToast } from './ToastProvider';
 import EmptyState from './EmptyState';
 import { trackEvent } from '../utils/analytics';
@@ -121,16 +122,6 @@ function ContinueWatching() {
     return Math.max(...entries.map((entry) => entry.updatedAt || 0));
   }, [entries]);
 
-  const formatDateTime = (value) => {
-    if (!value) return '暂无记录';
-    return new Intl.DateTimeFormat('zh-CN', {
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(new Date(value));
-  };
-
   const onClear = () => {
     clearWatchProgress();
     setEntries([]);
@@ -156,7 +147,7 @@ function ContinueWatching() {
               <Title>继续观看</Title>
               <Subtitle id="guoman-continue-desc">你的播放进度已保存，可随时续播。</Subtitle>
             </TitleWrap>
-            <MetaLine>最近更新：{formatDateTime(latestUpdatedAt)}</MetaLine>
+            <MetaLine>最近更新：{formatZhMonthDayTime(latestUpdatedAt, '暂无记录')}</MetaLine>
           </TitleGroup>
           <ClearButton type="button" onClick={onClear} aria-label="清空观看进度">
             <FiTrash2 />

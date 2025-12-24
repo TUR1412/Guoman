@@ -9,7 +9,7 @@ import {
   FiToggleRight,
   FiUpload,
   FiUser,
-} from 'react-icons/fi';
+} from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import { useToast } from '../components/ToastProvider';

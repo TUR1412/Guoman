@@ -1,7 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { FiAward, FiBell, FiHeart, FiMessageSquare, FiPlay, FiShare2 } from 'react-icons/fi';
+import {
+  FiAward,
+  FiBell,
+  FiHeart,
+  FiMessageSquare,
+  FiPlay,
+  FiShare2,
+} from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import ConfettiBurst from '../components/ConfettiBurst';
 import { useToast } from '../components/ToastProvider';
@@ -14,6 +21,7 @@ import { useFollowingEntries } from '../utils/useIsFollowing';
 import { useProMembership } from '../utils/useProMembership';
 import { safeJsonParse } from '../utils/json';
 import { usePersistedState } from '../utils/usePersistedState';
+import { useStorageSignal } from '../utils/useStorageSignal';
 import { getContinueWatchingList, subscribeWatchProgress } from '../utils/watchProgress';
 
 const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
@@ -257,7 +265,12 @@ function AchievementsPage() {
   const favoriteIds = useFavoriteIds();
   const followingEntries = useFollowingEntries();
   const pro = useProMembership();
-  const [signal, setSignal] = useState(0);
+  const { signal, bump } = useStorageSignal([
+    STORAGE_KEYS.playHistory,
+    STORAGE_KEYS.downloadHistory,
+    STORAGE_KEYS.sharePoster,
+    STORAGE_KEYS.feedback,
+  ]);
   const [hotUnlockedIds, setHotUnlockedIds] = useState([]);
   const [seenUnlockedIds, setSeenUnlockedIds] = usePersistedState(
     STORAGE_KEYS.achievementsUnlocked,
@@ -281,32 +294,8 @@ function AchievementsPage() {
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-
-    const onStorage = (event) => {
-      const key = event?.detail?.key || event?.key;
-      if (
-        key === STORAGE_KEYS.playHistory ||
-        key === STORAGE_KEYS.downloadHistory ||
-        key === STORAGE_KEYS.sharePoster ||
-        key === STORAGE_KEYS.feedback
-      ) {
-        setSignal((prev) => prev + 1);
-      }
-    };
-
-    const unsubscribeWatch = subscribeWatchProgress(() => {
-      setSignal((prev) => prev + 1);
-    });
-
-    window.addEventListener('guoman:storage', onStorage);
-    window.addEventListener('storage', onStorage);
-    return () => {
-      unsubscribeWatch?.();
-      window.removeEventListener('guoman:storage', onStorage);
-      window.removeEventListener('storage', onStorage);
-    };
-  }, []);
+    return subscribeWatchProgress(bump);
+  }, [bump]);
 
   const counts = useMemo(() => {
     void signal;

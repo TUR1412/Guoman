@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
-import { FiActivity, FiAward, FiBell, FiHeart, FiShare2, FiStar } from 'react-icons/fi';
+import { FiActivity, FiAward, FiBell, FiHeart, FiShare2, FiStar } from './icons/feather';
 import featuresBackground from '../assets/images/features-background.svg';
 
 const FeaturesContainer = styled.section`

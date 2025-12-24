@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { FiAlertTriangle, FiWifiOff, FiX } from 'react-icons/fi';
+import { FiAlertTriangle, FiDownload, FiWifiOff, FiX } from './icons/feather';
+import { activateServiceWorkerUpdate, SERVICE_WORKER_EVENTS } from '../utils/serviceWorker';
 
 const Wrap = styled(motion.div).attrs({ 'data-card': true, 'data-divider': 'card' })`
   position: fixed;
@@ -64,6 +65,35 @@ const Close = styled.button.attrs({ type: 'button', 'data-pressable': true })`
   }
 `;
 
+const Actions = styled.div.attrs({ 'data-divider': 'inline' })`
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+`;
+
+const ActionButton = styled.button.attrs({ type: 'button', 'data-pressable': true })`
+  height: 32px;
+  padding: 0 var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--primary-soft-border);
+  background: rgba(var(--primary-rgb), 0.18);
+  color: var(--text-primary);
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs-plus);
+  transition: var(--transition);
+
+  &:hover {
+    background: rgba(var(--primary-rgb), 0.26);
+    box-shadow: var(--shadow-glow);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+`;
+
 const readConnection = () => {
   const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   return {
@@ -80,7 +110,8 @@ export default function NetworkStatusBanner() {
   const [connection, setConnection] = useState(() =>
     typeof navigator !== 'undefined' ? readConnection() : { effectiveType: null, saveData: false },
   );
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissedKey, setDismissedKey] = useState(null);
+  const [swRegistration, setSwRegistration] = useState(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
@@ -88,7 +119,7 @@ export default function NetworkStatusBanner() {
     const onOnline = () => setOnline(true);
     const onOffline = () => {
       setOnline(false);
-      setDismissed(false);
+      setDismissedKey(null);
     };
 
     window.addEventListener('online', onOnline);
@@ -99,10 +130,20 @@ export default function NetworkStatusBanner() {
     const onConnectionChange = () => setConnection(readConnection());
     connectionObj?.addEventListener?.('change', onConnectionChange);
 
+    const onSwUpdate = (event) => {
+      const registration = event?.detail?.registration;
+      if (!registration) return;
+      setSwRegistration(registration);
+      setDismissedKey(null);
+    };
+
+    window.addEventListener(SERVICE_WORKER_EVENTS.update, onSwUpdate);
+
     return () => {
       window.removeEventListener('online', onOnline);
       window.removeEventListener('offline', onOffline);
       connectionObj?.removeEventListener?.('change', onConnectionChange);
+      window.removeEventListener(SERVICE_WORKER_EVENTS.update, onSwUpdate);
     };
   }, []);
 
@@ -114,6 +155,18 @@ export default function NetworkStatusBanner() {
         title: '离线模式',
         desc: '网络已断开：仍可浏览已缓存页面，但部分资源可能无法加载。',
         canDismiss: false,
+      };
+    }
+
+    const updateAvailable = Boolean(swRegistration?.waiting);
+    if (updateAvailable) {
+      return {
+        key: 'update',
+        icon: <FiDownload />,
+        title: '发现新版本',
+        desc: '已检测到更新：点击更新后将刷新页面并应用最新资源。',
+        canDismiss: true,
+        actionLabel: '更新',
       };
     }
 
@@ -141,9 +194,9 @@ export default function NetworkStatusBanner() {
     }
 
     return null;
-  }, [connection.effectiveType, connection.saveData, online]);
+  }, [connection.effectiveType, connection.saveData, online, swRegistration]);
 
-  const show = Boolean(status) && (!status?.canDismiss || !dismissed);
+  const show = Boolean(status) && (!status?.canDismiss || dismissedKey !== status.key);
 
   const motionProps = reducedMotion
     ? { initial: false, animate: { opacity: 1 }, exit: { opacity: 0 } }
@@ -163,8 +216,35 @@ export default function NetworkStatusBanner() {
             <Title>{status.title}</Title>
             <Desc>{status.desc}</Desc>
           </Text>
-          {status.canDismiss ? (
-            <Close aria-label="关闭提示" title="关闭提示" onClick={() => setDismissed(true)}>
+          {status.key === 'update' ? (
+            <Actions>
+              <ActionButton
+                aria-label="立即更新"
+                title="立即更新"
+                onClick={() => {
+                  const ok = activateServiceWorkerUpdate(swRegistration);
+                  if (!ok) window.location.reload();
+                }}
+              >
+                <span aria-hidden="true">
+                  <FiDownload />
+                </span>
+                {status.actionLabel}
+              </ActionButton>
+              <Close
+                aria-label="关闭提示"
+                title="关闭提示"
+                onClick={() => setDismissedKey(status.key)}
+              >
+                <FiX />
+              </Close>
+            </Actions>
+          ) : status.canDismiss ? (
+            <Close
+              aria-label="关闭提示"
+              title="关闭提示"
+              onClick={() => setDismissedKey(status.key)}
+            >
               <FiX />
             </Close>
           ) : (

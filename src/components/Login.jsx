@@ -2,7 +2,7 @@ import React, { useId, useState } from 'react';
 import styled from 'styled-components';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiUser, FiLock, FiMail, FiEye, FiEyeOff } from 'react-icons/fi';
+import { FiUser, FiLock, FiMail, FiEye, FiEyeOff } from './icons/feather';
 import { useToast } from './ToastProvider';
 import { usePageMeta } from '../utils/pageMeta';
 

@@ -28,11 +28,12 @@ import {
   FiTrendingUp,
   FiUser,
   FiX,
-} from 'react-icons/fi';
+} from './icons/feather';
 import logoSvg from '../assets/images/logo.svg';
 import { getCurrentTheme, toggleTheme } from '../utils/theme';
 import { usePersistedState } from '../utils/usePersistedState';
 import { STORAGE_KEYS } from '../utils/dataKeys';
+import { useStorageSignal } from '../utils/useStorageSignal';
 import { prefetchRoute } from '../utils/routePrefetch';
 import { safeJsonParse } from '../utils/json';
 import { useIsProEnabled } from '../utils/useProMembership';
@@ -412,6 +413,7 @@ function Header() {
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [theme, setTheme] = useState(() => getCurrentTheme());
+  const { signal: themeSignal } = useStorageSignal([STORAGE_KEYS.theme]);
   const proEnabled = useIsProEnabled();
   const reducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
@@ -604,14 +606,9 @@ function Header() {
   }, [isMobileMenuOpen, shortcutSettings?.enabled]);
 
   useEffect(() => {
-    const onStorage = (e) => {
-      if (e.key !== 'guoman.theme') return;
-      setTheme(getCurrentTheme());
-    };
-
-    window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
-  }, []);
+    void themeSignal;
+    setTheme(getCurrentTheme());
+  }, [themeSignal]);
 
   const isRouteActive = (targetPath) => {
     if (targetPath === '/') return location.pathname === '/';

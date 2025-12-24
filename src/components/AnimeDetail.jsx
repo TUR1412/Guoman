@@ -12,7 +12,7 @@ import {
   FiShare2,
   FiBell,
   FiHeart,
-} from 'react-icons/fi';
+} from './icons/feather';
 import { animeIndex } from '../data/animeData';
 import EmptyState from './EmptyState';
 import { useToast } from './ToastProvider';

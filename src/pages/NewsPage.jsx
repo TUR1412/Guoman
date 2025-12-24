@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { FiTag } from 'react-icons/fi';
+import { FiTag } from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import newsData from '../data/newsData';
@@ -9,6 +9,7 @@ import { usePersistedState } from '../utils/usePersistedState';
 import { trackEvent } from '../utils/analytics';
 import { STORAGE_KEYS } from '../utils/dataKeys';
 import { prefetchRoute } from '../utils/routePrefetch';
+import { formatZhDate } from '../utils/datetime';
 
 const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
   display: grid;
@@ -106,11 +107,6 @@ const Tag = styled.button.attrs({ role: 'listitem', 'data-pressable': true })`
   }
 `;
 
-const formatDate = (value) =>
-  new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(
-    new Date(value),
-  );
-
 function NewsPage() {
   const [activeTag, setActiveTag] = usePersistedState(STORAGE_KEYS.newsFilter, 'all');
 
@@ -166,7 +162,7 @@ function NewsPage() {
               >
                 <Title>{item.title}</Title>
                 <Meta>
-                  <span>{formatDate(item.date)}</span>
+                  <span>{formatZhDate(item.date, '')}</span>
                   <span>{item.tags.join(' · ')}</span>
                 </Meta>
                 <Summary>{item.summary}</Summary>

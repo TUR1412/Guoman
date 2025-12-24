@@ -1,7 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { FiActivity, FiArrowRight, FiDownload, FiPlay, FiShare2, FiTrash2 } from 'react-icons/fi';
+import {
+  FiActivity,
+  FiArrowRight,
+  FiDownload,
+  FiPlay,
+  FiShare2,
+  FiTrash2,
+} from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import { useToast } from '../components/ToastProvider';
@@ -17,6 +24,8 @@ import { trackEvent } from '../utils/analytics';
 import { getContinueWatchingList, subscribeWatchProgress } from '../utils/watchProgress';
 import { useFollowingEntries } from '../utils/useIsFollowing';
 import { useFavoriteIds } from '../utils/useIsFavorite';
+import { formatZhMonthDayTime } from '../utils/datetime';
+import { useStorageSignal } from '../utils/useStorageSignal';
 
 const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
   display: grid;
@@ -202,54 +211,21 @@ const ItemTime = styled.div`
   }
 `;
 
-const formatTime = (timestamp) => {
-  if (!timestamp) return '未知时间';
-  try {
-    return new Intl.DateTimeFormat('zh-CN', {
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(new Date(timestamp));
-  } catch {
-    return new Date(timestamp).toLocaleString('zh-CN');
-  }
-};
-
 function InsightsPage() {
   const toast = useToast();
   const favoriteIds = useFavoriteIds();
   const followingEntries = useFollowingEntries();
-  const [signal, setSignal] = useState(0);
+  const { signal, bump } = useStorageSignal([
+    STORAGE_KEYS.playHistory,
+    STORAGE_KEYS.downloadHistory,
+    STORAGE_KEYS.sharePoster,
+    STORAGE_KEYS.feedback,
+    STORAGE_KEYS.notifications,
+  ]);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-
-    const onStorage = (event) => {
-      const key = event?.detail?.key || event?.key;
-      if (
-        key === STORAGE_KEYS.playHistory ||
-        key === STORAGE_KEYS.downloadHistory ||
-        key === STORAGE_KEYS.sharePoster ||
-        key === STORAGE_KEYS.feedback ||
-        key === STORAGE_KEYS.notifications
-      ) {
-        setSignal((prev) => prev + 1);
-      }
-    };
-
-    const unsubscribeWatch = subscribeWatchProgress(() => {
-      setSignal((prev) => prev + 1);
-    });
-
-    window.addEventListener('guoman:storage', onStorage);
-    window.addEventListener('storage', onStorage);
-    return () => {
-      unsubscribeWatch?.();
-      window.removeEventListener('guoman:storage', onStorage);
-      window.removeEventListener('storage', onStorage);
-    };
-  }, []);
+    return subscribeWatchProgress(bump);
+  }, [bump]);
 
   const playHistory = useMemo(() => {
     void signal;
@@ -311,7 +287,7 @@ function InsightsPage() {
     const ok = window.confirm('确定要清空播放/下载足迹吗？此操作不可撤销。');
     if (!ok) return;
     clearEngagementHistory();
-    setSignal((prev) => prev + 1);
+    bump();
     toast.info('已清空足迹', '播放/下载历史已清理。');
     trackEvent('insights.engagement.clear');
   };
@@ -422,7 +398,7 @@ function InsightsPage() {
                       )}
                       <ItemMeta>{item.meta}</ItemMeta>
                     </ItemMain>
-                    <ItemTime>{formatTime(item.createdAt)}</ItemTime>
+                    <ItemTime>{formatZhMonthDayTime(item.createdAt, '未知时间')}</ItemTime>
                   </TimelineItem>
                 );
               })}

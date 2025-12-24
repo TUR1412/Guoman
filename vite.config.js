@@ -10,6 +10,10 @@ export default defineConfig(({ command }) => ({
   // GitHub Pages 部署时使用 /Guoman/，本地开发保持 / 更顺手
   base: command === 'build' ? '/Guoman/' : '/',
   plugins: [react()],
+  esbuild: {
+    legalComments: 'none',
+    drop: command === 'build' ? ['debugger'] : [],
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -30,6 +34,12 @@ export default defineConfig(({ command }) => ({
     manifest: true,
     reportCompressedSize: true,
     rollupOptions: {
+      treeshake: {
+        // 更激进的 tree-shaking：仅对 external 采取“无副作用”假设，避免误删本地副作用导入（如 global.css）。
+        moduleSideEffects: 'no-external',
+        propertyReadSideEffects: false,
+        tryCatchDeoptimization: false,
+      },
       output: {
         manualChunks: (id) => {
           if (!id.includes('node_modules')) return undefined;
@@ -44,7 +54,6 @@ export default defineConfig(({ command }) => ({
 
           if (id.includes('node_modules/framer-motion')) return 'vendor-motion';
           if (id.includes('node_modules/styled-components')) return 'vendor-styled';
-          if (id.includes('node_modules/react-icons')) return 'vendor-icons';
 
           return 'vendor';
         },

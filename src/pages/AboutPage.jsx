@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FiHeart, FiFilm, FiUsers, FiGithub, FiMail } from 'react-icons/fi';
+import { FiHeart, FiFilm, FiUsers, FiGithub, FiMail } from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 
 const Bento = styled.div.attrs({ 'data-divider': 'grid' })`
