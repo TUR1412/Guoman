@@ -7,13 +7,13 @@ flowchart TD
   User[用户] --> Browser[浏览器]
   Browser --> App[React SPA]
 
-  App --> Router[React Router (Hash)]
-  App --> UI[UI Components (styled-components)]
-  App --> Motion[Motion (Framer Motion)]
+  App --> Router["React Router (Hash)"]
+  App --> UI["UI Components (styled-components)"]
+  App --> Motion["Motion (Framer Motion)"]
 
-  App --> Data[Local-first Data Layer]
+  App --> Data["Local-first Data Layer"]
   Data --> LS[(localStorage)]
-  Data --> Queue[storageQueue: 合并写入/空闲刷新]
+  Data --> Queue["storageQueue: 合并写入/空闲刷新"]
 
   App --> PWA[Service Worker]
   PWA --> Cache[(Cache Storage)]
