@@ -205,8 +205,14 @@ const HistoryTitle = styled.div`
   font-weight: 900;
   color: var(--text-primary);
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   white-space: nowrap;
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0%, #000 82%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 `;
 
 const HistoryMeta = styled.div`
@@ -238,7 +244,11 @@ function PostersPage() {
 
   const onDownload = () => {
     const file = `guoman-poster-${safeFilename(title)}.svg`;
-    downloadTextFile(svg, file, 'image/svg+xml;charset=utf-8');
+    downloadTextFile({
+      text: svg,
+      filename: file,
+      mimeType: 'image/svg+xml;charset=utf-8',
+    });
     recordSharePoster({ title, subtitle });
     bump();
     toast.success('海报已下载', '已为你生成 SVG 海报，可直接用于社交分享。', {
@@ -364,7 +374,9 @@ function PostersPage() {
                       <img src={thumb} alt="" loading="lazy" decoding="async" />
                     </Thumb>
                     <HistoryMain>
-                      <HistoryTitle>{item.title || '分享海报'}</HistoryTitle>
+                      <HistoryTitle title={item.title || '分享海报'}>
+                        {item.title || '分享海报'}
+                      </HistoryTitle>
                       <HistoryMeta>
                         {item.subtitle || '无副标题'} ·{' '}
                         {formatZhDateTime(item.createdAt, '未知时间')}
@@ -373,7 +385,11 @@ function PostersPage() {
                     <Actions>
                       <Button
                         onClick={() => {
-                          downloadTextFile(itemSvg, filename, 'image/svg+xml;charset=utf-8');
+                          downloadTextFile({
+                            text: itemSvg,
+                            filename,
+                            mimeType: 'image/svg+xml;charset=utf-8',
+                          });
                           toast.success('已下载历史海报', '已为你重新导出 SVG。', {
                             celebrate: true,
                           });

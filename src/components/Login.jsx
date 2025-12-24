@@ -422,7 +422,7 @@ function Login() {
         aria-describedby={descId}
         initial={reducedMotion ? false : { opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={reducedMotion ? { duration: 0 } : { duration: 0.5 }}
+        transition={reducedMotion ? { duration: 0 } : { duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       >
         <FormPane>
           <FormTitle id={titleId}>{activeTab === 'login' ? '欢迎回来' : '创建账号'}</FormTitle>

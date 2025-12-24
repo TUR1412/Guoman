@@ -12,7 +12,7 @@ const loadTheme = async () => {
 describe('theme utils', () => {
   beforeEach(() => {
     document.documentElement.dataset.theme = '';
-    document.head.innerHTML = '<meta name="theme-color" content="#0D1117" />';
+    document.head.innerHTML = '<meta name="theme-color" content="#0B0F14" />';
     window.localStorage.clear();
   });
 
@@ -22,7 +22,7 @@ describe('theme utils', () => {
     applyTheme(THEMES.light);
     expect(document.documentElement.dataset.theme).toBe('light');
     expect(document.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe(
-      '#F7F8FA',
+      '#F7F4EF',
     );
   });
 

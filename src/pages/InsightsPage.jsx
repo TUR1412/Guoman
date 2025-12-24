@@ -190,16 +190,28 @@ const ItemTitle = styled.div`
   font-weight: 800;
   color: var(--text-primary);
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   white-space: nowrap;
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0%, #000 82%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 `;
 
 const ItemMeta = styled.div`
   color: var(--text-tertiary);
   font-size: var(--text-xs);
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   white-space: nowrap;
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 80%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0%, #000 80%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 `;
 
 const ItemTime = styled.div`
@@ -391,12 +403,14 @@ function InsightsPage() {
                           style={{ color: 'inherit', minWidth: 0 }}
                           onClick={() => trackEvent('insights.timeline.open', { id: anime.id })}
                         >
-                          <ItemTitle>{item.title || anime.title}</ItemTitle>
+                          <ItemTitle title={item.title || anime.title}>
+                            {item.title || anime.title}
+                          </ItemTitle>
                         </Link>
                       ) : (
-                        <ItemTitle>{item.title}</ItemTitle>
+                        <ItemTitle title={item.title}>{item.title}</ItemTitle>
                       )}
-                      <ItemMeta>{item.meta}</ItemMeta>
+                      <ItemMeta title={item.meta}>{item.meta}</ItemMeta>
                     </ItemMain>
                     <ItemTime>{formatZhMonthDayTime(item.createdAt, '未知时间')}</ItemTime>
                   </TimelineItem>

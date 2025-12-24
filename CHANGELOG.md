@@ -17,6 +17,10 @@
 - 长列表引擎：Search 页面改为“真实虚拟滚动”渲染（窗口化 DOM，滚动更稳）
 - 数据传输压缩：用户中心支持导入/导出 gzip 压缩包（.json.gz）
 - 工程自诊断：控制台健康全景图 `__GUOMAN_HEALTH__.print()`（LongTask/事件环路/内存/本地占用）
+- UI 交互：统一过渡曲线与 press feedback（避免 transition: all 的抖动），弹窗/Toast/提示条使用一致的 easing
+- 细节修复：长文本改为渐隐遮罩截断（hover 可看 title），图标基线对齐更稳定
+- 主题细化：theme-color 与首帧脚本统一，并在“未手动选择主题”时跟随系统主题变化
+- 修复：海报工坊导出 SVG 使用 `downloadTextFile` 的参数不一致问题
 
 ## [1.1.0] - 2025-12-19
 

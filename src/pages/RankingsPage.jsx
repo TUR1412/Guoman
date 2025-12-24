@@ -230,7 +230,9 @@ function RankingsPage() {
       </HighlightGrid>
 
       <div>
-        <h2 className="section-title">Top 12</h2>
+        <h2 className="section-title" style={{ marginBottom: 'var(--spacing-xl)' }}>
+          Top 12
+        </h2>
         <AnimeGrid $bento>
           {rest.map((anime) => (
             <AnimeCard key={anime.id} anime={anime} />

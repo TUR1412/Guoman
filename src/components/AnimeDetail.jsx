@@ -555,7 +555,13 @@ const RelatedTitle = styled.div`
   backdrop-filter: blur(12px);
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0%, #000 82%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 `;
 
 const ReviewsContainer = styled.div`
@@ -1195,7 +1201,7 @@ function AnimeDetail() {
                           height="280"
                         />
                       </RelatedImage>
-                      <RelatedTitle>{relatedAnime.title}</RelatedTitle>
+                      <RelatedTitle title={relatedAnime.title}>{relatedAnime.title}</RelatedTitle>
                     </RelatedCard>
                   ))}
                 </RelatedGrid>

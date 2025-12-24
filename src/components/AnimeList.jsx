@@ -29,7 +29,7 @@ const SectionInner = styled.div.attrs({ 'data-divider': 'list' })`
 const SectionHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   margin-bottom: var(--spacing-xl);
 
   @media (max-width: 576px) {

@@ -28,7 +28,16 @@ export function FeatherIcon({
       strokeLinecap="round"
       strokeLinejoin="round"
       focusable="false"
-      style={mergeStyle({ color }, style)}
+      shapeRendering="geometricPrecision"
+      style={mergeStyle(
+        {
+          color,
+          display: 'inline-block',
+          verticalAlign: '-0.125em',
+          flexShrink: 0,
+        },
+        style,
+      )}
       {...ariaProps}
       {...rest}
     >

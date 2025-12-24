@@ -11,6 +11,8 @@ export const THEMES = Object.freeze({
   light: 'light',
 });
 
+let didBindSystemThemeListener = false;
+
 const normalizeTheme = (value) => {
   if (value === THEMES.dark || value === THEMES.light) return value;
   return null;
@@ -38,7 +40,8 @@ export const applyTheme = (theme) => {
   // 同步浏览器 UI 颜色（移动端地址栏等）
   const metaThemeColor = document.querySelector('meta[name="theme-color"]');
   if (metaThemeColor) {
-    metaThemeColor.setAttribute('content', normalized === THEMES.dark ? '#0D1117' : '#F7F8FA');
+    // 与 index.html 的首帧主题色保持一致（避免切换时闪烁/色差）
+    metaThemeColor.setAttribute('content', normalized === THEMES.dark ? '#0B0F14' : '#F7F4EF');
   }
 };
 
@@ -69,4 +72,30 @@ export const initTheme = () => {
 
   const already = normalizeTheme(document.documentElement.dataset.theme);
   applyTheme(already ?? getResolvedTheme());
+
+  // 环境自适应：当用户未显式选择主题时，跟随系统主题变化
+  if (didBindSystemThemeListener) return;
+  const media = window.matchMedia?.('(prefers-color-scheme: dark)');
+  if (!media) return;
+
+  const onChange = () => {
+    if (getStoredTheme() != null) return;
+    applyTheme(getSystemTheme());
+  };
+
+  try {
+    if (typeof media.addEventListener === 'function') {
+      media.addEventListener('change', onChange);
+      didBindSystemThemeListener = true;
+      return;
+    }
+  } catch {}
+
+  // Safari 旧实现
+  try {
+    if (typeof media.addListener === 'function') {
+      media.addListener(onChange);
+      didBindSystemThemeListener = true;
+    }
+  } catch {}
 };

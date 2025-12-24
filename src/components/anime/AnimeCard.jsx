@@ -182,8 +182,14 @@ const Title = styled.h3`
   font-weight: 700;
   margin-bottom: var(--spacing-sm);
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   white-space: nowrap;
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0%, #000 82%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 
   @media (max-width: 576px) {
     font-size: var(--text-base);
@@ -201,9 +207,15 @@ const Meta = styled.div`
 
 const Type = styled.span`
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   white-space: nowrap;
   max-width: 70%;
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 80%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0%, #000 80%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 `;
 
 const Rating = styled.span`
@@ -410,9 +422,9 @@ function AnimeCard({ anime, virtualized = false }) {
           {typeShort ? `类型：${typeShort}。` : ''}
           评分：{anime.rating}。
         </span>
-        <Title>{anime.title}</Title>
+        <Title title={anime.title}>{anime.title}</Title>
         <Meta>
-          <Type>{typeShort}</Type>
+          <Type title={anime.type}>{typeShort}</Type>
           <Rating>{anime.rating}</Rating>
         </Meta>
       </CardLink>
