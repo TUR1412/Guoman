@@ -17,6 +17,9 @@
 - 去重复：新增 `useStorageSignal` Hook，收敛页面/组件的 storage 监听逻辑并统一 key 过滤策略。
 - 构建：Vite/Rollup 调整 tree-shaking 策略（`moduleSideEffects: 'no-external'`）并移除 build 产物中的 legal comments。
 - 文档：README 增加「未来进化蓝图」板块，给出 3 个版本的可落地迭代方向。
+- 长列表：替换 `VirtualizedGrid` 为真实虚拟滚动窗口化渲染（面向超大数据量更稳）。
+- 压缩：用户中心支持导入/导出 `.json.gz`（gzip 压缩）以降低文件体积。
+- 诊断：新增控制台健康全景图（`__GUOMAN_HEALTH__.print()` / `__GUOMAN_HEALTH__.start()`），实时观察 LongTask/事件环路/内存趋势等。
 
 ### 修复
 

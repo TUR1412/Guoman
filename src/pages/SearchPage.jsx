@@ -351,10 +351,8 @@ function SearchPage() {
       {q && results.length > 0 ? (
         results.length > 24 ? (
           <VirtualizedGrid
-            $bento
             items={results}
-            pageSize={24}
-            renderItem={(anime) => <AnimeCard key={anime.id} anime={anime} />}
+            renderItem={(anime) => <AnimeCard anime={anime} virtualized />}
           />
         ) : (
           <AnimeGrid $bento>

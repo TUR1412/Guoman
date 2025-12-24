@@ -21,3 +21,27 @@ export const downloadTextFile = ({ text, filename, mimeType = 'text/plain;charse
     return { ok: false, reason: 'exception' };
   }
 };
+
+export const downloadBinaryFile = ({ bytes, filename, mimeType = 'application/octet-stream' }) => {
+  if (typeof document === 'undefined') return { ok: false, reason: 'no-document' };
+
+  try {
+    const blob = new Blob([bytes], { type: mimeType });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+
+    a.href = url;
+    a.download = filename;
+    a.rel = 'noopener';
+    a.style.display = 'none';
+
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    window.URL.revokeObjectURL(url);
+    return { ok: true };
+  } catch {
+    return { ok: false, reason: 'exception' };
+  }
+};

@@ -13,7 +13,8 @@ import {
 import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import { useToast } from '../components/ToastProvider';
-import { downloadTextFile } from '../utils/download';
+import { downloadBinaryFile, downloadTextFile } from '../utils/download';
+import { canGzip, gzipCompressString, gzipDecompressToString } from '../utils/compression';
 import {
   clearAllData,
   clearFeatureData,
@@ -153,7 +154,7 @@ const ToggleButton = styled.button.attrs({ 'data-pressable': true })`
   color: var(--text-primary);
 `;
 
-const buildExportFilename = (prefix) => `${prefix}-${Date.now()}.json`;
+const buildExportFilename = (prefix, extension = 'json') => `${prefix}-${Date.now()}.${extension}`;
 
 const formatBytes = (bytes) => {
   const value = Number(bytes);
@@ -226,11 +227,32 @@ function UserCenterPage() {
     event.target.value = '';
     if (!file) return;
 
+    // 防御性限制：避免异常/恶意大文件导致页面卡死（本项目为纯前端，本地导入应保持可控）
+    const MAX_IMPORT_BYTES = 5 * 1024 * 1024; // 5MB（压缩包另行解压后再校验）
+    const MAX_DECOMPRESSED_CHARS = 10 * 1024 * 1024; // 10M chars 作为上限
+
+    const isGzipFile =
+      file.name?.toLowerCase?.().endsWith?.('.gz') || file.type === 'application/gzip';
+    if (!isGzipFile && file.size > MAX_IMPORT_BYTES) {
+      toast.warning('文件过大', '导入文件超过 5MB，可能导致页面卡顿。请拆分或使用压缩包导入。');
+      return;
+    }
+
     let text = '';
     try {
-      text = await file.text();
+      if (isGzipFile) {
+        const buffer = await file.arrayBuffer();
+        text = await gzipDecompressToString(new Uint8Array(buffer));
+      } else {
+        text = await file.text();
+      }
     } catch {
       toast.warning('读取失败', '无法读取导入文件内容。');
+      return;
+    }
+
+    if (text.length > MAX_DECOMPRESSED_CHARS) {
+      toast.warning('解压后内容过大', '导入内容超过限制（10M 字符），已拒绝导入以保护性能。');
       return;
     }
 
@@ -267,6 +289,31 @@ function UserCenterPage() {
     trackEvent('data.export', { scope: 'all' });
   };
 
+  const exportAllCompressed = async () => {
+    if (!canGzip()) {
+      exportAll();
+      toast.info('压缩不可用', '当前浏览器不支持 gzip 压缩，已导出未压缩 JSON。');
+      return;
+    }
+
+    const json = exportAllData();
+    const filename = buildExportFilename('guoman-data', 'json.gz');
+    const bytes = await gzipCompressString(json);
+    const result = downloadBinaryFile({
+      bytes,
+      filename,
+      mimeType: 'application/gzip',
+    });
+
+    if (!result.ok) {
+      toast.warning('导出失败', '请检查浏览器下载权限。');
+      return;
+    }
+
+    toast.success('已导出所有数据（压缩）', `文件已保存：${filename}`);
+    trackEvent('data.export', { scope: 'all', compressed: true });
+  };
+
   const exportFeature = (featureKey) => {
     const json = exportFeatureData(featureKey);
     const filename = buildExportFilename(`guoman-${featureKey}`);
@@ -283,6 +330,31 @@ function UserCenterPage() {
 
     toast.success('已导出数据', `文件已保存：${filename}`);
     trackEvent('data.export', { scope: 'feature', feature: featureKey });
+  };
+
+  const exportFeatureCompressed = async (featureKey) => {
+    if (!canGzip()) {
+      exportFeature(featureKey);
+      toast.info('压缩不可用', '当前浏览器不支持 gzip 压缩，已导出未压缩 JSON。');
+      return;
+    }
+
+    const json = exportFeatureData(featureKey);
+    const filename = buildExportFilename(`guoman-${featureKey}`, 'json.gz');
+    const bytes = await gzipCompressString(json);
+    const result = downloadBinaryFile({
+      bytes,
+      filename,
+      mimeType: 'application/gzip',
+    });
+
+    if (!result.ok) {
+      toast.warning('导出失败', '请检查浏览器下载权限。');
+      return;
+    }
+
+    toast.success('已导出数据（压缩）', `文件已保存：${filename}`);
+    trackEvent('data.export', { scope: 'feature', feature: featureKey, compressed: true });
   };
 
   const clearFeature = (featureKey, label) => {
@@ -389,6 +461,14 @@ function UserCenterPage() {
             <FiDownload />
             导出全部
           </ActionButton>
+          <ActionButton
+            type="button"
+            onClick={exportAllCompressed}
+            title="导出 gzip 压缩包（.json.gz）"
+          >
+            <FiDownload />
+            导出.gz
+          </ActionButton>
           <ActionButton type="button" onClick={() => startImport('all', 'merge')}>
             <FiUpload />
             导入合并
@@ -407,7 +487,7 @@ function UserCenterPage() {
       <input
         ref={fileInputRef}
         type="file"
-        accept="application/json,.json"
+        accept="application/json,application/gzip,.json,.gz"
         style={{ display: 'none' }}
         onChange={onImportFileChange}
         aria-label="导入数据文件"
@@ -432,6 +512,14 @@ function UserCenterPage() {
               <ActionButton type="button" onClick={() => exportFeature(feature.key)}>
                 <FiDownload />
                 导出
+              </ActionButton>
+              <ActionButton
+                type="button"
+                onClick={() => exportFeatureCompressed(feature.key)}
+                title="导出 gzip 压缩包（.json.gz）"
+              >
+                <FiDownload />
+                导出.gz
               </ActionButton>
               <ActionButton
                 type="button"

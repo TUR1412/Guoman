@@ -218,7 +218,7 @@ const Rating = styled.span`
   }
 `;
 
-function AnimeCard({ anime }) {
+function AnimeCard({ anime, virtualized = false }) {
   const toast = useToast();
   const reducedMotion = useReducedMotion();
   const animeId = anime?.id;
@@ -284,11 +284,13 @@ function AnimeCard({ anime }) {
 
   if (!anime) return null;
 
+  const enableMountMotion = !virtualized && !reducedMotion;
+
   return (
     <Card
-      initial={reducedMotion ? false : { opacity: 0, y: 16 }}
-      animate={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
-      transition={reducedMotion ? { duration: 0 } : { duration: 0.35 }}
+      initial={enableMountMotion ? { opacity: 0, y: 16 } : false}
+      animate={{ opacity: 1, y: 0 }}
+      transition={enableMountMotion ? { duration: 0.35 } : { duration: 0 }}
       whileHover={reducedMotion ? undefined : { scale: 1.02 }}
     >
       <Cover layoutId={coverLayoutId}>

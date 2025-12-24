@@ -14,6 +14,9 @@
 - 资讯详情：分享入口
 - Icons 熵减：移除 react-icons，内置 Feather Icons（减少依赖面）
 - 时间格式化：缓存 Intl.DateTimeFormat，收敛重复实现
+- 长列表引擎：Search 页面改为“真实虚拟滚动”渲染（窗口化 DOM，滚动更稳）
+- 数据传输压缩：用户中心支持导入/导出 gzip 压缩包（.json.gz）
+- 工程自诊断：控制台健康全景图 `__GUOMAN_HEALTH__.print()`（LongTask/事件环路/内存/本地占用）
 
 ## [1.1.0] - 2025-12-19
 

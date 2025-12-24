@@ -19,13 +19,14 @@
 
 ## 2. 模块索引
 
-| 模块名称           | 职责                                    | 状态     | 文档                                          |
-| ------------------ | --------------------------------------- | -------- | --------------------------------------------- |
-| App Shell / Router | 路由组织、页面加载、布局骨架            | ✅稳定   | `README.md` / `docs/ARCHITECTURE.md`          |
-| UI Components      | 组件库、可访问性、交互一致性            | ✅稳定   | `src/components/`                             |
-| Local-first Data   | localStorage 数据层、队列写入、导入导出 | ✅稳定   | `src/utils/`                                  |
-| PWA                | Service Worker 离线缓存与更新提示       | ✅稳定   | `public/sw.js` + `src/utils/serviceWorker.js` |
-| Build & Deploy     | Vite 构建、GitHub Actions 部署          | ✅稳定   | `docs/DEPLOYMENT.md`                          |
+| 模块名称           | 职责                                    | 状态   | 文档                                          |
+| ------------------ | --------------------------------------- | ------ | --------------------------------------------- |
+| App Shell / Router | 路由组织、页面加载、布局骨架            | ✅稳定 | `README.md` / `docs/ARCHITECTURE.md`          |
+| UI Components      | 组件库、可访问性、交互一致性            | ✅稳定 | `src/components/`                             |
+| Local-first Data   | localStorage 数据层、队列写入、导入导出 | ✅稳定 | `src/utils/`                                  |
+| PWA                | Service Worker 离线缓存与更新提示       | ✅稳定 | `public/sw.js` + `src/utils/serviceWorker.js` |
+| Diagnostics        | 控制台健康全景图与性能采样              | ✅稳定 | `src/utils/healthConsole.js`                  |
+| Build & Deploy     | Vite 构建、GitHub Actions 部署          | ✅稳定 | `docs/DEPLOYMENT.md`                          |
 
 ---
 

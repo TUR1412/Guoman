@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { downloadTextFile } from './download';
+import { downloadBinaryFile, downloadTextFile } from './download';
 
 describe('download', () => {
   afterEach(() => {
@@ -27,6 +27,24 @@ describe('download', () => {
     expect(res).toEqual({ ok: true });
     expect(createObjectURL).toHaveBeenCalledTimes(1);
     expect(revokeObjectURL).toHaveBeenCalledWith('blob:mock');
+  });
+
+  it('downloads binary payloads via blob URL', () => {
+    const createObjectURL = vi.fn(() => 'blob:mock-binary');
+    const revokeObjectURL = vi.fn();
+    window.URL.createObjectURL = createObjectURL;
+    window.URL.revokeObjectURL = revokeObjectURL;
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+
+    const res = downloadBinaryFile({
+      bytes: new Uint8Array([1, 2, 3]),
+      filename: 'data.bin',
+      mimeType: 'application/octet-stream',
+    });
+
+    expect(res).toEqual({ ok: true });
+    expect(createObjectURL).toHaveBeenCalledTimes(1);
+    expect(revokeObjectURL).toHaveBeenCalledWith('blob:mock-binary');
   });
 
   it('returns exception on unexpected errors', () => {
