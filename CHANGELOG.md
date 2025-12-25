@@ -20,6 +20,7 @@
 - UI 交互：统一过渡曲线与 press feedback（避免 transition: all 的抖动），弹窗/Toast/提示条使用一致的 easing
 - 细节修复：长文本改为渐隐遮罩截断（hover 可看 title），图标基线对齐更稳定
 - 主题细化：theme-color 与首帧脚本统一，并在“未手动选择主题”时跟随系统主题变化
+- 视觉设置：用户中心新增纸纹/极光/字号缩放/禁用玻璃 blur/强制减少动效（本地保存，可导出）
 - 修复：海报工坊导出 SVG 使用 `downloadTextFile` 的参数不一致问题
 - 省流降载：检测到 Save-Data/2G 时自动启用 low-data 模式（降低噪点/禁用卡片 blur/减缓 shimmer）
 

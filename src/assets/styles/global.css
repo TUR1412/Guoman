@@ -21,6 +21,14 @@
     border-color var(--motion-base) var(--ease-out), box-shadow var(--motion-base) var(--ease-out);
   --font-body: 'Noto Sans SC', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
+  --base-font-size: 16px;
+  --font-scale: 1;
+
+  /* 视觉设置（可由用户中心调参） */
+  --paper-noise-opacity: 0.08;
+  --paper-noise-multiplier: 1;
+  --aurora-opacity: 0.9;
+  --aurora-opacity-multiplier: 1;
 
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -114,16 +122,18 @@
 }
 
 /* 省流/弱网：降低 GPU 压力与视觉噪声（仍保持层级与可读性） */
-:root[data-low-data='true'] body::before {
-  opacity: 0.04;
-}
-
-:root[data-low-data='true'] body::after {
-  opacity: 0.65;
+:root[data-low-data='true'] {
+  --paper-noise-multiplier: 0.5;
+  --aurora-opacity-multiplier: 0.72;
 }
 
 :root[data-low-data='true'] :where([data-card]) {
   backdrop-filter: none;
+}
+
+:root[data-no-blur='true'] :where(*) {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 /* 主题色板（避免“只换背景不换文字”的灾难） */
@@ -343,7 +353,7 @@
 body {
   font-family: var(--font-body);
   line-height: var(--leading-normal);
-  font-size: 16px;
+  font-size: calc(var(--base-font-size) * var(--font-scale));
   overflow-x: hidden;
   background: var(--app-bg);
   color: var(--text-primary);
@@ -366,7 +376,7 @@ body::before {
   pointer-events: none;
   z-index: -1;
   background-image: url('../images/noise.svg');
-  opacity: 0.08;
+  opacity: calc(var(--paper-noise-opacity) * var(--paper-noise-multiplier));
   mix-blend-mode: overlay;
 }
 
@@ -380,7 +390,7 @@ body::after {
     radial-gradient(600px 400px at 15% 20%, rgba(var(--primary-rgb), 0.08), transparent 60%),
     radial-gradient(520px 420px at 85% 18%, rgba(var(--accent-rgb), 0.08), transparent 55%),
     radial-gradient(600px 600px at 50% 100%, rgba(var(--secondary-rgb), 0.1), transparent 65%);
-  opacity: 0.9;
+  opacity: calc(var(--aurora-opacity) * var(--aurora-opacity-multiplier));
 }
 
 a:focus-visible,
@@ -1078,4 +1088,27 @@ ol {
   [data-parallax] {
     transform: none !important;
   }
+}
+
+:root[data-reduced-motion='true'] {
+  --transition: none;
+}
+
+:root[data-reduced-motion='true'] *,
+:root[data-reduced-motion='true'] *::before,
+:root[data-reduced-motion='true'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+:root[data-reduced-motion='true'] [data-shimmer]::after,
+:root[data-reduced-motion='true'] [data-focus-guide],
+:root[data-reduced-motion='true'] [data-stagger] > * {
+  animation: none !important;
+}
+
+:root[data-reduced-motion='true'] [data-parallax] {
+  transform: none !important;
 }

@@ -14,6 +14,7 @@ export const STORAGE_KEYS = Object.freeze({
   categorySort: 'guoman.category.sort',
   theme: 'guoman.theme',
   themeMeta: 'guoman.theme.meta',
+  visualSettings: 'guoman.visual.settings.v1',
   shortcuts: 'guoman.shortcuts.settings',
   comments: 'guoman.comments.v1',
   notifications: 'guoman.notifications.v1',

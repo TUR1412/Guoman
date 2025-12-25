@@ -19,6 +19,13 @@ import { safeSessionStorageGet, safeSessionStorageSet } from './utils/storage';
 import { prefetchRoutes } from './utils/routePrefetch';
 import { trackEvent } from './utils/analytics';
 import { useIsProEnabled } from './utils/useProMembership';
+import {
+  applyVisualSettings,
+  getStoredVisualSettings,
+  VISUAL_SETTINGS_EVENT,
+} from './utils/visualSettings';
+import { useStorageSignal } from './utils/useStorageSignal';
+import { STORAGE_KEYS } from './utils/dataKeys';
 
 // 页面
 import HomePage from './pages/HomePage';
@@ -111,6 +118,28 @@ function App() {
   const location = useLocation();
   const reducedMotion = useReducedMotion();
   const proEnabled = useIsProEnabled();
+  const { signal: visualSignal } = useStorageSignal([STORAGE_KEYS.visualSettings]);
+  const [visualSettings, setVisualSettings] = useState(() => getStoredVisualSettings());
+
+  useEffect(() => {
+    const next = getStoredVisualSettings();
+    setVisualSettings(next);
+    applyVisualSettings(next);
+  }, [visualSignal]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const onUpdate = (event) => {
+      const next = event?.detail?.settings;
+      if (!next) return;
+      setVisualSettings(next);
+      applyVisualSettings(next);
+    };
+
+    window.addEventListener(VISUAL_SETTINGS_EVENT, onUpdate);
+    return () => window.removeEventListener(VISUAL_SETTINGS_EVENT, onUpdate);
+  }, []);
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -223,7 +252,7 @@ function App() {
   }, []);
 
   return (
-    <MotionConfig reducedMotion="user">
+    <MotionConfig reducedMotion={visualSettings.forceReducedMotion ? 'always' : 'user'}>
       <ToastProvider>
         <FavoritesProvider>
           <AppContainer>

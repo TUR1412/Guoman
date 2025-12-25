@@ -33,11 +33,13 @@
 - 墨韵 + Aurora 渐变背景 + Noise 纹理：拒绝纯色死白/死黑
 - `prefers-reduced-motion`：动效降级护栏
 - 字体体系：`Noto Sans SC`（正文）+ `ZCOOL XiaoWei/Noto Serif SC`（标题）
+- 视觉设置：通过 `CSS Variables + dataset` 提供用户可调参能力（噪点/极光/字号/blur/动效）
 
 主题状态与首帧初始化：
 
 - `index.html`：在 `<head>` 内联脚本提前写入 `data-theme`（减少闪烁）
 - `src/utils/theme.js`：提供 `get/set/toggle` API，并同步 `theme-color`
+- `src/utils/visualSettings.js`：提供 `init/get/set/apply`，将设置映射为 `--paper-noise-opacity`、`--aurora-opacity`、`--font-scale` 以及 `data-no-blur/data-reduced-motion`
 
 ---
 
@@ -46,6 +48,7 @@
 项目内置“对象恒常性”：
 
 - 主题：`localStorage -> guoman.theme`
+- 视觉设置：`localStorage -> guoman.visual.settings.v1`
 - 收藏：`localStorage -> guoman.favorites.v1`
 - 最近浏览：`localStorage -> guoman.recent.v1`
 - 观看进度：`localStorage -> guoman.watchProgress.v1`

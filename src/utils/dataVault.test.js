@@ -34,6 +34,7 @@ describe('dataVault', () => {
   it('summarizes boolean-ish features (user/theme/shortcuts/tagCategory/syncProfile)', () => {
     window.localStorage.setItem(STORAGE_KEYS.userProfile, JSON.stringify({ name: 'x' }));
     window.localStorage.setItem(STORAGE_KEYS.theme, 'dark');
+    window.localStorage.setItem(STORAGE_KEYS.visualSettings, JSON.stringify({ schemaVersion: 1 }));
     window.localStorage.setItem(STORAGE_KEYS.shortcuts, '1');
     window.localStorage.setItem(STORAGE_KEYS.tagSort, 'hot');
     window.localStorage.setItem(STORAGE_KEYS.categorySort, 'new');
@@ -42,6 +43,7 @@ describe('dataVault', () => {
     const list = getFeatureSummaries();
     expect(list.find((x) => x.key === 'userProfile').count).toBe(1);
     expect(list.find((x) => x.key === 'theme').count).toBe(1);
+    expect(list.find((x) => x.key === 'visualSettings').count).toBe(1);
     expect(list.find((x) => x.key === 'shortcuts').count).toBe(1);
     expect(list.find((x) => x.key === 'tagCategory').count).toBe(2);
     expect(list.find((x) => x.key === 'sync').count).toBe(1);

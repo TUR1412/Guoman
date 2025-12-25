@@ -61,6 +61,7 @@
 ### 2.6 视觉特效
 
 - `--app-bg`：全局墨韵 + Aurora 背景
+- `--aurora-opacity / --aurora-opacity-multiplier`：极光叠层强度（支持与 `data-low-data` 叠乘降载）
 - `--hero-overlay`：英雄区遮罩渐变
 - `--overlay-strong`：图片/卡片上文字的对比遮罩
 - `--progress-track / --progress-fill`：进度条轨道/填充
@@ -71,6 +72,8 @@
 - `--text-shadow-hero / --text-shadow-hero-soft`：英雄区标题阴影
 - `--shadow-primary / --shadow-primary-hover / --shadow-primary-soft`：主色阴影体系
 - `--shadow-ring`：强调环形阴影（徽标/状态点）
+- `--paper-noise-opacity / --paper-noise-multiplier`：纸纹噪点强度（支持与 `data-low-data` 叠乘降载）
+- `--font-scale`：全站字号缩放（配合 `--base-font-size`）
 
 ### 2.7 圆角与形状
 
@@ -95,3 +98,13 @@
 - 组件里出现 `rgba(255,255,255,...)` / `rgba(0,0,0,...)` 时，优先考虑是否可以替换为 token
 - “筛选/切换”类组件优先用 Chip/Badge tokens（保持一致）
 - 不要只改背景不改文字：遇到可读性问题优先回到 token 层解决
+
+## 4. 视觉设置（Visual Settings）
+
+项目在“固定设计 tokens”之外，额外提供用户可调的视觉设置（入口：用户中心）。
+
+- 存储位置：`localStorage` → `guoman.visual.settings.v1`
+- 作用方式：写入 `documentElement` 的 CSS Variables / dataset
+- 关键 dataset：
+  - `data-no-blur="true"`：全站禁用 `backdrop-filter`（更省、更兼容弱设备）
+  - `data-reduced-motion="true"`：强制低动效（配合 Framer Motion reducedMotion）

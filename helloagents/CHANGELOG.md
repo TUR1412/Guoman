@@ -9,6 +9,7 @@
 ### 新增
 
 - PWA：新增 Service Worker 离线缓存，并在检测到新版本时提示用户刷新以应用更新。
+- 视觉设置：用户中心新增“视觉设置”面板（纸纹噪点/极光光晕/字号缩放/禁用 blur/强制减少动效），并持久化到本地。
 
 ### 变更
 
@@ -24,6 +25,8 @@
 - 细节：长文本采用渐隐遮罩截断（并补齐 `title`），图标基线对齐更稳定（避免视觉偏移）。
 - 主题：统一首帧脚本与运行时 `theme-color`，并在未手动选择主题时自动跟随系统主题变化。
 - 性能：弱网/省流时自动启用 `data-low-data` 降载模式（降低噪点、禁用卡片 blur、减缓 shimmer）。
+- Tokens：噪点/极光强度改为可配置 tokens（支持与 `data-low-data` 叠乘降载），并新增全站字号缩放变量 `--font-scale`。
+- 动效：App Shell 的 MotionConfig 支持用户手动强制 reduced motion（等价于 `prefers-reduced-motion`）。
 
 ### 修复
 

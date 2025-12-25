@@ -6,6 +6,7 @@ import './assets/styles/global.css';
 
 import AppErrorBoundary from './components/AppErrorBoundary';
 import { initTheme } from './utils/theme';
+import { initVisualSettings } from './utils/visualSettings';
 import { initPerformanceMonitor } from './utils/performance';
 import { initErrorMonitor } from './utils/errorReporter';
 import { fireDueFollowingReminders } from './utils/followingStore';
@@ -19,6 +20,7 @@ import {
 
 // 尽量在首帧渲染前初始化主题，避免闪烁
 initTheme();
+initVisualSettings();
 initPerformanceMonitor();
 initErrorMonitor();
 fireDueFollowingReminders();

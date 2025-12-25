@@ -70,6 +70,38 @@
           document.documentElement.dataset.theme = theme;
           const meta = document.querySelector('meta[name="theme-color"]');
           if (meta) meta.setAttribute('content', theme === 'dark' ? '#0B0F14' : '#F7F4EF');
+
+          // 视觉设置：尽量在首帧写入 CSS Variables / dataset，避免“先默认后跳变”。
+          const visualKey = 'guoman.visual.settings.v1';
+          const visualRaw = localStorage.getItem(visualKey);
+          if (visualRaw) {
+            const clamp = (value, min, max) => {
+              const num = typeof value === 'number' ? value : Number(value);
+              if (!Number.isFinite(num)) return null;
+              return Math.min(max, Math.max(min, num));
+            };
+
+            const parsed = JSON.parse(visualRaw);
+            const noise = clamp(parsed.paperNoiseOpacity, 0, 0.14);
+            const aurora = clamp(parsed.auroraOpacity, 0, 1);
+            const fontScale = clamp(parsed.fontScale, 0.85, 1.25);
+
+            if (noise !== null) {
+              document.documentElement.style.setProperty('--paper-noise-opacity', String(noise));
+            }
+            if (aurora !== null) {
+              document.documentElement.style.setProperty('--aurora-opacity', String(aurora));
+            }
+            if (fontScale !== null) {
+              document.documentElement.style.setProperty('--font-scale', String(fontScale));
+            }
+            if (parsed.disableBlur) {
+              document.documentElement.dataset.noBlur = 'true';
+            }
+            if (parsed.forceReducedMotion) {
+              document.documentElement.dataset.reducedMotion = 'true';
+            }
+          }
         } catch (e) {}
       })();
     </script>

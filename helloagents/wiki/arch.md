@@ -15,6 +15,10 @@ flowchart TD
   Data --> LS[(localStorage)]
   Data --> Queue["storageQueue: 合并写入/空闲刷新"]
 
+  App --> Visual["Visual Settings (visualSettings.js)"]
+  Visual --> LS
+  Visual --> Root["documentElement: CSS vars + dataset"]
+
   App --> PWA[Service Worker]
   PWA --> Cache[(Cache Storage)]
 

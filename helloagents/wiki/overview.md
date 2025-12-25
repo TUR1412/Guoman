@@ -23,6 +23,7 @@
 | ------------------ | --------------------------------------- | ------ | --------------------------------------------- |
 | App Shell / Router | 路由组织、页面加载、布局骨架            | ✅稳定 | `README.md` / `docs/ARCHITECTURE.md`          |
 | UI Components      | 组件库、可访问性、交互一致性            | ✅稳定 | `src/components/`                             |
+| Visual Settings    | 用户可调视觉参数（噪点/极光/blur/字号） | ✅稳定 | `src/utils/visualSettings.js`                 |
 | Local-first Data   | localStorage 数据层、队列写入、导入导出 | ✅稳定 | `src/utils/`                                  |
 | PWA                | Service Worker 离线缓存与更新提示       | ✅稳定 | `public/sw.js` + `src/utils/serviceWorker.js` |
 | Diagnostics        | 控制台健康全景图与性能采样              | ✅稳定 | `src/utils/healthConsole.js`                  |

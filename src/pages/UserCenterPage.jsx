@@ -1,8 +1,11 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import {
+  FiActivity,
   FiBell,
   FiDownload,
+  FiEye,
+  FiEyeOff,
   FiInfo,
   FiTrash2,
   FiToggleLeft,
@@ -37,6 +40,11 @@ import { getEventStats, trackEvent } from '../utils/analytics';
 import { getPerformanceSnapshot } from '../utils/performance';
 import { safeJsonParse } from '../utils/json';
 import { flushStorageQueue } from '../utils/storageQueue';
+import {
+  getStoredVisualSettings,
+  resetVisualSettings,
+  setVisualSettings,
+} from '../utils/visualSettings';
 
 const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
   display: grid;
@@ -154,6 +162,48 @@ const ToggleButton = styled.button.attrs({ 'data-pressable': true })`
   color: var(--text-primary);
 `;
 
+const SettingsGroup = styled.div`
+  display: grid;
+  gap: var(--spacing-lg);
+`;
+
+const SettingRow = styled.div`
+  display: grid;
+  gap: var(--spacing-sm);
+`;
+
+const SettingHeader = styled.div`
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+`;
+
+const SettingLabel = styled.label`
+  font-weight: 900;
+  color: var(--text-primary);
+`;
+
+const SettingValue = styled.span`
+  padding: 0 var(--spacing-sm);
+  border-radius: var(--border-radius-pill);
+  border: 1px solid var(--chip-border);
+  background: var(--chip-bg);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+`;
+
+const SettingHint = styled.div`
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug-plus);
+`;
+
+const RangeInput = styled.input.attrs({ type: 'range' })`
+  width: 100%;
+  accent-color: var(--primary-color);
+`;
+
 const buildExportFilename = (prefix, extension = 'json') => `${prefix}-${Date.now()}.${extension}`;
 
 const formatBytes = (bytes) => {
@@ -178,6 +228,7 @@ function UserCenterPage() {
   const fileInputRef = useRef(null);
   const [importTarget, setImportTarget] = useState({ scope: 'all', mode: 'merge', feature: null });
   const [, setRefreshKey] = useState(0);
+  const [visual, setVisual] = useState(() => getStoredVisualSettings());
 
   const [profile, setProfile] = usePersistedState(
     STORAGE_KEYS.userProfile,
@@ -215,7 +266,10 @@ function UserCenterPage() {
   const eventStats = getEventStats();
   const perfSnapshot = getPerformanceSnapshot();
 
-  const triggerRefresh = () => setRefreshKey((prev) => prev + 1);
+  const triggerRefresh = () => {
+    setRefreshKey((prev) => prev + 1);
+    setVisual(getStoredVisualSettings());
+  };
 
   const startImport = (scope, mode = 'merge', feature = null) => {
     setImportTarget({ scope, mode, feature });
@@ -449,6 +503,18 @@ function UserCenterPage() {
     trackEvent('shortcuts.toggle', { enabled: !shortcuts?.enabled });
   };
 
+  const updateVisual = (patch) => {
+    const next = setVisualSettings(patch);
+    setVisual(next);
+  };
+
+  const resetVisual = () => {
+    const next = resetVisualSettings();
+    setVisual(next);
+    toast.success('已恢复默认', '视觉设置已恢复为推荐默认值。');
+    trackEvent('visual.settings.reset');
+  };
+
   return (
     <PageShell
       title="用户中心"
@@ -565,6 +631,113 @@ function UserCenterPage() {
           {shortcuts?.enabled ? <FiToggleRight /> : <FiToggleLeft />}
           {shortcuts?.enabled ? '已启用' : '已停用'}
         </ToggleButton>
+      </WideCard>
+
+      <WideCard>
+        <CardTitle>
+          <FiEye /> 视觉设置
+        </CardTitle>
+        <CardMeta>
+          调节纸纹、极光、字号与动效策略，适配不同设备/弱网环境；所有设置仅保存在本地，可随 Data
+          Vault 导出。
+        </CardMeta>
+
+        <SettingsGroup>
+          <SettingRow>
+            <SettingHeader>
+              <SettingLabel htmlFor="guoman-visual-noise">纸纹噪点</SettingLabel>
+              <SettingValue>{Math.round(visual.paperNoiseOpacity * 100)}%</SettingValue>
+            </SettingHeader>
+            <RangeInput
+              id="guoman-visual-noise"
+              min={0}
+              max={14}
+              step={1}
+              value={Math.round(visual.paperNoiseOpacity * 100)}
+              onChange={(event) =>
+                updateVisual({ paperNoiseOpacity: Number(event.target.value) / 100 })
+              }
+            />
+            <SettingHint>
+              越低越干净，越高越“纸感”。弱网/省流时会自动进一步降载（叠乘生效）。
+            </SettingHint>
+          </SettingRow>
+
+          <SettingRow>
+            <SettingHeader>
+              <SettingLabel htmlFor="guoman-visual-aurora">极光光晕</SettingLabel>
+              <SettingValue>{Math.round(visual.auroraOpacity * 100)}%</SettingValue>
+            </SettingHeader>
+            <RangeInput
+              id="guoman-visual-aurora"
+              min={0}
+              max={100}
+              step={5}
+              value={Math.round(visual.auroraOpacity * 100)}
+              onChange={(event) =>
+                updateVisual({ auroraOpacity: Number(event.target.value) / 100 })
+              }
+            />
+            <SettingHint>用于控制全局 Aurora Mesh 的强度（不影响文本对比度）。</SettingHint>
+          </SettingRow>
+
+          <SettingRow>
+            <SettingHeader>
+              <SettingLabel htmlFor="guoman-visual-font">字号缩放</SettingLabel>
+              <SettingValue>{Math.round(visual.fontScale * 100)}%</SettingValue>
+            </SettingHeader>
+            <RangeInput
+              id="guoman-visual-font"
+              min={90}
+              max={120}
+              step={2}
+              value={Math.round(visual.fontScale * 100)}
+              onChange={(event) => updateVisual({ fontScale: Number(event.target.value) / 100 })}
+            />
+            <SettingHint>用于提升可读性（已限制范围，避免布局溢出）。</SettingHint>
+          </SettingRow>
+
+          <SettingRow>
+            <SettingHeader>
+              <SettingLabel id="guoman-visual-blur-label">玻璃模糊</SettingLabel>
+              <SettingValue>{visual.disableBlur ? '已关闭' : '已开启'}</SettingValue>
+            </SettingHeader>
+            <ToggleButton
+              type="button"
+              onClick={() => updateVisual({ disableBlur: !visual.disableBlur })}
+              aria-labelledby="guoman-visual-blur-label"
+              aria-pressed={visual.disableBlur}
+            >
+              {visual.disableBlur ? <FiEyeOff /> : <FiEye />}
+              {visual.disableBlur ? '关闭 blur（更省）' : '开启 blur（更通透）'}
+            </ToggleButton>
+          </SettingRow>
+
+          <SettingRow>
+            <SettingHeader>
+              <SettingLabel id="guoman-visual-motion-label">减少动效</SettingLabel>
+              <SettingValue>{visual.forceReducedMotion ? '已开启' : '跟随系统'}</SettingValue>
+            </SettingHeader>
+            <ToggleButton
+              type="button"
+              onClick={() => updateVisual({ forceReducedMotion: !visual.forceReducedMotion })}
+              aria-labelledby="guoman-visual-motion-label"
+              aria-pressed={visual.forceReducedMotion}
+            >
+              <FiActivity />
+              {visual.forceReducedMotion ? '已减少动效' : '跟随系统偏好'}
+            </ToggleButton>
+            <SettingHint>
+              开启后将强制进入低动效模式（等价于系统的 prefers-reduced-motion）。
+            </SettingHint>
+          </SettingRow>
+
+          <Actions>
+            <ActionButton type="button" onClick={resetVisual}>
+              恢复默认
+            </ActionButton>
+          </Actions>
+        </SettingsGroup>
       </WideCard>
 
       <WideCard>

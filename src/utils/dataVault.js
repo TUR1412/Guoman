@@ -131,6 +131,13 @@ const FEATURE_MAP = [
     emptyHint: '切换深浅主题即可记录。',
   },
   {
+    key: 'visualSettings',
+    label: '视觉设置',
+    keys: [STORAGE_KEYS.visualSettings],
+    getCount: () => (safeLocalStorageGet(STORAGE_KEYS.visualSettings) ? 1 : 0),
+    emptyHint: '在用户中心调节视觉设置后会自动保存。',
+  },
+  {
     key: 'shortcuts',
     label: '快捷键',
     keys: [STORAGE_KEYS.shortcuts],

@@ -9,6 +9,7 @@
 - **样式:** styled-components + CSS Variables Design Tokens
 - **动效:** Framer Motion（尊重 `prefers-reduced-motion`）
 - **PWA:** Web App Manifest + Service Worker（离线缓存/更新提示）
+- **视觉设置:** `src/utils/visualSettings.js`（本地持久化 + 映射为 CSS Variables / dataset）
 
 ---
 
