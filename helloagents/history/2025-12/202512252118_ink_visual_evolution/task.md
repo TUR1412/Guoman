@@ -41,5 +41,5 @@
 ## 8. 质量闸门与交付
 
 - [√] 8.1 执行 `npm run check`（Prettier → ESLint → Vitest → Build）并确保通过
-- [ ] 8.2 更新版本号与变更记录（如需要），完成后提交并推送到远程仓库
+- [√] 8.2 更新版本号与变更记录（如需要），完成后提交并推送到远程仓库
 - [√] 8.3 **【强制】** 迁移方案包至 `helloagents/history/2025-12/202512252118_ink_visual_evolution/`，并更新 `helloagents/history/index.md`
