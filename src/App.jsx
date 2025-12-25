@@ -13,6 +13,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import NetworkStatusBanner from './components/NetworkStatusBanner';
+import PathLoader from './components/PathLoader';
 import { FavoritesProvider } from './components/FavoritesProvider';
 import { ToastProvider } from './components/ToastProvider';
 import { safeSessionStorageGet, safeSessionStorageSet } from './utils/storage';
@@ -87,12 +88,31 @@ const LoadingLogo = styled(motion.div)`
   text-shadow: var(--text-glow-primary);
 `;
 
+const LoadingStack = styled.div`
+  display: grid;
+  place-items: center;
+  gap: var(--spacing-md);
+  text-align: center;
+`;
+
+const LoadingHint = styled.div`
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+`;
+
 const RouteFallback = styled(motion.div)`
   min-height: calc(100vh - var(--header-height));
   display: grid;
   place-items: center;
   padding: var(--spacing-3xl) var(--spacing-lg);
   color: var(--text-secondary);
+`;
+
+const RouteFallbackStack = styled.div`
+  display: grid;
+  place-items: center;
+  gap: var(--spacing-md);
+  text-align: center;
 `;
 
 const RouteCurtain = styled(motion.div)`
@@ -290,13 +310,17 @@ function App() {
                     safeSessionStorageSet(INTRO_KEY, '1');
                   }}
                 >
-                  <LoadingLogo
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    国漫世界
-                  </LoadingLogo>
+                  <LoadingStack>
+                    <LoadingLogo
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      国漫世界
+                    </LoadingLogo>
+                    <PathLoader size={74} label="开屏加载中…" showLabel={false} />
+                    <LoadingHint aria-hidden="true">点击任意位置跳过</LoadingHint>
+                  </LoadingStack>
                 </LoadingScreen>
               )}
             </AnimatePresence>
@@ -316,7 +340,10 @@ function App() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35 }}
                   >
-                    正在加载页面...
+                    <RouteFallbackStack>
+                      <PathLoader size={62} label="正在加载页面…" showLabel={false} />
+                      <div aria-hidden="true">正在加载页面...</div>
+                    </RouteFallbackStack>
                   </RouteFallback>
                 }
               >

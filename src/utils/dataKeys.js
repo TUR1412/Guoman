@@ -7,6 +7,7 @@ export const STORAGE_KEYS = Object.freeze({
   recentlyViewed: 'guoman.recent.v1',
   searchHistory: 'guoman.search.history.v1',
   searchCache: 'guoman.search.cache.v1',
+  searchFilters: 'guoman.search.filters.v1',
   recommendationsTab: 'guoman.recommendations.activeTab',
   rankingsSort: 'guoman.rankings.sort',
   newsFilter: 'guoman.news.activeTag',

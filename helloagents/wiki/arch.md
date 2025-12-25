@@ -9,11 +9,15 @@ flowchart TD
 
   App --> Router["React Router (Hash)"]
   App --> UI["UI Components (styled-components)"]
+  App --> Design["Design System (global.css tokens + Grid/Glass)"]
   App --> Motion["Motion (Framer Motion)"]
 
   App --> Data["Local-first Data Layer"]
   Data --> LS[(localStorage)]
   Data --> Queue["storageQueue: 合并写入/空闲刷新"]
+
+  App --> Search["Search Intelligence (Filter Engine + Prefetch)"]
+  App --> Api["API Client (Retry + Cache + Dedupe)"]
 
   App --> Visual["Visual Settings (visualSettings.js)"]
   Visual --> LS
