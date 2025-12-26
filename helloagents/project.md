@@ -6,7 +6,7 @@
 - **前端框架:** React 18
 - **构建工具:** Vite 6
 - **路由:** React Router（Hash Router / `createHashRouter`，GitHub Pages 友好）
-- **样式:** styled-components + CSS Variables Design Tokens
+- **样式:** styled-components + CSS Variables Design Tokens（`global.css`）+ data-_ 设计系统（`data-card` / `data-grid` / `data-col-span_`/`data-elev`）
 - **动效:** Framer Motion（尊重 `prefers-reduced-motion`）
 - **PWA:** Web App Manifest + Service Worker（离线缓存/更新提示）
 - **视觉设置:** `src/utils/visualSettings.js`（本地持久化 + 映射为 CSS Variables / dataset）
@@ -20,6 +20,7 @@
   - React 组件：`PascalCase`（如 `NetworkStatusBanner.jsx`）
   - 工具函数：`camelCase`（如 `formatZhDateTime`）
   - 文件夹：`kebab-case` 或语义化分组（如 `src/components/icons/`）
+- **交互位移规范:** 对 hover/press 的位移与缩放，优先使用 `translate` / `scale`（CSS Transform Level 2，提供 `@supports` 回退），避免覆盖 Framer Motion 的 `transform` 与布局型 `transform: translateX(...)`。
 - **依赖策略:** 优先剔除“仅提供展示层能力但可内置实现”的依赖；核心框架依赖保持稳定。
 
 ---

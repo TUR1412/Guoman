@@ -19,17 +19,14 @@ const LoginCard = styled(motion.div).attrs({
   'data-card': true,
   'data-divider': 'card',
   'data-stagger': true,
+  'data-elev': '6',
 })`
   width: 100%;
   max-width: 820px;
-  background: var(--surface-glass);
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
   padding: var(--spacing-2xl);
-  border: 1px solid var(--border-subtle);
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(14px);
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--spacing-lg);
@@ -135,11 +132,13 @@ const SideStats = styled.div.attrs({ 'data-divider': 'grid' })`
   z-index: 1;
 `;
 
-const SideStat = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' })`
+const SideStat = styled.div.attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '2',
+})`
   padding: var(--spacing-sm-plus) var(--spacing-md-tight);
   border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-glass);
   color: var(--text-secondary);
   font-size: var(--text-sm);
   display: grid;

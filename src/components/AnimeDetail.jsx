@@ -222,15 +222,16 @@ const ActionButtons = styled.div`
   grid-column: 1 / -1;
 `;
 
-const ProgressCard = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' })`
-  background: var(--surface-glass);
+const ProgressCard = styled.div.attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '3',
+})`
   border-radius: var(--border-radius-md);
   padding: var(--spacing-lg);
-  border: 1px solid var(--border-subtle);
   margin-bottom: var(--spacing-xl);
   display: grid;
   gap: var(--spacing-md);
-  backdrop-filter: blur(14px);
   grid-column: span 5;
 
   @media (max-width: 992px) {
@@ -415,14 +416,16 @@ const StaffGrid = styled.div.attrs({ role: 'list' })`
   gap: var(--spacing-md);
 `;
 
-const StaffCard = styled.div.attrs({ role: 'listitem', 'data-card': true, 'data-divider': 'card' })`
+const StaffCard = styled.div.attrs({
+  role: 'listitem',
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '2',
+})`
   display: flex;
   flex-direction: column;
-  background: var(--surface-glass);
   border-radius: var(--border-radius-md);
   padding: var(--spacing-md);
-  border: 1px solid var(--border-subtle);
-  backdrop-filter: blur(12px);
 `;
 
 const StaffRole = styled.span`
@@ -447,15 +450,13 @@ const CharacterCard = styled.div.attrs({
   role: 'listitem',
   'data-card': true,
   'data-divider': 'card',
+  'data-elev': '2',
 })`
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
-  background: var(--surface-glass);
   border-radius: var(--border-radius-md);
   padding: var(--spacing-md);
-  border: 1px solid var(--border-subtle);
-  backdrop-filter: blur(12px);
 `;
 
 const CharacterAvatar = styled.div`
@@ -572,13 +573,14 @@ const ReviewsContainer = styled.div`
   }
 `;
 
-const ReviewCard = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' })`
-  background: var(--surface-glass);
+const ReviewCard = styled.div.attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '2',
+})`
   border-radius: var(--border-radius-md);
   padding: var(--spacing-lg);
-  border: 1px solid var(--border-subtle);
   margin-bottom: var(--spacing-md);
-  backdrop-filter: blur(12px);
 `;
 
 const ReviewHeader = styled.div`

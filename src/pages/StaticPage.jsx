@@ -26,13 +26,10 @@ const Card = styled.div.attrs({
   role: 'listitem',
   'data-card': true,
   'data-divider': 'card',
+  'data-elev': '3',
 })`
   border-radius: var(--border-radius-lg);
-  background: var(--surface-glass);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-md);
   padding: var(--spacing-xl);
-  backdrop-filter: blur(14px);
   display: grid;
   gap: var(--spacing-md);
   grid-column: span 6;

@@ -26,23 +26,13 @@ const Card = styled(Link).attrs({
   'data-card': true,
   'data-divider': 'card',
   'data-pressable': true,
+  'data-elev': '3',
 })`
   display: grid;
   gap: var(--spacing-md);
   padding: var(--spacing-xl);
   border-radius: var(--border-radius-lg);
-  background: var(--surface-glass);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(14px);
-  transition: var(--transition);
   grid-column: span 4;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--primary-soft-border);
-  }
 
   &:focus-visible {
     outline: 2px solid rgba(var(--primary-rgb), 0.7);

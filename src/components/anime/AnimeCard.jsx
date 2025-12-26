@@ -16,25 +16,10 @@ const Card = styled(motion.article).attrs({
   role: 'listitem',
   'data-card': true,
   'data-divider': 'card',
+  'data-elev': '3',
 })`
   border-radius: var(--border-radius-md);
   overflow: hidden;
-  background: var(--surface-glass);
-  border: 1px solid var(--border-subtle);
-  transition: var(--transition);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(12px);
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg), var(--shadow-glow);
-    border-color: var(--chip-border-hover);
-  }
-
-  &:focus-within {
-    box-shadow: var(--shadow-lg), var(--shadow-ring);
-    border-color: var(--primary-soft-border);
-  }
 `;
 
 const Cover = styled(motion.div)`

@@ -71,25 +71,16 @@ const HighlightCard = styled(Link).attrs({
   'data-pressable': true,
   'data-shimmer': true,
   'data-focus-guide': true,
+  'data-elev': '4',
   role: 'listitem',
 })`
   border-radius: var(--border-radius-lg);
-  background: var(--surface-glass);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-md);
   padding: var(--spacing-xl);
-  backdrop-filter: blur(14px);
   display: grid;
   gap: var(--spacing-md);
   position: relative;
   overflow: hidden;
   color: inherit;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--primary-soft-border);
-  }
 `;
 
 const HighlightCover = styled.div`

@@ -67,13 +67,13 @@ const FooterBottom = styled.div`
 
 const FooterColumn = styled.div``;
 
-const FooterBrand = styled(FooterColumn).attrs({ 'data-card': true, 'data-divider': 'card' })`
+const FooterBrand = styled(FooterColumn).attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '3',
+})`
   padding: var(--spacing-lg);
   border-radius: var(--border-radius-lg);
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-glass);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(12px);
   position: relative;
   overflow: hidden;
 

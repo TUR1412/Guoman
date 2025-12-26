@@ -257,17 +257,17 @@ const BannerMain = styled.div`
   }
 `;
 
-const BannerMetaCard = styled(motion.div).attrs({ 'data-card': true, 'data-divider': 'card' })`
+const BannerMetaCard = styled(motion.div).attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '5',
+})`
   grid-column: span 4;
   align-self: end;
   display: grid;
   gap: var(--spacing-sm);
   padding: var(--spacing-lg);
   border-radius: var(--border-radius-lg);
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-glass);
-  box-shadow: var(--shadow-lg);
-  backdrop-filter: blur(14px);
 
   @media (max-width: 992px) {
     grid-column: 1 / -1;

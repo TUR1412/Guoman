@@ -91,11 +91,7 @@ function PathLoader({ size = 64, label = '加载中…', tone = 'primary', showL
 
   return (
     <Wrap aria-label={label}>
-      <Svg
-        $size={size}
-        viewBox="0 0 120 120"
-        aria-hidden="true"
-      >
+      <Svg $size={size} viewBox="0 0 120 120" aria-hidden="true">
         <g style={{ ['--path-len']: String(pathLen) }}>
           <PathBase d="M 24 64 C 24 36 42 26 60 26 C 86 26 98 46 96 62 C 94 84 78 96 58 94 C 38 92 28 82 26 72" />
           {!reducedMotion ? (

@@ -10,20 +10,24 @@ import VirtualizedGrid from '../components/VirtualizedGrid';
 import animeData, { animeIndex, tagCounts } from '../data/animeData';
 import { usePersistedState } from '../utils/usePersistedState';
 import { getCachedSearch, setCachedSearch } from '../utils/searchCache';
-import { applyAnimeFilters, buildAnimeFacets, getTopFacetEntries } from '../utils/animeFilterEngine';
+import {
+  applyAnimeFilters,
+  buildAnimeFacets,
+  getTopFacetEntries,
+} from '../utils/animeFilterEngine';
 import { trackEvent } from '../utils/analytics';
 import { STORAGE_KEYS } from '../utils/dataKeys';
 
-const SearchBar = styled.form.attrs({ 'data-card': true, 'data-divider': 'card' })`
+const SearchBar = styled.form.attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '3',
+})`
   display: flex;
   gap: var(--spacing-md);
   align-items: center;
   padding: var(--spacing-lg);
   border-radius: var(--border-radius-lg);
-  background: var(--surface-glass);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(14px);
 `;
 
 const FiltersCard = styled.section.attrs({ 'data-card': true, 'data-divider': 'card' })`
@@ -419,7 +423,10 @@ function SearchPage() {
   useEffect(() => {
     if (!normalizedQuery) return;
     if (cachedIds && cachedIds.length > 0) return;
-    setCachedSearch(normalizedQuery, queryResults.map((anime) => anime.id));
+    setCachedSearch(
+      normalizedQuery,
+      queryResults.map((anime) => anime.id),
+    );
   }, [cachedIds, normalizedQuery, queryResults]);
 
   useEffect(() => {
@@ -452,7 +459,10 @@ function SearchPage() {
             (Number(b.rating) || 0) - (Number(a.rating) || 0) ||
             (Number(b.releaseYear) || 0) - (Number(a.releaseYear) || 0),
         );
-        setCachedSearch(next, list.map((anime) => anime.id));
+        setCachedSearch(
+          next,
+          list.map((anime) => anime.id),
+        );
         prefetchRef.current.last = next;
       } catch {}
     };
@@ -640,7 +650,9 @@ function SearchPage() {
                 const next = raw ? Number.parseInt(raw, 10) : null;
                 setFilters((prev) => {
                   const nextMax =
-                    prev.yearMax != null && next != null && next > prev.yearMax ? next : prev.yearMax;
+                    prev.yearMax != null && next != null && next > prev.yearMax
+                      ? next
+                      : prev.yearMax;
                   return { ...prev, yearMin: next, yearMax: nextMax };
                 });
                 trackEvent('search.filter.yearMin', { yearMin: next });
@@ -665,7 +677,9 @@ function SearchPage() {
                 const next = raw ? Number.parseInt(raw, 10) : null;
                 setFilters((prev) => {
                   const nextMin =
-                    prev.yearMin != null && next != null && next < prev.yearMin ? next : prev.yearMin;
+                    prev.yearMin != null && next != null && next < prev.yearMin
+                      ? next
+                      : prev.yearMin;
                   return { ...prev, yearMax: next, yearMin: nextMin };
                 });
                 trackEvent('search.filter.yearMax', { yearMax: next });
@@ -773,7 +787,9 @@ function SearchPage() {
 
         <FiltersFooter>
           <span aria-hidden="true">
-            {hasActiveFilters ? `已启用筛选 · 命中 ${results.length} 部作品` : '提示：输入关键词也能参与筛选'}
+            {hasActiveFilters
+              ? `已启用筛选 · 命中 ${results.length} 部作品`
+              : '提示：输入关键词也能参与筛选'}
           </span>
           <span aria-hidden="true">搜索结果支持虚拟滚动（数据量大时自动开启）</span>
         </FiltersFooter>
@@ -786,9 +802,7 @@ function SearchPage() {
               关键词：<strong>{q}</strong> ·{' '}
             </>
           ) : (
-            <>
-              已启用筛选 ·{' '}
-            </>
+            <>已启用筛选 · </>
           )}
           共找到 <strong>{results.length}</strong> 部作品
         </Summary>
@@ -878,7 +892,10 @@ function SearchPage() {
           }
           primaryAction={
             hasActiveFilters
-              ? { to: `/search?reset=1${q ? `&q=${encodeURIComponent(q)}` : ''}`, label: '清空筛选' }
+              ? {
+                  to: `/search?reset=1${q ? `&q=${encodeURIComponent(q)}` : ''}`,
+                  label: '清空筛选',
+                }
               : { to: '/recommendations', label: '去看推荐' }
           }
           secondaryAction={

@@ -14,16 +14,17 @@ const Inner = styled.div`
   padding: 0 var(--spacing-lg);
 `;
 
-const Header = styled.div.attrs({ 'data-parallax': true })`
+const Header = styled.div.attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-parallax': true,
+  'data-elev': '3',
+})`
   display: grid;
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-2xl);
   padding: var(--spacing-xl);
   border-radius: var(--border-radius-lg);
-  background: var(--surface-glass);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(14px);
   position: relative;
   overflow: hidden;
 

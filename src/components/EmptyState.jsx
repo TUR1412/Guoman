@@ -8,14 +8,14 @@ const Wrap = styled.div`
   padding: var(--spacing-3xl) 0;
 `;
 
-const Card = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' })`
+const Card = styled.div.attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '3',
+})`
   width: min(680px, 100%);
   border-radius: var(--border-radius-lg);
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-glass);
-  box-shadow: var(--shadow-md);
   padding: var(--spacing-2xl);
-  backdrop-filter: blur(14px);
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--spacing-lg);

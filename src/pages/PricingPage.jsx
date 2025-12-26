@@ -12,25 +12,18 @@ const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
   gap: var(--spacing-lg);
 `;
 
-const Tier = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' })`
+const Tier = styled.div.attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '3',
+})`
   grid-column: span 4;
   padding: var(--spacing-xl);
   border-radius: var(--border-radius-lg);
-  background: var(--surface-glass);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(14px);
   display: grid;
   gap: var(--spacing-md);
   position: relative;
   overflow: hidden;
-  transition: var(--transition);
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg), var(--shadow-glow);
-    border-color: var(--chip-border-hover);
-  }
 
   @media (max-width: 992px) {
     grid-column: span 6;

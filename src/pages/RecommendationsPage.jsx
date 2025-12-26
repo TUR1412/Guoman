@@ -13,13 +13,13 @@ import { subscribeWatchProgress } from '../utils/watchProgress';
 import { useFavoritesUpdatedAt } from '../utils/useIsFavorite';
 import { useStorageSignal } from '../utils/useStorageSignal';
 
-const PersonalizeCard = styled(motion.section).attrs({ 'data-card': true, 'data-divider': 'card' })`
+const PersonalizeCard = styled(motion.section).attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '3',
+})`
   padding: var(--spacing-xl);
   border-radius: var(--border-radius-lg);
-  background: var(--surface-glass);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(14px);
   display: grid;
   gap: var(--spacing-lg);
   position: relative;

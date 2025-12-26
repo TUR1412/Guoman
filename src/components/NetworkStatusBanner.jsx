@@ -4,7 +4,11 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { FiAlertTriangle, FiDownload, FiWifiOff, FiX } from './icons/feather';
 import { activateServiceWorkerUpdate, SERVICE_WORKER_EVENTS } from '../utils/serviceWorker';
 
-const Wrap = styled(motion.div).attrs({ 'data-card': true, 'data-divider': 'card' })`
+const Wrap = styled(motion.div).attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '4',
+})`
   position: fixed;
   top: calc(var(--header-height) + 12px);
   left: 50%;
@@ -13,10 +17,6 @@ const Wrap = styled(motion.div).attrs({ 'data-card': true, 'data-divider': 'card
   width: min(760px, calc(100vw - 32px));
   padding: 12px 14px;
   border-radius: var(--border-radius-lg);
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-glass);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(14px);
   display: grid;
   grid-template-columns: 28px 1fr auto;
   gap: 12px;

@@ -19,18 +19,18 @@
 
 ## 2. 模块索引
 
-| 模块名称           | 职责                                    | 状态   | 文档                                          |
-| ------------------ | --------------------------------------- | ------ | --------------------------------------------- |
-| App Shell / Router | 路由组织、页面加载、布局骨架            | ✅稳定 | `README.md` / `docs/ARCHITECTURE.md`          |
-| UI Components      | 组件库、可访问性、交互一致性            | ✅稳定 | `src/components/`                             |
-| Design System      | 12 栅格/阴影层级/黄金比例排版与玻璃容器 | ✅稳定 | `src/assets/styles/global.css`                |
-| Visual Settings    | 用户可调视觉参数（噪点/极光/blur/字号） | ✅稳定 | `src/utils/visualSettings.js`                 |
-| Local-first Data   | localStorage 数据层、队列写入、导入导出 | ✅稳定 | `src/utils/`                                  |
-| Search Intelligence| 多级筛选引擎 + 实时搜索预取 + 虚拟滚动  | ✅稳定 | `src/utils/animeFilterEngine.js` + `src/pages/SearchPage.jsx` |
-| API Client         | 通用请求层：重试 + 去重 + 缓存策略       | ✅稳定 | `src/utils/apiClient.js`                      |
-| PWA                | Service Worker 离线缓存与更新提示       | ✅稳定 | `public/sw.js` + `src/utils/serviceWorker.js` |
-| Diagnostics        | 控制台健康全景图与性能采样              | ✅稳定 | `src/utils/healthConsole.js`                  |
-| Build & Deploy     | Vite 构建、GitHub Actions 部署          | ✅稳定 | `docs/DEPLOYMENT.md`                          |
+| 模块名称            | 职责                                                             | 状态   | 文档                                                                                                                   |
+| ------------------- | ---------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------- |
+| App Shell / Router  | 路由组织、页面加载、布局骨架                                     | ✅稳定 | `README.md` / `docs/ARCHITECTURE.md`                                                                                   |
+| UI Components       | 组件库、可访问性、交互一致性                                     | ✅稳定 | `src/components/`                                                                                                      |
+| Design System       | 12 栅格/阴影层级（data-elev）/黄金比例排版/玻璃容器（data-card） | ✅稳定 | `src/assets/styles/global.css`                                                                                         |
+| Visual Settings     | 用户可调视觉参数（噪点/极光/blur/字号）                          | ✅稳定 | `src/utils/visualSettings.js`                                                                                          |
+| Local-first Data    | localStorage 数据层、队列写入、导入导出                          | ✅稳定 | `src/utils/`                                                                                                           |
+| Search Intelligence | 多级筛选引擎 + 实时搜索预取 + 虚拟滚动（Search/Tag/Category）    | ✅稳定 | `src/utils/animeFilterEngine.js` + `src/pages/SearchPage.jsx` + `src/pages/TagPage.jsx` + `src/pages/CategoryPage.jsx` |
+| API Client          | 通用请求层：重试 + 去重 + 缓存策略                               | ✅稳定 | `src/utils/apiClient.js`                                                                                               |
+| PWA                 | Service Worker 离线缓存与更新提示                                | ✅稳定 | `public/sw.js` + `src/utils/serviceWorker.js`                                                                          |
+| Diagnostics         | 控制台健康全景图与性能采样                                       | ✅稳定 | `src/utils/healthConsole.js`                                                                                           |
+| Build & Deploy      | Vite 构建、GitHub Actions 部署                                   | ✅稳定 | `docs/DEPLOYMENT.md`                                                                                                   |
 
 ---
 

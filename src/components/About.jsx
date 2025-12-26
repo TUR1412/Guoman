@@ -81,15 +81,12 @@ const StatItem = styled(motion.div).attrs({
   role: 'listitem',
   'data-card': true,
   'data-divider': 'card',
+  'data-elev': '3',
 })`
   text-align: center;
   grid-column: span 4;
   padding: var(--spacing-lg);
   border-radius: var(--border-radius-lg);
-  background: var(--surface-glass);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(12px);
 
   @media (max-width: 768px) {
     grid-column: 1 / -1;

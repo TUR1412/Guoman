@@ -6,6 +6,7 @@ import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import AnimeCard from '../components/anime/AnimeCard';
 import { AnimeGrid } from '../components/anime/AnimeGrid';
+import VirtualizedGrid from '../components/VirtualizedGrid';
 import animeData from '../data/animeData';
 import { usePersistedState } from '../utils/usePersistedState';
 import { trackEvent } from '../utils/analytics';
@@ -95,11 +96,18 @@ function TagPage() {
       </Summary>
 
       {results.length > 0 ? (
-        <AnimeGrid $bento>
-          {results.map((anime) => (
-            <AnimeCard key={anime.id} anime={anime} />
-          ))}
-        </AnimeGrid>
+        results.length > 24 ? (
+          <VirtualizedGrid
+            items={results}
+            renderItem={(anime) => <AnimeCard anime={anime} virtualized />}
+          />
+        ) : (
+          <AnimeGrid $bento>
+            {results.map((anime) => (
+              <AnimeCard key={anime.id} anime={anime} />
+            ))}
+          </AnimeGrid>
+        )
       ) : (
         <EmptyState
           icon={<FiTag size={22} />}

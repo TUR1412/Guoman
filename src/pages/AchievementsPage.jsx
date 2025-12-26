@@ -30,19 +30,18 @@ const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
   gap: var(--spacing-lg);
 `;
 
-const Card = styled(motion.div).attrs({ 'data-card': true, 'data-divider': 'card' })`
+const Card = styled(motion.div).attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '3',
+})`
   grid-column: span 4;
   padding: var(--spacing-xl);
   border-radius: var(--border-radius-lg);
-  background: var(--surface-glass);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(14px);
   display: grid;
   gap: var(--spacing-md);
   position: relative;
   overflow: hidden;
-  transition: var(--transition);
 
   &::before {
     content: '';
@@ -93,13 +92,14 @@ const CelebrationOverlay = styled(motion.div)`
   backdrop-filter: blur(10px);
 `;
 
-const CelebrationDialog = styled(motion.div).attrs({ 'data-card': true, 'data-divider': 'card' })`
+const CelebrationDialog = styled(motion.div).attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '8',
+})`
   width: min(680px, calc(100vw - 32px));
   border-radius: var(--border-radius-lg);
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-glass);
-  box-shadow: var(--shadow-lg), var(--shadow-glow);
-  backdrop-filter: blur(14px);
+  box-shadow: var(--card-shadow, var(--shadow-lg)), var(--shadow-glow);
   padding: var(--spacing-xl);
   position: relative;
   overflow: hidden;

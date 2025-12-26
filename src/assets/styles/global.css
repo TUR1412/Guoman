@@ -49,11 +49,7 @@
   --glass-saturate: 1.25;
   --glass-brightness: 1.02;
   --glass-border-shift-duration: 12s;
-  --border-gradient: linear-gradient(
-    120deg,
-    rgba(255, 255, 255, 0.22),
-    rgba(255, 255, 255, 0.08)
-  );
+  --border-gradient: linear-gradient(120deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
 
   /* 视觉设置（可由用户中心调参） */
   --paper-noise-opacity: 0.08;
@@ -1204,20 +1200,80 @@ ol {
   background:
     var(--surface-glass) padding-box,
     var(--border-gradient) border-box;
-  background-size: auto, 220% 220%;
-  background-position: 0 0, 0% 50%;
-  box-shadow: var(--shadow-md);
+  background-size:
+    auto,
+    220% 220%;
+  background-position:
+    0 0,
+    0% 50%;
+  box-shadow: var(--card-shadow, var(--shadow-md));
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate))
     brightness(var(--glass-brightness));
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate))
     brightness(var(--glass-brightness));
 }
 
-[data-card][data-card]:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg), var(--shadow-glow);
-  background-position: 0 0, 100% 50%;
-  animation: borderShift var(--glass-border-shift-duration) var(--ease-soft) infinite;
+/* 动态阴影层级：通过 data-elev="0..12" 为卡片容器注入统一的阴影基座（可选） */
+:where([data-elev='0']) {
+  --card-shadow: var(--shadow-elev-0);
+}
+:where([data-elev='1']) {
+  --card-shadow: var(--shadow-elev-1);
+}
+:where([data-elev='2']) {
+  --card-shadow: var(--shadow-elev-2);
+}
+:where([data-elev='3']) {
+  --card-shadow: var(--shadow-elev-3);
+}
+:where([data-elev='4']) {
+  --card-shadow: var(--shadow-elev-4);
+}
+:where([data-elev='5']) {
+  --card-shadow: var(--shadow-elev-5);
+}
+:where([data-elev='6']) {
+  --card-shadow: var(--shadow-elev-6);
+}
+:where([data-elev='7']) {
+  --card-shadow: var(--shadow-elev-7);
+}
+:where([data-elev='8']) {
+  --card-shadow: var(--shadow-elev-8);
+}
+:where([data-elev='9']) {
+  --card-shadow: var(--shadow-elev-9);
+}
+:where([data-elev='10']) {
+  --card-shadow: var(--shadow-elev-10);
+}
+:where([data-elev='11']) {
+  --card-shadow: var(--shadow-elev-11);
+}
+:where([data-elev='12']) {
+  --card-shadow: var(--shadow-elev-12);
+}
+
+@supports (translate: 0 0) {
+  [data-card][data-card]:hover {
+    translate: 0 -4px;
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    background-position:
+      0 0,
+      100% 50%;
+    animation: borderShift var(--glass-border-shift-duration) var(--ease-soft) infinite;
+  }
+}
+
+@supports not (translate: 0 0) {
+  [data-card][data-card]:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    background-position:
+      0 0,
+      100% 50%;
+    animation: borderShift var(--glass-border-shift-duration) var(--ease-soft) infinite;
+  }
 }
 
 [data-card][data-card]:focus-within {
@@ -1302,19 +1358,40 @@ ol {
     filter var(--motion-fast) var(--ease-out);
 }
 
-[data-pressable]:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
+@supports (translate: 0 0) {
+  [data-pressable]:hover {
+    translate: 0 -2px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  [data-pressable]:active {
+    translate: 0 0;
+    scale: 0.97;
+  }
+
+  [data-pressable][aria-disabled='true'],
+  [data-pressable]:disabled {
+    translate: 0 0;
+    scale: 1;
+    box-shadow: none;
+  }
 }
 
-[data-pressable]:active {
-  transform: translateY(0) scale(0.97);
-}
+@supports not (translate: 0 0) {
+  [data-pressable]:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
 
-[data-pressable][aria-disabled='true'],
-[data-pressable]:disabled {
-  transform: none;
-  box-shadow: none;
+  [data-pressable]:active {
+    transform: translateY(0) scale(0.97);
+  }
+
+  [data-pressable][aria-disabled='true'],
+  [data-pressable]:disabled {
+    transform: none;
+    box-shadow: none;
+  }
 }
 
 [data-skeleton] {
@@ -1457,13 +1534,19 @@ ol {
 
 @keyframes borderShift {
   0% {
-    background-position: 0 0, 0% 50%;
+    background-position:
+      0 0,
+      0% 50%;
   }
   50% {
-    background-position: 0 0, 100% 50%;
+    background-position:
+      0 0,
+      100% 50%;
   }
   100% {
-    background-position: 0 0, 0% 50%;
+    background-position:
+      0 0,
+      0% 50%;
   }
 }
 

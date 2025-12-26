@@ -6,10 +6,11 @@
 
 ## 索引
 
-| 时间戳       | 功能名称             | 类型 | 状态     | 方案包路径                                                                              |
-| ------------ | -------------------- | ---- | -------- | --------------------------------------------------------------------------------------- |
-| 202512242106 | singularity_refactor | 重构 | ✅已完成 | [2025-12/202512242106_singularity_refactor](2025-12/202512242106_singularity_refactor/) |
-| 202512252118 | ink_visual_evolution | 功能 | ✅已完成 | [2025-12/202512252118_ink_visual_evolution](2025-12/202512252118_ink_visual_evolution/) |
+| 时间戳       | 功能名称                    | 类型 | 状态     | 方案包路径                                                                                            |
+| ------------ | --------------------------- | ---- | -------- | ----------------------------------------------------------------------------------------------------- |
+| 202512242106 | singularity_refactor        | 重构 | ✅已完成 | [2025-12/202512242106_singularity_refactor](2025-12/202512242106_singularity_refactor/)               |
+| 202512252118 | ink_visual_evolution        | 功能 | ✅已完成 | [2025-12/202512252118_ink_visual_evolution](2025-12/202512252118_ink_visual_evolution/)               |
+| 202512270347 | infinite_evolution_protocol | 重构 | ✅已完成 | [2025-12/202512270347_infinite_evolution_protocol](2025-12/202512270347_infinite_evolution_protocol/) |
 
 ---
 
@@ -19,3 +20,4 @@
 
 - [202512242106_singularity_refactor](2025-12/202512242106_singularity_refactor/) - 奇点重构：离线缓存 + Icons 内联化 + 日期工具收敛
 - [202512252118_ink_visual_evolution](2025-12/202512252118_ink_visual_evolution/) - 墨韵视觉进化：视觉设置面板 + Tokens 叠乘降载 + 动效可控
+- [202512270347_infinite_evolution_protocol](2025-12/202512270347_infinite_evolution_protocol/) - 无限进化协议：data-card 收敛 + data-elev + translate/scale + Tag/Category 虚拟滚动

@@ -68,17 +68,13 @@ const FeatureCard = styled(motion.div).attrs({
   role: 'listitem',
   'data-card': true,
   'data-divider': 'card',
+  'data-elev': '3',
 })`
-  background: var(--surface-glass);
   border-radius: var(--border-radius-md);
   padding: var(--spacing-xl);
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-subtle);
-  transition: var(--transition);
   position: relative;
   overflow: hidden;
   grid-column: span 4;
-  backdrop-filter: blur(12px);
 
   &:nth-child(1) {
     grid-column: span 6;
@@ -98,12 +94,6 @@ const FeatureCard = styled(motion.div).attrs({
 
   @media (max-width: 992px) {
     grid-column: span 1;
-  }
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--chip-border-hover);
   }
 
   &::after {

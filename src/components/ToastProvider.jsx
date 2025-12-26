@@ -26,13 +26,13 @@ const Host = styled.div`
   pointer-events: none;
 `;
 
-const ToastCard = styled(motion.div).attrs({ 'data-card': true, 'data-divider': 'card' })`
+const ToastCard = styled(motion.div).attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '6',
+})`
   pointer-events: auto;
   border-radius: var(--border-radius-lg);
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-glass);
-  box-shadow: var(--shadow-lg);
-  backdrop-filter: blur(14px);
   padding: 12px 12px;
   position: relative;
   overflow: visible;

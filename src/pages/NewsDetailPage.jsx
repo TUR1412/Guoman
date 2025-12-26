@@ -88,6 +88,7 @@ const SideCard = styled.aside.attrs({
   'data-parallax': true,
   'data-card': true,
   'data-divider': 'card',
+  'data-elev': '3',
 })`
   grid-column: span 4;
   align-self: start;
@@ -95,10 +96,6 @@ const SideCard = styled.aside.attrs({
   gap: var(--spacing-md);
   padding: var(--spacing-lg);
   border-radius: var(--border-radius-lg);
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-glass);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(14px);
   position: relative;
   overflow: hidden;
 

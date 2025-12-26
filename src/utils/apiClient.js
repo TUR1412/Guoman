@@ -48,11 +48,7 @@ export const createApiClient = ({
   maxCacheEntries = 80,
 } = {}) => {
   const fetchFn =
-    typeof fetchImpl === 'function'
-      ? fetchImpl
-      : typeof fetch === 'function'
-        ? fetch
-        : null;
+    typeof fetchImpl === 'function' ? fetchImpl : typeof fetch === 'function' ? fetch : null;
 
   const cache = new Map(); // key -> { at, ttl, value }
   const inFlight = new Map(); // key -> Promise
@@ -161,4 +157,3 @@ export const createApiClient = ({
     invalidate,
   };
 };
-

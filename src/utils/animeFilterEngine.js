@@ -153,8 +153,7 @@ export const applyAnimeFilters = (
     if (numericYearMax !== null && Number.isFinite(year) && year > numericYearMax) continue;
 
     const rating = Number(anime.rating);
-    if (numericMinRating !== null && Number.isFinite(rating) && rating < numericMinRating)
-      continue;
+    if (numericMinRating !== null && Number.isFinite(rating) && rating < numericMinRating) continue;
 
     out.push(anime);
   }

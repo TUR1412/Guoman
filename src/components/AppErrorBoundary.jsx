@@ -12,14 +12,14 @@ const Fullscreen = styled.div`
   color: var(--text-primary);
 `;
 
-const Card = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' })`
+const Card = styled.div.attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '6',
+})`
   width: min(720px, 100%);
-  background: var(--surface-glass);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
   padding: var(--spacing-2xl);
-  backdrop-filter: blur(14px);
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--spacing-lg);

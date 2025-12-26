@@ -33,14 +33,14 @@ const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
   gap: var(--spacing-lg);
 `;
 
-const Card = styled.div.attrs({ 'data-card': true, 'data-divider': 'card' })`
+const Card = styled.div.attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '3',
+})`
   grid-column: span 3;
   padding: var(--spacing-xl);
   border-radius: var(--border-radius-lg);
-  background: var(--surface-glass);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(14px);
   display: grid;
   gap: var(--spacing-md);
   position: relative;
