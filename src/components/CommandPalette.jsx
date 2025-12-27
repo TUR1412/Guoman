@@ -1,31 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { AnimatePresence, motion } from 'framer-motion';
 import { FiCornerDownLeft, FiSearch } from './icons/feather';
 
 import { usePointerGlow } from './usePointerGlow';
-import { getModalBackdropMotion, getModalPanelMotion } from '../motion/presets';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
-
-const Backdrop = styled(motion.div)`
-  position: fixed;
-  inset: 0;
-  z-index: 10000;
-  background: var(--overlay-strong);
-  backdrop-filter: blur(10px);
-  display: grid;
-  place-items: start center;
-  padding: calc(var(--header-height) + 18px) var(--spacing-lg) var(--spacing-lg);
-`;
-
-const Panel = styled(motion.div).attrs({ 'data-card': true, 'data-divider': 'card' })`
-  width: min(720px, 100%);
-  border-radius: var(--border-radius-lg);
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-ink);
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
-`;
+import Dialog from '../ui/Dialog';
 
 const Header = styled.div`
   padding: var(--spacing-lg);
@@ -195,7 +174,6 @@ export default function CommandPalette({ open, onClose, actions, onSearch }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef(null);
   const panelRef = useRef(null);
-  const lastActiveElementRef = useRef(null);
 
   usePointerGlow(panelRef, { disabled: reducedMotion });
 
@@ -221,35 +199,13 @@ export default function CommandPalette({ open, onClose, actions, onSearch }) {
 
   useEffect(() => {
     if (!open) return;
-    lastActiveElementRef.current = document.activeElement;
     setQuery('');
     setActiveIndex(0);
-
-    const timeoutId = window.setTimeout(() => {
-      inputRef.current?.focus?.();
-    }, 0);
-
-    return () => window.clearTimeout(timeoutId);
   }, [open]);
 
   useEffect(() => {
     if (!open) return undefined;
-    const body = document.body;
-    const prevOverflow = body.style.overflow;
-    body.style.overflow = 'hidden';
-    return () => {
-      body.style.overflow = prevOverflow;
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
     const onKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        onClose?.();
-      }
-
       if (e.key === 'ArrowDown') {
         e.preventDefault();
         setActiveIndex((prev) => Math.min(prev + 1, Math.max(0, results.length - 1)));
@@ -281,110 +237,90 @@ export default function CommandPalette({ open, onClose, actions, onSearch }) {
     ? `guoman-command-${results[activeIndex].id}`
     : '';
 
-  const onExit = () => {
-    const el = lastActiveElementRef.current;
-    if (el instanceof HTMLElement) {
-      try {
-        el.focus({ preventScroll: true });
-      } catch {
-        el.focus();
-      }
-    }
-  };
-
-  const motionBackdrop = getModalBackdropMotion(reducedMotion);
-  const motionPanel = getModalPanelMotion(reducedMotion);
-
   return (
-    <AnimatePresence onExitComplete={onExit}>
-      {open ? (
-        <Backdrop
-          {...motionBackdrop}
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
-              onClose?.();
-            }
-          }}
-        >
-          <Panel
-            ref={panelRef}
-            data-pointer-glow
-            {...motionPanel}
-            role="dialog"
-            aria-modal="true"
-            aria-label="命令面板"
-          >
-            <Header>
-              <TitleRow>
-                <Title>命令面板</Title>
-                <Hint>Ctrl/⌘ + K · Esc</Hint>
-              </TitleRow>
-              <SearchRow>
-                <SearchIcon>
-                  <FiSearch />
-                </SearchIcon>
-                <SearchInput
-                  ref={inputRef}
-                  type="search"
-                  placeholder="输入关键词：搜索 / 页面跳转 / 快捷动作"
-                  value={query}
-                  onChange={(event) => {
-                    setQuery(event.target.value);
-                    setActiveIndex(0);
-                  }}
-                  aria-controls={listId}
-                  aria-activedescendant={activeOptionId}
-                  aria-label="命令面板输入框"
-                />
-              </SearchRow>
-            </Header>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      ariaLabel="命令面板"
+      initialFocusRef={inputRef}
+      panelRef={panelRef}
+      backdropProps={{
+        style: {
+          '--dialog-z': '10000',
+          '--dialog-place-items': 'start center',
+          '--dialog-padding':
+            'calc(var(--header-height) + 18px) var(--spacing-lg) var(--spacing-lg)',
+        },
+      }}
+      panelProps={{ 'data-pointer-glow': true }}
+    >
+      <Header>
+        <TitleRow>
+          <Title>命令面板</Title>
+          <Hint>Ctrl/⌘ + K · Esc</Hint>
+        </TitleRow>
+        <SearchRow>
+          <SearchIcon>
+            <FiSearch />
+          </SearchIcon>
+          <SearchInput
+            ref={inputRef}
+            type="search"
+            placeholder="输入关键词：搜索 / 页面跳转 / 快捷动作"
+            value={query}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              setActiveIndex(0);
+            }}
+            aria-controls={listId}
+            aria-activedescendant={activeOptionId}
+            aria-label="命令面板输入框"
+          />
+        </SearchRow>
+      </Header>
 
-            <List role="listbox" id={listId} aria-label="命令列表">
-              {results.length > 0 ? (
-                results.map((action, index) => {
-                  const selected = index === activeIndex;
-                  const optionId = `guoman-command-${action.id}`;
+      <List role="listbox" id={listId} aria-label="命令列表">
+        {results.length > 0 ? (
+          results.map((action, index) => {
+            const selected = index === activeIndex;
+            const optionId = `guoman-command-${action.id}`;
 
-                  return (
-                    <Item
-                      key={action.id}
-                      role="option"
-                      id={optionId}
-                      aria-selected={selected}
-                      onMouseEnter={() => setActiveIndex(index)}
-                      onClick={() => {
-                        try {
-                          action.run?.();
-                        } finally {
-                          onClose?.();
-                        }
-                      }}
-                    >
-                      <ItemIcon aria-hidden="true">{action.icon}</ItemIcon>
-                      <ItemText>
-                        <ItemTitle>{action.title}</ItemTitle>
-                        {action.description ? <ItemDesc>{action.description}</ItemDesc> : null}
-                      </ItemText>
-                      <ItemMeta aria-hidden="true">
-                        <FiCornerDownLeft />
-                        {action.meta || 'Enter'}
-                      </ItemMeta>
-                    </Item>
-                  );
-                })
-              ) : (
-                <Empty>没有匹配的命令，换个关键词试试。</Empty>
-              )}
-            </List>
+            return (
+              <Item
+                key={action.id}
+                role="option"
+                id={optionId}
+                aria-selected={selected}
+                onMouseEnter={() => setActiveIndex(index)}
+                onClick={() => {
+                  try {
+                    action.run?.();
+                  } finally {
+                    onClose?.();
+                  }
+                }}
+              >
+                <ItemIcon aria-hidden="true">{action.icon}</ItemIcon>
+                <ItemText>
+                  <ItemTitle>{action.title}</ItemTitle>
+                  {action.description ? <ItemDesc>{action.description}</ItemDesc> : null}
+                </ItemText>
+                <ItemMeta aria-hidden="true">
+                  <FiCornerDownLeft />
+                  {action.meta || 'Enter'}
+                </ItemMeta>
+              </Item>
+            );
+          })
+        ) : (
+          <Empty>没有匹配的命令，换个关键词试试。</Empty>
+        )}
+      </List>
 
-            <Footer>
-              <span>↑↓ 选择 · Enter 执行 · Esc 关闭</span>
-              <span>数据不出本地</span>
-            </Footer>
-          </Panel>
-        </Backdrop>
-      ) : null}
-    </AnimatePresence>
+      <Footer>
+        <span>↑↓ 选择 · Enter 执行 · Esc 关闭</span>
+        <span>数据不出本地</span>
+      </Footer>
+    </Dialog>
   );
 }

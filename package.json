@@ -13,6 +13,8 @@
     "build": "vite build && node -e \"require('fs').copyFileSync('.nojekyll', 'dist/.nojekyll'); require('fs').copyFileSync('404.html', 'dist/404.html');\"",
     "build:report": "npm run build && node ./scripts/bundle-report.js",
     "preview": "vite preview",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build",
     "lint": "eslint .",
     "test": "vitest run --config vitest.config.js",
     "test:watch": "vitest --config vitest.config.js",
@@ -34,6 +36,11 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@storybook/addon-a11y": "^8.6.14",
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/addon-interactions": "^8.6.14",
+    "@storybook/react-vite": "^8.6.14",
+    "@storybook/test": "^8.6.14",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
@@ -51,6 +58,7 @@
     "globals": "^16.5.0",
     "jsdom": "^22.1.0",
     "prettier": "^3.7.4",
+    "storybook": "^8.6.14",
     "vite": "^6.4.1",
     "vitest": "^3.2.4"
   }

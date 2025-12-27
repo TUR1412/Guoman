@@ -7,7 +7,9 @@
 - **构建工具:** Vite 6
 - **路由:** React Router（Hash Router / `createHashRouter`，GitHub Pages 友好）
 - **样式:** styled-components + CSS Variables Design Tokens（`global.css`）+ data-_ 设计系统（`data-card` / `data-grid` / `data-col-span_`/`data-elev`）
+- **UI 原语:** `src/ui/`（Container / Stack / Grid / Card / Dialog / Skeleton）
 - **动效:** Framer Motion + 动效中枢（`src/motion/`，尊重 `prefers-reduced-motion` 并支持站内“强制减少动效”）
+- **组件工作台:** Storybook 8（React-Vite，`npm run storybook`）
 - **PWA:** Web App Manifest + Service Worker（离线缓存/更新提示）
 - **视觉设置:** `src/utils/visualSettings.js`（本地持久化 + 映射为 CSS Variables / dataset）
 
@@ -38,4 +40,5 @@
 
 - **单测:** Vitest（`npm run test`）
 - **质量闸门:** `npm run check`（Prettier → ESLint → Vitest → Build）
+- **组件演示:** Storybook（`npm run storybook` / `npm run storybook:build`，dev tooling，不进入质量闸门）
 - **部署:** GitHub Actions → GitHub Pages（见 `.github/workflows/static.yml`）

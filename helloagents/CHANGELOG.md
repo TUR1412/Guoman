@@ -14,6 +14,7 @@
 - 请求层：新增 `apiClient`（GET 去重、TTL 缓存、5xx/429 重试与退避策略），为未来接入真实 API 做准备。
 - PWA：新增 Service Worker 离线缓存，并在检测到新版本时提示用户刷新以应用更新。
 - 视觉设置：用户中心新增“视觉设置”面板（纸纹噪点/极光光晕/字号缩放/禁用 blur/强制减少动效），并持久化到本地。
+- 组件工作台：新增 `src/ui/` 原语（Container/Stack/Grid/Card/Dialog/Skeleton）与 Storybook（React-Vite）配置 + Stories，便于组件级演示与视觉回归。
 
 ### 变更
 

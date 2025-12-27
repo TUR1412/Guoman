@@ -22,7 +22,7 @@
 | 模块名称            | 职责                                                                      | 状态   | 文档                                                                                                                   |
 | ------------------- | ------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------- |
 | App Shell / Router  | 路由组织、页面加载、布局骨架                                              | ✅稳定 | `README.md` / `docs/ARCHITECTURE.md`                                                                                   |
-| UI Components       | 组件库、可访问性、交互一致性                                              | ✅稳定 | `src/components/`                                                                                                      |
+| UI Components       | 组件库、可访问性、交互一致性（含 UI 原语与 Stories）                      | ✅稳定 | `src/components/`<br/>`src/ui/`<br/>`.storybook/`                                                                      |
 | Design System       | 12 栅格/阴影层级（data-elev）/黄金比例排版/玻璃容器（data-card）          | ✅稳定 | `src/assets/styles/global.css`                                                                                         |
 | Motion System       | Framer Motion 动效预设（Route/Page/Modal/Toast）+ Reduced Motion 策略收敛 | ✅稳定 | `src/motion/` + `src/App.jsx`                                                                                          |
 | Visual Settings     | 用户可调视觉参数（噪点/极光/blur/字号）                                   | ✅稳定 | `src/utils/visualSettings.js`                                                                                          |

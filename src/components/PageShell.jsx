@@ -4,16 +4,11 @@ import { motion } from 'framer-motion';
 import { usePageMeta } from '../utils/pageMeta';
 import { getPageMotion } from '../motion/presets';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
+import Container from '../ui/Container';
 
 const Page = styled(motion.section)`
   padding: var(--spacing-3xl) 0;
   min-height: calc(100vh - var(--header-height));
-`;
-
-const Inner = styled.div`
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 var(--spacing-lg);
 `;
 
 const Header = styled.div.attrs({
@@ -154,7 +149,7 @@ function PageShell({ title, subtitle, actions, badge, meta, children }) {
       aria-labelledby={title ? titleId : undefined}
       aria-describedby={subtitle ? subtitleId : undefined}
     >
-      <Inner>
+      <Container>
         {(title || subtitle || actions) && (
           <Header>
             <TitleRow>
@@ -169,7 +164,7 @@ function PageShell({ title, subtitle, actions, badge, meta, children }) {
           </Header>
         )}
         <Content>{children}</Content>
-      </Inner>
+      </Container>
     </Page>
   );
 }
