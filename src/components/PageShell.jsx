@@ -1,7 +1,9 @@
 import React, { useId } from 'react';
 import styled from 'styled-components';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { usePageMeta } from '../utils/pageMeta';
+import { getPageMotion } from '../motion/presets';
+import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 
 const Page = styled(motion.section)`
   padding: var(--spacing-3xl) 0;
@@ -137,24 +139,12 @@ const Content = styled.div.attrs({ 'data-stagger': true, 'data-divider': 'list' 
 `;
 
 function PageShell({ title, subtitle, actions, badge, meta, children }) {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const titleId = useId();
   const subtitleId = useId();
   usePageMeta({ title, description: subtitle });
 
-  const pageMotion = reducedMotion
-    ? {
-        initial: { opacity: 1, y: 0 },
-        animate: { opacity: 1, y: 0 },
-        exit: { opacity: 1, y: 0 },
-        transition: { duration: 0 },
-      }
-    : {
-        initial: { opacity: 0, y: 10 },
-        animate: { opacity: 1, y: 0 },
-        exit: { opacity: 0, y: -10 },
-        transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] },
-      };
+  const pageMotion = getPageMotion(reducedMotion, { y: 10 });
 
   return (
     <Page

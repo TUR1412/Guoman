@@ -1,7 +1,7 @@
 import React, { useId, useMemo, useState, useEffect } from 'react';
 import { useLocation, useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   FiStar,
   FiPlay,
@@ -28,6 +28,7 @@ import { downloadTextFile } from '../utils/download';
 import { recordDownload, recordPlay } from '../utils/engagementStore';
 import { buildPosterSvg, recordSharePoster } from '../utils/sharePoster';
 import { trackEvent } from '../utils/analytics';
+import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 import {
   clearWatchProgress,
   getWatchProgress,
@@ -696,7 +697,7 @@ function AnimeDetail() {
   const episodeInputId = useId();
   const progressRangeId = useId();
   const progressMetaId = useId();
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const toast = useToast();
   const favorited = useIsFavorite(anime?.id);
   const following = useIsFollowing(anime?.id);

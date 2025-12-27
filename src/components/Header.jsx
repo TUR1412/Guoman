@@ -1,14 +1,7 @@
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import {
-  AnimatePresence,
-  LayoutGroup,
-  motion,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-} from 'framer-motion';
+import { AnimatePresence, LayoutGroup, motion, useScroll, useSpring } from 'framer-motion';
 import {
   FiActivity,
   FiBell,
@@ -38,6 +31,7 @@ import { prefetchRoute } from '../utils/routePrefetch';
 import { safeJsonParse } from '../utils/json';
 import { useIsProEnabled } from '../utils/useProMembership';
 import CommandPalette from './CommandPalette';
+import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 import { usePointerGlow } from './usePointerGlow';
 
 const HeaderContainer = styled.header`
@@ -415,7 +409,7 @@ function Header() {
   const [theme, setTheme] = useState(() => getCurrentTheme());
   const { signal: themeSignal } = useStorageSignal([STORAGE_KEYS.theme]);
   const proEnabled = useIsProEnabled();
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const { scrollYProgress } = useScroll();
   const springScrollProgress = useSpring(scrollYProgress, {
     stiffness: 240,

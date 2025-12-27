@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Banner from '../components/Banner';
 import AnimeList from '../components/AnimeList';
 import Features from '../components/Features';
@@ -7,18 +7,13 @@ import About from '../components/About';
 import RecentlyViewed from '../components/RecentlyViewed';
 import ContinueWatching from '../components/ContinueWatching';
 import { usePageMeta } from '../utils/pageMeta';
+import { getPageMotion } from '../motion/presets';
+import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 
 function HomePage() {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
 
-  const pageMotion = reducedMotion
-    ? { initial: false, animate: false, exit: false }
-    : {
-        initial: { opacity: 0, y: 10 },
-        animate: { opacity: 1, y: 0 },
-        exit: { opacity: 0, y: -10 },
-        transition: { duration: 0.25 },
-      };
+  const pageMotion = getPageMotion(reducedMotion, { y: 10 });
 
   usePageMeta();
 

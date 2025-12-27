@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiChevronLeft, FiChevronRight } from './icons/feather';
 import { prefetchRoute } from '../utils/routePrefetch';
+import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 
 // 导入本地图片
 import placeholder1 from '../assets/images/placeholder-1.svg';
@@ -399,7 +400,7 @@ const BannerButton = styled(motion(Link)).attrs({
 `;
 
 function Banner() {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const slideCount = bannerData.length;

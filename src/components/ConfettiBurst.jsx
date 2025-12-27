@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 
 const Layer = styled.div`
   position: absolute;
@@ -41,7 +42,7 @@ function ConfettiBurst({
   originX = '50%',
   originY = '50%',
 }) {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
 
   const particles = useMemo(() => {
     const rand = mulberry32(seed);

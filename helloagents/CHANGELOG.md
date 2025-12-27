@@ -34,6 +34,7 @@
 - 性能：弱网/省流时自动启用 `data-low-data` 降载模式（降低噪点、禁用卡片 blur、减缓 shimmer）。
 - Tokens：噪点/极光强度改为可配置 tokens（支持与 `data-low-data` 叠乘降载），并新增全站字号缩放变量 `--font-scale`。
 - 动效：App Shell 的 MotionConfig 支持用户手动强制 reduced motion（等价于 `prefers-reduced-motion`）。
+- 动效编排：新增 `src/motion/`（tokens/presets/useAppReducedMotion），将站内视觉设置的“强制减少动效”注入动效分支判定，统一 Route/Page/Modal/Toast 的转场参数。
 
 ### 修复
 

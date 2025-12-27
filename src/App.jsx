@@ -1,13 +1,7 @@
 import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import {
-  motion,
-  AnimatePresence,
-  LayoutGroup,
-  MotionConfig,
-  useReducedMotion,
-} from 'framer-motion';
+import { motion, AnimatePresence, LayoutGroup, MotionConfig } from 'framer-motion';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -27,6 +21,8 @@ import {
 } from './utils/visualSettings';
 import { useStorageSignal } from './utils/useStorageSignal';
 import { STORAGE_KEYS } from './utils/dataKeys';
+import { getRouteCurtainMotion, getRouteMotion } from './motion/presets';
+import { useAppReducedMotion } from './motion/useAppReducedMotion';
 
 // 页面
 import HomePage from './pages/HomePage';
@@ -136,10 +132,12 @@ function App() {
     return !safeSessionStorageGet(INTRO_KEY);
   });
   const location = useLocation();
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const proEnabled = useIsProEnabled();
   const { signal: visualSignal } = useStorageSignal([STORAGE_KEYS.visualSettings]);
   const [visualSettings, setVisualSettings] = useState(() => getStoredVisualSettings());
+  const routeMotion = getRouteMotion(reducedMotion);
+  const curtainMotion = getRouteCurtainMotion(reducedMotion);
 
   useEffect(() => {
     const next = getStoredVisualSettings();
@@ -349,25 +347,7 @@ function App() {
               >
                 <LayoutGroup id="guoman-routes">
                   <AnimatePresence mode="wait" initial={false}>
-                    <motion.div
-                      key={location.pathname}
-                      initial={
-                        reducedMotion
-                          ? { opacity: 1, y: 0, scale: 1 }
-                          : { opacity: 0, y: 14, scale: 0.985 }
-                      }
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={
-                        reducedMotion
-                          ? { opacity: 1, y: 0, scale: 1 }
-                          : { opacity: 0, y: -12, scale: 0.985 }
-                      }
-                      transition={
-                        reducedMotion
-                          ? { duration: 0 }
-                          : { type: 'spring', stiffness: 420, damping: 42, mass: 0.8 }
-                      }
-                    >
+                    <motion.div key={location.pathname} {...routeMotion}>
                       <Routes location={location}>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/recommendations" element={<RecommendationsPage />} />
@@ -410,12 +390,10 @@ function App() {
                   </AnimatePresence>
                 </LayoutGroup>
 
-                {!loading && !reducedMotion ? (
+                {!loading && curtainMotion ? (
                   <RouteCurtain
                     key={`curtain:${location.pathname}`}
-                    initial={{ opacity: 0, y: -18, scale: 1.02 }}
-                    animate={{ opacity: [0, 0.9, 0], y: [-18, 0, 18], scale: [1.02, 1, 0.99] }}
-                    transition={{ duration: 0.62, ease: [0.22, 1, 0.36, 1], times: [0, 0.45, 1] }}
+                    {...curtainMotion}
                     aria-hidden="true"
                   />
                 ) : null}

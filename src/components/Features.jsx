@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { FiActivity, FiAward, FiBell, FiHeart, FiShare2, FiStar } from './icons/feather';
 import featuresBackground from '../assets/images/features-background.svg';
+import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 
 const FeaturesContainer = styled.section`
   padding: var(--spacing-3xl) 0;
@@ -210,7 +211,7 @@ const itemVariants = {
 };
 
 function Features() {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const titleId = 'features-title';
   const subtitleId = 'features-subtitle';
 

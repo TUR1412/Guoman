@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { FiStar } from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import AnimeList from '../components/AnimeList';
@@ -12,6 +12,7 @@ import { getPersonalizedRecommendations } from '../utils/personalization';
 import { subscribeWatchProgress } from '../utils/watchProgress';
 import { useFavoritesUpdatedAt } from '../utils/useIsFavorite';
 import { useStorageSignal } from '../utils/useStorageSignal';
+import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 
 const PersonalizeCard = styled(motion.section).attrs({
   'data-card': true,
@@ -109,7 +110,7 @@ const Grid = styled(AnimeGrid)`
 `;
 
 function RecommendationsPage() {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const favoritesUpdatedAt = useFavoritesUpdatedAt();
   const { signal, bump } = useStorageSignal([
     STORAGE_KEYS.recentlyViewed,

@@ -1,10 +1,11 @@
 import React, { useId, useState } from 'react';
 import styled from 'styled-components';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiLock, FiMail, FiEye, FiEyeOff } from './icons/feather';
 import { useToast } from './ToastProvider';
 import { usePageMeta } from '../utils/pageMeta';
+import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 
 const LoginContainer = styled(motion.section).attrs({ layout: true })`
   min-height: calc(100vh - var(--header-height));
@@ -378,7 +379,7 @@ function Login() {
   const usernameId = useId();
   const passwordId = useId();
   const rememberId = useId();
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const [formData, setFormData] = useState({
     username: '',
     email: '',

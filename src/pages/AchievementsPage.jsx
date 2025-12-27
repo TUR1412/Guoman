@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   FiAward,
   FiBell,
@@ -23,6 +23,7 @@ import { safeJsonParse } from '../utils/json';
 import { usePersistedState } from '../utils/usePersistedState';
 import { useStorageSignal } from '../utils/useStorageSignal';
 import { getContinueWatchingList, subscribeWatchProgress } from '../utils/watchProgress';
+import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 
 const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
   display: grid;
@@ -261,7 +262,7 @@ const totalToPercent = (current, target) => {
 
 function AchievementsPage() {
   const toast = useToast();
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const favoriteIds = useFavoriteIds();
   const followingEntries = useFollowingEntries();
   const pro = useProMembership();

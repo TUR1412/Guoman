@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css, keyframes } from 'styled-components';
-import { useReducedMotion } from 'framer-motion';
+import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 
 const draw = keyframes`
   0% {
@@ -86,7 +86,7 @@ const Label = styled.span`
  * - 默认适用于 Suspense fallback / 全屏开屏 / 骨架屏占位
  */
 function PathLoader({ size = 64, label = '加载中…', tone = 'primary', showLabel = true }) {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const pathLen = 280;
 
   return (

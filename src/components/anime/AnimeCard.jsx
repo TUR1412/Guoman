@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useEffect, useId, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiBell, FiHeart } from '../icons/feather';
 import { useToast } from '../ToastProvider';
@@ -11,6 +11,7 @@ import { useIsFollowing } from '../../utils/useIsFollowing';
 import { getWatchProgress, subscribeWatchProgressById } from '../../utils/watchProgress';
 import { prefetchRoute } from '../../utils/routePrefetch';
 import { trackEvent } from '../../utils/analytics';
+import { useAppReducedMotion } from '../../motion/useAppReducedMotion';
 
 const Card = styled(motion.article).attrs({
   role: 'listitem',
@@ -217,7 +218,7 @@ const Rating = styled.span`
 
 function AnimeCard({ anime, virtualized = false }) {
   const toast = useToast();
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const animeId = anime?.id;
   const instanceId = useId();
   const [progress, setProgress] = useState(() => getWatchProgress(animeId));

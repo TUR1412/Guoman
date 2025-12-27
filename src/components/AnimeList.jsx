@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import animeData, {
   categories,
   featuredAnime,
@@ -15,6 +15,7 @@ import { usePersistedState } from '../utils/usePersistedState';
 import { trackEvent } from '../utils/analytics';
 import { recordInteraction } from '../utils/interactionStore';
 import { STORAGE_KEYS } from '../utils/dataKeys';
+import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 
 const SectionContainer = styled.section`
   padding: var(--spacing-3xl) 0;
@@ -152,7 +153,7 @@ function AnimeList({
 }) {
   const titleId = useId();
   const descId = useId();
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const [activeTab, setActiveTab] = usePersistedState(storageKey, defaultTab);
 
   const [displayCount, setDisplayCount] = useState(initialDisplayCount);

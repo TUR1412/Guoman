@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { Reorder, useDragControls, useReducedMotion } from 'framer-motion';
+import { Reorder, useDragControls } from 'framer-motion';
 import {
   FiDownload,
   FiFolder,
@@ -30,6 +30,7 @@ import { STORAGE_KEYS } from '../utils/dataKeys';
 import { safeJsonParse } from '../utils/json';
 import { formatZhDateTime } from '../utils/datetime';
 import { usePersistedState } from '../utils/usePersistedState';
+import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 
 const ToggleGroup = styled.div.attrs({ 'data-divider': 'inline' })`
   --divider-inline-gap: var(--spacing-xs);
@@ -345,7 +346,7 @@ function FavoritesPage() {
   const { favoriteIds, clearFavorites, exportFavoritesBackup, importFavoritesBackup, updatedAt } =
     useFavorites();
   const toast = useToast();
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const fileInputRef = useRef(null);
   const importModeRef = useRef('merge');
   const importTypeRef = useRef('favorites');

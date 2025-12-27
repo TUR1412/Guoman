@@ -8,10 +8,12 @@ import React, {
   useState,
 } from 'react';
 import styled from 'styled-components';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { FiAlertTriangle, FiCheckCircle, FiInfo, FiX } from './icons/feather';
 
 import ConfettiBurst from './ConfettiBurst';
+import { getToastMotion } from '../motion/presets';
+import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 
 const ToastContext = createContext(null);
 
@@ -96,16 +98,10 @@ const VARIANTS = {
   warning: { icon: <FiAlertTriangle />, color: 'var(--warning-color)' },
 };
 
-const motionProps = {
-  initial: { opacity: 0, y: 12, scale: 0.98 },
-  animate: { opacity: 1, y: 0, scale: 1 },
-  exit: { opacity: 0, y: 10, scale: 0.98 },
-  transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] },
-};
-
 function ToastItem({ toast, meta, onRemove }) {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const [burstKey, setBurstKey] = useState(null);
+  const motionProps = getToastMotion(reducedMotion);
 
   useEffect(() => {
     if (reducedMotion) return undefined;

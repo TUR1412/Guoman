@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { FiAlertTriangle, FiDownload, FiWifiOff, FiX } from './icons/feather';
 import { activateServiceWorkerUpdate, SERVICE_WORKER_EVENTS } from '../utils/serviceWorker';
+import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 
 const Wrap = styled(motion.div).attrs({
   'data-card': true,
@@ -103,7 +104,7 @@ const readConnection = () => {
 };
 
 export default function NetworkStatusBanner() {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const [online, setOnline] = useState(() =>
     typeof navigator !== 'undefined' ? navigator.onLine : true,
   );
