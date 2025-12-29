@@ -170,6 +170,37 @@ describe('dataVault', () => {
     });
   });
 
+  it('redacts sensitive keys by default (syncProfile)', () => {
+    window.localStorage.setItem(
+      STORAGE_KEYS.syncProfile,
+      JSON.stringify({ token: 'secret-token', updatedAt: 123 }),
+    );
+
+    const raw = exportAllData();
+    const parsed = JSON.parse(raw);
+    expect(parsed.payload[STORAGE_KEYS.syncProfile]).toBeUndefined();
+    expect(parsed.redactedKeys).toContain(STORAGE_KEYS.syncProfile);
+
+    const rawIncluded = exportAllData({ includeSensitive: true });
+    const parsedIncluded = JSON.parse(rawIncluded);
+    expect(parsedIncluded.payload[STORAGE_KEYS.syncProfile]).toBe(
+      JSON.stringify({ token: 'secret-token', updatedAt: 123 }),
+    );
+    expect(parsedIncluded.redactedKeys).toEqual([]);
+
+    const featureRaw = exportFeatureData('sync');
+    const featureParsed = JSON.parse(featureRaw);
+    expect(featureParsed.payload[STORAGE_KEYS.syncProfile]).toBeUndefined();
+    expect(featureParsed.redactedKeys).toContain(STORAGE_KEYS.syncProfile);
+
+    const featureRawIncluded = exportFeatureData('sync', { includeSensitive: true });
+    const featureParsedIncluded = JSON.parse(featureRawIncluded);
+    expect(featureParsedIncluded.payload[STORAGE_KEYS.syncProfile]).toBe(
+      JSON.stringify({ token: 'secret-token', updatedAt: 123 }),
+    );
+    expect(featureParsedIncluded.redactedKeys).toEqual([]);
+  });
+
   it('importAllData supports replace mode', () => {
     window.localStorage.setItem(STORAGE_KEYS.favorites, JSON.stringify([1]));
     const incoming = JSON.stringify({

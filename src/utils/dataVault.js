@@ -36,6 +36,22 @@ const estimateBytes = (value) => {
   return value.length * 2;
 };
 
+const SENSITIVE_STORAGE_KEYS = new Set([STORAGE_KEYS.syncProfile]);
+
+const omitSensitivePayload = (keys, { includeSensitive = false } = {}) => {
+  const redactedKeys = [];
+  const payload = keys.reduce((acc, key) => {
+    if (!key) return acc;
+    if (!includeSensitive && SENSITIVE_STORAGE_KEYS.has(key)) {
+      redactedKeys.push(key);
+      return acc;
+    }
+    acc[key] = safeLocalStorageGet(key);
+    return acc;
+  }, {});
+  return { payload, redactedKeys };
+};
+
 const FEATURE_MAP = [
   {
     key: 'watchProgress',
@@ -225,20 +241,17 @@ export const getFeatureSummaries = () =>
     emptyHint: feature.emptyHint,
   }));
 
-export const exportFeatureData = (featureKey) => {
+export const exportFeatureData = (featureKey, { includeSensitive = false } = {}) => {
   const feature = FEATURE_MAP.find((item) => item.key === featureKey);
   if (!feature) throw new Error('未知的数据模块');
 
-  const payload = feature.keys.reduce((acc, key) => {
-    acc[key] = safeLocalStorageGet(key);
-    return acc;
-  }, {});
-
+  const { payload, redactedKeys } = omitSensitivePayload(feature.keys, { includeSensitive });
   return JSON.stringify({
     schemaVersion: 1,
     feature: feature.key,
     exportedAt: new Date().toISOString(),
     payload,
+    redactedKeys,
   });
 };
 
@@ -287,17 +300,15 @@ export const importFeatureData = (featureKey, jsonText, { mode = 'merge' } = {})
   return summary;
 };
 
-export const exportAllData = () => {
-  const payload = FEATURE_MAP.flatMap((feature) => feature.keys).reduce((acc, key) => {
-    acc[key] = safeLocalStorageGet(key);
-    return acc;
-  }, {});
-
+export const exportAllData = ({ includeSensitive = false } = {}) => {
+  const keys = Array.from(new Set(FEATURE_MAP.flatMap((feature) => feature.keys)));
+  const { payload, redactedKeys } = omitSensitivePayload(keys, { includeSensitive });
   return JSON.stringify({
     schemaVersion: 1,
     feature: 'all',
     exportedAt: new Date().toISOString(),
     payload,
+    redactedKeys,
   });
 };
 

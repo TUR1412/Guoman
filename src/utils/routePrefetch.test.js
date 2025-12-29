@@ -40,6 +40,7 @@ describe('routePrefetch', () => {
       '../pages/StaticPage',
       '../pages/NotFoundPage',
       '../pages/UserCenterPage',
+      '../pages/DiagnosticsPage',
     ].forEach(mockModule);
 
     const { prefetchRoute, prefetchRoutes } = await import('./routePrefetch');
@@ -63,6 +64,7 @@ describe('routePrefetch', () => {
     await prefetchRoute('/anime/1');
     await prefetchRoute('/help');
     await prefetchRoute('/profile');
+    await prefetchRoute('/diagnostics');
     await prefetchRoute('/some-unknown');
 
     // De-dupe (same route key should not re-import)
@@ -77,5 +79,6 @@ describe('routePrefetch', () => {
     expect(loads.get('../pages/NotFoundPage')).toBe(1);
     expect(loads.get('../pages/StaticPage')).toBe(1);
     expect(loads.get('../pages/UserCenterPage')).toBe(1);
+    expect(loads.get('../pages/DiagnosticsPage')).toBe(1);
   });
 });

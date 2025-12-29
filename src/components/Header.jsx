@@ -717,6 +717,14 @@ function Header() {
         <FiUser />,
         () => navigate('/profile'),
       ),
+      action(
+        'nav.diagnostics',
+        '诊断面板',
+        '查看本地健康快照（性能/错误/存储/SW）',
+        ['诊断', 'diagnostics', 'health', '性能', '错误', '存储'],
+        <FiActivity />,
+        () => navigate('/diagnostics'),
+      ),
       action('nav.about', '关于我们', '项目介绍与设计理念', ['关于', 'about'], <FiInfo />, () =>
         navigate('/about'),
       ),

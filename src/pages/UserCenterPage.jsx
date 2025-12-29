@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   FiActivity,
@@ -18,6 +19,7 @@ import EmptyState from '../components/EmptyState';
 import { useToast } from '../components/ToastProvider';
 import { downloadBinaryFile, downloadTextFile } from '../utils/download';
 import { canGzip, gzipCompressString, gzipDecompressToString } from '../utils/compression';
+import { formatBytes } from '../utils/formatBytes';
 import {
   clearAllData,
   clearFeatureData,
@@ -206,26 +208,10 @@ const RangeInput = styled.input.attrs({ type: 'range' })`
 
 const buildExportFilename = (prefix, extension = 'json') => `${prefix}-${Date.now()}.${extension}`;
 
-const formatBytes = (bytes) => {
-  const value = Number(bytes);
-  if (!Number.isFinite(value) || value <= 0) return '0 B';
-
-  const units = ['B', 'KB', 'MB', 'GB'];
-  let unitIndex = 0;
-  let next = value;
-
-  while (next >= 1024 && unitIndex < units.length - 1) {
-    next /= 1024;
-    unitIndex += 1;
-  }
-
-  const digits = unitIndex === 0 ? 0 : 1;
-  return `${next.toFixed(digits)} ${units[unitIndex]}`;
-};
-
 function UserCenterPage() {
   const toast = useToast();
   const fileInputRef = useRef(null);
+  const [includeSensitiveExport, setIncludeSensitiveExport] = useState(false);
   const [importTarget, setImportTarget] = useState({ scope: 'all', mode: 'merge', feature: null });
   const [, setRefreshKey] = useState(0);
   const [visual, setVisual] = useState(() => getStoredVisualSettings());
@@ -326,7 +312,7 @@ function UserCenterPage() {
   };
 
   const exportAll = () => {
-    const json = exportAllData();
+    const json = exportAllData({ includeSensitive: includeSensitiveExport });
     const filename = buildExportFilename('guoman-data');
     const result = downloadTextFile({
       text: json,
@@ -340,7 +326,7 @@ function UserCenterPage() {
     }
 
     toast.success('已导出所有数据', `文件已保存：${filename}`);
-    trackEvent('data.export', { scope: 'all' });
+    trackEvent('data.export', { scope: 'all', includeSensitive: includeSensitiveExport });
   };
 
   const exportAllCompressed = async () => {
@@ -350,7 +336,7 @@ function UserCenterPage() {
       return;
     }
 
-    const json = exportAllData();
+    const json = exportAllData({ includeSensitive: includeSensitiveExport });
     const filename = buildExportFilename('guoman-data', 'json.gz');
     const bytes = await gzipCompressString(json);
     const result = downloadBinaryFile({
@@ -365,11 +351,15 @@ function UserCenterPage() {
     }
 
     toast.success('已导出所有数据（压缩）', `文件已保存：${filename}`);
-    trackEvent('data.export', { scope: 'all', compressed: true });
+    trackEvent('data.export', {
+      scope: 'all',
+      compressed: true,
+      includeSensitive: includeSensitiveExport,
+    });
   };
 
   const exportFeature = (featureKey) => {
-    const json = exportFeatureData(featureKey);
+    const json = exportFeatureData(featureKey, { includeSensitive: includeSensitiveExport });
     const filename = buildExportFilename(`guoman-${featureKey}`);
     const result = downloadTextFile({
       text: json,
@@ -383,7 +373,11 @@ function UserCenterPage() {
     }
 
     toast.success('已导出数据', `文件已保存：${filename}`);
-    trackEvent('data.export', { scope: 'feature', feature: featureKey });
+    trackEvent('data.export', {
+      scope: 'feature',
+      feature: featureKey,
+      includeSensitive: includeSensitiveExport,
+    });
   };
 
   const exportFeatureCompressed = async (featureKey) => {
@@ -393,7 +387,7 @@ function UserCenterPage() {
       return;
     }
 
-    const json = exportFeatureData(featureKey);
+    const json = exportFeatureData(featureKey, { includeSensitive: includeSensitiveExport });
     const filename = buildExportFilename(`guoman-${featureKey}`, 'json.gz');
     const bytes = await gzipCompressString(json);
     const result = downloadBinaryFile({
@@ -408,7 +402,12 @@ function UserCenterPage() {
     }
 
     toast.success('已导出数据（压缩）', `文件已保存：${filename}`);
-    trackEvent('data.export', { scope: 'feature', feature: featureKey, compressed: true });
+    trackEvent('data.export', {
+      scope: 'feature',
+      feature: featureKey,
+      compressed: true,
+      includeSensitive: includeSensitiveExport,
+    });
   };
 
   const clearFeature = (featureKey, label) => {
@@ -523,6 +522,22 @@ function UserCenterPage() {
       meta={<span>本地存储 · 导入/导出 · 快捷设置</span>}
       actions={
         <Actions>
+          <ActionButton as={Link} to="/diagnostics">
+            <FiActivity />
+            诊断面板
+          </ActionButton>
+          <ActionButton
+            type="button"
+            onClick={() => setIncludeSensitiveExport((prev) => !prev)}
+            title={
+              includeSensitiveExport
+                ? '当前导出将包含同步 Token 等敏感字段，请勿分享给他人。'
+                : '当前导出默认脱敏：同步 Token 等敏感字段将被排除。'
+            }
+          >
+            {includeSensitiveExport ? <FiEye /> : <FiEyeOff />}
+            {includeSensitiveExport ? '敏感：包含' : '敏感：脱敏'}
+          </ActionButton>
           <ActionButton type="button" onClick={exportAll}>
             <FiDownload />
             导出全部

@@ -46,6 +46,7 @@ const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
 const Login = lazy(() => import('./components/Login'));
 const AnimeDetail = lazy(() => import('./components/AnimeDetail'));
 const UserCenterPage = lazy(() => import('./pages/UserCenterPage'));
+const DiagnosticsPage = lazy(() => import('./pages/DiagnosticsPage'));
 
 const AppContainer = styled.div`
   min-height: 100vh;
@@ -369,6 +370,7 @@ function App() {
                         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                         <Route path="/anime/:id" element={<AnimeDetail />} />
                         <Route path="/profile" element={<UserCenterPage />} />
+                        <Route path="/diagnostics" element={<DiagnosticsPage />} />
 
                         <Route path="/help" element={<StaticPage page="help" />} />
                         <Route path="/faq" element={<StaticPage page="faq" />} />

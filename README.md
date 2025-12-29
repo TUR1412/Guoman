@@ -86,6 +86,7 @@
 - **数据管理**：用户中心支持导入/导出/清理，并显示本地占用体积
 - **PWA 体验增强**：离线缓存（Service Worker）+ 新版本可用提示 + 弱网/省流识别（自动降载 blur/动效）
 - **工程自诊断**：控制台健康全景图（`__GUOMAN_HEALTH__.print()` / `__GUOMAN_HEALTH__.start()`）
+- **可视化诊断页**：`/diagnostics` 查看并导出健康快照（性能/错误/存储/SW，默认不上传网络）
 - **稳健兜底**：Error Boundary + 友好空状态 + 性能/错误监控钩子
 
 ---
@@ -106,6 +107,7 @@
 - 🏅 **成就系统**：进度条化反馈（收藏/追更/分享/PRO），增强可玩性
 - 📌 **本地数据 Vault**：导出/导入（合并/覆盖）+ 分模块清理 + 占用统计
 - 🧪 **诊断面板（控制台）**：`__GUOMAN_HEALTH__.print()` 输出“系统健康全景图”（渲染耗时/LongTask/内存趋势）
+- 🧭 **诊断面板（UI）**：`/diagnostics` 可复制/下载诊断包，并支持启停采样（排障更直观）
 - 🏆 **排行榜**：评分/人气切换，Top 卡片强化
 - 📰 **资讯模块**：资讯列表 + 详情页（可替换真实 API）
 - 🧭 **路由完备**：分类页/标签页/静态页/404 深链兜底
@@ -211,7 +213,7 @@ npm run dev
 npm run check
 ```
 
-`check` 会依次执行：Prettier → ESLint → Vitest → Build。
+`check` 会依次执行：Prettier → ESLint → Vitest → Build → Bundle Budget（体积预算闸门）。
 
 ---
 
@@ -270,6 +272,7 @@ GitHub Pages 的站点通常挂在 `/<repoName>/` 下，所以 `vite.config.js` 
 
 - `docs/ARCHITECTURE.md`：架构说明与关键决策
 - `docs/DESIGN_TOKENS.md`：设计变量与组件规范
+- `docs/DIAGNOSTICS.md`：诊断面板与性能预算（如何导出/如何排障/CI 闸门）
 - `docs/QUARK_AUDIT.md`：夸克级审计与改进清单
 - `docs/QUARK_BACKLOG_1000.md`：1000 微任务全量清单
 - `docs/ITERATIONS.md`：迭代记录（原子级提交）

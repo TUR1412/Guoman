@@ -1,6 +1,7 @@
 import { getFeatureSummaries } from './dataVault';
 import { getErrorReports } from './errorReporter';
 import { getPerformanceSnapshot } from './performance';
+import { formatBytes } from './formatBytes';
 
 const MAX_SAMPLES = 120;
 const MAX_LONGTASKS = 60;
@@ -14,15 +15,6 @@ const safeRound = (value, digits = 1) => {
   if (!Number.isFinite(num)) return null;
   const factor = 10 ** digits;
   return Math.round(num * factor) / factor;
-};
-
-const formatBytes = (bytes) => {
-  const value = Number(bytes);
-  if (!Number.isFinite(value) || value <= 0) return '0 B';
-  const units = ['B', 'KB', 'MB', 'GB'];
-  const idx = Math.min(units.length - 1, Math.floor(Math.log(value) / Math.log(1024)));
-  const scaled = value / 1024 ** idx;
-  return `${scaled.toFixed(idx === 0 ? 0 : 2)} ${units[idx]}`;
 };
 
 const state = {

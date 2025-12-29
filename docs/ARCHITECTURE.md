@@ -94,3 +94,28 @@
 
 - 统一 API 客户端（fetch/axios 二选一，避免混用）
 - 引入请求层缓存与错误提示策略（Toast + EmptyState）
+
+---
+
+## 7. 诊断与性能预算
+
+### 诊断（Diagnostics）
+
+本项目提供两套诊断入口：
+
+- **控制台 API**：`__GUOMAN_HEALTH__.print()` / `__GUOMAN_HEALTH__.start()`（采样 LongTask / 事件循环延迟 / 内存趋势 / React commit）。
+- **UI 诊断页**：`/diagnostics`（可视化展示 + 可复制/下载诊断包 JSON）。
+
+核心实现：
+
+- `src/utils/healthConsole.js`：健康快照与采样器（LongTask / event loop lag / memory / React Profiler）。
+- `src/pages/DiagnosticsPage.jsx`：把快照能力从“控制台”下沉到 UI，并提供导出能力。
+
+### 性能预算（Bundle Budget）
+
+为了避免“体验回归”在无意中发生，`npm run check` 在构建完成后会额外执行 bundle 体积预算：
+
+- 脚本：`scripts/bundle-budget.js`
+- 配置：`scripts/bundle-budget.config.json`
+
+它会读取 `dist/.vite/manifest.json`，计算首屏依赖链（入口 + imports + CSS）gzip 体积，并对关键 vendor chunk 应用阈值约束。

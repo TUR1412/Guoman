@@ -15,6 +15,8 @@
 - PWA：新增 Service Worker 离线缓存，并在检测到新版本时提示用户刷新以应用更新。
 - 视觉设置：用户中心新增“视觉设置”面板（纸纹噪点/极光光晕/字号缩放/禁用 blur/强制减少动效），并持久化到本地。
 - 组件工作台：新增 `src/ui/` 原语（Container/Stack/Grid/Card/Dialog/Skeleton）与 Storybook（React-Vite）配置 + Stories，便于组件级演示与视觉回归。
+- 诊断：新增 UI 诊断页 `/diagnostics`（可视化健康快照 + 可复制/下载诊断包 + 可启停采样）。
+- 性能预算：新增 `scripts/bundle-budget.js` + `scripts/bundle-budget.config.json`，并接入 `npm run check` 作为 CI 体积闸门。
 
 ### 变更
 
@@ -26,6 +28,9 @@
 - 长列表：替换 `VirtualizedGrid` 为真实虚拟滚动窗口化渲染（面向超大数据量更稳）。
 - 压缩：用户中心支持导入/导出 `.json.gz`（gzip 压缩）以降低文件体积。
 - 诊断：新增控制台健康全景图（`__GUOMAN_HEALTH__.print()` / `__GUOMAN_HEALTH__.start()`），实时观察 LongTask/事件环路/内存趋势等。
+- 数据导出：全量/单模块导出默认脱敏（同步 Token 等敏感键默认剔除，可显式包含）。
+- 工程：质量闸门 `npm run check` 增加 Bundle Budget（构建后校验首屏依赖链 gzip 体积）。
+- 依赖：Storybook 升级到修复版本（消除审计高危项）。
 - UI：全局过渡从 `transition: all` 收敛为可控属性集合，并统一弹窗/Toast/提示条的 easing 曲线。
 - 视觉系统：新增 `data-elev="0..12"` 作为阴影层级入口，并将卡片/按钮的 hover/press 位移升级为 `translate/scale`（避免覆盖 `transform`，与 Framer Motion 更好叠加）。
 - 样式收敛：移除多处组件内重复的 `data-card` 玻璃基座实现（background/border/box-shadow/backdrop-filter），统一由 `global.css` 驱动。

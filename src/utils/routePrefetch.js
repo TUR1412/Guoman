@@ -21,6 +21,7 @@ const routes = {
   staticPage: () => import('../pages/StaticPage'),
   notFound: () => import('../pages/NotFoundPage'),
   userCenter: () => import('../pages/UserCenterPage'),
+  diagnostics: () => import('../pages/DiagnosticsPage'),
 };
 
 const matchRouteKey = (path = '') => {
@@ -51,6 +52,7 @@ const matchRouteKey = (path = '') => {
     return 'staticPage';
   if (clean.startsWith('/accessibility')) return 'staticPage';
   if (clean.startsWith('/profile')) return 'userCenter';
+  if (clean.startsWith('/diagnostics')) return 'diagnostics';
   return 'notFound';
 };
 

@@ -23,13 +23,17 @@ flowchart TD
   Visual --> LS
   Visual --> Root["documentElement: CSS vars + dataset"]
 
+  App --> Diagnostics["Diagnostics UI (/diagnostics)"]
+  Diagnostics --> Data
+
   App --> PWA[Service Worker]
   PWA --> Cache[(Cache Storage)]
 
   subgraph Build[构建与部署]
-    Vite[Vite Build] --> Dist[dist/]
-    Actions[GitHub Actions] --> Dist
-    Dist --> Pages[GitHub Pages]
+    Actions[GitHub Actions] --> Vite[Vite Build]
+    Vite --> Dist[dist/]
+    Dist --> Budget["Bundle Budget Gate\n(scripts/bundle-budget.js)"]
+    Budget --> Pages[GitHub Pages]
   end
 ```
 

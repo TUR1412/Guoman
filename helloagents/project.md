@@ -33,12 +33,13 @@
 - **全局兜底:** `src/components/AppErrorBoundary.jsx`
 - **错误采集:** `src/utils/errorReporter.js`（本地安全容错，避免阻塞）
 - **行为埋点:** `src/utils/analytics.js`（本地记录为主，便于后续接入真实分析）
+- **诊断面板:** `/diagnostics`（UI 可视化诊断 + 导出诊断包），控制台 API 见 `src/utils/healthConsole.js`
 
 ---
 
 ## 测试与流程
 
 - **单测:** Vitest（`npm run test`）
-- **质量闸门:** `npm run check`（Prettier → ESLint → Vitest → Build）
+- **质量闸门:** `npm run check`（Prettier → ESLint → Vitest → Build → Bundle Budget）
 - **组件演示:** Storybook（`npm run storybook` / `npm run storybook:build`，dev tooling，不进入质量闸门）
 - **部署:** GitHub Actions → GitHub Pages（见 `.github/workflows/static.yml`）

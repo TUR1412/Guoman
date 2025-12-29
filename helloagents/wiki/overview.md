@@ -30,8 +30,8 @@
 | Search Intelligence | 多级筛选引擎 + 实时搜索预取 + 虚拟滚动（Search/Tag/Category）             | ✅稳定 | `src/utils/animeFilterEngine.js` + `src/pages/SearchPage.jsx` + `src/pages/TagPage.jsx` + `src/pages/CategoryPage.jsx` |
 | API Client          | 通用请求层：重试 + 去重 + 缓存策略                                        | ✅稳定 | `src/utils/apiClient.js`                                                                                               |
 | PWA                 | Service Worker 离线缓存与更新提示                                         | ✅稳定 | `public/sw.js` + `src/utils/serviceWorker.js`                                                                          |
-| Diagnostics         | 控制台健康全景图与性能采样                                                | ✅稳定 | `src/utils/healthConsole.js`                                                                                           |
-| Build & Deploy      | Vite 构建、GitHub Actions 部署                                            | ✅稳定 | `docs/DEPLOYMENT.md`                                                                                                   |
+| Diagnostics         | 控制台健康全景图 + UI 诊断页（可导出诊断包）                              | ✅稳定 | `src/utils/healthConsole.js`<br/>`src/pages/DiagnosticsPage.jsx`                                                       |
+| Build & Deploy      | Vite 构建、Bundle Budget 闸门、GitHub Actions 部署                        | ✅稳定 | `docs/DEPLOYMENT.md`<br/>`scripts/bundle-budget.js`<br/>`scripts/bundle-budget.config.json`                            |
 
 ---
 
