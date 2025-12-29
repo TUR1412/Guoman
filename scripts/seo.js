@@ -35,6 +35,7 @@ export const getDefaultSitemapRoutes = ({ animeIds = [], tags = [], categorySlug
   { path: '/#/search', changefreq: 'weekly', priority: '0.6' },
   { path: '/#/about', changefreq: 'monthly', priority: '0.6' },
   { path: '/#/profile', changefreq: 'monthly', priority: '0.5' },
+  { path: '/#/diagnostics', changefreq: 'monthly', priority: '0.35' },
 
   { path: '/#/help', changefreq: 'monthly', priority: '0.4' },
   { path: '/#/faq', changefreq: 'monthly', priority: '0.4' },
