@@ -17,6 +17,7 @@
 - 组件工作台：新增 `src/ui/` 原语（Container/Stack/Grid/Card/Dialog/Skeleton）与 Storybook（React-Vite）配置 + Stories，便于组件级演示与视觉回归。
 - 诊断：新增 UI 诊断页 `/diagnostics`（可视化健康快照 + 可复制/下载诊断包 + 可启停采样）。
 - 性能预算：新增 `scripts/bundle-budget.js` + `scripts/bundle-budget.config.json`，并接入 `npm run check` 作为 CI 体积闸门。
+- 移动端导航：新增底部 Dock（首页/搜索/收藏/追更/我的），并为主内容/页脚预留安全区（避免遮挡）。
 
 ### 变更
 

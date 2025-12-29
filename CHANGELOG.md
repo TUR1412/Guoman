@@ -24,6 +24,7 @@
 - 数据导出安全：全量导出默认脱敏（同步 Token 等敏感键默认剔除，可显式包含）
 - 性能预算闸门：新增 `npm run budget:bundle` 并接入 `npm run check`（CI 自动守住首屏体积）
 - 依赖安全：Storybook 升级到修复版本（消除审计高危项）
+- 移动端导航：新增底部 Dock（首页/搜索/收藏/追更/我的），单手操作更顺畅
 - UI 交互：统一过渡曲线与 press feedback（避免 transition: all 的抖动），弹窗/Toast/提示条使用一致的 easing
 - 细节修复：长文本改为渐隐遮罩截断（hover 可看 title），图标基线对齐更稳定
 - 主题细化：theme-color 与首帧脚本统一，并在“未手动选择主题”时跟随系统主题变化

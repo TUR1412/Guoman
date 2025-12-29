@@ -8,6 +8,7 @@ import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import NetworkStatusBanner from './components/NetworkStatusBanner';
 import PathLoader from './components/PathLoader';
+import BottomNav from './components/BottomNav';
 import { FavoritesProvider } from './components/FavoritesProvider';
 import { ToastProvider } from './components/ToastProvider';
 import { safeSessionStorageGet, safeSessionStorageSet } from './utils/storage';
@@ -59,6 +60,11 @@ const AppContainer = styled.div`
 const MainContent = styled.main`
   flex: 1;
   padding-top: var(--header-height);
+  padding-bottom: 0;
+
+  @media (max-width: 768px) {
+    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
+  }
 `;
 
 const LoadingScreen = styled(motion.button)`
@@ -403,6 +409,7 @@ function App() {
             </MainContent>
 
             <Footer />
+            <BottomNav />
           </AppContainer>
         </FavoritesProvider>
       </ToastProvider>

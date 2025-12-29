@@ -9,6 +9,7 @@
 
 :root {
   --header-height: 70px;
+  --bottom-nav-height: 74px;
   --max-width: 1200px;
   /* 统一交互过渡（避免 transition: all 带来的布局抖动与“假”动画） */
   --transition:

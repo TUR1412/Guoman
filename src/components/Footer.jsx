@@ -7,6 +7,12 @@ const FooterContainer = styled.footer`
   background-color: var(--darker-color);
   border-top: 1px solid var(--border-color);
   padding: var(--spacing-2xl) 0 var(--spacing-lg);
+
+  @media (max-width: 768px) {
+    padding-bottom: calc(
+      var(--spacing-lg) + var(--bottom-nav-height) + env(safe-area-inset-bottom)
+    );
+  }
 `;
 
 const FooterInner = styled.div`
