@@ -1,7 +1,5 @@
 import React, { useId, useMemo, useState, useEffect } from 'react';
-import { useLocation, useParams, Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { useLocation, useParams } from 'react-router-dom';
 import {
   FiStar,
   FiPlay,
@@ -29,657 +27,56 @@ import { recordDownload, recordPlay } from '../utils/engagementStore';
 import { buildPosterSvg, recordSharePoster } from '../utils/sharePoster';
 import { trackEvent } from '../utils/analytics';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
+import AnimeProgressCard from './anime/detail/AnimeProgressCard';
+import AnimeReviews from './anime/detail/AnimeReviews';
 import {
   clearWatchProgress,
   getWatchProgress,
   subscribeWatchProgressById,
   updateWatchProgress,
 } from '../utils/watchProgress';
-
-const DetailContainer = styled(motion.section).attrs({ layout: true })`
-  padding-top: var(--spacing-xl);
-  padding-bottom: var(--spacing-3xl);
-`;
-
-const DetailInner = styled.div.attrs({ 'data-stagger': true, 'data-divider': 'list' })`
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 var(--spacing-lg);
-`;
-
-const BannerContainer = styled.div.attrs({ 'data-parallax': true })`
-  position: relative;
-  width: 100%;
-  height: 400px;
-  border-radius: var(--border-radius-lg);
-  overflow: hidden;
-  margin-bottom: var(--spacing-2xl);
-
-  @media (max-width: 768px) {
-    height: 300px;
-  }
-
-  @media (max-width: 576px) {
-    height: 200px;
-  }
-`;
-
-const BannerImage = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url(${(props) => props.$image});
-  background-size: cover;
-  background-position: center;
-  filter: blur(2px);
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--hero-overlay);
-  }
-`;
-
-const ContentContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--spacing-2xl);
-  align-items: start;
-
-  @media (max-width: 992px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const CoverContainer = styled.div`
-  grid-column: span 4;
-
-  @media (max-width: 992px) {
-    display: flex;
-    justify-content: center;
-    grid-column: 1 / -1;
-  }
-`;
-
-const CoverImage = styled(motion.div).attrs({ 'data-card': true })`
-  width: 100%;
-  max-width: 300px;
-  border-radius: var(--border-radius-md);
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
-  position: relative;
-
-  img {
-    width: 100%;
-    display: block;
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(0deg, var(--overlay-strong) 0%, transparent 60%);
-    z-index: 1;
-  }
-`;
-
-const AnimeInfo = styled.div`
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--spacing-lg);
-  grid-column: span 8;
-
-  @media (max-width: 992px) {
-    grid-column: 1 / -1;
-  }
-`;
-
-const AnimeTitle = styled.h1`
-  font-size: var(--text-9xl);
-  font-weight: 900;
-  margin-bottom: var(--spacing-sm);
-  color: var(--text-primary);
-  grid-column: 1 / -1;
-
-  @media (max-width: 768px) {
-    font-size: var(--text-8xl);
-  }
-
-  @media (max-width: 576px) {
-    font-size: var(--text-5xl);
-  }
-`;
-
-const AnimeOriginalTitle = styled.h2`
-  font-size: var(--text-lg-plus);
-  font-weight: 400;
-  margin-bottom: var(--spacing-lg);
-  color: var(--text-tertiary);
-  grid-column: 1 / -1;
-`;
-
-const MetaInfo = styled.div.attrs({ role: 'list', 'aria-label': '作品信息' })`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-xl);
-  grid-column: span 7;
-
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 992px) {
-    grid-column: 1 / -1;
-  }
-`;
-
-const MetaItem = styled.div.attrs({ role: 'listitem' })`
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-`;
-
-const MetaLabel = styled.span`
-  font-size: var(--text-sm);
-  color: var(--text-tertiary);
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-`;
-
-const MetaValue = styled.span`
-  font-size: var(--text-lg);
-  font-weight: 600;
-  color: var(--text-secondary);
-`;
-
-const AnimeDescription = styled.p`
-  font-size: var(--text-lg);
-  line-height: var(--leading-relaxed);
-  color: var(--text-secondary);
-  margin-bottom: var(--spacing-xl);
-  grid-column: 1 / -1;
-
-  @media (max-width: 768px) {
-    font-size: var(--text-base);
-  }
-`;
-
-const ActionButtons = styled.div`
-  display: flex;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-xl);
-  flex-wrap: wrap;
-  grid-column: 1 / -1;
-`;
-
-const ProgressCard = styled.div.attrs({
-  'data-card': true,
-  'data-divider': 'card',
-  'data-elev': '3',
-})`
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
-  display: grid;
-  gap: var(--spacing-md);
-  grid-column: span 5;
-
-  @media (max-width: 992px) {
-    grid-column: 1 / -1;
-  }
-`;
-
-const ProgressTitle = styled.h3`
-  font-size: var(--text-lg-plus);
-  font-weight: 600;
-  color: var(--text-primary);
-`;
-
-const ProgressRow = styled.div`
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: var(--spacing-md);
-  align-items: center;
-
-  @media (max-width: 576px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const ProgressLabel = styled.span`
-  color: var(--text-tertiary);
-  font-size: var(--text-sm-plus);
-`;
-
-const ProgressInput = styled.input`
-  width: 100%;
-  padding: var(--spacing-sm-mid) var(--spacing-md-compact);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--field-bg);
-  color: var(--text-primary);
-`;
-
-const ProgressRange = styled.input`
-  width: 100%;
-  accent-color: var(--primary-color);
-`;
-
-const ProgressMeta = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-`;
-
-const ProgressActions = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-`;
-
-const WatchButton = styled.a.attrs({
-  'data-shimmer': true,
-  'data-pressable': true,
-  'data-focus-guide': true,
-})`
-  padding: var(--spacing-sm-plus) var(--spacing-xl);
-  background-color: var(--primary-color);
-  color: var(--text-on-primary);
-  border-radius: var(--border-radius-md);
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  transition: var(--transition);
-  box-shadow: var(--shadow-primary);
-
-  &:hover {
-    background-color: var(--primary-color);
-    filter: brightness(1.05);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-primary-hover);
-  }
-
-  &[aria-disabled='true'] {
-    cursor: not-allowed;
-    opacity: 0.6;
-    box-shadow: none;
-    background-color: var(--surface-soft);
-    color: var(--text-tertiary);
-    border: 1px solid var(--border-subtle);
-  }
-`;
-
-const SecondaryButton = styled.button.attrs({ 'data-pressable': true })`
-  padding: var(--spacing-sm-plus) var(--spacing-lg);
-  background-color: ${(p) => (p.$active ? 'var(--primary-soft)' : 'var(--surface-soft)')};
-  color: ${(p) => (p.$active ? 'var(--text-primary)' : 'var(--text-secondary)')};
-  border-radius: var(--border-radius-md);
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  transition: var(--transition);
-  border: 1px solid ${(p) => (p.$active ? 'var(--primary-soft-border)' : 'var(--border-subtle)')};
-
-  &:hover {
-    background-color: ${(p) =>
-      p.$active ? 'var(--primary-soft-hover)' : 'var(--surface-soft-hover)'};
-    transform: translateY(-2px);
-  }
-`;
-
-const TagsContainer = styled.div`
-  margin-bottom: var(--spacing-xl);
-  grid-column: span 6;
-
-  @media (max-width: 992px) {
-    grid-column: 1 / -1;
-  }
-`;
-
-const TagsTitle = styled.h3`
-  font-size: var(--text-lg-plus);
-  font-weight: 600;
-  margin-bottom: var(--spacing-md);
-  color: var(--text-primary);
-`;
-
-const Tags = styled.div.attrs({ role: 'list' })`
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-sm);
-`;
-
-const Tag = styled(Link).attrs({ 'data-pressable': true, role: 'listitem' })`
-  padding: var(--spacing-xs) var(--spacing-sm-plus);
-  background-color: var(--primary-soft);
-  border: 1px solid var(--primary-soft-border);
-  color: var(--primary-color);
-  border-radius: var(--border-radius-sm);
-  font-size: var(--text-sm);
-  transition: var(--transition);
-
-  &:hover {
-    background-color: var(--primary-soft-hover);
-    transform: translateY(-2px);
-  }
-`;
-
-const StaffContainer = styled.div`
-  margin-bottom: var(--spacing-xl);
-  grid-column: span 6;
-
-  @media (max-width: 992px) {
-    grid-column: 1 / -1;
-  }
-`;
-
-const CharactersContainer = styled.div`
-  margin-bottom: var(--spacing-xl);
-  grid-column: 1 / -1;
-`;
-
-const SectionTitle = styled.h3`
-  font-size: var(--text-4xl);
-  font-weight: 600;
-  margin-bottom: var(--spacing-lg);
-  color: var(--text-primary);
-  position: relative;
-  display: inline-block;
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 40px;
-    height: 2px;
-    background-color: var(--primary-color);
-  }
-`;
-
-const StaffGrid = styled.div.attrs({ role: 'list' })`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--spacing-md);
-`;
-
-const StaffCard = styled.div.attrs({
-  role: 'listitem',
-  'data-card': true,
-  'data-divider': 'card',
-  'data-elev': '2',
-})`
-  display: flex;
-  flex-direction: column;
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-`;
-
-const StaffRole = styled.span`
-  font-size: var(--text-sm);
-  color: var(--text-tertiary);
-  margin-bottom: var(--spacing-xs);
-`;
-
-const StaffName = styled.span`
-  font-size: var(--text-base);
-  font-weight: 600;
-  color: var(--text-secondary);
-`;
-
-const CharactersGrid = styled.div.attrs({ role: 'list' })`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: var(--spacing-md);
-`;
-
-const CharacterCard = styled.div.attrs({
-  role: 'listitem',
-  'data-card': true,
-  'data-divider': 'card',
-  'data-elev': '2',
-})`
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-`;
-
-const CharacterAvatar = styled.div`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: var(--primary-soft);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--text-4xl);
-  font-weight: 600;
-  color: var(--text-primary);
-`;
-
-const CharacterInfo = styled.div`
-  flex: 1;
-`;
-
-const CharacterName = styled.div`
-  font-size: var(--text-base);
-  font-weight: 600;
-  color: var(--text-secondary);
-`;
-
-const CharacterDetails = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-size: var(--text-sm);
-  color: var(--text-tertiary);
-`;
-
-const RelatedContainer = styled.div`
-  margin-bottom: var(--spacing-xl);
-  grid-column: span 6;
-
-  @media (max-width: 992px) {
-    grid-column: 1 / -1;
-  }
-`;
-
-const RelatedGrid = styled.div.attrs({ role: 'list' })`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--spacing-lg);
-
-  @media (max-width: 576px) {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  }
-`;
-
-const RelatedCard = styled(Link).attrs({
-  role: 'listitem',
-  'data-card': true,
-  'data-divider': 'card',
-  'data-pressable': true,
-})`
-  display: block;
-  border-radius: var(--border-radius-md);
-  overflow: hidden;
-  transition: var(--transition);
-
-  &:hover {
-    transform: translateY(-5px);
-
-    img {
-      transform: scale(1.05);
-    }
-  }
-`;
-
-const RelatedImage = styled.div`
-  width: 100%;
-  height: 0;
-  padding-top: 140%; /* 10:14 aspect ratio */
-  position: relative;
-  overflow: hidden;
-
-  img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
-`;
-
-const RelatedTitle = styled.div`
-  font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--text-secondary);
-  padding: var(--spacing-sm);
-  text-align: center;
-  background: var(--surface-glass);
-  backdrop-filter: blur(12px);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: clip;
-  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 82%, transparent 100%);
-  mask-image: linear-gradient(90deg, #000 0%, #000 82%, transparent 100%);
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-`;
-
-const ReviewsContainer = styled.div`
-  grid-column: span 6;
-
-  @media (max-width: 992px) {
-    grid-column: 1 / -1;
-  }
-`;
-
-const ReviewCard = styled.div.attrs({
-  'data-card': true,
-  'data-divider': 'card',
-  'data-elev': '2',
-})`
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-lg);
-  margin-bottom: var(--spacing-md);
-`;
-
-const ReviewHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-md);
-`;
-
-const ReviewUser = styled.div`
-  font-weight: 600;
-  color: var(--text-secondary);
-`;
-
-const ReviewRating = styled.div`
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  color: var(--secondary-color);
-`;
-
-const ReviewComment = styled.p`
-  line-height: var(--leading-normal);
-  color: var(--text-secondary);
-`;
-
-const CommentForm = styled.form`
-  display: grid;
-  gap: var(--spacing-md);
-  margin-top: var(--spacing-lg);
-`;
-
-const CommentRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-`;
-
-const CommentInput = styled.input`
-  flex: 1;
-  min-width: 180px;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--field-bg);
-  color: var(--text-primary);
-
-  &:focus {
-    border-color: var(--primary-color);
-    background: var(--field-bg-focus);
-  }
-`;
-
-const CommentSelect = styled.select`
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--field-bg);
-  color: var(--text-primary);
-`;
-
-const CommentTextarea = styled.textarea`
-  min-height: 120px;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--field-bg);
-  color: var(--text-primary);
-  resize: vertical;
-  line-height: var(--leading-relaxed);
-
-  &:focus {
-    border-color: var(--primary-color);
-    background: var(--field-bg-focus);
-  }
-`;
-
-const CommentActions = styled.div.attrs({ 'data-divider': 'inline' })`
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-`;
-
-const CommentButton = styled.button.attrs({ 'data-pressable': true })`
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md-tight);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-soft);
-  color: var(--text-primary);
-  transition: var(--transition);
-
-  &:hover {
-    background: var(--surface-soft-hover);
-  }
-`;
+import {
+  DetailContainer,
+  DetailInner,
+  BannerContainer,
+  BannerImage,
+  ContentContainer,
+  CoverContainer,
+  CoverImage,
+  AnimeInfo,
+  AnimeTitle,
+  AnimeOriginalTitle,
+  MetaInfo,
+  MetaItem,
+  MetaLabel,
+  MetaValue,
+  AnimeDescription,
+  ActionButtons,
+  WatchButton,
+  SecondaryButton,
+  TagsContainer,
+  TagsTitle,
+  Tags,
+  Tag,
+  StaffContainer,
+  CharactersContainer,
+  SectionTitle,
+  StaffGrid,
+  StaffCard,
+  StaffRole,
+  StaffName,
+  CharactersGrid,
+  CharacterCard,
+  CharacterAvatar,
+  CharacterInfo,
+  CharacterName,
+  CharacterDetails,
+  RelatedContainer,
+  RelatedGrid,
+  RelatedCard,
+  RelatedImage,
+  RelatedTitle,
+} from './anime/detail/styles';
 
 function AnimeDetail() {
   const { id } = useParams();
@@ -1068,80 +465,15 @@ function AnimeDetail() {
               </SecondaryButton>
             </ActionButtons>
 
-            <ProgressCard>
-              <ProgressTitle>观看进度</ProgressTitle>
-              <ProgressRow>
-                <ProgressLabel as="label" htmlFor={episodeInputId}>
-                  当前集数
-                </ProgressLabel>
-                <ProgressInput
-                  id={episodeInputId}
-                  type="number"
-                  min={1}
-                  max={anime.episodes}
-                  value={safeProgress.episode}
-                  onChange={(event) =>
-                    handleProgressUpdate({
-                      episode: Number(event.target.value || 1),
-                      progress: safeProgress.progress,
-                    })
-                  }
-                />
-              </ProgressRow>
-              <ProgressRow>
-                <ProgressLabel as="label" htmlFor={progressRangeId}>
-                  本集进度
-                </ProgressLabel>
-                <div>
-                  <ProgressRange
-                    id={progressRangeId}
-                    type="range"
-                    min={0}
-                    max={100}
-                    value={safeProgress.progress}
-                    aria-describedby={progressMetaId}
-                    onChange={(event) =>
-                      handleProgressUpdate({
-                        episode: safeProgress.episode,
-                        progress: Number(event.target.value || 0),
-                      })
-                    }
-                  />
-                  <ProgressMeta id={progressMetaId}>
-                    <span>0%</span>
-                    <span>{safeProgress.progress}%</span>
-                    <span>100%</span>
-                  </ProgressMeta>
-                </div>
-              </ProgressRow>
-              <ProgressActions>
-                <SecondaryButton
-                  type="button"
-                  onClick={() =>
-                    handleProgressUpdate({
-                      episode: safeProgress.episode,
-                      progress: 50,
-                    })
-                  }
-                >
-                  先看到一半
-                </SecondaryButton>
-                <SecondaryButton
-                  type="button"
-                  onClick={() =>
-                    handleProgressUpdate({
-                      episode: anime.episodes,
-                      progress: 100,
-                    })
-                  }
-                >
-                  追到最新
-                </SecondaryButton>
-                <SecondaryButton type="button" onClick={handleClearProgress}>
-                  清空进度
-                </SecondaryButton>
-              </ProgressActions>
-            </ProgressCard>
+            <AnimeProgressCard
+              animeEpisodes={anime.episodes}
+              episodeInputId={episodeInputId}
+              progressMetaId={progressMetaId}
+              progressRangeId={progressRangeId}
+              safeProgress={safeProgress}
+              onUpdate={handleProgressUpdate}
+              onClear={handleClearProgress}
+            />
 
             <TagsContainer>
               <TagsTitle>标签</TagsTitle>
@@ -1211,78 +543,17 @@ function AnimeDetail() {
               </RelatedContainer>
             )}
 
-            <ReviewsContainer>
-              <SectionTitle>评论</SectionTitle>
-              {mergedReviews.length > 0 ? (
-                mergedReviews.map((review) => (
-                  <ReviewCard key={`${review.user}:${review.comment}`}>
-                    <ReviewHeader>
-                      <ReviewUser>
-                        {review.user}
-                        {review.isLocal ? '（本地）' : ''}
-                      </ReviewUser>
-                      <ReviewRating>
-                        {review.rating ? (
-                          Array.from({ length: 5 }).map((_, i) => (
-                            <FiStar
-                              key={i}
-                              style={{
-                                fill: i < review.rating ? 'var(--secondary-color)' : 'none',
-                              }}
-                            />
-                          ))
-                        ) : (
-                          <span style={{ color: 'var(--text-tertiary)' }}>暂无评分</span>
-                        )}
-                      </ReviewRating>
-                    </ReviewHeader>
-                    <ReviewComment>{review.comment}</ReviewComment>
-                  </ReviewCard>
-                ))
-              ) : (
-                <EmptyState
-                  title="还没有评论"
-                  description="写下你的观感，让更多人找到好作品。"
-                  primaryAction={{ to: '/rankings', label: '看看排行榜' }}
-                  secondaryAction={{ to: '/recommendations', label: '看看推荐' }}
-                />
-              )}
-
-              <CommentForm onSubmit={handleCommentSubmit}>
-                <CommentRow>
-                  <CommentInput
-                    type="text"
-                    name="user"
-                    placeholder="昵称（可选）"
-                    value={commentUser}
-                    onChange={(event) => setCommentUser(event.target.value)}
-                  />
-                  <CommentSelect
-                    name="rating"
-                    value={commentRating}
-                    onChange={(event) => setCommentRating(Number(event.target.value || 0))}
-                  >
-                    {[5, 4, 3, 2, 1, 0].map((score) => (
-                      <option key={score} value={score}>
-                        {score === 0 ? '暂无评分' : `${score} 星`}
-                      </option>
-                    ))}
-                  </CommentSelect>
-                </CommentRow>
-                <CommentTextarea
-                  name="comment"
-                  placeholder="说说你的看法..."
-                  value={commentDraft}
-                  onChange={(event) => setCommentDraft(event.target.value)}
-                />
-                <CommentActions>
-                  <CommentButton type="submit">发布评论</CommentButton>
-                  <CommentButton type="button" onClick={handleClearComments}>
-                    清空本地评论
-                  </CommentButton>
-                </CommentActions>
-              </CommentForm>
-            </ReviewsContainer>
+            <AnimeReviews
+              mergedReviews={mergedReviews}
+              commentUser={commentUser}
+              commentRating={commentRating}
+              commentDraft={commentDraft}
+              onCommentUserChange={setCommentUser}
+              onCommentRatingChange={setCommentRating}
+              onCommentDraftChange={setCommentDraft}
+              onSubmit={handleCommentSubmit}
+              onClearComments={handleClearComments}
+            />
           </AnimeInfo>
         </ContentContainer>
       </DetailInner>

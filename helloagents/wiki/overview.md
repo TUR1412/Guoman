@@ -53,6 +53,8 @@
 - Primitives：`Button`、`IconButton`、`TextField`（统一 variants/sizes/disabled/focus-visible/输入一致性）
 - 约定：页面/组件优先复用 primitives，避免重复声明 `styled.button` 导致交互分叉
 - 渐进式模块化：`Header` 相关拆分组件放在 `src/components/header/`，对外入口仍为 `src/components/Header.jsx`
+- 渐进式模块化：`AnimeDetail` 拆分组件放在 `src/components/anime/detail/`（`AnimeProgressCard`、`AnimeReviews`、`styles.js`），对外入口仍为 `src/components/AnimeDetail.jsx`
+- 表单一致性：详情页“当前集数 / 昵称”输入已迁移到 `TextField`；后续新增输入优先复用 primitives，避免原生控件样式与交互分叉
 
 ## 构建生成物
 
