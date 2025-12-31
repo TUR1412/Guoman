@@ -34,6 +34,8 @@ import { useIsProEnabled } from '../utils/useProMembership';
 import CommandPalette from './CommandPalette';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 import { usePointerGlow } from './usePointerGlow';
+import HeaderSearch from './header/HeaderSearch';
+import { navItems } from './header/navItems';
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -222,48 +224,6 @@ const ActionGroup = styled.div`
   }
 `;
 
-const SearchForm = styled.form`
-  position: relative;
-  width: 100%;
-`;
-
-const SearchInput = styled.input`
-  background-color: var(--field-bg);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--border-radius-pill);
-  padding: var(--spacing-sm) var(--spacing-md);
-  padding-left: 2.5rem;
-  width: 100%;
-  color: var(--text-primary);
-  transition: var(--transition);
-
-  &:focus {
-    background-color: var(--field-bg-focus);
-    border-color: var(--primary-color);
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
-
-    &:focus {
-      width: 100%;
-    }
-  }
-
-  &::placeholder {
-    color: var(--text-tertiary);
-  }
-`;
-
-const SearchIcon = styled(FiSearch)`
-  position: absolute;
-  top: 50%;
-  left: var(--spacing-sm-plus);
-  transform: translateY(-50%);
-  color: var(--text-tertiary);
-  pointer-events: none;
-`;
-
 const ScrollProgress = styled(motion.div)`
   position: absolute;
   left: 0;
@@ -293,38 +253,6 @@ const LoginButton = styled(Link).attrs({
   &:hover {
     background-color: var(--primary-color);
     color: var(--text-on-primary);
-  }
-`;
-
-const ThemeButton = styled(IconButton).attrs({
-  variant: 'secondary',
-  'data-pressable': true,
-  'data-focus-guide': true,
-})`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: var(--border-radius-pill);
-  border: 1px solid var(--control-border);
-  background: var(--control-bg);
-  color: var(--text-primary);
-  transition: var(--transition);
-
-  &:hover {
-    transform: translateY(-1px);
-    background: var(--control-bg-hover);
-  }
-
-  &:active {
-    transform: translateY(0px) scale(0.96);
-  }
-`;
-
-const CommandButton = styled(ThemeButton)`
-  @media (max-width: 768px) {
-    display: none;
   }
 `;
 
@@ -393,18 +321,6 @@ const MobileLoginButton = styled(Link).attrs({ 'data-pressable': true })`
     filter: brightness(1.05);
   }
 `;
-
-const navItems = [
-  { title: '首页', path: '/' },
-  { title: '国漫推荐', path: '/recommendations' },
-  { title: '收藏', path: '/favorites' },
-  { title: '追更', path: '/following' },
-  { title: '排行榜', path: '/rankings' },
-  { title: '最新资讯', path: '/news' },
-  { title: '关于我们', path: '/about' },
-  { title: 'PRO', path: '/pro' },
-  { title: '用户中心', path: '/profile' },
-];
 
 function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -827,40 +743,28 @@ function Header() {
         </Nav>
 
         <DesktopSearch>
-          <SearchForm role="search" aria-label="站内搜索" onSubmit={handleSearchSubmit}>
-            <label className="sr-only" htmlFor={desktopSearchId}>
-              搜索国漫
-            </label>
-            <span id="guoman-search-hint-desktop" className="sr-only">
-              快捷键 Ctrl/⌘ + K 打开命令面板，可快速搜索与跳转页面
-            </span>
-            <SearchInput
-              ref={desktopSearchRef}
-              id={desktopSearchId}
-              type="search"
-              name="q"
-              placeholder="搜索国漫...（Ctrl/⌘ + K 命令面板）"
-              aria-label="搜索国漫"
-              aria-keyshortcuts="Control+K Meta+K"
-              aria-describedby="guoman-search-hint-desktop"
-              autoComplete="off"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <SearchIcon />
-          </SearchForm>
+          <HeaderSearch
+            id={desktopSearchId}
+            hintId="guoman-search-hint-desktop"
+            placeholder="搜索国漫...（Ctrl/⌘ + K 命令面板）"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onSubmit={handleSearchSubmit}
+            inputRef={desktopSearchRef}
+          />
         </DesktopSearch>
 
         <ActionGroup>
-          <CommandButton
+          <IconButton
             type="button"
+            variant="secondary"
             onClick={() => setIsPaletteOpen(true)}
-            aria-label="打开命令面板"
+            label="打开命令面板"
             title="命令面板（Ctrl/⌘ + K）"
             aria-pressed={isPaletteOpen}
           >
             <FiCommand />
-          </CommandButton>
+          </IconButton>
 
           <LoginButton
             to="/login"
@@ -871,15 +775,16 @@ function Header() {
             登录/注册
           </LoginButton>
 
-          <ThemeButton
+          <IconButton
             type="button"
+            variant="secondary"
             onClick={handleToggleTheme}
-            aria-label={theme === 'dark' ? '切换到浅色主题' : '切换到深色主题'}
+            label={theme === 'dark' ? '切换到浅色主题' : '切换到深色主题'}
             title={theme === 'dark' ? '浅色主题' : '深色主题'}
             aria-pressed={theme === 'dark'}
           >
             {theme === 'dark' ? <FiSun /> : <FiMoon />}
-          </ThemeButton>
+          </IconButton>
         </ActionGroup>
 
         <MobileMenuButton
@@ -906,45 +811,28 @@ function Header() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
           >
-            <SearchForm
-              role="search"
-              aria-label="站内搜索"
+            <HeaderSearch
+              id={mobileSearchId}
+              hintId="guoman-search-hint-mobile"
+              placeholder="搜索国漫...（Ctrl/⌘ + K 命令面板）"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               onSubmit={handleSearchSubmit}
+              inputRef={mobileSearchRef}
               style={{ margin: '0 0 var(--spacing-xl) 0', width: '80%' }}
-            >
-              <label className="sr-only" htmlFor={mobileSearchId}>
-                搜索国漫
-              </label>
-              <span id="guoman-search-hint-mobile" className="sr-only">
-                快捷键 Ctrl/⌘ + K 打开命令面板，可快速搜索与跳转页面
-              </span>
-              <SearchInput
-                ref={mobileSearchRef}
-                id={mobileSearchId}
-                type="search"
-                name="q"
-                placeholder="搜索国漫...（Ctrl/⌘ + K 命令面板）"
-                aria-label="搜索国漫"
-                aria-keyshortcuts="Control+K Meta+K"
-                aria-describedby="guoman-search-hint-mobile"
-                autoComplete="off"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ width: '100%' }}
-              />
-              <SearchIcon />
-            </SearchForm>
+            />
 
-            <ThemeButton
+            <IconButton
               type="button"
+              variant="secondary"
               onClick={handleToggleTheme}
-              aria-label={theme === 'dark' ? '切换到浅色主题' : '切换到深色主题'}
+              label={theme === 'dark' ? '切换到浅色主题' : '切换到深色主题'}
               title={theme === 'dark' ? '浅色主题' : '深色主题'}
               aria-pressed={theme === 'dark'}
               style={{ marginLeft: 0, marginBottom: 'var(--spacing-lg-compact)' }}
             >
               {theme === 'dark' ? <FiSun /> : <FiMoon />}
-            </ThemeButton>
+            </IconButton>
 
             <MobileNavLinks>
               {navItems.map((item) => {

@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+- ✅ UI 组件库：新增 `TextField`（统一输入外观/label/icon/状态展示，收敛输入交互分叉）。
+- ✅ Header：搜索输入迁移到 `TextField`，并将 `navItems` / `HeaderSearch` 渐进拆分到 `src/components/header/`。
+- ✅ SearchPage：主搜索输入迁移到 `TextField`（保持 URL 参数与 ESC 清空逻辑不变）。
+
 - ✅ UI 组件库：新增 `Button`/`IconButton` primitives（统一 variants/sizes/disabled/focus）。
 - ✅ 交互一致性：Banner / Login / Header / NetworkStatusBanner 关键按钮迁移到 UI primitives。
 - ✅ A11y：补齐全局 `:focus-visible` 基线样式（支持键盘导航）。

@@ -5,6 +5,7 @@ export { default as Col } from './Col';
 export { default as Card } from './Card';
 export { default as Button } from './Button';
 export { default as IconButton } from './IconButton';
+export { default as TextField } from './TextField';
 export { default as Dialog } from './Dialog';
 export { DialogBackdrop, DialogPanel } from './Dialog';
 export { default as Skeleton, SkeletonBlock, SkeletonCircle } from './Skeleton';

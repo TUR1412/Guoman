@@ -50,8 +50,9 @@
 ## UI 组件库（Design System）
 
 - 入口：`src/ui/index.js`
-- Primitives：`Button`、`IconButton`（统一 variants/sizes/disabled/focus-visible）
+- Primitives：`Button`、`IconButton`、`TextField`（统一 variants/sizes/disabled/focus-visible/输入一致性）
 - 约定：页面/组件优先复用 primitives，避免重复声明 `styled.button` 导致交互分叉
+- 渐进式模块化：`Header` 相关拆分组件放在 `src/components/header/`，对外入口仍为 `src/components/Header.jsx`
 
 ## 构建生成物
 

@@ -1,0 +1,149 @@
+import React, { useId, useMemo } from 'react';
+import styled from 'styled-components';
+
+const FieldRoot = styled.div`
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+`;
+
+const LabelRow = styled.label`
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+`;
+
+const Control = styled.div`
+  --tf-border: var(--control-border);
+  --tf-bg: var(--field-bg, var(--control-bg));
+  --tf-icon: var(--text-tertiary);
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--tf-border);
+  background: var(--tf-bg);
+  transition: var(--transition);
+
+  &:focus-within {
+    --tf-border: rgba(var(--primary-rgb), 0.62);
+    --tf-bg: var(--field-bg-focus, var(--control-bg-hover));
+    --tf-icon: var(--text-secondary);
+    box-shadow: var(--shadow-ring);
+  }
+
+  &[data-invalid='true'] {
+    --tf-border: rgba(255, 90, 90, 0.75);
+  }
+
+  &[data-disabled='true'] {
+    opacity: 0.72;
+  }
+`;
+
+const IconSlot = styled.span`
+  width: 18px;
+  height: 18px;
+  display: inline-grid;
+  place-items: center;
+  color: var(--tf-icon);
+
+  & > svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+`;
+
+const Input = styled.input`
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  padding: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+
+  &::placeholder {
+    color: var(--text-tertiary);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+`;
+
+const Helper = styled.div`
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  line-height: var(--leading-snug-plus);
+`;
+
+const ErrorText = styled(Helper)`
+  color: rgba(255, 90, 90, 0.95);
+  font-weight: 600;
+`;
+
+export function TextField({
+  id,
+  label,
+  labelSrOnly = false,
+  helperText,
+  errorText,
+  startIcon,
+  endIcon,
+  inputRef,
+  invalid,
+  disabled,
+  className,
+  style,
+  ...inputProps
+}) {
+  const fallbackId = useId();
+  const inputId = id ?? fallbackId;
+  const hintId = useMemo(() => `${inputId}-hint`, [inputId]);
+  const errorId = useMemo(() => `${inputId}-error`, [inputId]);
+
+  const describedBy = [
+    inputProps['aria-describedby'],
+    helperText ? hintId : null,
+    errorText ? errorId : null,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return (
+    <FieldRoot className={className} style={style}>
+      {label ? (
+        <LabelRow htmlFor={inputId} className={labelSrOnly ? 'sr-only' : undefined}>
+          {label}
+        </LabelRow>
+      ) : null}
+      <Control
+        data-invalid={invalid ? 'true' : undefined}
+        data-disabled={disabled ? 'true' : undefined}
+      >
+        {startIcon ? <IconSlot aria-hidden="true">{startIcon}</IconSlot> : null}
+        <Input
+          id={inputId}
+          ref={inputRef}
+          disabled={disabled}
+          aria-invalid={invalid ? 'true' : undefined}
+          aria-describedby={describedBy || undefined}
+          {...inputProps}
+        />
+        {endIcon ? <IconSlot aria-hidden="true">{endIcon}</IconSlot> : null}
+      </Control>
+      {errorText ? <ErrorText id={errorId}>{errorText}</ErrorText> : null}
+      {!errorText && helperText ? <Helper id={hintId}>{helperText}</Helper> : null}
+    </FieldRoot>
+  );
+}
+
+export default TextField;

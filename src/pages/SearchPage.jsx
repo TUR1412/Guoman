@@ -17,6 +17,7 @@ import {
 } from '../utils/animeFilterEngine';
 import { trackEvent } from '../utils/analytics';
 import { STORAGE_KEYS } from '../utils/dataKeys';
+import { TextField } from '../ui';
 
 const SearchBar = styled.form.attrs({
   'data-card': true,
@@ -138,24 +139,6 @@ const ResetButton = styled.button.attrs({ 'data-pressable': true })`
   &:hover {
     background: var(--surface-soft-hover);
     color: var(--text-primary);
-  }
-`;
-
-const Input = styled.input`
-  flex: 1;
-  padding: 0.85rem var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--field-bg);
-  color: var(--text-primary);
-
-  &:focus {
-    border-color: var(--primary-color);
-    background: var(--field-bg-focus);
-  }
-
-  &::placeholder {
-    color: var(--text-tertiary);
   }
 `;
 
@@ -546,17 +529,18 @@ function SearchPage() {
         <label className="sr-only" htmlFor={searchInputId}>
           搜索关键词
         </label>
-        <Input
+        <TextField
           id={searchInputId}
           type="search"
           name="q"
           aria-label="搜索关键词"
           aria-describedby="guoman-search-page-hint"
-          ref={inputRef}
+          inputRef={inputRef}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="例如：古风 仙侠 / 斗罗 / 绘梦动画"
+          style={{ flex: 1 }}
         />
         <Button type="submit">
           <FiSearch />
