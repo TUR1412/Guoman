@@ -81,6 +81,7 @@
 - **本地优先 (Local-first)**：收藏 / 观看进度 / 搜索 / 偏好等全量写入 `localStorage`
 - **命令面板**：`Ctrl/⌘ + K` 全局命令入口（搜索 / 跳转 / 快捷动作）
 - **影院级微交互**：Shared Layout 过渡、悬浮/按压反馈、Shimmer/Focus 动效护栏
+- **表单一致性**：Select / TextArea / Range 与 `TextField` 同一套 focus ring / disabled / invalid 交互与视觉语言
 - **指针高光**：导航/命令面板光标跟随高光（RAF 节流，避免 React 重渲染）
 - **增长裂变模块**：海报工坊（SVG 导出 + 历史管理）+ 足迹中心 + 成就系统
 - **数据管理**：用户中心支持导入/导出/清理，并显示本地占用体积

@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- ✅ 表单体系收敛：新增 `SelectField` / `TextAreaField` / `RangeInput` primitives，并迁移 Search/Favorites/Following/StaticPage/UserCenterPage/AnimeDetail 的表单控件以统一 focus/disabled/invalid 交互。
+
 - ✅ UI 组件库：新增 `TextField`（统一输入外观/label/icon/状态展示，收敛输入交互分叉）。
 - ✅ Header：搜索输入迁移到 `TextField`，并将 `navItems` / `HeaderSearch` 渐进拆分到 `src/components/header/`。
 - ✅ SearchPage：主搜索输入迁移到 `TextField`（保持 URL 参数与 ESC 清空逻辑不变）。

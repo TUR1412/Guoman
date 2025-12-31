@@ -7,7 +7,7 @@
 - **构建工具:** Vite 6
 - **路由:** React Router（Hash Router / `createHashRouter`，GitHub Pages 友好）
 - **样式:** styled-components + CSS Variables Design Tokens（`global.css`）+ data-_ 设计系统（`data-card` / `data-grid` / `data-col-span_`/`data-elev`）
-- **UI 原语:** `src/ui/`（Container / Stack / Grid / Card / Dialog / Skeleton）
+- **UI 原语:** `src/ui/`（Container / Stack / Grid / Card / Dialog / Skeleton / Toast / Button / IconButton / TextField / SelectField / TextAreaField / RangeInput）
 - **动效:** Framer Motion + 动效中枢（`src/motion/`，尊重 `prefers-reduced-motion` 并支持站内“强制减少动效”）
 - **组件工作台:** Storybook 8（React-Vite，`npm run storybook`）
 - **PWA:** Web App Manifest + Service Worker（离线缓存/更新提示）
