@@ -12,11 +12,11 @@ const dispatchUpdateEvent = (registration) => {
   } catch {}
 };
 
-export const registerServiceWorker = async () => {
+export const registerServiceWorker = async ({ forceProd = false } = {}) => {
   if (typeof window === 'undefined') return null;
   if (!('serviceWorker' in navigator)) return null;
 
-  const prod = Boolean(import.meta?.env?.PROD);
+  const prod = Boolean(import.meta?.env?.PROD) || Boolean(forceProd);
   if (!prod) return null;
 
   const swUrl = `${import.meta.env.BASE_URL}sw.js`;

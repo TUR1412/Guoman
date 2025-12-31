@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+- ✅ 质量门禁：修复覆盖率门禁相关失败（补齐关键分支测试，`npm run check` 全绿）。
+- ✅ 可测试性：`registerServiceWorker({ forceProd })` 支持注入生产分支以便稳定覆盖。
+- ✅ 稳定性：避免 `apiClient` 中未消费的 Promise `finally` 链触发未处理拒绝告警。
+
 ### 新增
 
 - 视觉系统：新增黄金比例排版/间距变量、12 列响应式栅格工具、0-12 阴影层级，并为 `data-card` 容器统一注入毛玻璃 + 动态渐变边框（hover 动态流光）。

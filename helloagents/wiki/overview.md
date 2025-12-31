@@ -40,3 +40,9 @@
 - [技术约定](../project.md)
 - [架构设计](arch.md)
 - [项目 README](../../README.md)
+
+## 质量门禁（本地）
+
+- `npm run check`：一键执行 `format:check` + `lint` + `test` + `build` + `budget:bundle`。
+- 覆盖率门禁（需要时）：`npm run test:coverage`。
+- `npm audit`：如遇镜像源不支持 audit endpoint，可用 `npm audit --registry="https://registry.npmjs.org/"` 获取完整结果。

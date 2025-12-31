@@ -111,6 +111,43 @@ describe('theme utils', () => {
     expect(document.documentElement.dataset.theme).toBe('light');
   });
 
+  it('initTheme binds matchMedia change listener via addEventListener and follows system when no stored theme', async () => {
+    const { initTheme, THEMES } = await loadTheme();
+
+    const original = window.matchMedia;
+    let matches = false;
+    const listeners = new Map();
+    const addEventListener = vi.fn((type, cb) => listeners.set(type, cb));
+    window.matchMedia = () => ({ matches, addEventListener });
+
+    initTheme();
+    expect(addEventListener).toHaveBeenCalledWith('change', expect.any(Function));
+
+    // second init should not re-bind
+    initTheme();
+    expect(addEventListener).toHaveBeenCalledTimes(1);
+
+    // system theme change (no stored theme) should apply
+    matches = true;
+    listeners.get('change')?.();
+    expect(document.documentElement.dataset.theme).toBe(THEMES.dark);
+
+    window.matchMedia = original;
+  });
+
+  it('initTheme falls back to addListener when addEventListener is unavailable', async () => {
+    const { initTheme } = await loadTheme();
+
+    const original = window.matchMedia;
+    const addListener = vi.fn();
+    window.matchMedia = () => ({ matches: false, addListener });
+
+    initTheme();
+    expect(addListener).toHaveBeenCalledWith(expect.any(Function));
+
+    window.matchMedia = original;
+  });
+
   it('covers remaining guard branches (window/document missing + invalid theme)', async () => {
     const { applyTheme, getCurrentTheme, getStoredTheme, initTheme, THEMES, toggleTheme } =
       await loadTheme();

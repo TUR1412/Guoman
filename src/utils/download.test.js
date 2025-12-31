@@ -16,6 +16,14 @@ describe('download', () => {
     });
   });
 
+  it('returns no-document for binary downloads when document is missing', () => {
+    vi.stubGlobal('document', undefined);
+    expect(downloadBinaryFile({ bytes: new Uint8Array([1]), filename: 'a.bin' })).toEqual({
+      ok: false,
+      reason: 'no-document',
+    });
+  });
+
   it('downloads via blob URL', () => {
     const createObjectURL = vi.fn(() => 'blob:mock');
     const revokeObjectURL = vi.fn();
@@ -53,6 +61,17 @@ describe('download', () => {
     });
 
     expect(downloadTextFile({ text: 'x', filename: 'x.txt' })).toEqual({
+      ok: false,
+      reason: 'exception',
+    });
+  });
+
+  it('returns exception on unexpected binary download errors', () => {
+    window.URL.createObjectURL = vi.fn(() => {
+      throw new Error('boom');
+    });
+
+    expect(downloadBinaryFile({ bytes: new Uint8Array([1, 2, 3]), filename: 'x.bin' })).toEqual({
       ok: false,
       reason: 'exception',
     });

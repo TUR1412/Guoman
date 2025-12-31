@@ -6,13 +6,14 @@
 
 ## 索引
 
-| 时间戳       | 功能名称                    | 类型 | 状态     | 方案包路径                                                                                            |
-| ------------ | --------------------------- | ---- | -------- | ----------------------------------------------------------------------------------------------------- |
-| 202512242106 | singularity_refactor        | 重构 | ✅已完成 | [2025-12/202512242106_singularity_refactor](2025-12/202512242106_singularity_refactor/)               |
-| 202512252118 | ink_visual_evolution        | 功能 | ✅已完成 | [2025-12/202512252118_ink_visual_evolution](2025-12/202512252118_ink_visual_evolution/)               |
-| 202512270347 | infinite_evolution_protocol | 重构 | ✅已完成 | [2025-12/202512270347_infinite_evolution_protocol](2025-12/202512270347_infinite_evolution_protocol/) |
-| 202512271448 | motion_orchestration_hub    | 重构 | ✅已完成 | [2025-12/202512271448_motion_orchestration_hub](2025-12/202512271448_motion_orchestration_hub/)       |
-| 202512271510 | ui_component_library        | 功能 | ✅已完成 | [2025-12/202512271510_ui_component_library](2025-12/202512271510_ui_component_library/)               |
+| 时间戳       | 功能名称                    | 类型 | 状态     | 方案包路径                                                                                                                   |
+| ------------ | --------------------------- | ---- | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| 202512242106 | singularity_refactor        | 重构 | ✅已完成 | [2025-12/202512242106_singularity_refactor](2025-12/202512242106_singularity_refactor/)                                      |
+| 202512252118 | ink_visual_evolution        | 功能 | ✅已完成 | [2025-12/202512252118_ink_visual_evolution](2025-12/202512252118_ink_visual_evolution/)                                      |
+| 202512270347 | infinite_evolution_protocol | 重构 | ✅已完成 | [2025-12/202512270347_infinite_evolution_protocol](2025-12/202512270347_infinite_evolution_protocol/)                        |
+| 202512271448 | motion_orchestration_hub    | 重构 | ✅已完成 | [2025-12/202512271448_motion_orchestration_hub](2025-12/202512271448_motion_orchestration_hub/)                              |
+| 202512271510 | ui_component_library        | 功能 | ✅已完成 | [2025-12/202512271510_ui_component_library](2025-12/202512271510_ui_component_library/)                                      |
+| 202512312013 | quark_r11_evolution         | 重构 | ✅已完成 | [helloagents/history/2025-12/202512312013_quark_r11_evolution](helloagents/history/2025-12/202512312013_quark_r11_evolution) |
 
 ---
 

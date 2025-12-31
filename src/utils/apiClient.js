@@ -138,7 +138,7 @@ export const createApiClient = ({
 
     if (enableDedup) {
       inFlight.set(key, exec);
-      exec.finally(() => inFlight.delete(key));
+      exec.finally(() => inFlight.delete(key)).catch(() => {});
     }
 
     return exec;
