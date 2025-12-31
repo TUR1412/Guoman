@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { AnimatePresence, LayoutGroup, motion, useScroll, useSpring } from 'framer-motion';
+import { IconButton } from '../ui';
 import {
   FiActivity,
   FiBell,
@@ -295,7 +296,11 @@ const LoginButton = styled(Link).attrs({
   }
 `;
 
-const ThemeButton = styled.button.attrs({ 'data-pressable': true, 'data-focus-guide': true })`
+const ThemeButton = styled(IconButton).attrs({
+  variant: 'secondary',
+  'data-pressable': true,
+  'data-focus-guide': true,
+})`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -323,7 +328,7 @@ const CommandButton = styled(ThemeButton)`
   }
 `;
 
-const MobileMenuButton = styled.button.attrs({ 'data-pressable': true })`
+const MobileMenuButton = styled(IconButton).attrs({ variant: 'ghost', 'data-pressable': true })`
   display: none;
   font-size: var(--text-4xl);
   color: var(--text-primary);

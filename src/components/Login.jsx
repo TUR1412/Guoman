@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiLock, FiMail, FiEye, FiEyeOff } from './icons/feather';
+import { Button } from '../ui';
 import { useToast } from './ToastProvider';
 import { usePageMeta } from '../utils/pageMeta';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
@@ -293,7 +294,8 @@ const ForgotPassword = styled(Link).attrs({ 'data-pressable': true })`
   }
 `;
 
-const SubmitButton = styled.button.attrs({
+const SubmitButton = styled(Button).attrs({
+  variant: 'primary',
   'data-shimmer': true,
   'data-pressable': true,
   'data-focus-guide': true,
@@ -351,7 +353,11 @@ const SocialLogin = styled.div.attrs({ role: 'list' })`
   grid-column: 1 / -1;
 `;
 
-const SocialButton = styled.button.attrs({ 'data-pressable': true, role: 'listitem' })`
+const SocialButton = styled(Button).attrs({
+  variant: 'secondary',
+  'data-pressable': true,
+  role: 'listitem',
+})`
   flex: 1;
   padding: var(--spacing-md);
   border-radius: var(--border-radius-md);

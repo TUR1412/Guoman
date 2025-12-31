@@ -46,3 +46,13 @@
 - `npm run check`：一键执行 `format:check` + `lint` + `test` + `build` + `budget:bundle`。
 - 覆盖率门禁（需要时）：`npm run test:coverage`。
 - `npm audit`：如遇镜像源不支持 audit endpoint，可用 `npm audit --registry="https://registry.npmjs.org/"` 获取完整结果。
+
+## UI 组件库（Design System）
+
+- 入口：`src/ui/index.js`
+- Primitives：`Button`、`IconButton`（统一 variants/sizes/disabled/focus-visible）
+- 约定：页面/组件优先复用 primitives，避免重复声明 `styled.button` 导致交互分叉
+
+## 构建生成物
+
+- `public/robots.txt`、`public/sitemap.xml` 为 `npm run build` 的 `prebuild` 阶段生成物，已从 Git 移除并加入 `.gitignore`。

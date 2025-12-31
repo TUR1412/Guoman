@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+- ✅ UI 组件库：新增 `Button`/`IconButton` primitives（统一 variants/sizes/disabled/focus）。
+- ✅ 交互一致性：Banner / Login / Header / NetworkStatusBanner 关键按钮迁移到 UI primitives。
+- ✅ A11y：补齐全局 `:focus-visible` 基线样式（支持键盘导航）。
+- ✅ 工程体验：`public/robots.txt` 与 `public/sitemap.xml` 改为构建生成物（避免本地 build 产生无意义 diff）。
 - ✅ 质量门禁：修复覆盖率门禁相关失败（补齐关键分支测试，`npm run check` 全绿）。
 - ✅ 可测试性：`registerServiceWorker({ forceProd })` 支持注入生产分支以便稳定覆盖。
 - ✅ 稳定性：避免 `apiClient` 中未消费的 Promise `finally` 链触发未处理拒绝告警。

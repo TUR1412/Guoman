@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FiAlertTriangle, FiDownload, FiWifiOff, FiX } from './icons/feather';
+import { Button, IconButton } from '../ui';
 import { activateServiceWorkerUpdate, SERVICE_WORKER_EVENTS } from '../utils/serviceWorker';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 
@@ -52,7 +53,11 @@ const Desc = styled.div`
   line-height: var(--leading-snug-plus);
 `;
 
-const Close = styled.button.attrs({ type: 'button', 'data-pressable': true })`
+const Close = styled(IconButton).attrs({
+  type: 'button',
+  variant: 'ghost',
+  'data-pressable': true,
+})`
   width: 32px;
   height: 32px;
   border-radius: var(--border-radius-md);
@@ -72,7 +77,11 @@ const Actions = styled.div.attrs({ 'data-divider': 'inline' })`
   gap: var(--spacing-sm);
 `;
 
-const ActionButton = styled.button.attrs({ type: 'button', 'data-pressable': true })`
+const ActionButton = styled(Button).attrs({
+  type: 'button',
+  variant: 'ghost',
+  'data-pressable': true,
+})`
   height: 32px;
   padding: 0 var(--spacing-md);
   border-radius: var(--border-radius-md);

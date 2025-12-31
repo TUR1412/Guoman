@@ -1689,3 +1689,18 @@ ol {
 :root[data-reduced-motion='true'] [data-parallax] {
   transform: none !important;
 }
+
+/* R12: Global focus-visible baseline (A11y) */
+:where(
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  summary,
+  [role='button'],
+  [tabindex]:not([tabindex='-1'])
+):focus-visible {
+  outline: 2px solid var(--accent-color, var(--primary-color));
+  outline-offset: 3px;
+}

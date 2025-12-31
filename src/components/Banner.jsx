@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiChevronLeft, FiChevronRight } from './icons/feather';
+import { IconButton } from '../ui';
 import { prefetchRoute } from '../utils/routePrefetch';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 
@@ -125,7 +126,11 @@ const ControlsLayer = styled.div`
   pointer-events: none;
 `;
 
-const NavButton = styled.button.attrs({ type: 'button', 'data-pressable': true })`
+const NavButton = styled(IconButton).attrs({
+  type: 'button',
+  variant: 'secondary',
+  'data-pressable': true,
+})`
   pointer-events: auto;
   position: absolute;
   top: 50%;
@@ -150,11 +155,6 @@ const NavButton = styled.button.attrs({ type: 'button', 'data-pressable': true }
 
   &:active {
     transform: translateY(-50%) scale(0.96);
-  }
-
-  &:focus-visible {
-    outline: 2px solid rgba(var(--primary-rgb), 0.65);
-    outline-offset: 2px;
   }
 `;
 

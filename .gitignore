@@ -33,3 +33,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw? 
+
+# Generated SEO assets (created during prebuild)
+public/robots.txt
+public/sitemap.xml
