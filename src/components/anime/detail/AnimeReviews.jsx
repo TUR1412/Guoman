@@ -1,14 +1,12 @@
 import React from 'react';
 import { FiStar } from '../../icons/feather';
 import EmptyState from '../../EmptyState';
-import { TextField } from '../../../ui';
+import { SelectField, TextAreaField, TextField } from '../../../ui';
 import {
   CommentActions,
   CommentButton,
   CommentForm,
   CommentRow,
-  CommentSelect,
-  CommentTextarea,
   ReviewCard,
   ReviewComment,
   ReviewHeader,
@@ -74,6 +72,8 @@ export function AnimeReviews({
       <CommentForm onSubmit={onSubmit}>
         <CommentRow>
           <TextField
+            label="昵称（可选）"
+            labelSrOnly
             type="text"
             name="user"
             placeholder="昵称（可选）"
@@ -81,19 +81,24 @@ export function AnimeReviews({
             onChange={(event) => onCommentUserChange(event.target.value)}
             style={{ flex: 1, minWidth: 180 }}
           />
-          <CommentSelect
+          <SelectField
+            label="评分"
+            labelSrOnly
             name="rating"
             value={commentRating}
             onChange={(event) => onCommentRatingChange(Number(event.target.value || 0))}
+            style={{ minWidth: 160 }}
           >
             {[5, 4, 3, 2, 1, 0].map((score) => (
               <option key={score} value={score}>
                 {score === 0 ? '暂无评分' : `${score} 星`}
               </option>
             ))}
-          </CommentSelect>
+          </SelectField>
         </CommentRow>
-        <CommentTextarea
+        <TextAreaField
+          label="评论内容"
+          labelSrOnly
           name="comment"
           placeholder="说说你的看法..."
           value={commentDraft}

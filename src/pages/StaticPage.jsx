@@ -10,6 +10,7 @@ import {
 import PageShell from '../components/PageShell';
 import { useToast } from '../components/ToastProvider';
 import { clearFeedback, getFeedbackList, submitFeedback } from '../utils/feedbackStore';
+import { Button, TextAreaField, TextField } from '../ui';
 
 const Grid = styled.div.attrs({
   role: 'list',
@@ -73,6 +74,17 @@ const Li = styled.li`
     left: 0;
     color: var(--primary-color);
   }
+`;
+
+const FeedbackForm = styled.form`
+  display: grid;
+  gap: var(--spacing-md);
+`;
+
+const FeedbackActions = styled.div`
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
 `;
 
 const PAGES = {
@@ -288,61 +300,31 @@ function StaticPage({ page }) {
             </span>
             提交反馈
           </H2>
-          <form onSubmit={onSubmitFeedback} style={{ display: 'grid', gap: 'var(--spacing-md)' }}>
-            <input
+          <FeedbackForm onSubmit={onSubmitFeedback}>
+            <TextField
+              label="联系方式（可选）"
+              labelSrOnly
               type="text"
               placeholder="联系方式（可选）"
               value={feedbackContact}
               onChange={(event) => setFeedbackContact(event.target.value)}
-              style={{
-                padding: 'var(--spacing-sm) var(--spacing-md)',
-                borderRadius: 'var(--border-radius-md)',
-                border: '1px solid var(--border-subtle)',
-                background: 'var(--field-bg)',
-                color: 'var(--text-primary)',
-              }}
             />
-            <textarea
+            <TextAreaField
+              label="反馈内容"
+              labelSrOnly
               placeholder="写下你的建议..."
               value={feedbackMessage}
               onChange={(event) => setFeedbackMessage(event.target.value)}
-              style={{
-                minHeight: '120px',
-                padding: 'var(--spacing-sm) var(--spacing-md)',
-                borderRadius: 'var(--border-radius-md)',
-                border: '1px solid var(--border-subtle)',
-                background: 'var(--field-bg)',
-                color: 'var(--text-primary)',
-              }}
             />
-            <div style={{ display: 'flex', gap: 'var(--spacing-md)', flexWrap: 'wrap' }}>
-              <button
-                type="submit"
-                style={{
-                  padding: 'var(--spacing-sm) var(--spacing-md)',
-                  borderRadius: 'var(--border-radius-md)',
-                  border: '1px solid var(--border-subtle)',
-                  background: 'var(--surface-soft)',
-                  color: 'var(--text-primary)',
-                }}
-              >
+            <FeedbackActions>
+              <Button type="submit" variant="primary">
                 提交反馈
-              </button>
-              <button
-                type="button"
-                onClick={onClearFeedback}
-                style={{
-                  padding: 'var(--spacing-sm) var(--spacing-md)',
-                  borderRadius: 'var(--border-radius-md)',
-                  border: '1px solid var(--border-subtle)',
-                  background: 'var(--surface-soft)',
-                  color: 'var(--text-primary)',
-                }}
-              >
+              </Button>
+              <Button type="button" onClick={onClearFeedback}>
                 清空记录
-              </button>
-            </div>
-          </form>
+              </Button>
+            </FeedbackActions>
+          </FeedbackForm>
 
           {feedbackList.length > 0 && (
             <List style={{ marginTop: 'var(--spacing-md)' }}>

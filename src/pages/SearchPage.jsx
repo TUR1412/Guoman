@@ -17,7 +17,7 @@ import {
 } from '../utils/animeFilterEngine';
 import { trackEvent } from '../utils/analytics';
 import { STORAGE_KEYS } from '../utils/dataKeys';
-import { TextField } from '../ui';
+import { SelectField, TextField } from '../ui';
 
 const SearchBar = styled.form.attrs({
   'data-card': true,
@@ -69,22 +69,6 @@ const Field = styled.div`
 const FieldLabel = styled.label`
   color: var(--text-tertiary);
   font-size: var(--text-sm);
-`;
-
-const Select = styled.select`
-  width: 100%;
-  padding: 0.85rem var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--field-bg);
-  color: var(--text-primary);
-  transition: var(--transition);
-
-  &:focus {
-    border-color: var(--primary-color);
-    background: var(--field-bg-focus);
-    outline: none;
-  }
 `;
 
 const FilterChipRow = styled.div.attrs({ role: 'list' })`
@@ -583,10 +567,10 @@ function SearchPage() {
         </FiltersHeader>
 
         <FiltersGrid>
-          <Field data-col-span="12" data-col-span-md="6">
-            <FieldLabel htmlFor="guoman-search-filter-studio">制作方</FieldLabel>
-            <Select
+          <div data-col-span="12" data-col-span-md="6">
+            <SelectField
               id="guoman-search-filter-studio"
+              label="制作方"
               value={filters.studio}
               onChange={(e) => {
                 const nextStudio = e.target.value;
@@ -600,13 +584,13 @@ function SearchPage() {
                   {studio}（{count}）
                 </option>
               ))}
-            </Select>
-          </Field>
+            </SelectField>
+          </div>
 
-          <Field data-col-span="12" data-col-span-md="6">
-            <FieldLabel htmlFor="guoman-search-filter-rating">最低评分</FieldLabel>
-            <Select
+          <div data-col-span="12" data-col-span-md="6">
+            <SelectField
               id="guoman-search-filter-rating"
+              label="最低评分"
               value={filters.minRating == null ? '' : String(filters.minRating)}
               onChange={(e) => {
                 const raw = e.target.value;
@@ -621,13 +605,13 @@ function SearchPage() {
               <option value="4.4">4.4+</option>
               <option value="4.6">4.6+</option>
               <option value="4.8">4.8+</option>
-            </Select>
-          </Field>
+            </SelectField>
+          </div>
 
-          <Field data-col-span="12" data-col-span-md="6">
-            <FieldLabel htmlFor="guoman-search-filter-year-min">年份从</FieldLabel>
-            <Select
+          <div data-col-span="12" data-col-span-md="6">
+            <SelectField
               id="guoman-search-filter-year-min"
+              label="年份从"
               value={filters.yearMin == null ? '' : String(filters.yearMin)}
               onChange={(e) => {
                 const raw = e.target.value;
@@ -648,13 +632,13 @@ function SearchPage() {
                   {year}
                 </option>
               ))}
-            </Select>
-          </Field>
+            </SelectField>
+          </div>
 
-          <Field data-col-span="12" data-col-span-md="6">
-            <FieldLabel htmlFor="guoman-search-filter-year-max">年份到</FieldLabel>
-            <Select
+          <div data-col-span="12" data-col-span-md="6">
+            <SelectField
               id="guoman-search-filter-year-max"
+              label="年份到"
               value={filters.yearMax == null ? '' : String(filters.yearMax)}
               onChange={(e) => {
                 const raw = e.target.value;
@@ -675,8 +659,8 @@ function SearchPage() {
                   {year}
                 </option>
               ))}
-            </Select>
-          </Field>
+            </SelectField>
+          </div>
 
           <Field data-col-span="12">
             <FieldLabel as="div">连载状态</FieldLabel>

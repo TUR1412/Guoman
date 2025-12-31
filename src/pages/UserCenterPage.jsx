@@ -47,6 +47,7 @@ import {
   resetVisualSettings,
   setVisualSettings,
 } from '../utils/visualSettings';
+import { RangeInput, TextAreaField, TextField } from '../ui';
 
 const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
   display: grid;
@@ -121,24 +122,6 @@ const InlineForm = styled.form`
   gap: var(--spacing-md);
 `;
 
-const Input = styled.input`
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--field-bg);
-  color: var(--text-primary);
-`;
-
-const Textarea = styled.textarea`
-  min-height: 120px;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--field-bg);
-  color: var(--text-primary);
-  resize: vertical;
-`;
-
 const List = styled.div.attrs({ 'data-divider': 'list' })`
   display: grid;
   gap: var(--spacing-sm);
@@ -199,11 +182,6 @@ const SettingHint = styled.div`
   color: var(--text-tertiary);
   font-size: var(--text-sm);
   line-height: var(--leading-snug-plus);
-`;
-
-const RangeInput = styled.input.attrs({ type: 'range' })`
-  width: 100%;
-  accent-color: var(--primary-color);
 `;
 
 const buildExportFilename = (prefix, extension = 'json') => `${prefix}-${Date.now()}.${extension}`;
@@ -623,13 +601,17 @@ function UserCenterPage() {
           <FiUser /> 个人档案
         </CardTitle>
         <InlineForm>
-          <Input
+          <TextField
+            label="昵称"
+            labelSrOnly
             type="text"
             placeholder="昵称"
             value={profile.name}
             onChange={(event) => setProfile({ ...profile, name: event.target.value })}
           />
-          <Textarea
+          <TextAreaField
+            label="个人签名"
+            labelSrOnly
             placeholder="个人签名"
             value={profile.signature}
             onChange={(event) => setProfile({ ...profile, signature: event.target.value })}
@@ -760,7 +742,9 @@ function UserCenterPage() {
           <FiInfo /> 多端同步
         </CardTitle>
         <CardMeta>此处可保存你的同步 Token（占位，后续可接入真实后端）。</CardMeta>
-        <Input
+        <TextField
+          label="同步 Token"
+          labelSrOnly
           type="text"
           placeholder="同步 Token"
           value={sync.token || ''}
@@ -810,13 +794,17 @@ function UserCenterPage() {
           <FiInfo /> 意见反馈
         </CardTitle>
         <InlineForm onSubmit={onSubmitFeedback}>
-          <Input
+          <TextField
+            label="联系方式（可选）"
+            labelSrOnly
             type="text"
             placeholder="联系方式（可选）"
             value={feedbackContact}
             onChange={(event) => setFeedbackContact(event.target.value)}
           />
-          <Textarea
+          <TextAreaField
+            label="反馈内容"
+            labelSrOnly
             placeholder="写下你的想法..."
             value={feedbackMessage}
             onChange={(event) => setFeedbackMessage(event.target.value)}

@@ -14,6 +14,7 @@ import {
 } from '../utils/followingStore';
 import { pushNotification } from '../utils/notificationsStore';
 import { useFollowingEntries } from '../utils/useIsFollowing';
+import { SelectField, TextField } from '../ui';
 
 const Card = styled.div.attrs({
   'data-card': true,
@@ -86,40 +87,6 @@ const Label = styled.label`
   color: var(--text-tertiary);
   font-size: var(--text-xs);
   letter-spacing: 0.02em;
-`;
-
-const Input = styled.input.attrs({ 'data-focus-guide': true })`
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--field-bg);
-  color: var(--text-primary);
-  transition: var(--transition);
-
-  &:focus {
-    border-color: var(--primary-soft-border);
-    background: var(--field-bg-focus);
-    box-shadow: var(--shadow-ring);
-    outline: none;
-  }
-`;
-
-const Select = styled.select.attrs({ 'data-focus-guide': true })`
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--field-bg);
-  color: var(--text-primary);
-  transition: var(--transition);
-
-  &:focus {
-    border-color: var(--primary-soft-border);
-    background: var(--field-bg-focus);
-    box-shadow: var(--shadow-ring);
-    outline: none;
-  }
 `;
 
 const ToggleRow = styled.label.attrs({ 'data-pressable': true })`
@@ -316,8 +283,9 @@ function FollowingPage() {
 
                 <Field>
                   <Label htmlFor={`guoman-following-${entry.animeId}-at`}>开播时间（本地）</Label>
-                  <Input
+                  <TextField
                     id={`guoman-following-${entry.animeId}-at`}
+                    data-focus-guide
                     type="datetime-local"
                     value={reminderValue}
                     onChange={(event) => {
@@ -333,8 +301,9 @@ function FollowingPage() {
 
                 <Field>
                   <Label htmlFor={`guoman-following-${entry.animeId}-before`}>提前提醒</Label>
-                  <Select
+                  <SelectField
                     id={`guoman-following-${entry.animeId}-before`}
+                    data-focus-guide
                     value={entry.remindBeforeMinutes}
                     onChange={(event) => {
                       updateFollowingReminder(entry.animeId, {
@@ -350,7 +319,7 @@ function FollowingPage() {
                     <option value={30}>提前 30 分钟</option>
                     <option value={60}>提前 1 小时</option>
                     <option value={180}>提前 3 小时</option>
-                  </Select>
+                  </SelectField>
                 </Field>
 
                 <ButtonRow>

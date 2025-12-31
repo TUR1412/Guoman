@@ -228,20 +228,6 @@ export const ProgressLabel = styled.span`
   font-size: var(--text-sm-plus);
 `;
 
-export const ProgressInput = styled.input`
-  width: 100%;
-  padding: var(--spacing-sm-mid) var(--spacing-md-compact);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--field-bg);
-  color: var(--text-primary);
-`;
-
-export const ProgressRange = styled.input`
-  width: 100%;
-  accent-color: var(--primary-color);
-`;
-
 export const ProgressMeta = styled.div`
   display: flex;
   justify-content: space-between;
@@ -584,45 +570,6 @@ export const CommentRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-md);
-`;
-
-export const CommentInput = styled.input`
-  flex: 1;
-  min-width: 180px;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--field-bg);
-  color: var(--text-primary);
-
-  &:focus {
-    border-color: var(--primary-color);
-    background: var(--field-bg-focus);
-  }
-`;
-
-export const CommentSelect = styled.select`
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--field-bg);
-  color: var(--text-primary);
-`;
-
-export const CommentTextarea = styled.textarea`
-  min-height: 120px;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--field-bg);
-  color: var(--text-primary);
-  resize: vertical;
-  line-height: var(--leading-relaxed);
-
-  &:focus {
-    border-color: var(--primary-color);
-    background: var(--field-bg-focus);
-  }
 `;
 
 export const CommentActions = styled.div.attrs({ 'data-divider': 'inline' })`

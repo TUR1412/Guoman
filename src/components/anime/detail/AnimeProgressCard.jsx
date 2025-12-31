@@ -1,11 +1,10 @@
 import React from 'react';
-import { TextField } from '../../../ui';
+import { RangeInput, TextField } from '../../../ui';
 import {
   ProgressActions,
   ProgressCard,
   ProgressLabel,
   ProgressMeta,
-  ProgressRange,
   ProgressRow,
   ProgressTitle,
   SecondaryButton,
@@ -46,9 +45,8 @@ export function AnimeProgressCard({
           本集进度
         </ProgressLabel>
         <div>
-          <ProgressRange
+          <RangeInput
             id={progressRangeId}
-            type="range"
             min={0}
             max={100}
             value={safeProgress.progress}

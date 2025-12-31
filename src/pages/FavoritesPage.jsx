@@ -28,6 +28,7 @@ import { trackEvent } from '../utils/analytics';
 import { scheduleStorageWrite } from '../utils/storageQueue';
 import { STORAGE_KEYS } from '../utils/dataKeys';
 import { safeJsonParse } from '../utils/json';
+import { SelectField } from '../ui';
 import { formatZhDateTime } from '../utils/datetime';
 import { usePersistedState } from '../utils/usePersistedState';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
@@ -167,15 +168,6 @@ const GroupChip = styled.button.attrs({ 'data-pressable': true })`
     transform: translateY(-1px);
   `
       : ''}
-`;
-
-const GroupSelect = styled.select`
-  width: 100%;
-  padding: var(--spacing-xs-plus) var(--spacing-sm);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--field-bg);
-  color: var(--text-primary);
 `;
 
 const FavoriteItem = styled.div`
@@ -327,7 +319,8 @@ function SortableFavoriteRow({
 
       <AnimeCard anime={anime} />
 
-      <GroupSelect
+      <SelectField
+        aria-label="选择分组"
         value={groupMap.get(anime.id) || 'none'}
         onChange={(event) => updateGroupAssignment(anime.id, event.target.value)}
       >
@@ -337,7 +330,7 @@ function SortableFavoriteRow({
             {group.name}
           </option>
         ))}
-      </GroupSelect>
+      </SelectField>
     </SortableItem>
   );
 }
@@ -850,7 +843,8 @@ function FavoritesPage() {
                     </DragGroupHandle>
                   ) : null}
                 </HandleRow>
-                <GroupSelect
+                <SelectField
+                  aria-label="选择分组"
                   value={groupMap.get(anime.id) || 'none'}
                   onChange={(event) => updateGroupAssignment(anime.id, event.target.value)}
                 >
@@ -860,7 +854,7 @@ function FavoritesPage() {
                       {group.name}
                     </option>
                   ))}
-                </GroupSelect>
+                </SelectField>
               </FavoriteItem>
             ))}
           </AnimeGrid>
