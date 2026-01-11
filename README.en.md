@@ -33,6 +33,7 @@
 - **Command Palette upgrades**: jump to titles / `#tags` / categories / pages; search stays as a fallback item, and highlighted targets are idle-prefetched for snappier navigation.
 - **Local-first**: favorites, progress, taste profile, and visual settings are persisted in `localStorage`.
 - **PWA & diagnostics**: offline caching + update prompt + `/diagnostics` local health snapshot.
+- **Observability**: local logs and INP tracking for faster debugging of interaction issues.
 
 ---
 

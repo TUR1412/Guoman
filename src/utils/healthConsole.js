@@ -1,5 +1,6 @@
 import { getFeatureSummaries } from './dataVault';
 import { getErrorReports } from './errorReporter';
+import { getLogs } from './logger';
 import { getPerformanceSnapshot } from './performance';
 import { formatBytes } from './formatBytes';
 
@@ -185,6 +186,7 @@ export const getHealthSnapshot = () => {
   const memory = getMemorySnapshot();
   const perf = getPerformanceSnapshot();
   const errors = getErrorReports();
+  const logs = getLogs();
 
   return {
     at: new Date().toISOString(),
@@ -209,6 +211,13 @@ export const getHealthSnapshot = () => {
     recentErrors: errors
       .slice(0, 5)
       .map((e) => ({ at: e.at, message: e.message, source: e.source })),
+    logCount: Array.isArray(logs) ? logs.length : 0,
+    recentLogs: (Array.isArray(logs) ? logs : []).slice(0, 5).map((entry) => ({
+      at: entry.at,
+      level: entry.level,
+      message: entry.message,
+      source: entry.source,
+    })),
     sw:
       typeof navigator !== 'undefined'
         ? {

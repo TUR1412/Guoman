@@ -6,6 +6,7 @@ import { useToast } from '../components/ToastProvider';
 import { FiActivity, FiDownload, FiTrash2, FiZap } from '../components/icons/feather';
 import { downloadTextFile } from '../utils/download';
 import { getErrorReports, clearErrorReports } from '../utils/errorReporter';
+import { getLogs, clearLogs } from '../utils/logger';
 import { getFeatureSummaries } from '../utils/dataVault';
 import { formatBytes } from '../utils/formatBytes';
 import {
@@ -122,10 +123,12 @@ const ProgressFill = styled.div`
 const buildDiagnosticsBundle = () => {
   const snapshot = getHealthSnapshot();
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     generatedAt: new Date().toISOString(),
     userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
     snapshot,
+    logs: getLogs().slice(0, 120),
+    errors: getErrorReports().slice(0, 50),
   };
 };
 
@@ -159,11 +162,13 @@ export default function DiagnosticsPage() {
   const [monitoring, setMonitoring] = useState(false);
   const [bundle, setBundle] = useState(() => buildDiagnosticsBundle());
   const [errors, setErrors] = useState(() => getErrorReports());
+  const [logs, setLogs] = useState(() => getLogs());
   const [storage, setStorage] = useState(() => getFeatureSummaries());
 
   const refresh = useCallback(() => {
     setBundle(buildDiagnosticsBundle());
     setErrors(getErrorReports());
+    setLogs(getLogs());
     setStorage(getFeatureSummaries());
   }, []);
 
@@ -327,6 +332,12 @@ export default function DiagnosticsPage() {
               </StatValue>
             </StatRow>
             <StatRow>
+              <StatKey>INP</StatKey>
+              <StatValue>
+                {typeof perf.inp?.value === 'number' ? `${perf.inp.value.toFixed(0)}ms` : '—'}
+              </StatValue>
+            </StatRow>
+            <StatRow>
               <StatKey>事件循环延迟</StatKey>
               <StatValue>
                 {typeof lag.avg === 'number' ? `${lag.avg}ms` : '—'} /{' '}
@@ -388,6 +399,48 @@ export default function DiagnosticsPage() {
           </Actions>
         </Card>
 
+        <Card>
+          <CardTitle>日志</CardTitle>
+          <List>
+            <StatRow>
+              <StatKey>最近日志</StatKey>
+              <StatValue>{logs.length} 条</StatValue>
+            </StatRow>
+          </List>
+          <Actions>
+            <ActionButton
+              type="button"
+              onClick={() => {
+                clearLogs();
+                refresh();
+                toast.success('已清空日志', '本地日志列表已清空。');
+              }}
+            >
+              <FiTrash2 />
+              清空日志
+            </ActionButton>
+            <ActionButton
+              type="button"
+              onClick={() => {
+                const filename = `guoman-logs-${Date.now()}.json`;
+                const res = downloadTextFile({
+                  text: JSON.stringify(getLogs(), null, 2),
+                  filename,
+                  mimeType: 'application/json;charset=utf-8',
+                });
+                if (!res.ok) {
+                  toast.warning('下载失败', '请检查浏览器下载权限。');
+                  return;
+                }
+                toast.success('已下载', `文件已保存：${filename}`);
+              }}
+            >
+              <FiDownload />
+              下载日志
+            </ActionButton>
+          </Actions>
+        </Card>
+
         <WideCard>
           <CardTitle>本地存储占用</CardTitle>
           {storage.length > 0 ? (
@@ -444,6 +497,29 @@ export default function DiagnosticsPage() {
             <EmptyState
               title="暂无错误"
               description="这里会记录脚本错误与未捕获 Promise 拒绝，便于你导出诊断包定位问题。"
+              primaryAction={{ to: '/', label: '回到首页' }}
+              secondaryAction={{ to: '/profile', label: '用户中心' }}
+            />
+          )}
+        </WideCard>
+
+        <WideCard>
+          <CardTitle>最近日志明细</CardTitle>
+          {logs.length > 0 ? (
+            <List>
+              {logs.slice(0, 16).map((entry) => (
+                <div key={entry.id}>
+                  <strong>{new Date(entry.at).toLocaleString('zh-CN')}</strong>{' '}
+                  <span>· {String(entry.level || 'info').toUpperCase()}</span>
+                  {entry.source ? <span> · {entry.source}</span> : null}
+                  <div>{entry.message}</div>
+                </div>
+              ))}
+            </List>
+          ) : (
+            <EmptyState
+              title="暂无日志"
+              description="这里会记录关键行为与异常线索（local-first），方便你导出日志定位问题。"
               primaryAction={{ to: '/', label: '回到首页' }}
               secondaryAction={{ to: '/profile', label: '用户中心' }}
             />

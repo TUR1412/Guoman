@@ -14,6 +14,14 @@ const loadHealthConsole = async ({
     { at: Date.now(), message: 'E5', source: 'unit' },
     { at: Date.now(), message: 'E6', source: 'unit' },
   ],
+  logs = [
+    { at: Date.now(), level: 'info', message: 'L1', source: 'unit' },
+    { at: Date.now(), level: 'warn', message: 'L2', source: 'unit' },
+    { at: Date.now(), level: 'error', message: 'L3', source: 'unit' },
+    { at: Date.now(), level: 'debug', message: 'L4', source: 'unit' },
+    { at: Date.now(), level: 'info', message: 'L5', source: 'unit' },
+    { at: Date.now(), level: 'info', message: 'L6', source: 'unit' },
+  ],
   perfSnapshot = { fps: 60, longTasks: 0 },
 } = {}) => {
   vi.resetModules();
@@ -22,6 +30,9 @@ const loadHealthConsole = async ({
   }));
   vi.doMock('./errorReporter', () => ({
     getErrorReports: () => errorReports,
+  }));
+  vi.doMock('./logger', () => ({
+    getLogs: () => logs,
   }));
   vi.doMock('./performance', () => ({
     getPerformanceSnapshot: () => perfSnapshot,
@@ -74,6 +85,9 @@ describe('healthConsole', () => {
     expect(Array.isArray(snap.storage)).toBe(true);
     expect(Array.isArray(snap.recentErrors)).toBe(true);
     expect(snap.recentErrors.length).toBeLessThanOrEqual(5);
+    expect(typeof snap.logCount).toBe('number');
+    expect(Array.isArray(snap.recentLogs)).toBe(true);
+    expect(snap.recentLogs.length).toBeLessThanOrEqual(5);
     expect(snap.memory).toMatchObject({
       used: 1_048_576,
       total: 2_097_152,

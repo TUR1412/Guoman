@@ -4,6 +4,7 @@ import {
   hasPendingStorageWrite,
   scheduleStorageWrite,
 } from './storageQueue';
+import { logError } from './logger';
 
 const STORAGE_KEY = 'guoman.errors.v1';
 const MAX_ERRORS = 50;
@@ -36,6 +37,8 @@ export const reportError = ({ message, stack, source }) => {
     at: Date.now(),
   });
   writeErrors(list);
+
+  logError(message, { stack: stack || null }, source || 'errorReporter');
 };
 
 export const getErrorReports = () => readErrors();

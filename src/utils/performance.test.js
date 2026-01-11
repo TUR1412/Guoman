@@ -64,6 +64,14 @@ describe('performance monitor', () => {
         getEntries: () => [{ startTime: 100, processingStart: 130 }],
       });
 
+      find('event').callback({
+        getEntries: () => [
+          { interactionId: 1, duration: 80 },
+          { interactionId: 1, duration: 120 },
+          { interactionId: 2, duration: 60 },
+        ],
+      });
+
       flushStorageQueue();
 
       const snapshot = getPerformanceSnapshot();
@@ -72,6 +80,7 @@ describe('performance monitor', () => {
           cls: expect.objectContaining({ value: expect.any(Number) }),
           lcp: expect.objectContaining({ value: 123, element: 'IMG' }),
           fid: expect.objectContaining({ value: 30 }),
+          inp: expect.objectContaining({ value: expect.any(Number) }),
         }),
       );
     } finally {
@@ -94,7 +103,7 @@ describe('performance monitor', () => {
 
     window.localStorage.clear();
     window.localStorage.setItem('guoman.perf.cls.v1', '{bad');
-    expect(getPerformanceSnapshot()).toEqual({ cls: null, lcp: null, fid: null });
+    expect(getPerformanceSnapshot()).toEqual({ cls: null, lcp: null, fid: null, inp: null });
   });
 
   it('does not throw when observe is not supported', async () => {

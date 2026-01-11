@@ -52,6 +52,8 @@
   **Command Palette Upgrades**: jump to titles/tags/categories, keep search as a fallback, and idle-prefetch highlighted targets for faster navigation.
 - **性能 & 质量闸门**：Lighthouse 友好、Bundle Budget、ESLint + Vitest 全链路守门。<br />
   **Performance & Quality Gates**: lint, test, build, and bundle budget in CI.
+- **可观测性**：新增本地日志（log store）+ 诊断面板日志导出，并补齐 INP 指标用于交互体验排障。<br />
+  **Observability**: local logs + diagnostics export, with INP tracked for interaction debugging.
 - **离线兜底页**：Service Worker 增加离线页面 fallback，弱网/断网更可控。<br />
   **Offline Fallback**: a dedicated offline page fallback for more resilient navigation.
 
