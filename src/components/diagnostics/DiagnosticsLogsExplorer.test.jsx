@@ -50,4 +50,24 @@ describe('DiagnosticsLogsExplorer', () => {
     await user.type(screen.getByLabelText('关键词'), '42');
     expect(screen.getByText('warn me')).toBeInTheDocument();
   });
+
+  it('supports custom title and empty state overrides', () => {
+    render(
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <DiagnosticsLogsExplorer
+          title="导入日志浏览器"
+          logs={[]}
+          emptyState={{
+            title: '导入包暂无日志',
+            description: '该诊断包未包含 logs 记录。',
+            primaryAction: null,
+            secondaryAction: null,
+          }}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText('导入日志浏览器')).toBeInTheDocument();
+    expect(screen.getByText('导入包暂无日志')).toBeInTheDocument();
+  });
 });

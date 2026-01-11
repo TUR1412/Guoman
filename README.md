@@ -56,8 +56,8 @@
   **Observability**: local logs + diagnostics export, with INP tracked for interaction debugging.
 - **崩溃兜底**：ErrorBoundary 支持复制/下载诊断包（logs + errors + health snapshot），复制失败会自动打开手动复制窗口，并在支持时可下载 `.json.gz` 压缩包。<br />
   **Crash Recovery**: error boundary can copy/download a diagnostics bundle (logs + errors + health snapshot), with manual-copy fallback and optional `.json.gz` export.
-- **诊断回放**：诊断面板支持导入 `.json` / `.json.gz` 诊断包（拖拽/选择文件），本地解析展示摘要，并提供日志/错误浏览器（关键词/级别筛选、展开详情、下载筛选结果）用于对照排障（不出网）。<br />
-  **Diagnostics Replay**: import `.json` / `.json.gz` bundles via drag-and-drop or file picker, inspect summaries locally, and use log/error explorers (query/level filters, expand details, download filtered results) — no upload.
+- **诊断回放**：诊断面板支持导入 `.json` / `.json.gz` 诊断包（拖拽/点击导入区域），本地解析展示摘要，并可直接浏览导入包内 logs/errors（关键词/级别筛选、展开详情、下载筛选结果）用于对照排障（不出网）。<br />
+  **Diagnostics Replay**: import `.json` / `.json.gz` bundles via drag-and-drop (or click the import zone), inspect summaries locally, and browse the imported logs/errors with query/level filters and expandable details — no upload.
 - **稳定性**：路由懒加载 dynamic import 失败自动重试，并写入本地日志（应对弱网/缓存不一致）。<br />
   **Resilient Lazy Loading**: automatic retry on dynamic-import failures, with local logs for troubleshooting.
 - **离线兜底页**：Service Worker 增加离线页面 fallback，弱网/断网更可控。<br />

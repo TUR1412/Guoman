@@ -6,6 +6,20 @@ import TextField from '../../ui/TextField';
 import SelectField from '../../ui/SelectField';
 import { DiagnosticsActions, DiagnosticsActionButton, DiagnosticsCardTitle } from './diagnosticsUi';
 
+const DEFAULT_EMPTY_STATE = {
+  title: '暂无日志',
+  description: '这里会记录关键行为与异常线索（local-first），方便你导出日志定位问题。',
+  primaryAction: { to: '/', label: '回到首页' },
+  secondaryAction: { to: '/profile', label: '用户中心' },
+};
+
+const DEFAULT_NO_MATCH_STATE = {
+  title: '无匹配日志',
+  description: '请调整关键词或级别筛选条件。',
+  primaryAction: { to: '/diagnostics', label: '重置视图' },
+  secondaryAction: { to: '/profile', label: '用户中心' },
+};
+
 const Filters = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 1fr) 180px;
@@ -143,6 +157,9 @@ export default function DiagnosticsLogsExplorer({
   onClear,
   onDownload,
   defaultLimit = 24,
+  title = '日志浏览器',
+  emptyState,
+  noMatchState,
 }) {
   const [query, setQuery] = useState('');
   const [level, setLevel] = useState('all');
@@ -171,10 +188,16 @@ export default function DiagnosticsLogsExplorer({
 
   const shown = useMemo(() => filtered.slice(0, limit), [filtered, limit]);
   const remaining = Math.max(0, filtered.length - shown.length);
+  const resolvedEmptyState = emptyState
+    ? { ...DEFAULT_EMPTY_STATE, ...emptyState }
+    : DEFAULT_EMPTY_STATE;
+  const resolvedNoMatchState = noMatchState
+    ? { ...DEFAULT_NO_MATCH_STATE, ...noMatchState }
+    : DEFAULT_NO_MATCH_STATE;
 
   return (
     <div className={className}>
-      <DiagnosticsCardTitle>日志浏览器</DiagnosticsCardTitle>
+      <DiagnosticsCardTitle>{title}</DiagnosticsCardTitle>
 
       {Array.isArray(logs) && logs.length > 0 ? (
         <>
@@ -294,19 +317,19 @@ export default function DiagnosticsLogsExplorer({
             </>
           ) : (
             <EmptyState
-              title="无匹配日志"
-              description="请调整关键词或级别筛选条件。"
-              primaryAction={{ to: '/diagnostics', label: '重置视图' }}
-              secondaryAction={{ to: '/profile', label: '用户中心' }}
+              title={resolvedNoMatchState.title}
+              description={resolvedNoMatchState.description}
+              primaryAction={resolvedNoMatchState.primaryAction}
+              secondaryAction={resolvedNoMatchState.secondaryAction}
             />
           )}
         </>
       ) : (
         <EmptyState
-          title="暂无日志"
-          description="这里会记录关键行为与异常线索（local-first），方便你导出日志定位问题。"
-          primaryAction={{ to: '/', label: '回到首页' }}
-          secondaryAction={{ to: '/profile', label: '用户中心' }}
+          title={resolvedEmptyState.title}
+          description={resolvedEmptyState.description}
+          primaryAction={resolvedEmptyState.primaryAction}
+          secondaryAction={resolvedEmptyState.secondaryAction}
         />
       )}
     </div>

@@ -47,4 +47,24 @@ describe('DiagnosticsErrorsExplorer', () => {
     expect(filtered).toHaveLength(1);
     expect(filtered[0].id).toBe('e2');
   });
+
+  it('supports custom title and empty state overrides', () => {
+    render(
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <DiagnosticsErrorsExplorer
+          title="导入错误浏览器"
+          errors={[]}
+          emptyState={{
+            title: '导入包暂无错误',
+            description: '该诊断包未包含 errors 记录。',
+            primaryAction: null,
+            secondaryAction: null,
+          }}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText('导入错误浏览器')).toBeInTheDocument();
+    expect(screen.getByText('导入包暂无错误')).toBeInTheDocument();
+  });
 });

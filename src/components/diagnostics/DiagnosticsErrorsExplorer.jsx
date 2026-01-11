@@ -5,6 +5,20 @@ import { FiDownload, FiSearch, FiTrash2 } from '../icons/feather';
 import TextField from '../../ui/TextField';
 import { DiagnosticsActions, DiagnosticsActionButton, DiagnosticsCardTitle } from './diagnosticsUi';
 
+const DEFAULT_EMPTY_STATE = {
+  title: '暂无错误',
+  description: '这里会记录脚本错误与未捕获 Promise 拒绝，便于你导出诊断包定位问题。',
+  primaryAction: { to: '/', label: '回到首页' },
+  secondaryAction: { to: '/profile', label: '用户中心' },
+};
+
+const DEFAULT_NO_MATCH_STATE = {
+  title: '无匹配错误',
+  description: '请调整关键词筛选条件。',
+  primaryAction: { to: '/diagnostics', label: '重置视图' },
+  secondaryAction: { to: '/profile', label: '用户中心' },
+};
+
 const Filters = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -110,6 +124,9 @@ export default function DiagnosticsErrorsExplorer({
   onClear,
   onDownload,
   defaultLimit = 16,
+  title = '错误浏览器',
+  emptyState,
+  noMatchState,
 }) {
   const [query, setQuery] = useState('');
   const [limit, setLimit] = useState(defaultLimit);
@@ -134,10 +151,16 @@ export default function DiagnosticsErrorsExplorer({
 
   const shown = useMemo(() => filtered.slice(0, limit), [filtered, limit]);
   const remaining = Math.max(0, filtered.length - shown.length);
+  const resolvedEmptyState = emptyState
+    ? { ...DEFAULT_EMPTY_STATE, ...emptyState }
+    : DEFAULT_EMPTY_STATE;
+  const resolvedNoMatchState = noMatchState
+    ? { ...DEFAULT_NO_MATCH_STATE, ...noMatchState }
+    : DEFAULT_NO_MATCH_STATE;
 
   return (
     <div className={className}>
-      <DiagnosticsCardTitle>错误浏览器</DiagnosticsCardTitle>
+      <DiagnosticsCardTitle>{title}</DiagnosticsCardTitle>
 
       {Array.isArray(errors) && errors.length > 0 ? (
         <>
@@ -239,19 +262,19 @@ export default function DiagnosticsErrorsExplorer({
             </>
           ) : (
             <EmptyState
-              title="无匹配错误"
-              description="请调整关键词筛选条件。"
-              primaryAction={{ to: '/diagnostics', label: '重置视图' }}
-              secondaryAction={{ to: '/profile', label: '用户中心' }}
+              title={resolvedNoMatchState.title}
+              description={resolvedNoMatchState.description}
+              primaryAction={resolvedNoMatchState.primaryAction}
+              secondaryAction={resolvedNoMatchState.secondaryAction}
             />
           )}
         </>
       ) : (
         <EmptyState
-          title="暂无错误"
-          description="这里会记录脚本错误与未捕获 Promise 拒绝，便于你导出诊断包定位问题。"
-          primaryAction={{ to: '/', label: '回到首页' }}
-          secondaryAction={{ to: '/profile', label: '用户中心' }}
+          title={resolvedEmptyState.title}
+          description={resolvedEmptyState.description}
+          primaryAction={resolvedEmptyState.primaryAction}
+          secondaryAction={resolvedEmptyState.secondaryAction}
         />
       )}
     </div>

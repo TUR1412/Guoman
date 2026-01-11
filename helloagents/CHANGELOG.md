@@ -15,6 +15,7 @@
 - ✅ Diagnostics：复制失败自动打开手动复制窗口；浏览器支持时可下载 `.json.gz` 压缩诊断包（更易分享）。
 - ✅ Diagnostics：支持导入 `.json` / `.json.gz` 诊断包并解析展示摘要（本地完成，不出网）。
 - ✅ Diagnostics：新增日志/错误浏览器（关键词检索、级别筛选、展开详情、下载筛选结果）并支持拖拽导入诊断包。
+- ✅ Diagnostics：导入回放增强：导入诊断包后可直接浏览导入的 logs/errors（筛选/检索/展开/下载筛选结果），无需复制 JSON 手动排查。
 - ✅ PWA：新增 `public/offline.html` 离线兜底页，并升级 Service Worker cache version（确保更新一致性）。
 
 - ✅ 表单体系收敛：新增 `SelectField` / `TextAreaField` / `RangeInput` primitives，并迁移 Search/Favorites/Following/StaticPage/UserCenterPage/AnimeDetail 的表单控件以统一 focus/disabled/invalid 交互。

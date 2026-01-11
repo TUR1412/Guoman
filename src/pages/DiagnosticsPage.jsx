@@ -422,27 +422,6 @@ export default function DiagnosticsPage() {
               <StatValue>{errors.length} 条</StatValue>
             </StatRow>
           </List>
-          <DiagnosticsBundleDropZone
-            onPick={() => {
-              fileInputRef.current?.click?.();
-            }}
-            onFile={(file) => {
-              void handleImport(file);
-            }}
-          />
-          <Actions>
-            <ActionButton
-              type="button"
-              onClick={() => {
-                clearErrorReports();
-                refresh();
-                toast.success('已清空错误记录', '本地错误列表已清空。');
-              }}
-            >
-              <FiTrash2 />
-              清空错误
-            </ActionButton>
-          </Actions>
         </Card>
 
         <Card>
@@ -453,38 +432,6 @@ export default function DiagnosticsPage() {
               <StatValue>{logs.length} 条</StatValue>
             </StatRow>
           </List>
-          <Actions>
-            <ActionButton
-              type="button"
-              onClick={() => {
-                clearLogs();
-                refresh();
-                toast.success('已清空日志', '本地日志列表已清空。');
-              }}
-            >
-              <FiTrash2 />
-              清空日志
-            </ActionButton>
-            <ActionButton
-              type="button"
-              onClick={() => {
-                const filename = `guoman-logs-${Date.now()}.json`;
-                const res = downloadTextFile({
-                  text: JSON.stringify(getLogs(), null, 2),
-                  filename,
-                  mimeType: 'application/json;charset=utf-8',
-                });
-                if (!res.ok) {
-                  toast.warning('下载失败', '请检查浏览器下载权限。');
-                  return;
-                }
-                toast.success('已下载', `文件已保存：${filename}`);
-              }}
-            >
-              <FiDownload />
-              下载日志
-            </ActionButton>
-          </Actions>
         </Card>
 
         <WideCard>
@@ -502,75 +449,71 @@ export default function DiagnosticsPage() {
               <StatValue>仅本地解析，不上传网络</StatValue>
             </StatRow>
           </List>
-          <Actions>
-            <ActionButton
-              type="button"
-              onClick={() => {
-                fileInputRef.current?.click?.();
-              }}
-              title="从本地选择导出的诊断包（JSON 或 gzip 压缩包）"
-            >
-              <FiUpload />
-              选择文件
-            </ActionButton>
-            {importedBundle ? (
-              <>
-                <ActionButton
-                  type="button"
-                  onClick={async () => {
-                    try {
-                      const result = await copyTextToClipboard(importedJsonText);
-                      if (result.ok) {
-                        toast.success('已复制', '导入的诊断 JSON 已复制到剪贴板。');
-                        return;
-                      }
-                      setImportedCopyOpen(true);
-                      toast.info('请手动复制', '已打开手动复制窗口。');
-                    } catch {
-                      setImportedCopyOpen(true);
-                      toast.info('请手动复制', '已打开手动复制窗口。');
-                    }
-                  }}
-                >
-                  复制导入 JSON
-                </ActionButton>
-                <ActionButton
-                  type="button"
-                  onClick={() => {
-                    const base = importedMeta?.filename || `imported-${Date.now()}.json`;
-                    const safeName = String(base).replace(/\.gz$/i, '');
-                    const filename = safeName.toLowerCase().endsWith('.json')
-                      ? safeName
-                      : `${safeName}.json`;
-                    const res = downloadTextFile({
-                      text: importedJsonText,
-                      filename,
-                      mimeType: 'application/json;charset=utf-8',
-                    });
-                    if (!res.ok) {
-                      toast.warning('下载失败', '请检查浏览器下载权限。');
+          <DiagnosticsBundleDropZone
+            onPick={() => {
+              fileInputRef.current?.click?.();
+            }}
+            onFile={(file) => {
+              void handleImport(file);
+            }}
+          />
+          {importedBundle ? (
+            <Actions>
+              <ActionButton
+                type="button"
+                onClick={async () => {
+                  try {
+                    const result = await copyTextToClipboard(importedJsonText);
+                    if (result.ok) {
+                      toast.success('已复制', '导入的诊断 JSON 已复制到剪贴板。');
                       return;
                     }
-                    toast.success('已下载', `文件已保存：${filename}`);
-                  }}
-                >
-                  <FiDownload />
-                  下载导入包
-                </ActionButton>
-                <ActionButton
-                  type="button"
-                  onClick={() => {
-                    setImportedBundle(null);
-                    setImportedMeta(null);
-                    toast.info('已清空导入', '已移除导入的诊断包。');
-                  }}
-                >
-                  <FiTrash2 />
-                  清空导入
-                </ActionButton>
-              </>
-            ) : null}
-          </Actions>
+                    setImportedCopyOpen(true);
+                    toast.info('请手动复制', '已打开手动复制窗口。');
+                  } catch {
+                    setImportedCopyOpen(true);
+                    toast.info('请手动复制', '已打开手动复制窗口。');
+                  }
+                }}
+              >
+                复制导入 JSON
+              </ActionButton>
+              <ActionButton
+                type="button"
+                onClick={() => {
+                  const base = importedMeta?.filename || `imported-${Date.now()}.json`;
+                  const safeName = String(base).replace(/\.gz$/i, '');
+                  const filename = safeName.toLowerCase().endsWith('.json')
+                    ? safeName
+                    : `${safeName}.json`;
+                  const res = downloadTextFile({
+                    text: importedJsonText,
+                    filename,
+                    mimeType: 'application/json;charset=utf-8',
+                  });
+                  if (!res.ok) {
+                    toast.warning('下载失败', '请检查浏览器下载权限。');
+                    return;
+                  }
+                  toast.success('已下载', `文件已保存：${filename}`);
+                }}
+              >
+                <FiDownload />
+                下载导入包
+              </ActionButton>
+              <ActionButton
+                type="button"
+                onClick={() => {
+                  setImportedBundle(null);
+                  setImportedMeta(null);
+                  toast.info('已清空导入', '已移除导入的诊断包。');
+                }}
+              >
+                <FiTrash2 />
+                清空导入
+              </ActionButton>
+            </Actions>
+          ) : null}
           <input
             ref={fileInputRef}
             type="file"
@@ -680,6 +623,50 @@ export default function DiagnosticsPage() {
             />
           )}
         </WideCard>
+
+        {importedBundle ? (
+          <>
+            <WideCard>
+              <DiagnosticsErrorsExplorer
+                title="导入错误浏览器"
+                errors={importedBundle.errors}
+                onDownload={downloadFilteredErrors}
+                emptyState={{
+                  title: '导入包暂无错误',
+                  description: '该诊断包未包含 errors 记录，或导出端已做裁剪。',
+                  primaryAction: null,
+                  secondaryAction: null,
+                }}
+                noMatchState={{
+                  title: '导入包无匹配错误',
+                  description: '请调整关键词筛选条件。',
+                  primaryAction: null,
+                  secondaryAction: null,
+                }}
+              />
+            </WideCard>
+
+            <WideCard>
+              <DiagnosticsLogsExplorer
+                title="导入日志浏览器"
+                logs={importedBundle.logs}
+                onDownload={downloadFilteredLogs}
+                emptyState={{
+                  title: '导入包暂无日志',
+                  description: '该诊断包未包含 logs 记录，或导出端已做裁剪。',
+                  primaryAction: null,
+                  secondaryAction: null,
+                }}
+                noMatchState={{
+                  title: '导入包无匹配日志',
+                  description: '请调整关键词或级别筛选条件。',
+                  primaryAction: null,
+                  secondaryAction: null,
+                }}
+              />
+            </WideCard>
+          </>
+        ) : null}
 
         <WideCard>
           <CardTitle>本地存储占用</CardTitle>
