@@ -7,6 +7,7 @@ import AnimeCard from '../components/anime/AnimeCard';
 import { AnimeGrid } from '../components/anime/AnimeGrid';
 import VirtualizedGrid from '../components/VirtualizedGrid';
 import animeData from '../data/animeData';
+import { CATEGORY_SLUG_MAP } from '../data/categoryMap';
 import styled from 'styled-components';
 import { usePersistedState } from '../utils/usePersistedState';
 import { trackEvent } from '../utils/analytics';
@@ -36,14 +37,6 @@ const Toggle = styled.button.attrs({ 'data-pressable': true })`
   }
 `;
 
-const CATEGORY_MAP = {
-  action: { title: '热血动作', tag: '热血' },
-  fantasy: { title: '奇幻玄幻', tag: '奇幻' },
-  ancient: { title: '古风仙侠', tag: '古风' },
-  scifi: { title: '科幻未来', tag: '科幻' },
-  comedy: { title: '轻松搞笑', tag: '搞笑' },
-};
-
 const SORTS = {
   rating: {
     id: 'rating',
@@ -59,7 +52,7 @@ const SORTS = {
 
 function CategoryPage() {
   const { category } = useParams();
-  const meta = CATEGORY_MAP[category];
+  const meta = CATEGORY_SLUG_MAP[category];
   const [sortId, setSortId] = usePersistedState(STORAGE_KEYS.categorySort, SORTS.rating.id);
 
   const sort = SORTS[sortId] || SORTS.rating;

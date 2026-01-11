@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'guoman';
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const STATIC_CACHE = `${CACHE_PREFIX}:static:${CACHE_VERSION}`;
 const RUNTIME_CACHE = `${CACHE_PREFIX}:runtime:${CACHE_VERSION}`;
 
@@ -7,6 +7,7 @@ const PRECACHE_URLS = [
   './',
   './index.html',
   './404.html',
+  './offline.html',
   './favicon.svg',
   './site.webmanifest',
   './og.svg',
@@ -71,7 +72,11 @@ const networkFirst = async (request) => {
   } catch {
     const cached = await cache.match(request);
     if (cached) return cached;
-    return (await cache.match('./index.html')) || new Response('Offline', { status: 503 });
+    return (
+      (await cache.match('./index.html')) ||
+      (await cache.match('./offline.html')) ||
+      new Response('Offline', { status: 503 })
+    );
   }
 };
 

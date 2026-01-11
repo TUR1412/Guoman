@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+- ✅ Command Palette：支持作品/标签/#tag/分类/静态页直达，搜索 action 下沉为兜底项（不抢占首选命令）。
+- ✅ PWA：新增 `public/offline.html` 离线兜底页，并升级 Service Worker cache version（确保更新一致性）。
+
 - ✅ 表单体系收敛：新增 `SelectField` / `TextAreaField` / `RangeInput` primitives，并迁移 Search/Favorites/Following/StaticPage/UserCenterPage/AnimeDetail 的表单控件以统一 focus/disabled/invalid 交互。
 
 - ✅ UI 组件库：新增 `TextField`（统一输入外观/label/icon/状态展示，收敛输入交互分叉）。

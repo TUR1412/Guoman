@@ -86,14 +86,20 @@ const Item = styled.button.attrs({ type: 'button', 'data-pressable': true })`
   background: transparent;
   color: var(--text-primary);
   text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--border-subtle);
 
   &:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: var(--surface-soft-hover);
+  }
+
+  &:focus-visible {
+    outline: none;
+    background: var(--surface-soft-hover);
+    box-shadow: var(--shadow-ring);
   }
 
   &[aria-selected='true'] {
-    background: rgba(var(--primary-rgb), 0.14);
+    background: var(--primary-soft);
   }
 `;
 
@@ -193,8 +199,15 @@ export default function CommandPalette({ open, onClose, actions, onSearch }) {
         })
       : base;
 
-    const merged = searchAction ? [searchAction, ...filtered] : filtered;
-    return merged.slice(0, 12);
+    if (!searchAction) {
+      return filtered.slice(0, 12);
+    }
+
+    if (filtered.length === 0) {
+      return [searchAction];
+    }
+
+    return [...filtered.slice(0, 11), searchAction];
   }, [actions, onSearch, query]);
 
   useEffect(() => {
@@ -266,7 +279,7 @@ export default function CommandPalette({ open, onClose, actions, onSearch }) {
           <SearchInput
             ref={inputRef}
             type="search"
-            placeholder="输入关键词：搜索 / 页面跳转 / 快捷动作"
+            placeholder="输入：作品名 / #标签 / 分类 / 页面 / 快捷动作"
             value={query}
             onChange={(event) => {
               setQuery(event.target.value);

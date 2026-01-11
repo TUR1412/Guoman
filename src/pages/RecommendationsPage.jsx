@@ -214,7 +214,11 @@ const TagPulseBar = styled.div`
 const TagPulseFill = styled.div`
   height: 100%;
   width: ${(props) => `${props.$value}%`};
-  background: linear-gradient(90deg, rgba(var(--primary-rgb), 0.85), rgba(var(--secondary-rgb), 0.7));
+  background: linear-gradient(
+    90deg,
+    rgba(var(--primary-rgb), 0.85),
+    rgba(var(--secondary-rgb), 0.7)
+  );
 `;
 
 function RecommendationsPage() {

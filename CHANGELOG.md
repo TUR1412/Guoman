@@ -3,6 +3,9 @@
 本项目遵循“原子级迭代”原则：每个 commit 尽量只做一件事，方便回滚与审查。
 
 ## [Unreleased]
+
+- 命令面板升级：支持作品/标签/#tag/分类/静态页直达，搜索 action 作为兜底项保留（不抢占首选命令）
+- PWA：新增 `public/offline.html` 离线兜底页，并升级 Service Worker cache version（确保离线导航更可控）
 - 未来感 UI 重塑：Space Grotesk + Chakra Petch 字体体系与深浅主题色板升级
 - 内容洞察引擎：新增 Tag Pulse 标签趋势、Studio Radar 工作室雷达、Audience Pulse 口碑脉冲
 - 观影计划器：结合追更与观看进度计算剩余时长与每日观看预算

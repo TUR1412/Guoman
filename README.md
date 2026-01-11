@@ -7,6 +7,11 @@
     Futuristic Guoman discovery hub · Frontend-only · Local-first · Detail-obsessed
   </p>
   <p>
+    <strong>简体中文</strong>
+    ·
+    <a href="README.en.md">English</a>
+  </p>
+  <p>
     <a href="https://tur1412.github.io/Guoman/">在线预览</a>
     ·
     <a href="#-项目亮点--highlights">项目亮点</a>
@@ -43,21 +48,25 @@
   **Match Score + Reasons**: transparent recommendation explanations.
 - **本地优先**：收藏/进度/口味画像/视觉偏好全部 localStorage 持久化。<br />
   **Local-first**: all key user state stays in the browser.
+- **命令面板升级**：支持作品/标签/分类直达，搜索建议作为“兜底项”保留。<br />
+  **Command Palette Upgrades**: jump to titles/tags/categories, with search kept as a fallback.
 - **性能 & 质量闸门**：Lighthouse 友好、Bundle Budget、ESLint + Vitest 全链路守门。<br />
   **Performance & Quality Gates**: lint, test, build, and bundle budget in CI.
+- **离线兜底页**：Service Worker 增加离线页面 fallback，弱网/断网更可控。<br />
+  **Offline Fallback**: a dedicated offline page fallback for more resilient navigation.
 
 ---
 
 ## ✅ 功能矩阵 | Feature Matrix
 
-| 模块 Module | 能力 Capabilities |
-| --- | --- |
-| 探索 & 推荐 | 口味画像、本地推荐、匹配度解释、标签趋势热力 |
-| 追更 & 计划 | 追更提醒、观看进度、观影计划器、剩余时长估算 |
-| 洞察与分析 | Studio Radar、Audience Pulse、足迹中心、成就系统 |
-| 视觉体验 | 未来感主题、玻璃拟态、动态栅格、动效护栏 |
-| 数据管理 | 收藏/分组/导入导出/Data Vault、本地占用统计 |
-| 质量保障 | PWA、诊断面板、性能预算闸门、错误兜底 |
+| 模块 Module | 能力 Capabilities                                |
+| ----------- | ------------------------------------------------ |
+| 探索 & 推荐 | 口味画像、本地推荐、匹配度解释、标签趋势热力     |
+| 追更 & 计划 | 追更提醒、观看进度、观影计划器、剩余时长估算     |
+| 洞察与分析  | Studio Radar、Audience Pulse、足迹中心、成就系统 |
+| 视觉体验    | 未来感主题、玻璃拟态、动态栅格、动效护栏         |
+| 数据管理    | 收藏/分组/导入导出/Data Vault、本地占用统计      |
+| 质量保障    | PWA、诊断面板、性能预算闸门、错误兜底            |
 
 ---
 
@@ -104,16 +113,16 @@ flowchart TD
 
 ## 🧩 技术栈 | Tech Stack
 
-| 模块 | 技术 |
-| --- | --- |
-| 框架 | React 18 |
-| 构建 | Vite 6 |
-| 路由 | React Router (Hash Router) |
-| 动效 | Framer Motion |
+| 模块 | 技术                              |
+| ---- | --------------------------------- |
+| 框架 | React 18                          |
+| 构建 | Vite 6                            |
+| 路由 | React Router (Hash Router)        |
+| 动效 | Framer Motion                     |
 | 样式 | styled-components + Design Tokens |
-| PWA | Web App Manifest + Service Worker |
-| 测试 | Vitest + Testing Library |
-| 部署 | GitHub Actions → GitHub Pages |
+| PWA  | Web App Manifest + Service Worker |
+| 测试 | Vitest + Testing Library          |
+| 部署 | GitHub Actions → GitHub Pages     |
 
 ---
 

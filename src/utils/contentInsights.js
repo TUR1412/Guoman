@@ -172,13 +172,14 @@ export const buildAudiencePulse = (anime) => {
   const heatRaw = avgReviewRating * 16 + Math.min(popularity / 1200, 10) * 6 + reviewCount * 4;
   const heat = clamp(Math.round(heatRaw), 0, 100);
 
-  const tone = avgReviewRating >= 4.6
-    ? '口碑爆棚'
-    : avgReviewRating >= 4.2
-      ? '口碑稳健'
-      : avgReviewRating >= 3.6
-        ? '争议分化'
-        : '口碑待提升';
+  const tone =
+    avgReviewRating >= 4.6
+      ? '口碑爆棚'
+      : avgReviewRating >= 4.2
+        ? '口碑稳健'
+        : avgReviewRating >= 3.6
+          ? '争议分化'
+          : '口碑待提升';
 
   const vibe = variance >= 1.2 ? '讨论度高' : '口碑集中';
 

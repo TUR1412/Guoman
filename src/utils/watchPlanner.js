@@ -57,13 +57,9 @@ export const buildWatchPlan = ({ animeList = [], dailyMinutes = 60 } = {}) => {
   const totalMinutes = items.reduce((sum, item) => sum + item.remainingMinutes, 0);
   const totalEpisodes = items.reduce((sum, item) => sum + item.remainingEpisodes, 0);
   const daysNeeded = totalMinutes > 0 ? Math.ceil(totalMinutes / normalizedDaily) : 0;
-  const finishDate = daysNeeded
-    ? new Date(Date.now() + daysNeeded * 24 * 60 * 60 * 1000)
-    : null;
+  const finishDate = daysNeeded ? new Date(Date.now() + daysNeeded * 24 * 60 * 60 * 1000) : null;
 
-  const priority = [...items]
-    .sort((a, b) => b.remainingMinutes - a.remainingMinutes)
-    .slice(0, 3);
+  const priority = [...items].sort((a, b) => b.remainingMinutes - a.remainingMinutes).slice(0, 3);
 
   return {
     dailyMinutes: normalizedDaily,

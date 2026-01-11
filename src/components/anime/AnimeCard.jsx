@@ -270,7 +270,10 @@ function AnimeCard({ anime, virtualized = false, insight }) {
   }, [insight?.score]);
   const insightTags = useMemo(() => {
     if (!Array.isArray(insight?.reasons)) return [];
-    return insight.reasons.map((tag) => String(tag)).filter(Boolean).slice(0, 3);
+    return insight.reasons
+      .map((tag) => String(tag))
+      .filter(Boolean)
+      .slice(0, 3);
   }, [insight?.reasons]);
   const descId = useMemo(() => `anime-card-desc-${animeId ?? 'unknown'}`, [animeId]);
   const coverLayoutId = useMemo(

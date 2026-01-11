@@ -3,26 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { AnimatePresence, LayoutGroup, motion, useScroll, useSpring } from 'framer-motion';
 import { IconButton } from '../ui';
-import {
-  FiActivity,
-  FiBell,
-  FiAward,
-  FiBookOpen,
-  FiCommand,
-  FiCompass,
-  FiHeart,
-  FiHome,
-  FiInfo,
-  FiLogIn,
-  FiMenu,
-  FiMoon,
-  FiSearch,
-  FiShare2,
-  FiSun,
-  FiTrendingUp,
-  FiUser,
-  FiX,
-} from './icons/feather';
+import { FiCommand, FiMenu, FiMoon, FiSun, FiUser, FiX } from './icons/feather';
 import logoSvg from '../assets/images/logo.svg';
 import { getCurrentTheme, toggleTheme } from '../utils/theme';
 import { usePersistedState } from '../utils/usePersistedState';
@@ -36,6 +17,7 @@ import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 import { usePointerGlow } from './usePointerGlow';
 import HeaderSearch from './header/HeaderSearch';
 import { navItems } from './header/navItems';
+import { buildCommandPaletteActions } from './header/paletteActions';
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -556,128 +538,15 @@ function Header() {
     setTheme(next);
   }, []);
 
-  const paletteActions = useMemo(() => {
-    const action = (id, title, description, keywords, icon, run) => ({
-      id,
-      title,
-      description,
-      keywords,
-      icon,
-      meta: 'Enter',
-      run,
-    });
-
-    return [
-      action('nav.home', '前往首页', '回到精选首页', ['首页', 'home', '/'], <FiHome />, () =>
-        navigate('/'),
-      ),
-      action(
-        'nav.recommendations',
-        '国漫推荐',
-        '打开推荐页面',
-        ['推荐', 'recommendations'],
-        <FiCompass />,
-        () => navigate('/recommendations'),
-      ),
-      action('nav.favorites', '收藏', '查看我的收藏列表', ['收藏', 'favorites'], <FiHeart />, () =>
-        navigate('/favorites'),
-      ),
-      action(
-        'nav.following',
-        '追更中心',
-        '管理追更与提醒设置',
-        ['追更', 'following', 'reminder', '通知'],
-        <FiBell />,
-        () => navigate('/following'),
-      ),
-      action(
-        'nav.pro',
-        '会员与赞助',
-        '开启 PRO 视觉与权益模型（本地演示）',
-        ['pro', '会员', '赞助', 'pricing', 'support'],
-        <FiAward />,
-        () => navigate('/pro'),
-      ),
-      action(
-        'nav.insights',
-        '足迹中心',
-        '查看播放/下载/分享足迹与留存概览',
-        ['足迹', 'insights', 'activity', '留存', '增长'],
-        <FiActivity />,
-        () => navigate('/insights'),
-      ),
-      action(
-        'nav.posters',
-        '海报工坊',
-        '生成分享海报并管理历史（SVG）',
-        ['海报', 'poster', 'share', 'svg', '裂变'],
-        <FiShare2 />,
-        () => navigate('/posters'),
-      ),
-      action(
-        'nav.achievements',
-        '成就中心',
-        '查看成就进度条与解锁状态',
-        ['成就', 'achievements', 'badge'],
-        <FiAward />,
-        () => navigate('/achievements'),
-      ),
-      action(
-        'nav.rankings',
-        '排行榜',
-        '查看评分/人气排行',
-        ['排行', 'rankings'],
-        <FiTrendingUp />,
-        () => navigate('/rankings'),
-      ),
-      action('nav.news', '最新资讯', '打开资讯列表', ['资讯', 'news'], <FiBookOpen />, () =>
-        navigate('/news'),
-      ),
-      action(
-        'nav.search',
-        '打开搜索',
-        '前往搜索页（也可直接输入关键词）',
-        ['搜索', 'search'],
-        <FiSearch />,
-        () => navigate('/search'),
-      ),
-      action(
-        'nav.profile',
-        '用户中心',
-        '管理本地数据与偏好',
-        ['用户中心', 'profile', '设置', 'settings'],
-        <FiUser />,
-        () => navigate('/profile'),
-      ),
-      action(
-        'nav.diagnostics',
-        '诊断面板',
-        '查看本地健康快照（性能/错误/存储/SW）',
-        ['诊断', 'diagnostics', 'health', '性能', '错误', '存储'],
-        <FiActivity />,
-        () => navigate('/diagnostics'),
-      ),
-      action('nav.about', '关于我们', '项目介绍与设计理念', ['关于', 'about'], <FiInfo />, () =>
-        navigate('/about'),
-      ),
-      action(
-        'nav.login',
-        '登录 / 注册',
-        '进入账号页（占位）',
-        ['登录', '注册', 'login'],
-        <FiLogIn />,
-        () => navigate('/login'),
-      ),
-      action(
-        'theme.toggle',
-        theme === 'dark' ? '切换到浅色主题' : '切换到深色主题',
-        '立即切换主题并持久化',
-        ['主题', 'theme', 'dark', 'light'],
-        theme === 'dark' ? <FiSun /> : <FiMoon />,
-        handleToggleTheme,
-      ),
-    ];
-  }, [handleToggleTheme, navigate, theme]);
+  const paletteActions = useMemo(
+    () =>
+      buildCommandPaletteActions({
+        navigate,
+        theme,
+        onToggleTheme: handleToggleTheme,
+      }),
+    [handleToggleTheme, navigate, theme],
+  );
 
   return (
     <HeaderContainer

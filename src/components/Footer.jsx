@@ -223,8 +223,7 @@ function Footer() {
               国漫<span>世界</span>
             </FooterLogo>
             <FooterDescription>
-              未来感国漫探索中枢，提供智能推荐、观影计划与本地口味画像，
-              让每一部国漫都更懂你。
+              未来感国漫探索中枢，提供智能推荐、观影计划与本地口味画像， 让每一部国漫都更懂你。
             </FooterDescription>
             <SocialLinks>
               <SocialLink

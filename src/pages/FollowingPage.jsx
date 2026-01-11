@@ -334,14 +334,10 @@ function FollowingPage() {
   const toast = useToast();
   const entries = useFollowingEntries();
   const { signal: planSignal, bump: bumpPlan } = useStorageSignal([STORAGE_KEYS.watchProgress]);
-  const [planMinutes, setPlanMinutes] = usePersistedState(
-    STORAGE_KEYS.watchPlanner,
-    60,
-    {
-      serialize: (value) => String(value),
-      deserialize: (raw) => Number(raw) || 60,
-    },
-  );
+  const [planMinutes, setPlanMinutes] = usePersistedState(STORAGE_KEYS.watchPlanner, 60, {
+    serialize: (value) => String(value),
+    deserialize: (raw) => Number(raw) || 60,
+  });
 
   useEffect(() => subscribeWatchProgress(bumpPlan), [bumpPlan]);
 
@@ -457,7 +453,8 @@ function FollowingPage() {
                     <div>
                       <PlannerQueueTitle>{item.anime.title}</PlannerQueueTitle>
                       <PlannerQueueMeta>
-                        剩余 {Math.ceil(item.remainingEpisodes)} 集 · 单集约 {item.minutesPerEpisode} 分
+                        剩余 {Math.ceil(item.remainingEpisodes)} 集 · 单集约{' '}
+                        {item.minutesPerEpisode} 分
                       </PlannerQueueMeta>
                     </div>
                     <PlannerQueueMeta>{formatMinutes(item.remainingMinutes)}</PlannerQueueMeta>

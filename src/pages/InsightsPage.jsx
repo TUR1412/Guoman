@@ -336,7 +336,11 @@ const RadarBar = styled.div`
 const RadarFill = styled.div`
   height: 100%;
   width: ${(props) => `${props.$value}%`};
-  background: linear-gradient(90deg, rgba(var(--secondary-rgb), 0.85), rgba(var(--accent-rgb), 0.7));
+  background: linear-gradient(
+    90deg,
+    rgba(var(--secondary-rgb), 0.85),
+    rgba(var(--accent-rgb), 0.7)
+  );
 `;
 
 function InsightsPage() {
