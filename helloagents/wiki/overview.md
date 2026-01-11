@@ -58,6 +58,7 @@
 - 命令面板入口：`src/components/header/paletteActions.jsx` 统一收口 Command Palette actions（支持作品/标签/#tag/分类/静态页直达）
 - 命令面板预取：`src/components/CommandPalette.jsx` 在高亮/hover action 时读取 `prefetchPath` 并调用 `src/utils/routePrefetch.js` 提前加载目标路由 chunk（提升跳转响应）
 - 日志监控（Local-first）：`src/utils/logger.js` 记录关键行为与异常线索，并在 `/diagnostics` 支持查看/清空/下载日志（不出本地）
+- 埋点事件（Local-first）：`src/utils/analytics.js` 记录关键交互埋点事件（events），并在 `/diagnostics` 支持本地/导入事件浏览器（事件名筛选、展开 payload、下载筛选结果）
 - 性能指标：`src/utils/performance.js` 采集 CLS/LCP/FID，并补齐 INP（用于交互体验诊断）
 - 路由容错：`src/utils/lazyWithRetry.js` 为 route lazy 加载提供失败重试，并将异常写入日志（应对弱网/缓存不一致导致的 chunk 加载失败）
 - 崩溃兜底：`src/components/AppErrorBoundary.jsx` 提供“复制/下载诊断包”入口（logs + errors + health snapshot），便于快速提交问题

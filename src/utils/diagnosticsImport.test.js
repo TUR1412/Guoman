@@ -72,6 +72,7 @@ describe('diagnosticsImport', () => {
       build: { version: '1.0.0', shortSha: 'abc1234' },
       logs: [{ id: 1 }],
       errors: [{ id: 2 }, { id: 3 }],
+      events: [{ id: 'a1' }, { id: 'a2' }, { id: 'a3' }],
       snapshot: { perf: { inp: { value: 123 } } },
     });
 
@@ -80,6 +81,7 @@ describe('diagnosticsImport', () => {
     expect(summary.build.shortSha).toBe('abc1234');
     expect(summary.logsCount).toBe(1);
     expect(summary.errorsCount).toBe(2);
+    expect(summary.eventsCount).toBe(3);
     expect(summary.perf.inp).toBe(123);
   });
 });

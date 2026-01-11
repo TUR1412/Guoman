@@ -78,6 +78,7 @@ export const summarizeDiagnosticsBundle = (bundle) => {
     },
     logsCount: Array.isArray(b.logs) ? b.logs.length : 0,
     errorsCount: Array.isArray(b.errors) ? b.errors.length : 0,
+    eventsCount: Array.isArray(b.events) ? b.events.length : 0,
     perf: {
       cls: toMetricValue(perf.cls),
       lcp: toMetricValue(perf.lcp),

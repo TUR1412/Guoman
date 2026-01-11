@@ -5,6 +5,7 @@ import { useToast } from '../components/ToastProvider';
 import ManualCopyDialog from '../components/ManualCopyDialog';
 import { FiActivity, FiDownload, FiTrash2, FiUpload, FiZap } from '../components/icons/feather';
 import DiagnosticsBundleDropZone from '../components/diagnostics/DiagnosticsBundleDropZone';
+import DiagnosticsEventsExplorer from '../components/diagnostics/DiagnosticsEventsExplorer';
 import DiagnosticsErrorsExplorer from '../components/diagnostics/DiagnosticsErrorsExplorer';
 import DiagnosticsLogsExplorer from '../components/diagnostics/DiagnosticsLogsExplorer';
 import {
@@ -27,6 +28,7 @@ import { buildDiagnosticsBundle } from '../utils/diagnosticsBundle';
 import { downloadBinaryFile, downloadTextFile } from '../utils/download';
 import { getErrorReports, clearErrorReports } from '../utils/errorReporter';
 import { getLogs, clearLogs } from '../utils/logger';
+import { getEvents, clearEvents } from '../utils/analytics';
 import { getFeatureSummaries } from '../utils/dataVault';
 import { formatBytes } from '../utils/formatBytes';
 import { canGzip, gzipCompressString } from '../utils/compression';
@@ -46,6 +48,7 @@ export default function DiagnosticsPage() {
   const [bundle, setBundle] = useState(() => buildDiagnosticsBundle());
   const [errors, setErrors] = useState(() => getErrorReports());
   const [logs, setLogs] = useState(() => getLogs());
+  const [events, setEvents] = useState(() => getEvents());
   const [storage, setStorage] = useState(() => getFeatureSummaries());
   const [importedBundle, setImportedBundle] = useState(null);
   const [importedMeta, setImportedMeta] = useState(null);
@@ -54,6 +57,7 @@ export default function DiagnosticsPage() {
     setBundle(buildDiagnosticsBundle());
     setErrors(getErrorReports());
     setLogs(getLogs());
+    setEvents(getEvents());
     setStorage(getFeatureSummaries());
   }, []);
 
@@ -171,6 +175,23 @@ export default function DiagnosticsPage() {
   const downloadFilteredErrors = useCallback(
     (filtered) => {
       const filename = `guoman-errors-filtered-${Date.now()}.json`;
+      const res = downloadTextFile({
+        text: JSON.stringify(filtered || [], null, 2),
+        filename,
+        mimeType: 'application/json;charset=utf-8',
+      });
+      if (!res.ok) {
+        toast.warning('下载失败', '请检查浏览器下载权限。');
+        return;
+      }
+      toast.success('已下载', `文件已保存：${filename}`);
+    },
+    [toast],
+  );
+
+  const downloadFilteredEvents = useCallback(
+    (filtered) => {
+      const filename = `guoman-events-filtered-${Date.now()}.json`;
       const res = downloadTextFile({
         text: JSON.stringify(filtered || [], null, 2),
         filename,
@@ -434,6 +455,16 @@ export default function DiagnosticsPage() {
           </List>
         </Card>
 
+        <Card>
+          <CardTitle>事件</CardTitle>
+          <List>
+            <StatRow>
+              <StatKey>最近事件</StatKey>
+              <StatValue>{events.length} 条</StatValue>
+            </StatRow>
+          </List>
+        </Card>
+
         <WideCard>
           <CardTitle>
             <FiUpload />
@@ -558,9 +589,10 @@ export default function DiagnosticsPage() {
                   </StatValue>
                 </StatRow>
                 <StatRow>
-                  <StatKey>日志 / 错误</StatKey>
+                  <StatKey>日志 / 错误 / 事件</StatKey>
                   <StatValue>
-                    {importedSummary.logsCount} 条 / {importedSummary.errorsCount} 条
+                    {importedSummary.logsCount} 条 / {importedSummary.errorsCount} 条 /{' '}
+                    {importedSummary.eventsCount} 条
                   </StatValue>
                 </StatRow>
                 <StatRow>
@@ -591,6 +623,12 @@ export default function DiagnosticsPage() {
                   <StatKey>错误</StatKey>
                   <StatValue>
                     {currentSummary.errorsCount} 条 / {importedSummary.errorsCount} 条
+                  </StatValue>
+                </StatRow>
+                <StatRow>
+                  <StatKey>事件</StatKey>
+                  <StatValue>
+                    {currentSummary.eventsCount} 条 / {importedSummary.eventsCount} 条
                   </StatValue>
                 </StatRow>
                 <StatRow>
@@ -665,6 +703,26 @@ export default function DiagnosticsPage() {
                 }}
               />
             </WideCard>
+
+            <WideCard>
+              <DiagnosticsEventsExplorer
+                title="导入事件浏览器"
+                events={importedBundle.events}
+                onDownload={downloadFilteredEvents}
+                emptyState={{
+                  title: '导入包暂无事件',
+                  description: '该诊断包未包含 events 记录，或导出端已做裁剪。',
+                  primaryAction: null,
+                  secondaryAction: null,
+                }}
+                noMatchState={{
+                  title: '导入包无匹配事件',
+                  description: '请调整关键词或事件名筛选条件。',
+                  primaryAction: null,
+                  secondaryAction: null,
+                }}
+              />
+            </WideCard>
           </>
         ) : null}
 
@@ -729,6 +787,18 @@ export default function DiagnosticsPage() {
               toast.success('已清空日志', '本地日志列表已清空。');
             }}
             onDownload={downloadFilteredLogs}
+          />
+        </WideCard>
+
+        <WideCard>
+          <DiagnosticsEventsExplorer
+            events={events}
+            onClear={() => {
+              clearEvents();
+              refresh();
+              toast.success('已清空事件记录', '本地事件列表已清空。');
+            }}
+            onDownload={downloadFilteredEvents}
           />
         </WideCard>
       </Grid>

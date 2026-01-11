@@ -14,6 +14,7 @@
 - 诊断回放：诊断面板支持导入 `.json` / `.json.gz` 诊断包并解析摘要（本地完成，不出网）
 - 诊断浏览器：诊断面板新增日志/错误浏览器（关键词检索、日志级别筛选、展开详情、下载筛选结果）与拖拽导入，提升对照排障效率
 - 诊断回放增强：导入诊断包后可直接浏览导入的 logs/errors（筛选/检索/展开/下载筛选结果），无需复制 JSON 手动排查
+- 诊断回放增强：诊断包新增 `events`（本地埋点事件），诊断面板支持本地/导入事件浏览器（事件名筛选、展开 payload、下载筛选结果）
 - PWA：新增 `public/offline.html` 离线兜底页，并升级 Service Worker cache version（确保离线导航更可控）
 - 未来感 UI 重塑：Space Grotesk + Chakra Petch 字体体系与深浅主题色板升级
 - 内容洞察引擎：新增 Tag Pulse 标签趋势、Studio Radar 工作室雷达、Audience Pulse 口碑脉冲

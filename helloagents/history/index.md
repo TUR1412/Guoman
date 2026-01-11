@@ -8,6 +8,7 @@
 
 | 时间戳       | 功能名称                              | 类型 | 状态     | 方案包路径                                                                                                                |
 | ------------ | ------------------------------------- | ---- | -------- | ------------------------------------------------------------------------------------------------------------------------- |
+| 202601120629 | diagnostics_events_explorer           | 功能 | ✅已完成 | [2026-01/202601120629_diagnostics_events_explorer](2026-01/202601120629_diagnostics_events_explorer/)                     |
 | 202601120558 | lighthouse_baseline_automation        | 功能 | ✅已完成 | [2026-01/202601120558_lighthouse_baseline_automation](2026-01/202601120558_lighthouse_baseline_automation/)               |
 | 202601120412 | diagnostics_imported_records_explorer | 功能 | ✅已完成 | [2026-01/202601120412_diagnostics_imported_records_explorer](2026-01/202601120412_diagnostics_imported_records_explorer/) |
 | 202601120258 | diagnostics_records_explorer          | 功能 | ✅已完成 | [2026-01/202601120258_diagnostics_records_explorer](2026-01/202601120258_diagnostics_records_explorer/)                   |
@@ -41,6 +42,7 @@
 
 ### 2026-01
 
+- [202601120629_diagnostics_events_explorer](2026-01/202601120629_diagnostics_events_explorer/) - 诊断回放增强：诊断包 events + 本地/导入事件浏览器（筛选/展开/下载筛选结果）
 - [202601120558_lighthouse_baseline_automation](2026-01/202601120558_lighthouse_baseline_automation/) - Lighthouse 基线自动化：升级 `npm run lighthouse:baseline`（remote/local）生成报告（HTML/JSON）与得分基线摘要
 - [202601120412_diagnostics_imported_records_explorer](2026-01/202601120412_diagnostics_imported_records_explorer/) - 诊断回放增强：导入 logs/errors 浏览器（可定制标题/空状态，支持筛选/检索/展开/下载筛选结果）+ 导入入口收敛
 - [202601120258_diagnostics_records_explorer](2026-01/202601120258_diagnostics_records_explorer/) - 诊断回放：Records Explorer（日志/错误浏览器筛选/检索/导出）+ 拖拽导入（本地完成）

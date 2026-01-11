@@ -39,6 +39,8 @@ export const trackEvent = (name, payload = {}) => {
   writeEvents(events);
 };
 
+export const getEvents = () => readEvents();
+
 export const getEventStats = () => {
   const events = readEvents();
   const counts = events.reduce((acc, event) => {

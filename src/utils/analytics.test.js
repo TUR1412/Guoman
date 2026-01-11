@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { clearEvents, getEventStats, trackEvent } from './analytics';
+import { clearEvents, getEvents, getEventStats, trackEvent } from './analytics';
 import { STORAGE_KEYS } from './dataKeys';
 import { flushStorageQueue } from './storageQueue';
 
@@ -23,11 +23,23 @@ describe('analytics store', () => {
     const stats = getEventStats();
     expect(stats.total).toBe(1);
     expect(stats.counts.open).toBe(1);
+
+    const events = getEvents();
+    expect(events).toHaveLength(1);
+    expect(events[0]).toEqual(
+      expect.objectContaining({
+        name: 'open',
+        payload: { from: 'home' },
+        id: expect.any(String),
+        at: expect.any(Number),
+      }),
+    );
   });
 
   it('getEventStats tolerates invalid storage payload', () => {
     window.localStorage.setItem(STORAGE_KEYS.analyticsEvents, '{not-json');
     expect(getEventStats()).toEqual({ total: 0, counts: {} });
+    expect(getEvents()).toEqual([]);
   });
 
   it('caps stored events', () => {
