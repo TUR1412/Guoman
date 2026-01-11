@@ -19,6 +19,9 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
+        __APP_VERSION__: 'readonly',
+        __BUILD_SHA__: 'readonly',
+        __BUILD_TIME__: 'readonly',
       },
       parserOptions: {
         ecmaFeatures: {

@@ -3,6 +3,9 @@ import { describe, expect, it, vi } from 'vitest';
 describe('diagnosticsBundle', () => {
   it('buildDiagnosticsBundle includes snapshot/logs/errors', async () => {
     vi.resetModules();
+    vi.doMock('./buildInfo', () => ({
+      getBuildInfo: () => ({ version: '0.0.0-test', sha: 'deadbeef' }),
+    }));
     vi.doMock('./healthConsole', () => ({
       getHealthSnapshot: () => ({ ok: true }),
     }));
@@ -20,6 +23,7 @@ describe('diagnosticsBundle', () => {
       expect.objectContaining({
         schemaVersion: 2,
         generatedAt: expect.any(String),
+        build: { version: '0.0.0-test', sha: 'deadbeef' },
         snapshot: { ok: true },
         logs: [{ id: 'l1' }],
         errors: [{ id: 'e1' }],

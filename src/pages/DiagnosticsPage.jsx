@@ -150,6 +150,7 @@ export default function DiagnosticsPage() {
 
   const jsonText = useMemo(() => JSON.stringify(bundle, null, 2), [bundle]);
 
+  const build = bundle.build || {};
   const snapshot = bundle.snapshot || {};
   const perf = snapshot.perf || {};
   const lag = snapshot.lag || {};
@@ -238,6 +239,20 @@ export default function DiagnosticsPage() {
               <StatKey>生成时间</StatKey>
               <StatValue>
                 {bundle.generatedAt ? new Date(bundle.generatedAt).toLocaleString('zh-CN') : '—'}
+              </StatValue>
+            </StatRow>
+            <StatRow>
+              <StatKey>版本</StatKey>
+              <StatValue>{build.version || '—'}</StatValue>
+            </StatRow>
+            <StatRow>
+              <StatKey>Build</StatKey>
+              <StatValue>{build.shortSha || (import.meta.env.DEV ? 'dev' : '—')}</StatValue>
+            </StatRow>
+            <StatRow>
+              <StatKey>构建时间</StatKey>
+              <StatValue>
+                {build.builtAt ? new Date(build.builtAt).toLocaleString('zh-CN') : '—'}
               </StatValue>
             </StatRow>
             <StatRow>

@@ -2,14 +2,34 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { readFileSync } from 'node:fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const packageJson = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf-8'));
+const APP_VERSION = packageJson.version;
+
+const resolveBuildSha = () => {
+  const raw =
+    process.env.GITHUB_SHA ||
+    process.env.VITE_BUILD_SHA ||
+    process.env.BUILD_SHA ||
+    process.env.COMMIT_SHA;
+
+  if (!raw) return null;
+  return String(raw);
+};
 
 export default defineConfig(({ command }) => ({
   // GitHub Pages 部署时使用 /Guoman/，本地开发保持 / 更顺手
   base: command === 'build' ? '/Guoman/' : '/',
   plugins: [react()],
+  define: {
+    __APP_VERSION__: JSON.stringify(APP_VERSION),
+    __BUILD_SHA__: JSON.stringify(command === 'build' ? resolveBuildSha() : null),
+    __BUILD_TIME__: JSON.stringify(command === 'build' ? new Date().toISOString() : null),
+  },
   esbuild: {
     legalComments: 'none',
     drop: command === 'build' ? ['debugger'] : [],
