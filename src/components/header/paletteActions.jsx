@@ -33,15 +33,21 @@ const splitKeywords = (value) =>
     .map((item) => item.trim())
     .filter(Boolean);
 
-const createAction = (id, title, description, keywords, icon, run, meta = 'Enter') => ({
-  id,
-  title,
-  description,
-  keywords,
-  icon,
-  meta,
-  run,
-});
+const createAction = (id, title, description, keywords, icon, run, options) => {
+  const meta = typeof options === 'string' ? options : (options?.meta ?? 'Enter');
+  const prefetchPath = typeof options === 'object' && options ? options.prefetchPath : undefined;
+
+  return {
+    id,
+    title,
+    description,
+    keywords,
+    icon,
+    meta,
+    prefetchPath,
+    run,
+  };
+};
 
 const buildAnimeActions = (navigate) =>
   (Array.isArray(animeData) ? animeData : []).map((anime) =>
@@ -59,6 +65,7 @@ const buildAnimeActions = (navigate) =>
       ],
       <FiFilm />,
       () => navigate(`/anime/${anime.id}`),
+      { prefetchPath: `/anime/${anime.id}` },
     ),
   );
 
@@ -69,16 +76,20 @@ const buildTagActions = (navigate) => {
     return String(a[0]).localeCompare(String(b[0]), 'zh-Hans-CN');
   });
 
-  return entries.map(([tag, count]) =>
-    createAction(
-      `tag.open.${encodeURIComponent(tag)}`,
+  return entries.map(([tag, count]) => {
+    const encoded = encodeURIComponent(tag);
+    const path = `/tag/${encoded}`;
+
+    return createAction(
+      `tag.open.${encoded}`,
       `标签：${tag}`,
       `查看该标签下的作品（${count} 部）`,
       [tag, `#${tag}`, '标签', 'tag'],
       <FiTag />,
-      () => navigate(`/tag/${encodeURIComponent(tag)}`),
-    ),
-  );
+      () => navigate(path),
+      { prefetchPath: path },
+    );
+  });
 };
 
 const buildCategoryActions = (navigate) =>
@@ -90,6 +101,7 @@ const buildCategoryActions = (navigate) =>
       [meta.title, meta.tag, '分类', slug, 'category'],
       <FiGrid />,
       () => navigate(`/category/${slug}`),
+      { prefetchPath: `/category/${slug}` },
     ),
   );
 
@@ -105,6 +117,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['推荐', 'recommendations'],
       <FiCompass />,
       () => navigate('/recommendations'),
+      { prefetchPath: '/recommendations' },
     ),
     createAction(
       'nav.favorites',
@@ -113,6 +126,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['收藏', 'favorites'],
       <FiHeart />,
       () => navigate('/favorites'),
+      { prefetchPath: '/favorites' },
     ),
     createAction(
       'nav.following',
@@ -121,6 +135,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['追更', 'following', 'reminder', '通知'],
       <FiBell />,
       () => navigate('/following'),
+      { prefetchPath: '/following' },
     ),
     createAction(
       'nav.pro',
@@ -129,6 +144,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['pro', '会员', '赞助', 'pricing', 'support'],
       <FiAward />,
       () => navigate('/pro'),
+      { prefetchPath: '/pro' },
     ),
     createAction(
       'nav.insights',
@@ -137,6 +153,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['足迹', 'insights', 'activity', '留存', '增长'],
       <FiActivity />,
       () => navigate('/insights'),
+      { prefetchPath: '/insights' },
     ),
     createAction(
       'nav.posters',
@@ -145,6 +162,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['海报', 'poster', 'share', 'svg', '裂变'],
       <FiShare2 />,
       () => navigate('/posters'),
+      { prefetchPath: '/posters' },
     ),
     createAction(
       'nav.achievements',
@@ -153,6 +171,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['成就', 'achievements', 'badge'],
       <FiAward />,
       () => navigate('/achievements'),
+      { prefetchPath: '/achievements' },
     ),
     createAction(
       'nav.rankings',
@@ -161,9 +180,16 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['排行', 'rankings'],
       <FiTrendingUp />,
       () => navigate('/rankings'),
+      { prefetchPath: '/rankings' },
     ),
-    createAction('nav.news', '最新资讯', '打开资讯列表', ['资讯', 'news'], <FiBookOpen />, () =>
-      navigate('/news'),
+    createAction(
+      'nav.news',
+      '最新资讯',
+      '打开资讯列表',
+      ['资讯', 'news'],
+      <FiBookOpen />,
+      () => navigate('/news'),
+      { prefetchPath: '/news' },
     ),
     createAction(
       'nav.search',
@@ -172,6 +198,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['搜索', 'search'],
       <FiSearch />,
       () => navigate('/search'),
+      { prefetchPath: '/search' },
     ),
     createAction(
       'nav.profile',
@@ -180,6 +207,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['用户中心', 'profile', '设置', 'settings'],
       <FiUser />,
       () => navigate('/profile'),
+      { prefetchPath: '/profile' },
     ),
     createAction(
       'nav.diagnostics',
@@ -188,9 +216,16 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['诊断', 'diagnostics', 'health', '性能', '错误', '存储'],
       <FiActivity />,
       () => navigate('/diagnostics'),
+      { prefetchPath: '/diagnostics' },
     ),
-    createAction('nav.about', '关于我们', '项目介绍与设计理念', ['关于', 'about'], <FiInfo />, () =>
-      navigate('/about'),
+    createAction(
+      'nav.about',
+      '关于我们',
+      '项目介绍与设计理念',
+      ['关于', 'about'],
+      <FiInfo />,
+      () => navigate('/about'),
+      { prefetchPath: '/about' },
     ),
     createAction(
       'nav.help',
@@ -199,6 +234,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['帮助', 'help', '指引'],
       <FiHelpCircle />,
       () => navigate('/help'),
+      { prefetchPath: '/help' },
     ),
     createAction(
       'nav.faq',
@@ -207,6 +243,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['faq', '常见问题', '问题', '解答'],
       <FiHelpCircle />,
       () => navigate('/faq'),
+      { prefetchPath: '/faq' },
     ),
     createAction(
       'nav.feedback',
@@ -215,6 +252,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['反馈', 'feedback', '建议'],
       <FiMessageSquare />,
       () => navigate('/feedback'),
+      { prefetchPath: '/feedback' },
     ),
     createAction(
       'nav.contact',
@@ -223,6 +261,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['联系', 'contact', '邮箱', 'mail'],
       <FiMail />,
       () => navigate('/contact'),
+      { prefetchPath: '/contact' },
     ),
     createAction(
       'nav.app',
@@ -231,6 +270,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['app', '下载', '移动端', '离线'],
       <FiDownload />,
       () => navigate('/app'),
+      { prefetchPath: '/app' },
     ),
     createAction(
       'nav.privacy',
@@ -239,6 +279,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['隐私', 'privacy', '数据'],
       <FiShield />,
       () => navigate('/privacy'),
+      { prefetchPath: '/privacy' },
     ),
     createAction(
       'nav.terms',
@@ -247,6 +288,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['条款', 'terms', 'policy'],
       <FiShield />,
       () => navigate('/terms'),
+      { prefetchPath: '/terms' },
     ),
     createAction(
       'nav.cookies',
@@ -255,6 +297,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['cookie', 'cookies', '政策'],
       <FiShield />,
       () => navigate('/cookies'),
+      { prefetchPath: '/cookies' },
     ),
     createAction(
       'nav.accessibility',
@@ -263,6 +306,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['无障碍', 'accessibility', 'a11y'],
       <FiShield />,
       () => navigate('/accessibility'),
+      { prefetchPath: '/accessibility' },
     ),
     createAction(
       'nav.login',
@@ -271,6 +315,7 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       ['登录', '注册', 'login'],
       <FiLogIn />,
       () => navigate('/login'),
+      { prefetchPath: '/login' },
     ),
   ];
 

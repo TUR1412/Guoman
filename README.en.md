@@ -30,7 +30,7 @@
 - **Content insights**: Tag Pulse, Studio Radar, Audience Pulse summaries.
 - **Watch Planner**: turns progress + following status into daily viewing budgets and ETA.
 - **Match score + reasons**: recommendations are explainable and transparent.
-- **Command Palette upgrades**: jump to titles / `#tags` / categories / pages; search stays as a fallback item.
+- **Command Palette upgrades**: jump to titles / `#tags` / categories / pages; search stays as a fallback item, and highlighted targets are idle-prefetched for snappier navigation.
 - **Local-first**: favorites, progress, taste profile, and visual settings are persisted in `localStorage`.
 - **PWA & diagnostics**: offline caching + update prompt + `/diagnostics` local health snapshot.
 

@@ -56,6 +56,7 @@
 - 约定：页面/组件优先复用 primitives，避免重复声明 `styled.button` 导致交互分叉
 - 渐进式模块化：`Header` 相关拆分组件放在 `src/components/header/`，对外入口仍为 `src/components/Header.jsx`
 - 命令面板入口：`src/components/header/paletteActions.jsx` 统一收口 Command Palette actions（支持作品/标签/#tag/分类/静态页直达）
+- 命令面板预取：`src/components/CommandPalette.jsx` 在高亮/hover action 时读取 `prefetchPath` 并调用 `src/utils/routePrefetch.js` 提前加载目标路由 chunk（提升跳转响应）
 - 分类映射 SSOT：`src/data/categoryMap.js`（分类 slug → 标签映射，被 CategoryPage 与命令面板共同复用）
 - 渐进式模块化：`AnimeDetail` 拆分组件放在 `src/components/anime/detail/`（`AnimeProgressCard`、`AnimeReviews`、`styles.js`），对外入口仍为 `src/components/AnimeDetail.jsx`
 - 表单一致性：Search/Favorites/Following 的 Select、StaticPage/UserCenterPage 的反馈输入、AnimeDetail 的评分/评论/进度滑条已收敛到 `TextField`/`SelectField`/`TextAreaField`/`RangeInput`；后续新增输入优先复用 primitives，避免原生控件样式与交互分叉

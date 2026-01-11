@@ -48,8 +48,8 @@
   **Match Score + Reasons**: transparent recommendation explanations.
 - **本地优先**：收藏/进度/口味画像/视觉偏好全部 localStorage 持久化。<br />
   **Local-first**: all key user state stays in the browser.
-- **命令面板升级**：支持作品/标签/分类直达，搜索建议作为“兜底项”保留。<br />
-  **Command Palette Upgrades**: jump to titles/tags/categories, with search kept as a fallback.
+- **命令面板升级**：支持作品/标签/分类直达，搜索建议作为“兜底项”保留，并在高亮/hover 时自动预取目标路由（更快跳转）。<br />
+  **Command Palette Upgrades**: jump to titles/tags/categories, keep search as a fallback, and idle-prefetch highlighted targets for faster navigation.
 - **性能 & 质量闸门**：Lighthouse 友好、Bundle Budget、ESLint + Vitest 全链路守门。<br />
   **Performance & Quality Gates**: lint, test, build, and bundle budget in CI.
 - **离线兜底页**：Service Worker 增加离线页面 fallback，弱网/断网更可控。<br />

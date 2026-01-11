@@ -5,6 +5,7 @@
 ## [Unreleased]
 
 - 命令面板升级：支持作品/标签/#tag/分类/静态页直达，搜索 action 作为兜底项保留（不抢占首选命令）
+- 命令面板性能：高亮/hover 时 idle 预取目标路由 chunk，Enter 跳转更快
 - PWA：新增 `public/offline.html` 离线兜底页，并升级 Service Worker cache version（确保离线导航更可控）
 - 未来感 UI 重塑：Space Grotesk + Chakra Petch 字体体系与深浅主题色板升级
 - 内容洞察引擎：新增 Tag Pulse 标签趋势、Studio Radar 工作室雷达、Audience Pulse 口碑脉冲

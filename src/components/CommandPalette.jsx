@@ -4,6 +4,7 @@ import { FiCornerDownLeft, FiSearch } from './icons/feather';
 
 import { usePointerGlow } from './usePointerGlow';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
+import { prefetchRoute } from '../utils/routePrefetch';
 import Dialog from '../ui/Dialog';
 
 const Header = styled.div`
@@ -158,6 +159,18 @@ const normalize = (value) =>
     .toLowerCase()
     .trim();
 
+const scheduleIdle = (callback) => {
+  if (typeof window === 'undefined') return () => undefined;
+
+  if (typeof window.requestIdleCallback === 'function') {
+    const id = window.requestIdleCallback(callback, { timeout: 800 });
+    return () => window.cancelIdleCallback?.(id);
+  }
+
+  const id = window.setTimeout(callback, 120);
+  return () => window.clearTimeout(id);
+};
+
 const buildSearchAction = (query, onSearch) => {
   const trimmed = query.trim();
   if (!trimmed) return null;
@@ -170,6 +183,7 @@ const buildSearchAction = (query, onSearch) => {
     keywords: [trimmed],
     icon: <FiSearch />,
     meta: 'Enter',
+    prefetchPath: '/search',
     run: () => onSearch(trimmed),
   };
 };
@@ -215,6 +229,16 @@ export default function CommandPalette({ open, onClose, actions, onSearch }) {
     setQuery('');
     setActiveIndex(0);
   }, [open]);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const path = results[activeIndex]?.prefetchPath;
+    if (!path) return undefined;
+
+    return scheduleIdle(() => {
+      prefetchRoute(path);
+    });
+  }, [activeIndex, open, results]);
 
   useEffect(() => {
     if (!open) return undefined;
