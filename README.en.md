@@ -34,7 +34,7 @@
 - **Local-first**: favorites, progress, taste profile, and visual settings are persisted in `localStorage`.
 - **PWA & diagnostics**: offline caching + update prompt + `/diagnostics` local health snapshot.
 - **Observability**: local logs and INP tracking for faster debugging of interaction issues.
-- **Crash recovery**: ErrorBoundary provides one-click copy/download diagnostics bundles (logs + errors + health snapshot) for fast issue reporting.
+- **Crash recovery**: ErrorBoundary provides one-click copy/download diagnostics bundles (logs + errors + health snapshot), with manual-copy fallback and optional `.json.gz` export.
 - **Resilient lazy loading**: automatic retry for dynamic-import failures (flaky networks, stale caches, or chunk mismatch).
 
 ---

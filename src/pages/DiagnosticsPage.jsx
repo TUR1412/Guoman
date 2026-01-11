@@ -3,14 +3,16 @@ import styled from 'styled-components';
 import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import { useToast } from '../components/ToastProvider';
+import ManualCopyDialog from '../components/ManualCopyDialog';
 import { FiActivity, FiDownload, FiTrash2, FiZap } from '../components/icons/feather';
 import { copyTextToClipboard } from '../utils/share';
 import { buildDiagnosticsBundle } from '../utils/diagnosticsBundle';
-import { downloadTextFile } from '../utils/download';
+import { downloadBinaryFile, downloadTextFile } from '../utils/download';
 import { getErrorReports, clearErrorReports } from '../utils/errorReporter';
 import { getLogs, clearLogs } from '../utils/logger';
 import { getFeatureSummaries } from '../utils/dataVault';
 import { formatBytes } from '../utils/formatBytes';
+import { canGzip, gzipCompressString } from '../utils/compression';
 import { startHealthMonitoring, stopHealthMonitoring } from '../utils/healthConsole';
 
 const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
@@ -121,6 +123,7 @@ const ProgressFill = styled.div`
 export default function DiagnosticsPage() {
   const toast = useToast();
   const [monitoring, setMonitoring] = useState(false);
+  const [manualCopyOpen, setManualCopyOpen] = useState(false);
   const [bundle, setBundle] = useState(() => buildDiagnosticsBundle());
   const [errors, setErrors] = useState(() => getErrorReports());
   const [logs, setLogs] = useState(() => getLogs());
@@ -157,6 +160,8 @@ export default function DiagnosticsPage() {
   const longTasks = snapshot.longTasks || {};
   const reactCommits = snapshot.reactCommits || {};
   const memory = snapshot.memory || null;
+  const gzipSupported = useMemo(() => canGzip(), []);
+  const isGzipBytes = useCallback((bytes) => bytes?.[0] === 0x1f && bytes?.[1] === 0x8b, []);
 
   return (
     <PageShell
@@ -200,10 +205,12 @@ export default function DiagnosticsPage() {
                 if (result.ok) {
                   toast.success('已复制', '诊断 JSON 已复制到剪贴板。');
                 } else {
-                  toast.warning('复制失败', '当前浏览器不支持剪贴板写入。');
+                  setManualCopyOpen(true);
+                  toast.info('请手动复制', '已打开手动复制窗口。');
                 }
               } catch {
-                toast.warning('复制失败', '当前浏览器不支持剪贴板写入。');
+                setManualCopyOpen(true);
+                toast.info('请手动复制', '已打开手动复制窗口。');
               }
             }}
           >
@@ -228,6 +235,39 @@ export default function DiagnosticsPage() {
             <FiDownload />
             下载 JSON
           </ActionButton>
+          {gzipSupported ? (
+            <ActionButton
+              type="button"
+              onClick={async () => {
+                try {
+                  const bytes = await gzipCompressString(jsonText);
+                  if (!isGzipBytes(bytes)) {
+                    toast.warning('下载失败', '当前环境不支持 gzip 压缩导出。');
+                    return;
+                  }
+
+                  const buildTag =
+                    build.shortSha || (import.meta.env.DEV ? 'dev' : build.version || 'local');
+                  const filename = `guoman-diagnostics-${buildTag}-${Date.now()}.json.gz`;
+                  const res = downloadBinaryFile({
+                    bytes,
+                    filename,
+                    mimeType: 'application/gzip',
+                  });
+                  if (!res.ok) {
+                    toast.warning('下载失败', '请检查浏览器下载权限。');
+                    return;
+                  }
+                  toast.success('已下载', `文件已保存：${filename}`);
+                } catch {
+                  toast.warning('下载失败', '请检查浏览器下载权限或稍后重试。');
+                }
+              }}
+              title="下载 gzip 压缩诊断包（体积更小，便于分享）"
+            >
+              下载 .gz
+            </ActionButton>
+          ) : null}
         </Actions>
       }
     >
@@ -502,6 +542,15 @@ export default function DiagnosticsPage() {
           )}
         </WideCard>
       </Grid>
+
+      <ManualCopyDialog
+        open={manualCopyOpen}
+        onClose={() => setManualCopyOpen(false)}
+        title="手动复制诊断 JSON"
+        description="当前环境不支持自动写入剪贴板。你可以手动复制下面的内容并分享给维护者（建议先检查是否需要脱敏）。"
+        label="诊断 JSON"
+        text={jsonText}
+      />
     </PageShell>
   );
 }

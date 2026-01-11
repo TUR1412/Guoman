@@ -2,9 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { FiAlertTriangle, FiDownload, FiRefreshCcw, FiShare2 } from './icons/feather';
 import { buildDiagnosticsBundle } from '../utils/diagnosticsBundle';
-import { downloadTextFile } from '../utils/download';
+import { downloadBinaryFile, downloadTextFile } from '../utils/download';
+import { canGzip, gzipCompressString } from '../utils/compression';
 import { reportError } from '../utils/errorReporter';
 import { copyTextToClipboard } from '../utils/share';
+import ManualCopyDialog from './ManualCopyDialog';
 
 const Fullscreen = styled.div`
   min-height: 100vh;
@@ -185,7 +187,13 @@ const DevDetails = styled.details`
 class AppErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null, actionMessage: '' };
+    this.state = {
+      hasError: false,
+      error: null,
+      actionMessage: '',
+      manualCopyOpen: false,
+      manualCopyText: '',
+    };
   }
 
   static getDerivedStateFromError(error) {
@@ -230,9 +238,17 @@ class AppErrorBoundary extends React.Component {
         return;
       }
 
-      this.setState({ actionMessage: '复制失败：当前环境不支持剪贴板写入。' });
+      this.setState({
+        actionMessage: '当前环境不支持自动复制，已打开手动复制窗口。',
+        manualCopyOpen: true,
+        manualCopyText: text,
+      });
     } catch {
-      this.setState({ actionMessage: '复制失败：当前环境不支持剪贴板写入。' });
+      this.setState({
+        actionMessage: '当前环境不支持自动复制，已打开手动复制窗口。',
+        manualCopyOpen: true,
+        manualCopyText: text,
+      });
     }
   }
 
@@ -251,6 +267,40 @@ class AppErrorBoundary extends React.Component {
     }
 
     this.setState({ actionMessage: '下载失败：请检查浏览器下载权限。' });
+  }
+
+  async handleDownloadCompressedDiagnostics() {
+    if (!canGzip()) {
+      this.setState({ actionMessage: '下载失败：当前环境不支持 gzip 压缩。' });
+      return;
+    }
+
+    const text = this.getDiagnosticsJsonText();
+
+    try {
+      const bytes = await gzipCompressString(text);
+      const looksLikeGzip = bytes?.[0] === 0x1f && bytes?.[1] === 0x8b;
+      if (!looksLikeGzip) {
+        this.setState({ actionMessage: '下载失败：gzip 压缩导出失败。' });
+        return;
+      }
+
+      const filename = `guoman-crash-${Date.now()}.json.gz`;
+      const res = downloadBinaryFile({
+        bytes,
+        filename,
+        mimeType: 'application/gzip',
+      });
+
+      if (res.ok) {
+        this.setState({ actionMessage: `已下载压缩诊断包：${filename}` });
+        return;
+      }
+
+      this.setState({ actionMessage: '下载失败：请检查浏览器下载权限。' });
+    } catch {
+      this.setState({ actionMessage: '下载失败：gzip 压缩导出失败。' });
+    }
   }
 
   render() {
@@ -288,6 +338,18 @@ class AppErrorBoundary extends React.Component {
                 <FiDownload />
                 下载诊断包
               </Button>
+              {canGzip() ? (
+                <Button
+                  type="button"
+                  title="下载 gzip 压缩诊断包（体积更小，便于分享）"
+                  onClick={() => {
+                    void this.handleDownloadCompressedDiagnostics();
+                  }}
+                >
+                  <FiDownload />
+                  下载 .gz
+                </Button>
+              ) : null}
               <HomeLink href="#/">返回首页</HomeLink>
             </Actions>
             {this.state.actionMessage ? (
@@ -317,6 +379,17 @@ class AppErrorBoundary extends React.Component {
             </DevDetails>
           )}
         </Card>
+
+        <ManualCopyDialog
+          open={this.state.manualCopyOpen}
+          onClose={() => {
+            this.setState({ manualCopyOpen: false });
+          }}
+          title="手动复制诊断信息"
+          description="当前环境不支持自动写入剪贴板。你可以手动复制下面的诊断信息并分享给维护者（建议先检查是否需要脱敏）。"
+          label="诊断 JSON"
+          text={this.state.manualCopyText || this.getDiagnosticsJsonText()}
+        />
       </Fullscreen>
     );
   }
