@@ -1,7 +1,9 @@
+// 推荐页：输出口味画像、匹配度解释与标签趋势洞察。
 import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FiStar } from '../components/icons/feather';
+import { Link } from 'react-router-dom';
+import { FiStar, FiTrendingUp } from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import AnimeList from '../components/AnimeList';
 import AnimeCard from '../components/anime/AnimeCard';
@@ -13,6 +15,7 @@ import { subscribeWatchProgress } from '../utils/watchProgress';
 import { useFavoritesUpdatedAt } from '../utils/useIsFavorite';
 import { useStorageSignal } from '../utils/useStorageSignal';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
+import { buildTagPulse } from '../utils/contentInsights';
 
 const PersonalizeCard = styled(motion.section).attrs({
   'data-card': true,
@@ -109,6 +112,111 @@ const Grid = styled(AnimeGrid)`
   z-index: 1;
 `;
 
+const TagPulseCard = styled.section.attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '3',
+})`
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-lg);
+  display: grid;
+  gap: var(--spacing-lg);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      260px 180px at 12% 0%,
+      rgba(var(--primary-rgb), 0.14),
+      transparent 60%
+    );
+    opacity: 0.8;
+    pointer-events: none;
+  }
+`;
+
+const TagPulseHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  position: relative;
+  z-index: 1;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`;
+
+const TagPulseTitle = styled.div`
+  display: grid;
+  gap: 6px;
+`;
+
+const TagPulseGrid = styled.div.attrs({ 'data-divider': 'grid' })`
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--spacing-md);
+  position: relative;
+  z-index: 1;
+`;
+
+const TagPulseItem = styled(Link).attrs({ 'data-pressable': true })`
+  grid-column: span 4;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-paper);
+  color: inherit;
+  display: grid;
+  gap: 8px;
+  transition: var(--transition);
+
+  &:hover {
+    border-color: var(--chip-border-hover);
+    background: var(--surface-soft-hover);
+  }
+
+  @media (max-width: 992px) {
+    grid-column: span 6;
+  }
+
+  @media (max-width: 576px) {
+    grid-column: 1 / -1;
+  }
+`;
+
+const TagPulseName = styled.div`
+  font-weight: 800;
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+`;
+
+const TagPulseMeta = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+`;
+
+const TagPulseBar = styled.div`
+  height: 6px;
+  border-radius: var(--border-radius-pill);
+  background: var(--progress-track);
+  overflow: hidden;
+`;
+
+const TagPulseFill = styled.div`
+  height: 100%;
+  width: ${(props) => `${props.$value}%`};
+  background: linear-gradient(90deg, rgba(var(--primary-rgb), 0.85), rgba(var(--secondary-rgb), 0.7));
+`;
+
 function RecommendationsPage() {
   const reducedMotion = useAppReducedMotion();
   const favoritesUpdatedAt = useFavoritesUpdatedAt();
@@ -135,7 +243,27 @@ function RecommendationsPage() {
     .map((t) => t.key)
     .filter(Boolean)
     .slice(0, 5);
-  const ranked = personalized.ranked.map((item) => item.anime).filter(Boolean);
+  const rankedWithInsight = useMemo(() => {
+    const items = personalized.ranked.filter((item) => item?.anime);
+    const scores = items.map((item) => Number(item.score)).filter(Number.isFinite);
+    const minScore = scores.length ? Math.min(...scores) : 0;
+    const maxScore = scores.length ? Math.max(...scores) : 1;
+    const toMatchScore = (score) => {
+      if (!Number.isFinite(score)) return null;
+      if (maxScore <= minScore) return 86;
+      return Math.round(70 + ((score - minScore) / (maxScore - minScore)) * 30);
+    };
+
+    return items.map((item) => ({
+      anime: item.anime,
+      insight: {
+        score: toMatchScore(item.score),
+        reasons: item.reasons?.tags || [],
+      },
+    }));
+  }, [personalized.ranked]);
+
+  const tagPulse = useMemo(() => buildTagPulse(animeData, { limit: 9 }), []);
 
   const personalizeMotion = reducedMotion
     ? { initial: false, animate: { opacity: 1 }, transition: { duration: 0 } }
@@ -173,14 +301,42 @@ function RecommendationsPage() {
           <Muted>还没有足够的偏好数据：先收藏几部作品或观看一集，推荐会更“懂你”。</Muted>
         )}
 
-        {ranked.length > 0 ? (
+        {rankedWithInsight.length > 0 ? (
           <Grid $bento>
-            {ranked.map((anime) => (
-              <AnimeCard key={anime.id} anime={anime} />
+            {rankedWithInsight.map((item) => (
+              <AnimeCard key={item.anime.id} anime={item.anime} insight={item.insight} />
             ))}
           </Grid>
         ) : null}
       </PersonalizeCard>
+
+      <TagPulseCard aria-label="标签趋势热力">
+        <TagPulseHeader>
+          <TagPulseTitle>
+            <H2>标签趋势热力</H2>
+            <Muted>结合评分、人气与覆盖作品数，输出当前最具势能的标签维度。</Muted>
+          </TagPulseTitle>
+          <Badge>
+            <FiTrendingUp /> Tag Pulse
+          </Badge>
+        </TagPulseHeader>
+
+        <TagPulseGrid>
+          {tagPulse.map((item) => (
+            <TagPulseItem key={item.tag} to={`/tag/${encodeURIComponent(item.tag)}`}>
+              <TagPulseName>{item.tag}</TagPulseName>
+              <TagPulseMeta>
+                <span>{item.count} 部作品</span>
+                <span>均分 {item.avgRating}</span>
+                <span>热度 {item.avgPopularity.toLocaleString()}</span>
+              </TagPulseMeta>
+              <TagPulseBar aria-hidden="true">
+                <TagPulseFill $value={item.heat} />
+              </TagPulseBar>
+            </TagPulseItem>
+          ))}
+        </TagPulseGrid>
+      </TagPulseCard>
 
       <AnimeList
         title="为你精选"

@@ -4,9 +4,22 @@ import { Link } from 'react-router-dom';
 import { FiGithub, FiTwitter, FiInstagram, FiYoutube, FiMail } from './icons/feather';
 
 const FooterContainer = styled.footer`
-  background-color: var(--darker-color);
-  border-top: 1px solid var(--border-color);
+  background: var(--surface-ink);
+  border-top: 1px solid var(--border-subtle);
   padding: var(--spacing-2xl) 0 var(--spacing-lg);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(420px 220px at 12% 0%, rgba(var(--primary-rgb), 0.18), transparent 70%),
+      radial-gradient(360px 200px at 88% 0%, rgba(var(--secondary-rgb), 0.12), transparent 70%);
+    opacity: 0.6;
+    pointer-events: none;
+  }
 
   @media (max-width: 768px) {
     padding-bottom: calc(
@@ -19,6 +32,8 @@ const FooterInner = styled.div`
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 var(--spacing-lg);
+  position: relative;
+  z-index: 1;
 `;
 
 const FooterTop = styled.div`
@@ -26,7 +41,7 @@ const FooterTop = styled.div`
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--spacing-xl);
   padding-bottom: var(--spacing-xl);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-subtle);
 
   & > :nth-child(1) {
     grid-column: span 5;
@@ -208,8 +223,8 @@ function Footer() {
               国漫<span>世界</span>
             </FooterLogo>
             <FooterDescription>
-              中国最大的国产动漫内容平台，致力于推广优质国漫作品，
-              为广大动漫爱好者提供优质的观影体验。
+              未来感国漫探索中枢，提供智能推荐、观影计划与本地口味画像，
+              让每一部国漫都更懂你。
             </FooterDescription>
             <SocialLinks>
               <SocialLink

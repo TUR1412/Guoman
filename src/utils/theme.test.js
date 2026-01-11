@@ -22,7 +22,7 @@ describe('theme utils', () => {
     applyTheme(THEMES.light);
     expect(document.documentElement.dataset.theme).toBe('light');
     expect(document.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe(
-      '#F7F4EF',
+      '#F5F7FB',
     );
   });
 

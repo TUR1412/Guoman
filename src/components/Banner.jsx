@@ -204,7 +204,10 @@ const BannerOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--hero-overlay);
+  background:
+    var(--hero-overlay),
+    radial-gradient(720px 360px at 78% 0%, rgba(var(--primary-rgb), 0.22), transparent 60%),
+    radial-gradient(520px 280px at 12% 12%, rgba(var(--secondary-rgb), 0.16), transparent 60%);
   z-index: 2;
 `;
 
@@ -331,6 +334,13 @@ const BannerTitle = styled(motion.h1)`
   color: var(--text-primary);
   text-shadow: var(--text-shadow-hero);
   letter-spacing: 0.02em;
+  font-family: var(--font-display);
+
+  @supports (-webkit-background-clip: text) {
+    background: linear-gradient(120deg, var(--text-primary), rgba(var(--primary-rgb), 0.85));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 
   @media (max-width: 768px) {
     font-size: var(--text-9xl);
@@ -347,6 +357,7 @@ const BannerSubtitle = styled(motion.h2)`
   margin-bottom: var(--spacing-md);
   color: var(--secondary-color);
   text-shadow: var(--text-shadow-hero-soft);
+  font-family: var(--font-display);
 
   @media (max-width: 576px) {
     font-size: var(--text-xl);

@@ -6,6 +6,8 @@ import { Button, IconButton } from '../ui';
 import { activateServiceWorkerUpdate, SERVICE_WORKER_EVENTS } from '../utils/serviceWorker';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 
+const IS_JSDOM = typeof navigator !== 'undefined' && /jsdom/i.test(navigator.userAgent);
+
 const Wrap = styled(motion.div).attrs({
   'data-card': true,
   'data-divider': 'card',
@@ -247,7 +249,12 @@ export default function NetworkStatusBanner() {
                 title="立即更新"
                 onClick={() => {
                   const ok = activateServiceWorkerUpdate(swRegistration);
-                  if (!ok) window.location.reload();
+                  if (!ok) {
+                    if (IS_JSDOM) return;
+                    try {
+                      window.location.reload();
+                    } catch {}
+                  }
                 }}
               >
                 <span aria-hidden="true">

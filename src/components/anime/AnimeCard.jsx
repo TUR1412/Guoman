@@ -1,3 +1,4 @@
+// 动漫卡片：展示作品概要，并可承载推荐匹配度与理由提示。
 import React, { memo, useCallback, useEffect, useId, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
@@ -191,6 +192,43 @@ const Meta = styled.div`
   color: var(--text-tertiary);
 `;
 
+const InsightRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+  flex-wrap: wrap;
+`;
+
+const InsightBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--border-radius-pill);
+  border: 1px solid var(--primary-soft-border);
+  background: rgba(var(--primary-rgb), 0.14);
+  color: var(--text-primary);
+  font-size: var(--text-xs);
+  font-weight: 800;
+`;
+
+const InsightChips = styled.div`
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+`;
+
+const InsightChip = styled.span`
+  padding: 2px 8px;
+  border-radius: var(--border-radius-pill);
+  border: 1px solid var(--chip-border);
+  background: var(--chip-bg);
+  color: var(--text-secondary);
+  font-size: var(--text-xxs);
+`;
+
 const Type = styled.span`
   overflow: hidden;
   text-overflow: clip;
@@ -216,7 +254,7 @@ const Rating = styled.span`
   }
 `;
 
-function AnimeCard({ anime, virtualized = false }) {
+function AnimeCard({ anime, virtualized = false, insight }) {
   const toast = useToast();
   const reducedMotion = useAppReducedMotion();
   const animeId = anime?.id;
@@ -226,6 +264,14 @@ function AnimeCard({ anime, virtualized = false }) {
   const favorited = useIsFavorite(animeId);
   const following = useIsFollowing(animeId);
   const typeShort = useMemo(() => anime?.type?.split('、')?.[0] ?? '', [anime?.type]);
+  const insightScore = useMemo(() => {
+    const raw = Number(insight?.score);
+    return Number.isFinite(raw) ? Math.round(raw) : null;
+  }, [insight?.score]);
+  const insightTags = useMemo(() => {
+    if (!Array.isArray(insight?.reasons)) return [];
+    return insight.reasons.map((tag) => String(tag)).filter(Boolean).slice(0, 3);
+  }, [insight?.reasons]);
   const descId = useMemo(() => `anime-card-desc-${animeId ?? 'unknown'}`, [animeId]);
   const coverLayoutId = useMemo(
     () => (animeId ? `guoman:anime-cover:${animeId}:${instanceId}` : undefined),
@@ -413,6 +459,16 @@ function AnimeCard({ anime, virtualized = false }) {
           <Type title={anime.type}>{typeShort}</Type>
           <Rating>{anime.rating}</Rating>
         </Meta>
+        {insightScore !== null || insightTags.length > 0 ? (
+          <InsightRow>
+            {insightScore !== null ? <InsightBadge>匹配度 {insightScore}%</InsightBadge> : null}
+            <InsightChips>
+              {insightTags.map((tag) => (
+                <InsightChip key={`${anime.id}-${tag}`}>{tag}</InsightChip>
+              ))}
+            </InsightChips>
+          </InsightRow>
+        ) : null}
       </CardLink>
     </Card>
   );

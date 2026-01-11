@@ -35,24 +35,46 @@ const loadBanner = async ({ reducedMotion = false, activateOk = true } = {}) => 
 
 const stubLocationReload = () => {
   const original = window.location.reload;
-  let spy = null;
-  try {
-    spy = vi.spyOn(window.location, 'reload').mockImplementation(() => {});
-  } catch {
-    // Some jsdom implementations may not allow spying; fall back to best-effort override.
-    try {
-      window.location.reload = vi.fn();
-      spy = window.location.reload;
-    } catch {
-      spy = vi.fn();
-    }
-  }
+  const spy = vi.fn();
+  let restored = false;
 
   const restore = () => {
+    if (restored) return;
+    restored = true;
+    try {
+      Object.defineProperty(window.location, 'reload', {
+        configurable: true,
+        writable: true,
+        value: original,
+      });
+      return;
+    } catch {}
+
     try {
       window.location.reload = original;
     } catch {}
   };
+
+  try {
+    Object.defineProperty(window.location, 'reload', {
+      configurable: true,
+      writable: true,
+      value: spy,
+    });
+    return { spy, restore };
+  } catch {}
+
+  try {
+    const spyOn = vi.spyOn(window.location, 'reload').mockImplementation(spy);
+    return { spy: spyOn, restore };
+  } catch {}
+
+  try {
+    Object.defineProperty(window, 'location', {
+      configurable: true,
+      value: { ...window.location, reload: spy },
+    });
+  } catch {}
 
   return { spy, restore };
 };

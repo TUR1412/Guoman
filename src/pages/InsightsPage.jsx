@@ -1,3 +1,4 @@
+// 足迹中心：展示用户行为概览，并提供工作室雷达洞察。
 import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -8,11 +9,12 @@ import {
   FiPlay,
   FiShare2,
   FiTrash2,
+  FiTrendingUp,
 } from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import { useToast } from '../components/ToastProvider';
-import { animeIndex } from '../data/animeData';
+import animeData, { animeIndex } from '../data/animeData';
 import {
   clearEngagementHistory,
   getDownloadHistory,
@@ -26,6 +28,7 @@ import { useFollowingEntries } from '../utils/useIsFollowing';
 import { useFavoriteIds } from '../utils/useIsFavorite';
 import { formatZhMonthDayTime } from '../utils/datetime';
 import { useStorageSignal } from '../utils/useStorageSignal';
+import { buildStudioRadar } from '../utils/contentInsights';
 
 const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
   display: grid;
@@ -223,6 +226,119 @@ const ItemTime = styled.div`
   }
 `;
 
+const RadarCard = styled.div.attrs({
+  'data-card': true,
+  'data-divider': 'card',
+  'data-elev': '3',
+})`
+  grid-column: 1 / -1;
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-lg);
+  display: grid;
+  gap: var(--spacing-lg);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      280px 180px at 12% 0%,
+      rgba(var(--secondary-rgb), 0.16),
+      transparent 60%
+    );
+    opacity: 0.8;
+    pointer-events: none;
+  }
+`;
+
+const RadarHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  position: relative;
+  z-index: 1;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`;
+
+const RadarTitle = styled.div`
+  display: grid;
+  gap: 6px;
+`;
+
+const RadarBadge = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs-plus);
+  padding: 6px 12px;
+  border-radius: var(--border-radius-pill);
+  border: 1px solid var(--stamp-border);
+  background: var(--stamp-bg);
+  color: var(--stamp-text);
+  font-size: var(--text-xs);
+  font-weight: 800;
+  box-shadow: var(--shadow-stamp);
+`;
+
+const RadarGrid = styled.div.attrs({ 'data-divider': 'grid' })`
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--spacing-md);
+  position: relative;
+  z-index: 1;
+`;
+
+const RadarItem = styled.div`
+  grid-column: span 4;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-paper);
+  display: grid;
+  gap: 6px;
+
+  @media (max-width: 992px) {
+    grid-column: span 6;
+  }
+
+  @media (max-width: 576px) {
+    grid-column: 1 / -1;
+  }
+`;
+
+const RadarName = styled.div`
+  font-weight: 800;
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+`;
+
+const RadarMeta = styled.div`
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+`;
+
+const RadarBar = styled.div`
+  height: 6px;
+  border-radius: var(--border-radius-pill);
+  background: var(--progress-track);
+  overflow: hidden;
+`;
+
+const RadarFill = styled.div`
+  height: 100%;
+  width: ${(props) => `${props.$value}%`};
+  background: linear-gradient(90deg, rgba(var(--secondary-rgb), 0.85), rgba(var(--accent-rgb), 0.7));
+`;
+
 function InsightsPage() {
   const toast = useToast();
   const favoriteIds = useFavoriteIds();
@@ -255,6 +371,8 @@ function InsightsPage() {
     void signal;
     return getContinueWatchingList({ limit: 999 });
   }, [signal]);
+
+  const studioRadar = useMemo(() => buildStudioRadar(animeData, { limit: 6 }), []);
 
   const timeline = useMemo(() => {
     const merged = [];
@@ -426,6 +544,39 @@ function InsightsPage() {
             />
           )}
         </WideCard>
+
+        <RadarCard aria-label="工作室雷达">
+          <RadarHeader>
+            <RadarTitle>
+              <StatLabel>
+                <FiTrendingUp /> Studio Radar
+              </StatLabel>
+              <StatMeta>综合评分、人气与产量，识别高口碑制作方。</StatMeta>
+            </RadarTitle>
+            <RadarBadge>口碑雷达</RadarBadge>
+          </RadarHeader>
+
+          <RadarGrid>
+            {studioRadar.map((item) => (
+              <RadarItem key={item.studio}>
+                <RadarName>{item.studio}</RadarName>
+                <RadarMeta>
+                  <span>{item.count} 部作品</span>
+                  <span>均分 {item.avgRating}</span>
+                  <span>热度 {item.avgPopularity.toLocaleString()}</span>
+                </RadarMeta>
+                {item.topAnime?.title ? (
+                  <RadarMeta>
+                    代表作：<strong>{item.topAnime.title}</strong>
+                  </RadarMeta>
+                ) : null}
+                <RadarBar aria-hidden="true">
+                  <RadarFill $value={item.heat} />
+                </RadarBar>
+              </RadarItem>
+            ))}
+          </RadarGrid>
+        </RadarCard>
       </Grid>
     </PageShell>
   );

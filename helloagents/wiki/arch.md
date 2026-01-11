@@ -18,6 +18,8 @@ flowchart TD
 
   App --> Search["Search Intelligence (Filter Engine + Prefetch)"]
   App --> Api["API Client (Retry + Cache + Dedupe)"]
+  App --> Insights["Content Insights (Tag Pulse / Studio Radar / Audience Pulse)"]
+  App --> Planner["Watch Planner"]
 
   App --> Visual["Visual Settings (visualSettings.js)"]
   Visual --> LS
@@ -25,6 +27,8 @@ flowchart TD
 
   App --> Diagnostics["Diagnostics UI (/diagnostics)"]
   Diagnostics --> Data
+  Insights --> Data
+  Planner --> Data
 
   App --> PWA[Service Worker]
   PWA --> Cache[(Cache Storage)]

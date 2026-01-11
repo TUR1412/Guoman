@@ -1,3 +1,4 @@
+// 主题切换与首帧主题色同步。
 import { safeLocalStorageGet } from './storage';
 import { scheduleStorageWrite } from './storageQueue';
 import { STORAGE_KEYS } from './dataKeys';
@@ -41,7 +42,7 @@ export const applyTheme = (theme) => {
   const metaThemeColor = document.querySelector('meta[name="theme-color"]');
   if (metaThemeColor) {
     // 与 index.html 的首帧主题色保持一致（避免切换时闪烁/色差）
-    metaThemeColor.setAttribute('content', normalized === THEMES.dark ? '#0B0F14' : '#F7F4EF');
+    metaThemeColor.setAttribute('content', normalized === THEMES.dark ? '#05070D' : '#F5F7FB');
   }
 };
 

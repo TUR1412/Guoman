@@ -44,11 +44,22 @@ const HeaderContainer = styled.header`
   width: 100%;
   height: var(--header-height);
   background-color: ${(p) => (p.$scrolled ? 'var(--header-bg-scrolled)' : 'var(--header-bg)')};
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(14px) saturate(1.12);
   z-index: 100;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-subtle);
   transition: var(--transition);
   box-shadow: ${(p) => (p.$scrolled ? 'var(--shadow-md)' : 'none')};
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(120deg, rgba(var(--primary-rgb), 0.08), transparent 35%),
+      linear-gradient(300deg, rgba(var(--secondary-rgb), 0.06), transparent 40%);
+    opacity: ${(p) => (p.$scrolled ? 0.35 : 0.22)};
+  }
 
   &::after {
     content: '';

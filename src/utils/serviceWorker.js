@@ -1,4 +1,5 @@
 const UPDATE_EVENT = 'guoman:sw:update';
+const IS_JSDOM = typeof navigator !== 'undefined' && /jsdom/i.test(navigator.userAgent);
 
 const dispatchUpdateEvent = (registration) => {
   if (typeof window === 'undefined') return;
@@ -27,7 +28,10 @@ export const registerServiceWorker = async ({ forceProd = false } = {}) => {
     if (!hadController) return;
     if (reloading) return;
     reloading = true;
-    window.location.reload();
+    if (IS_JSDOM) return;
+    try {
+      window.location.reload();
+    } catch {}
   });
 
   try {

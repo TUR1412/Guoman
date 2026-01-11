@@ -23,6 +23,10 @@
 
 ### 新增
 
+- 内容洞察引擎：新增 Tag Pulse 标签趋势、Studio Radar 工作室雷达、Audience Pulse 口碑脉冲。
+- 观影计划器：结合追更与观看进度生成每日观看预算与完结预测。
+- 推荐解释：AnimeCard 新增匹配度与推荐理由标签。
+- 详情洞察：AnimeDetail 接入口碑脉冲卡片。
 - 视觉系统：新增黄金比例排版/间距变量、12 列响应式栅格工具、0-12 阴影层级，并为 `data-card` 容器统一注入毛玻璃 + 动态渐变边框（hover 动态流光）。
 - 加载动效：新增 SVG PathLoader（路径描边动画），并接入开屏与路由 Suspense fallback。
 - 搜索进化：Search 页面新增“多级智能筛选面板”（制作方/年份/最低评分/状态/类型/标签）+ 实时搜索预取（idle 缓存）+ 筛选埋点。
@@ -36,6 +40,8 @@
 
 ### 变更
 
+- 视觉升级：全站字体与未来感色板升级，Banner/Header/Footer/PageShell 视觉骨架重塑。
+- 文档更新：README 重写为双语版本，突出未来感视觉与内容洞察能力。
 - Icons：移除 `react-icons` 依赖，改为内置 Feather Icons（更可控、更利于包体优化与缓存命中）。
 - 日期时间：抽取 `Intl.DateTimeFormat` 缓存工具，减少重复创建 formatter 的开销与重复代码。
 - 去重复：新增 `useStorageSignal` Hook，收敛页面/组件的 storage 监听逻辑并统一 key 过滤策略。

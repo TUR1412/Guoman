@@ -12,7 +12,7 @@
 
 ### 范围
 
-- **范围内:** 国漫内容浏览（模拟数据/可替换 API）、收藏与分组、追更提醒、搜索与推荐、海报生成、足迹与成就、PWA 离线体验。
+- **范围内:** 国漫内容浏览（模拟数据/可替换 API）、收藏与分组、追更提醒、搜索与推荐、观影计划器、内容洞察（Tag Pulse / Studio Radar / Audience Pulse）、海报生成、足迹与成就、PWA 离线体验。
 - **范围外:** 服务端鉴权与真实支付、跨端同步、多用户协作、生产级后台管理。
 
 ---
@@ -28,6 +28,8 @@
 | Visual Settings     | 用户可调视觉参数（噪点/极光/blur/字号）                                   | ✅稳定 | `src/utils/visualSettings.js`                                                                                          |
 | Local-first Data    | localStorage 数据层、队列写入、导入导出                                   | ✅稳定 | `src/utils/`                                                                                                           |
 | Search Intelligence | 多级筛选引擎 + 实时搜索预取 + 虚拟滚动（Search/Tag/Category）             | ✅稳定 | `src/utils/animeFilterEngine.js` + `src/pages/SearchPage.jsx` + `src/pages/TagPage.jsx` + `src/pages/CategoryPage.jsx` |
+| Content Insights    | 标签趋势/工作室雷达/观众口碑脉冲                        | ✅稳定 | `src/utils/contentInsights.js`<br/>`src/pages/RecommendationsPage.jsx`<br/>`src/pages/InsightsPage.jsx`<br/>`src/components/anime/detail/AudiencePulse.jsx` |
+| Watch Planner       | 观影计划器：剩余时长与每日观看预算                      | ✅稳定 | `src/utils/watchPlanner.js`<br/>`src/pages/FollowingPage.jsx` |
 | API Client          | 通用请求层：重试 + 去重 + 缓存策略                                        | ✅稳定 | `src/utils/apiClient.js`                                                                                               |
 | PWA                 | Service Worker 离线缓存与更新提示                                         | ✅稳定 | `public/sw.js` + `src/utils/serviceWorker.js`                                                                          |
 | Diagnostics         | 控制台健康全景图 + UI 诊断页（可导出诊断包）                              | ✅稳定 | `src/utils/healthConsole.js`<br/>`src/pages/DiagnosticsPage.jsx`                                                       |
@@ -59,3 +61,5 @@
 ## 构建生成物
 
 - `public/robots.txt`、`public/sitemap.xml` 为 `npm run build` 的 `prebuild` 阶段生成物，已从 Git 移除并加入 `.gitignore`。
+
+

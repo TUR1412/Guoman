@@ -1,3 +1,4 @@
+// 本地存储键集合：统一管理所有 localStorage key，避免散落与冲突。
 export const STORAGE_KEYS = Object.freeze({
   favorites: 'guoman.favorites.v1',
   favoritesUpdatedAt: 'guoman.favorites.updatedAt',
@@ -32,4 +33,5 @@ export const STORAGE_KEYS = Object.freeze({
   following: 'guoman.following.v1',
   proMembership: 'guoman.pro.membership.v1',
   achievementsUnlocked: 'guoman.achievements.unlocked.v1',
+  watchPlanner: 'guoman.watchPlanner.v1',
 });

@@ -20,8 +20,8 @@
   --theme-transition:
     background-color var(--motion-base) var(--ease-out), color var(--motion-base) var(--ease-out),
     border-color var(--motion-base) var(--ease-out), box-shadow var(--motion-base) var(--ease-out);
-  --font-body: 'Noto Sans SC', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-display: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
+  --font-body: 'Space Grotesk', 'Noto Sans SC', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Chakra Petch', 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
   --base-font-size: 16px;
   --font-scale: 1;
 
@@ -44,10 +44,11 @@
   --grid-gap: var(--spacing-lg);
   --grid-gap-tight: var(--spacing-md);
   --grid-gap-loose: var(--spacing-xl);
+  --grid-size: 140px;
 
   /* 玻璃拟态：统一 blur/saturate 与动态渐变边框参数 */
-  --glass-blur: 16px;
-  --glass-saturate: 1.25;
+  --glass-blur: 18px;
+  --glass-saturate: 1.35;
   --glass-brightness: 1.02;
   --glass-border-shift-duration: 12s;
   --border-gradient: linear-gradient(120deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
@@ -87,8 +88,8 @@
   --accent-soft: rgba(var(--accent-rgb), 0.14);
 
   --border-radius-sm: 4px;
-  --border-radius-md: 8px;
-  --border-radius-lg: 16px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 20px;
   --border-radius-pill: 999px;
 
   --spacing-xs: 0.25rem;
@@ -192,35 +193,36 @@
 
 /* 主题色板（避免“只换背景不换文字”的灾难） */
 :root[data-theme='dark'] {
-  --primary-color: #e85445;
-  --primary-rgb: 232, 84, 69;
-  --secondary-color: #caa45a;
-  --secondary-rgb: 202, 164, 90;
-  --accent-color: #1f8f7a;
-  --accent-rgb: 31, 143, 122;
+  --primary-color: #5af3ff;
+  --primary-rgb: 90, 243, 255;
+  --secondary-color: #ff9c6b;
+  --secondary-rgb: 255, 156, 107;
+  --accent-color: #7cffb2;
+  --accent-rgb: 124, 255, 178;
 
-  --dark-color: #0b0f14;
-  --darker-color: #080b10;
-  --text-primary: #f4f2ee;
-  --text-secondary: #d5d0c7;
-  --text-tertiary: #b1a79c;
-  --text-on-primary: #ffffff;
+  --dark-color: #070a12;
+  --darker-color: #05070d;
+  --text-primary: #eef6ff;
+  --text-secondary: #c9d4e2;
+  --text-tertiary: #9aa6b2;
+  --text-on-primary: #021015;
   --text-on-dark: #ffffff;
-  --border-color: rgba(244, 242, 238, 0.18);
+  --border-color: rgba(238, 246, 255, 0.18);
 
   --surface-glass:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
-    radial-gradient(120% 120% at 10% 0%, rgba(var(--primary-rgb), 0.14), transparent 60%),
-    rgba(16, 20, 26, 0.72);
+    linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02)),
+    radial-gradient(120% 120% at 12% 0%, rgba(var(--primary-rgb), 0.18), transparent 60%),
+    rgba(10, 14, 22, 0.72);
   --surface-ink:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
-    radial-gradient(120% 120% at 85% 0%, rgba(var(--secondary-rgb), 0.12), transparent 62%),
-    rgba(11, 15, 20, 0.88);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)),
+    radial-gradient(140% 140% at 88% 0%, rgba(var(--accent-rgb), 0.12), transparent 62%),
+    rgba(6, 10, 18, 0.9);
   --surface-paper:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04)),
-    rgba(255, 255, 255, 0.08);
-  --border-subtle: rgba(244, 242, 238, 0.18);
-  --shadow-color-rgb: 0, 0, 0;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+    rgba(255, 255, 255, 0.06);
+  --border-subtle: rgba(238, 246, 255, 0.12);
+  --shadow-color-rgb: 2, 6, 12;
+  --grid-line: rgba(var(--primary-rgb), 0.08);
   --border-gradient: linear-gradient(
     120deg,
     rgba(var(--primary-rgb), 0.72),
@@ -229,47 +231,47 @@
   );
 
   /* 组件级 tokens（避免散落 hardcode rgba） */
-  --surface-soft: rgba(255, 255, 255, 0.1);
-  --surface-soft-hover: rgba(255, 255, 255, 0.14);
+  --surface-soft: rgba(255, 255, 255, 0.08);
+  --surface-soft-hover: rgba(255, 255, 255, 0.12);
 
-  --chip-bg: rgba(8, 11, 16, 0.48);
-  --chip-bg-hover: rgba(8, 11, 16, 0.62);
+  --chip-bg: rgba(4, 9, 14, 0.6);
+  --chip-bg-hover: rgba(4, 9, 14, 0.72);
   --chip-border: rgba(255, 255, 255, 0.2);
   --chip-border-hover: rgba(var(--primary-rgb), 0.45);
   --chip-bg-active: rgba(var(--primary-rgb), 0.22);
   --chip-border-active: rgba(var(--primary-rgb), 0.55);
 
   --primary-soft: rgba(var(--primary-rgb), 0.2);
-  --primary-soft-hover: rgba(var(--primary-rgb), 0.28);
+  --primary-soft-hover: rgba(var(--primary-rgb), 0.32);
   --primary-soft-border: rgba(var(--primary-rgb), 0.55);
 
-  --badge-bg: rgba(8, 11, 16, 0.5);
+  --badge-bg: rgba(4, 9, 14, 0.6);
   --badge-border: rgba(255, 255, 255, 0.2);
 
-  --header-bg: rgba(10, 13, 18, 0.82);
-  --header-bg-scrolled: rgba(10, 13, 18, 0.94);
+  --header-bg: rgba(7, 10, 18, 0.7);
+  --header-bg-scrolled: rgba(7, 10, 18, 0.92);
 
-  --field-bg: rgba(255, 255, 255, 0.12);
-  --field-bg-focus: rgba(255, 255, 255, 0.18);
-  --control-bg: rgba(255, 255, 255, 0.1);
-  --control-bg-hover: rgba(255, 255, 255, 0.16);
+  --field-bg: rgba(255, 255, 255, 0.1);
+  --field-bg-focus: rgba(255, 255, 255, 0.16);
+  --control-bg: rgba(255, 255, 255, 0.09);
+  --control-bg-hover: rgba(255, 255, 255, 0.14);
   --control-border: rgba(255, 255, 255, 0.24);
-  --button-disabled-bg: rgba(255, 255, 255, 0.22);
+  --button-disabled-bg: rgba(255, 255, 255, 0.18);
   --button-disabled-text: rgba(255, 255, 255, 0.88);
-  --progress-track: rgba(255, 255, 255, 0.22);
+  --progress-track: rgba(255, 255, 255, 0.18);
   --progress-fill: rgba(var(--primary-rgb), 0.9);
   --overlay-strong: rgba(0, 0, 0, 0.62);
-  --text-glow-primary: 0 0 10px rgba(var(--primary-rgb), 0.35);
-  --text-shadow-hero: 0 8px 20px rgba(0, 0, 0, 0.4);
-  --text-shadow-hero-soft: 0 6px 16px rgba(0, 0, 0, 0.35);
-  --stamp-bg: rgba(8, 11, 16, 0.62);
+  --text-glow-primary: 0 0 14px rgba(var(--primary-rgb), 0.38);
+  --text-shadow-hero: 0 10px 24px rgba(0, 0, 0, 0.4);
+  --text-shadow-hero-soft: 0 8px 20px rgba(0, 0, 0, 0.35);
+  --stamp-bg: rgba(4, 9, 14, 0.7);
   --stamp-border: rgba(var(--primary-rgb), 0.45);
   --stamp-text: var(--text-primary);
   --divider-gradient: linear-gradient(
     90deg,
-    rgba(var(--primary-rgb), 0.6) 0%,
-    rgba(var(--secondary-rgb), 0.38) 45%,
-    rgba(var(--secondary-rgb), 0.2) 70%,
+    rgba(var(--primary-rgb), 0.65) 0%,
+    rgba(var(--secondary-rgb), 0.45) 45%,
+    rgba(var(--accent-rgb), 0.35) 70%,
     transparent 100%
   );
   --scrollbar-track: rgba(255, 255, 255, 0.12);
@@ -288,53 +290,53 @@
   --warning-color: rgba(var(--warning-rgb), 0.85);
   --hero-overlay: linear-gradient(
     0deg,
-    rgba(9, 12, 17, 0.98) 0%,
-    rgba(9, 12, 17, 0.78) 30%,
-    rgba(9, 12, 17, 0.55) 55%,
-    rgba(9, 12, 17, 0.32) 75%,
-    rgba(9, 12, 17, 0.1) 100%
+    rgba(5, 7, 13, 0.98) 0%,
+    rgba(5, 7, 13, 0.74) 32%,
+    rgba(5, 7, 13, 0.52) 60%,
+    rgba(5, 7, 13, 0.28) 78%,
+    rgba(5, 7, 13, 0.08) 100%
   );
 
   /* 极光 + Mesh 渐变（拒绝死黑） */
   --app-bg:
-    radial-gradient(900px 500px at 12% 10%, rgba(31, 143, 122, 0.18), transparent 60%),
-    radial-gradient(900px 500px at 85% 12%, rgba(232, 84, 69, 0.18), transparent 55%),
-    radial-gradient(800px 520px at 50% 35%, rgba(var(--primary-rgb), 0.08), transparent 70%),
-    radial-gradient(1000px 600px at 30% 95%, rgba(202, 164, 90, 0.14), transparent 55%),
-    radial-gradient(1200px 650px at 70% 80%, rgba(155, 112, 60, 0.08), transparent 60%),
+    radial-gradient(900px 520px at 10% 12%, rgba(90, 243, 255, 0.18), transparent 60%),
+    radial-gradient(900px 520px at 88% 10%, rgba(124, 255, 178, 0.14), transparent 60%),
+    radial-gradient(900px 520px at 20% 88%, rgba(255, 156, 107, 0.16), transparent 65%),
+    radial-gradient(1000px 560px at 70% 60%, rgba(var(--primary-rgb), 0.1), transparent 70%),
     linear-gradient(180deg, var(--dark-color) 0%, var(--darker-color) 100%);
 }
 
 :root[data-theme='light'] {
-  --primary-color: #b42318;
-  --primary-rgb: 180, 35, 24;
-  --secondary-color: #b88917;
-  --secondary-rgb: 184, 137, 23;
-  --accent-color: #0f766e;
-  --accent-rgb: 15, 118, 110;
+  --primary-color: #0ea5e9;
+  --primary-rgb: 14, 165, 233;
+  --secondary-color: #ff7a45;
+  --secondary-rgb: 255, 122, 69;
+  --accent-color: #22c55e;
+  --accent-rgb: 34, 197, 94;
 
-  --dark-color: #f7f4ef;
+  --dark-color: #f5f7fb;
   --darker-color: #ffffff;
-  --text-primary: #1a1a1a;
-  --text-secondary: #2f2f2f;
-  --text-tertiary: #4a4a4a;
+  --text-primary: #0b1220;
+  --text-secondary: #273447;
+  --text-tertiary: #4b5b6a;
   --text-on-primary: #ffffff;
   --text-on-dark: #ffffff;
-  --border-color: rgba(26, 26, 26, 0.18);
+  --border-color: rgba(11, 18, 32, 0.16);
 
   --surface-glass:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.78)),
-    radial-gradient(140% 140% at 12% 0%, rgba(var(--secondary-rgb), 0.08), transparent 60%),
-    rgba(255, 255, 255, 0.86);
-  --surface-ink:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.86)),
-    radial-gradient(140% 140% at 88% 0%, rgba(var(--accent-rgb), 0.06), transparent 62%),
-    rgba(247, 244, 239, 0.94);
-  --surface-paper:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.88)),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.82)),
+    radial-gradient(140% 140% at 12% 0%, rgba(var(--primary-rgb), 0.1), transparent 60%),
     rgba(255, 255, 255, 0.9);
-  --border-subtle: rgba(26, 26, 26, 0.18);
-  --shadow-color-rgb: 8, 11, 16;
+  --surface-ink:
+    linear-gradient(170deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9)),
+    radial-gradient(140% 140% at 88% 0%, rgba(var(--accent-rgb), 0.08), transparent 62%),
+    rgba(245, 247, 251, 0.96);
+  --surface-paper:
+    linear-gradient(170deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.9)),
+    rgba(255, 255, 255, 0.94);
+  --border-subtle: rgba(11, 18, 32, 0.14);
+  --shadow-color-rgb: 14, 21, 32;
+  --grid-line: rgba(var(--primary-rgb), 0.12);
   --border-gradient: linear-gradient(
     120deg,
     rgba(var(--primary-rgb), 0.55),
@@ -343,47 +345,47 @@
   );
 
   /* 组件级 tokens（避免散落 hardcode rgba） */
-  --surface-soft: rgba(26, 26, 26, 0.08);
-  --surface-soft-hover: rgba(26, 26, 26, 0.12);
+  --surface-soft: rgba(11, 18, 32, 0.06);
+  --surface-soft-hover: rgba(11, 18, 32, 0.1);
 
-  --chip-bg: rgba(26, 26, 26, 0.08);
-  --chip-bg-hover: rgba(26, 26, 26, 0.12);
-  --chip-border: rgba(26, 26, 26, 0.2);
+  --chip-bg: rgba(11, 18, 32, 0.06);
+  --chip-bg-hover: rgba(11, 18, 32, 0.1);
+  --chip-border: rgba(11, 18, 32, 0.18);
   --chip-border-hover: rgba(var(--primary-rgb), 0.35);
   --chip-bg-active: rgba(var(--primary-rgb), 0.16);
   --chip-border-active: rgba(var(--primary-rgb), 0.45);
 
-  --primary-soft: rgba(var(--primary-rgb), 0.16);
-  --primary-soft-hover: rgba(var(--primary-rgb), 0.24);
-  --primary-soft-border: rgba(var(--primary-rgb), 0.45);
+  --primary-soft: rgba(var(--primary-rgb), 0.14);
+  --primary-soft-hover: rgba(var(--primary-rgb), 0.22);
+  --primary-soft-border: rgba(var(--primary-rgb), 0.4);
 
-  --badge-bg: rgba(26, 26, 26, 0.08);
-  --badge-border: rgba(26, 26, 26, 0.18);
+  --badge-bg: rgba(255, 255, 255, 0.8);
+  --badge-border: rgba(11, 18, 32, 0.16);
 
-  --header-bg: rgba(255, 255, 255, 0.86);
-  --header-bg-scrolled: rgba(255, 255, 255, 0.96);
+  --header-bg: rgba(245, 247, 251, 0.82);
+  --header-bg-scrolled: rgba(245, 247, 251, 0.96);
 
-  --field-bg: rgba(26, 26, 26, 0.08);
-  --field-bg-focus: rgba(26, 26, 26, 0.14);
-  --control-bg: rgba(26, 26, 26, 0.08);
-  --control-bg-hover: rgba(26, 26, 26, 0.14);
-  --control-border: rgba(26, 26, 26, 0.22);
-  --button-disabled-bg: rgba(26, 26, 26, 0.2);
-  --button-disabled-text: rgba(26, 26, 26, 0.7);
-  --progress-track: rgba(26, 26, 26, 0.18);
+  --field-bg: rgba(11, 18, 32, 0.06);
+  --field-bg-focus: rgba(11, 18, 32, 0.1);
+  --control-bg: rgba(11, 18, 32, 0.06);
+  --control-bg-hover: rgba(11, 18, 32, 0.12);
+  --control-border: rgba(11, 18, 32, 0.2);
+  --button-disabled-bg: rgba(11, 18, 32, 0.18);
+  --button-disabled-text: rgba(11, 18, 32, 0.62);
+  --progress-track: rgba(11, 18, 32, 0.16);
   --progress-fill: rgba(var(--primary-rgb), 0.9);
   --overlay-strong: rgba(0, 0, 0, 0.58);
-  --text-glow-primary: 0 0 10px rgba(var(--primary-rgb), 0.28);
-  --text-shadow-hero: 0 8px 20px rgba(8, 11, 16, 0.35);
-  --text-shadow-hero-soft: 0 6px 16px rgba(8, 11, 16, 0.28);
-  --stamp-bg: rgba(255, 255, 255, 0.78);
-  --stamp-border: rgba(var(--primary-rgb), 0.4);
+  --text-glow-primary: 0 0 10px rgba(var(--primary-rgb), 0.25);
+  --text-shadow-hero: 0 8px 18px rgba(14, 21, 32, 0.25);
+  --text-shadow-hero-soft: 0 6px 16px rgba(14, 21, 32, 0.2);
+  --stamp-bg: rgba(255, 255, 255, 0.86);
+  --stamp-border: rgba(var(--primary-rgb), 0.35);
   --stamp-text: var(--text-primary);
   --divider-gradient: linear-gradient(
     90deg,
     rgba(var(--primary-rgb), 0.45) 0%,
     rgba(var(--secondary-rgb), 0.3) 45%,
-    rgba(var(--secondary-rgb), 0.18) 70%,
+    rgba(var(--accent-rgb), 0.22) 70%,
     transparent 100%
   );
   --scrollbar-track: rgba(26, 26, 26, 0.12);
@@ -402,19 +404,19 @@
   --warning-color: rgba(var(--warning-rgb), 0.85);
   --hero-overlay: linear-gradient(
     0deg,
-    rgba(255, 255, 255, 0.98) 0%,
-    rgba(255, 255, 255, 0.8) 35%,
-    rgba(255, 255, 255, 0.55) 60%,
-    rgba(255, 255, 255, 0.32) 80%,
-    rgba(255, 255, 255, 0.12) 100%
+    rgba(245, 247, 251, 0.98) 0%,
+    rgba(245, 247, 251, 0.82) 35%,
+    rgba(245, 247, 251, 0.58) 62%,
+    rgba(245, 247, 251, 0.34) 80%,
+    rgba(245, 247, 251, 0.12) 100%
   );
 
   /* 极光 + Mesh 渐变（拒绝死白） */
   --app-bg:
-    radial-gradient(900px 500px at 12% 12%, rgba(15, 118, 110, 0.16), transparent 60%),
-    radial-gradient(900px 500px at 86% 12%, rgba(180, 35, 24, 0.14), transparent 55%),
+    radial-gradient(900px 500px at 12% 12%, rgba(14, 165, 233, 0.14), transparent 60%),
+    radial-gradient(900px 500px at 86% 12%, rgba(255, 122, 69, 0.12), transparent 55%),
     radial-gradient(800px 520px at 50% 40%, rgba(var(--primary-rgb), 0.06), transparent 70%),
-    radial-gradient(1000px 600px at 30% 95%, rgba(184, 137, 23, 0.12), transparent 55%),
+    radial-gradient(1000px 600px at 30% 95%, rgba(34, 197, 94, 0.12), transparent 55%),
     linear-gradient(180deg, var(--dark-color) 0%, var(--darker-color) 100%);
 }
 
@@ -455,6 +457,18 @@ body::after {
   pointer-events: none;
   z-index: -2;
   background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent calc(var(--grid-size) - 1px),
+      var(--grid-line) var(--grid-size)
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent calc(var(--grid-size) - 1px),
+      var(--grid-line) var(--grid-size)
+    ),
     radial-gradient(600px 400px at 15% 20%, rgba(var(--primary-rgb), 0.08), transparent 60%),
     radial-gradient(520px 420px at 85% 18%, rgba(var(--accent-rgb), 0.08), transparent 55%),
     radial-gradient(600px 600px at 50% 100%, rgba(var(--secondary-rgb), 0.1), transparent 65%);

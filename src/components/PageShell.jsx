@@ -70,6 +70,14 @@ const Title = styled.h1`
   font-size: var(--text-8xl);
   line-height: var(--leading-tight);
   letter-spacing: 0.02em;
+  font-family: var(--font-display);
+  color: var(--text-primary);
+
+  @supports (-webkit-background-clip: text) {
+    background: linear-gradient(120deg, var(--text-primary), rgba(var(--primary-rgb), 0.9));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 
   @media (max-width: 768px) {
     font-size: var(--text-5xl);

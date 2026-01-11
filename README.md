@@ -1,176 +1,123 @@
 <div align="center">
   <img src="docs/hero.svg" alt="国漫世界 Guoman World" width="100%" />
-
-  <h1>国漫世界 (Guoman World)</h1>
-
+  <h1>国漫世界 Guoman World</h1>
   <p>
-    墨韵国风 × 极光光晕的国漫探索站（纯前端 · 静态部署 · 本地优先）。
+    未来感国漫探索中枢 · 纯前端 · 本地优先 · 细节控
     <br />
-    收藏 · 追更中心 · Taste Engine 推荐 · 海报工坊 · 足迹中心 · 成就系统 · 数据 Vault
+    Futuristic Guoman discovery hub · Frontend-only · Local-first · Detail-obsessed
   </p>
-
   <p>
     <a href="https://tur1412.github.io/Guoman/">在线预览</a>
     ·
-    <a href="#-功能一览">功能一览</a>
+    <a href="#-项目亮点--highlights">项目亮点</a>
     ·
-    <a href="#-架构一览">架构一览</a>
+    <a href="#-功能矩阵--feature-matrix">功能矩阵</a>
     ·
-    <a href="#-快速开始">快速开始</a>
+    <a href="#-快速开始--quick-start">快速开始</a>
     ·
-    <a href="#-部署到-github-pages">部署</a>
+    <a href="#-部署到-github-pages--deployment">部署</a>
   </p>
-
   <p>
-    <img
-      alt="GitHub License"
-      src="https://img.shields.io/github/license/TUR1412/Guoman?style=flat-square"
-    />
-    <img
-      alt="Build"
-      src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/static.yml?branch=master&style=flat-square"
-    />
-    <img
-      alt="Last Commit"
-      src="https://img.shields.io/github/last-commit/TUR1412/Guoman?style=flat-square"
-    />
+    <img alt="GitHub License" src="https://img.shields.io/github/license/TUR1412/Guoman?style=flat-square" />
+    <img alt="Build" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/static.yml?branch=master&style=flat-square" />
+    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/TUR1412/Guoman?style=flat-square" />
     <img alt="Node" src="https://img.shields.io/badge/node-%3E%3D18-339933?style=flat-square" />
-    <img
-      alt="React"
-      src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=000&style=flat-square"
-    />
-    <img
-      alt="Vite"
-      src="https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=fff&style=flat-square"
-    />
-    <img
-      alt="Vitest"
-      src="https://img.shields.io/badge/Vitest-tested-6E9F18?style=flat-square"
-    />
-    <img
-      alt="ESLint"
-      src="https://img.shields.io/badge/ESLint-enabled-4B32C3?style=flat-square"
-    />
+    <img alt="React" src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=000&style=flat-square" />
+    <img alt="Vite" src="https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=fff&style=flat-square" />
+    <img alt="Vitest" src="https://img.shields.io/badge/Vitest-tested-6E9F18?style=flat-square" />
+    <img alt="ESLint" src="https://img.shields.io/badge/ESLint-enabled-4B32C3?style=flat-square" />
   </p>
 </div>
 
 ---
 
-## ✨ 目录
+## ✨ 项目亮点 | Highlights
 
-- [项目亮点](#-项目亮点)
-- [功能一览](#-功能一览)
-- [动效演示](#-动效演示)
-- [架构一览](#-架构一览)
-- [技术栈](#-技术栈)
-- [项目结构](#-项目结构)
-- [快速开始](#-快速开始)
-- [部署到 GitHub Pages](#-部署到-github-pages)
-- [设计与可访问性](#-设计与可访问性)
-- [文档](#-文档)
-- [Roadmap](#-roadmap)
-- [未来进化蓝图](#-未来进化蓝图)
-- [贡献与安全](#-贡献与安全)
-- [许可证](#-许可证)
+- **未来感视觉体系**：Aurora Mesh + 玻璃层级 + 未来字体 + 空间级阴影，打造“顶级舰桥”的视觉质感。<br />
+  **Futuristic Visual System**: aurora mesh, glass layers, modern typography, and cinematic depth.
+- **内容智能洞察**：Tag Pulse 标签趋势、Studio Radar 工作室雷达、Audience Pulse 口碑脉冲。<br />
+  **Content Insights**: tag momentum, studio radar, and audience pulse summaries.
+- **观影计划器**：结合追更与观看进度，计算剩余时长与每日观看预算。<br />
+  **Watch Planner**: turns progress into daily viewing budgets and ETA.
+- **匹配度解释**：推荐卡片展示匹配度 + 推荐理由，让“为什么推荐”可视化。<br />
+  **Match Score + Reasons**: transparent recommendation explanations.
+- **本地优先**：收藏/进度/口味画像/视觉偏好全部 localStorage 持久化。<br />
+  **Local-first**: all key user state stays in the browser.
+- **性能 & 质量闸门**：Lighthouse 友好、Bundle Budget、ESLint + Vitest 全链路守门。<br />
+  **Performance & Quality Gates**: lint, test, build, and bundle budget in CI.
 
 ---
 
-## 🌟 项目亮点
+## ✅ 功能矩阵 | Feature Matrix
 
-- **墨韵国风 UI**：纸感纹理 + Aurora Mesh + Glass 层级（拒绝死白/死黑）
-- **本地优先 (Local-first)**：收藏 / 观看进度 / 搜索 / 偏好等全量写入 `localStorage`
-- **命令面板**：`Ctrl/⌘ + K` 全局命令入口（搜索 / 跳转 / 快捷动作）
-- **影院级微交互**：Shared Layout 过渡、悬浮/按压反馈、Shimmer/Focus 动效护栏
-- **表单一致性**：Select / TextArea / Range 与 `TextField` 同一套 focus ring / disabled / invalid 交互与视觉语言
-- **指针高光**：导航/命令面板光标跟随高光（RAF 节流，避免 React 重渲染）
-- **增长裂变模块**：海报工坊（SVG 导出 + 历史管理）+ 足迹中心 + 成就系统
-- **数据管理**：用户中心支持导入/导出/清理，并显示本地占用体积
-- **PWA 体验增强**：离线缓存（Service Worker）+ 新版本可用提示 + 弱网/省流识别（自动降载 blur/动效）
-- **工程自诊断**：控制台健康全景图（`__GUOMAN_HEALTH__.print()` / `__GUOMAN_HEALTH__.start()`）
-- **可视化诊断页**：`/diagnostics` 查看并导出健康快照（性能/错误/存储/SW，默认不上传网络）
-- **稳健兜底**：Error Boundary + 友好空状态 + 性能/错误监控钩子
+| 模块 Module | 能力 Capabilities |
+| --- | --- |
+| 探索 & 推荐 | 口味画像、本地推荐、匹配度解释、标签趋势热力 |
+| 追更 & 计划 | 追更提醒、观看进度、观影计划器、剩余时长估算 |
+| 洞察与分析 | Studio Radar、Audience Pulse、足迹中心、成就系统 |
+| 视觉体验 | 未来感主题、玻璃拟态、动态栅格、动效护栏 |
+| 数据管理 | 收藏/分组/导入导出/Data Vault、本地占用统计 |
+| 质量保障 | PWA、诊断面板、性能预算闸门、错误兜底 |
 
 ---
 
-## ✅ 功能一览
+## 🧭 内容洞察 | Content Insights
 
-- 🎴 **视觉体系**：墨韵纸感 + Aurora 渐变 + Glassmorphism + 微边框层级
-- 🎛️ **主题切换**：深/浅主题一键切换并持久化（主题原子性）
-- 👁️ **视觉设置**：纸纹噪点/极光光晕/字号缩放/禁用玻璃 blur/强制减少动效（本地保存，可随 Data Vault 导出）
-- ⏱️ **观看进度**：集数 + 进度滑条 + 继续观看入口（本地保存）
-- 🔍 **站内搜索**：多关键词搜索（标题/原名/类型/标签/制作方）+ 搜索缓存管理
-- ❤️ **收藏系统**：收藏页、卡片角标、分组管理、导入/导出、本地持久化
-- 🧲 **收藏自定义排序**：拖拽排序（自动保存）+ 拖拽到分组（Chip Drop）
-- 🔔 **追更中心**：一键追更 + 提醒时间（站内通知）+ 测试通知
-- ⭐ **Taste Engine 推荐**：基于收藏/进度/搜索词生成本地口味画像并排序推荐
-- 🖼️ **海报工坊**：生成可分享的 SVG 海报 + Shimmer 预览 + 历史管理
-- 📈 **足迹中心**：播放/下载/分享足迹时间线 + 一键清理（留存视角）
-- 🏅 **成就系统**：进度条化反馈（收藏/追更/分享/PRO），增强可玩性
-- 📌 **本地数据 Vault**：导出/导入（合并/覆盖）+ 分模块清理 + 占用统计
-- 🧪 **诊断面板（控制台）**：`__GUOMAN_HEALTH__.print()` 输出“系统健康全景图”（渲染耗时/LongTask/内存趋势）
-- 🧭 **诊断面板（UI）**：`/diagnostics` 可复制/下载诊断包，并支持启停采样（排障更直观）
-- 🏆 **排行榜**：评分/人气切换，Top 卡片强化
-- 📰 **资讯模块**：资讯列表 + 详情页（可替换真实 API）
-- 🧭 **路由完备**：分类页/标签页/静态页/404 深链兜底
+- **Tag Pulse**：基于评分/人气/覆盖量输出势能标签。
+- **Studio Radar**：识别高口碑工作室与代表作。
+- **Audience Pulse**：用热度指数/均分/关键词总结口碑氛围。
+- **Insight Cards**：推荐卡片补齐匹配度与理由。
 
 ---
 
-## 🎬 动效演示
+## 🎨 视觉系统 | Design Language
 
-> README 内嵌为可动 SVG（无需额外依赖），用于展示“影院级微交互”的节奏与风格取向。
+- **字体体系**：Space Grotesk + Chakra Petch（科技感 Display），中文衬底 Noto / ZCOOL。
+- **设计 Tokens**：黄金比例排版、12 栅格、玻璃卡片、0-12 阴影深度。
+- **动效护栏**：Reduced Motion、低数据模式自动降载。
 
-<div align="center">
-  <img src="docs/demo-shared-cover.svg" alt="Shared Layout 过渡演示" width="100%" />
-  <img src="docs/demo-poster-studio.svg" alt="海报工坊 Shimmer 演示" width="100%" />
-  <img src="docs/demo-achievements.svg" alt="成就中心 Progress Bar 演示" width="100%" />
-  <img src="docs/demo-favorites-dnd.svg" alt="收藏页 Drag & Drop 演示" width="100%" />
-  <img src="docs/demo-pointer-glow.svg" alt="Pointer Glow 高光演示" width="100%" />
-</div>
+---
 
-## 🧠 架构一览
-
-> 该项目是典型的“静态站 + 本地状态”架构：页面与数据完全前端化，部署到 GitHub Pages。
+## 🧠 架构一览 | Architecture
 
 ```mermaid
 flowchart TD
-  User[用户] --> Browser[浏览器]
+  User[User] --> Browser[Browser]
   Browser --> App[React SPA]
 
-  App --> Router["React Router (Hash)"]
-  App --> UI["UI Components (styled-components)"]
-  App --> Motion["Motion (Framer Motion)"]
+  App --> Router[React Router / Hash]
+  App --> UI[styled-components UI]
+  App --> Motion[Framer Motion]
 
-  App --> Data["Local-first Data Layer"]
+  App --> Data[Local-first Data Layer]
   Data --> LS[(localStorage)]
-  Data --> Queue["storageQueue: 合并写入/空闲刷新"]
+  Data --> Queue[storageQueue]
 
-  subgraph Build[构建与部署]
+  subgraph Build[Build & Deploy]
     Vite[Vite Build] --> Dist[dist/]
     Actions[GitHub Actions] --> Dist
     Dist --> Pages[GitHub Pages]
   end
 ```
 
-核心设计决策与更多细节：见 `docs/ARCHITECTURE.md`
+---
+
+## 🧩 技术栈 | Tech Stack
+
+| 模块 | 技术 |
+| --- | --- |
+| 框架 | React 18 |
+| 构建 | Vite 6 |
+| 路由 | React Router (Hash Router) |
+| 动效 | Framer Motion |
+| 样式 | styled-components + Design Tokens |
+| PWA | Web App Manifest + Service Worker |
+| 测试 | Vitest + Testing Library |
+| 部署 | GitHub Actions → GitHub Pages |
 
 ---
 
-## 🧩 技术栈
-
-| 模块 | 技术                                               |
-| ---- | -------------------------------------------------- |
-| 框架 | React 18                                           |
-| 构建 | Vite 6                                             |
-| 路由 | React Router（Hash Router / `createHashRouter`）   |
-| 动效 | Framer Motion                                      |
-| 样式 | styled-components + Design Tokens（CSS Variables） |
-| PWA  | Web App Manifest + Service Worker（离线缓存/更新） |
-| 测试 | Vitest + Testing Library                           |
-| 部署 | GitHub Actions → GitHub Pages                      |
-
----
-
-## 🗂️ 项目结构
+## 🗂️ 项目结构 | Structure
 
 ```txt
 .
@@ -192,128 +139,46 @@ flowchart TD
 
 ---
 
-## 🚀 快速开始
+## 🚀 快速开始 | Quick Start
 
 > 建议 Node.js v18+（与 GitHub Actions 构建环境一致）
 
-### 1) 安装依赖
-
 ```bash
 npm ci
-```
-
-### 2) 开发模式
-
-```bash
 npm run dev
 ```
 
-### 3) 质量闸门（推荐提交前执行）
+---
+
+## ✅ 质量闸门 | Quality Gates
 
 ```bash
 npm run check
 ```
 
-`check` 会依次执行：Prettier → ESLint → Vitest → Build → Bundle Budget（体积预算闸门）。
+`check` 会依次执行：Prettier → ESLint → Vitest → Build → Bundle Budget。
 
 ---
 
-## 🚢 部署到 GitHub Pages
+## 🚢 部署到 GitHub Pages | Deployment
 
-该仓库默认通过 GitHub Actions 自动部署到 GitHub Pages（见 `.github/workflows/static.yml`）。
-
-### 1) 确认 Vite base
-
-GitHub Pages 的站点通常挂在 `/<repoName>/` 下，所以 `vite.config.js` 在 build 时使用：
-
-- `base: command === 'build' ? '/Guoman/' : '/'`
-
-如果你 fork 到自己的仓库名（例如 `MyGuoman`），请同步把 base 改为：
-
-- `'/MyGuoman/'`
-
-### 2) 开启 Pages
-
-在 GitHub 仓库设置：
-
-- `Settings` → `Pages`
-- Source 选择 `GitHub Actions`
-
-### 3) 构建与发布
-
-每次 push 到默认分支会触发 workflow：
-
-- `npm ci`
-- `npm run build`
-- 发布 `dist/` 到 Pages
-
-### 4) 深链（404 兜底）
-
-由于 GitHub Pages 对 SPA 深链支持有限，本项目提供：
-
-- `404.html`：将路径转换为 Hash 路由，避免刷新 404
-- `.nojekyll`：避免 Jekyll 干预文件路径
-
-更多说明：`docs/DEPLOYMENT.md`
+- `vite.config.js` 已配置 `base: '/Guoman/'`
+- GitHub Actions 会在每次 push 后自动构建并发布 `dist/`
+- 需要手动启用 `Settings → Pages → GitHub Actions`
 
 ---
 
-## 🎨 设计与可访问性
-
-- **主题原子性**：背景/文字/边框/卡片同步切换，避免“浅底浅字”
-- **可读性**：关键文案对比度满足 WCAG AA
-- **动效护栏**：尊重 `prefers-reduced-motion`，并支持在用户中心手动强制“减少动效”
-- **对象恒常性**：主题/收藏/进度等核心状态写入 `localStorage`
-- **语义补齐**：主内容/列表/提示区具备语义与 `aria-live`
-- **舒适度调参**：纸纹/极光强度、字号缩放、禁用玻璃 blur（弱网/省流下自动降载可叠加）
-
----
-
-## 📚 文档
+## 📚 文档 | Docs
 
 - `docs/ARCHITECTURE.md`：架构说明与关键决策
 - `docs/DESIGN_TOKENS.md`：设计变量与组件规范
-- `docs/DIAGNOSTICS.md`：诊断面板与性能预算（如何导出/如何排障/CI 闸门）
+- `docs/DIAGNOSTICS.md`：诊断面板与性能预算
 - `docs/QUARK_AUDIT.md`：夸克级审计与改进清单
-- `docs/QUARK_BACKLOG_1000.md`：1000 微任务全量清单
 - `docs/ITERATIONS.md`：迭代记录（原子级提交）
 
 ---
 
-## 🧭 Roadmap
-
-- [ ] 接入真实后端（账号/收藏云同步/评论）
-- [ ] 内容扩展（更丰富作品与标签体系）
-- [ ] 性能升级（更细粒度拆包、预取策略）
-
----
-
-## 🔮 未来进化蓝图
-
-> 目标：在不牺牲“纯前端可部署性”的前提下，分三次把项目从“好看好用”推到“更像 App / 更可控 / 可云同步”。
-
-### v1.2（体验与性能：更快、更稳、更像 App）
-
-- **路由预取升级**：结合命令面板、导航 hover 与空闲时间预取关键路由资源，减少首跳等待。
-- **SW 缓存进化**：引入版本化 Cache 命名与更细粒度缓存分层（HTML/JS/CSS/图片），并提供离线兜底页面。
-- **长列表与图片策略**：对排行榜/资讯/收藏等长列表引入懒加载与更温和的渲染节奏（避免主线程尖刺）。
-- **本地诊断页**：在用户中心新增“诊断”视图，展示缓存体积、localStorage 占用、SW 状态与一键修复操作。
-
-### v1.3（数据体系：更可迁移、更可控）
-
-- **Data Vault 2.0**：导入/导出支持“差异合并 + 冲突提示 + 预览”，并按模块一键回滚。
-- **可选本地加密**：导出文件支持用户设置口令进行加密（仅前端实现，保护离线备份）。
-- **内容层可插拔**：抽象数据源适配器（Mock JSON / 远程 API），让 UI 与内容来源解耦，便于后续接入真实后端。
-
-### v2.0（云端版本：账号与多端同步）
-
-- **账号体系**：最小可用登录（邮箱/第三方 OAuth），并保持“匿名本地模式”可用。
-- **云同步**：收藏/追更/观看进度/口味画像跨设备同步，支持合并策略与冲突解决。
-- **服务端能力可选**：搜索与推荐可以保持纯前端，也可逐步引入服务端索引/推荐（按成本与隐私取舍）。
-
----
-
-## 🤝 贡献与安全
+## 🤝 贡献与安全 | Contributing & Security
 
 - 贡献指南：`CONTRIBUTING.md`
 - 行为准则：`CODE_OF_CONDUCT.md`
@@ -321,6 +186,6 @@ GitHub Pages 的站点通常挂在 `/<repoName>/` 下，所以 `vite.config.js` 
 
 ---
 
-## 📄 许可证
+## 📄 许可证 | License
 
 MIT

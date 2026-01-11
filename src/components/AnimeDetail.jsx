@@ -1,3 +1,4 @@
+// 详情页：展示作品信息、互动操作与口碑脉冲概览。
 import React, { useId, useMemo, useState, useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import {
@@ -29,12 +30,14 @@ import { trackEvent } from '../utils/analytics';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 import AnimeProgressCard from './anime/detail/AnimeProgressCard';
 import AnimeReviews from './anime/detail/AnimeReviews';
+import AudiencePulse from './anime/detail/AudiencePulse';
 import {
   clearWatchProgress,
   getWatchProgress,
   subscribeWatchProgressById,
   updateWatchProgress,
 } from '../utils/watchProgress';
+import { buildAudiencePulse } from '../utils/contentInsights';
 import {
   DetailContainer,
   DetailInner,
@@ -180,6 +183,8 @@ function AnimeDetail() {
     }));
     return [...locals, ...base];
   }, [anime?.reviews, userComments]);
+
+  const audiencePulse = useMemo(() => buildAudiencePulse(anime), [anime]);
 
   if (isLoading) {
     return (
@@ -474,6 +479,8 @@ function AnimeDetail() {
               onUpdate={handleProgressUpdate}
               onClear={handleClearProgress}
             />
+
+            <AudiencePulse pulse={audiencePulse} />
 
             <TagsContainer>
               <TagsTitle>标签</TagsTitle>
