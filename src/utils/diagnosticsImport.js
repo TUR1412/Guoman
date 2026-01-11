@@ -55,3 +55,34 @@ export const parseDiagnosticsBundleText = (text) => {
 
   return { ok: true, bundle };
 };
+
+export const summarizeDiagnosticsBundle = (bundle) => {
+  const b = bundle && typeof bundle === 'object' ? bundle : {};
+  const build = b.build && typeof b.build === 'object' ? b.build : {};
+  const snapshot = b.snapshot && typeof b.snapshot === 'object' ? b.snapshot : {};
+  const perf = snapshot.perf && typeof snapshot.perf === 'object' ? snapshot.perf : {};
+
+  const toMetricValue = (metric) => {
+    const value = metric && typeof metric === 'object' ? metric.value : metric;
+    return typeof value === 'number' && Number.isFinite(value) ? value : null;
+  };
+
+  return {
+    schemaVersion: typeof b.schemaVersion === 'number' ? b.schemaVersion : null,
+    generatedAt: typeof b.generatedAt === 'string' ? b.generatedAt : null,
+    build: {
+      version: typeof build.version === 'string' ? build.version : null,
+      sha: typeof build.sha === 'string' ? build.sha : null,
+      shortSha: typeof build.shortSha === 'string' ? build.shortSha : null,
+      builtAt: typeof build.builtAt === 'string' ? build.builtAt : null,
+    },
+    logsCount: Array.isArray(b.logs) ? b.logs.length : 0,
+    errorsCount: Array.isArray(b.errors) ? b.errors.length : 0,
+    perf: {
+      cls: toMetricValue(perf.cls),
+      lcp: toMetricValue(perf.lcp),
+      fid: toMetricValue(perf.fid),
+      inp: toMetricValue(perf.inp),
+    },
+  };
+};

@@ -1,7 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { gzipCompressString } from './compression';
-import { decodeDiagnosticsBytes, parseDiagnosticsBundleText } from './diagnosticsImport';
+import {
+  decodeDiagnosticsBytes,
+  parseDiagnosticsBundleText,
+  summarizeDiagnosticsBundle,
+} from './diagnosticsImport';
 
 describe('diagnosticsImport', () => {
   afterEach(() => {
@@ -59,5 +63,23 @@ describe('diagnosticsImport', () => {
       ok: false,
       reason: 'invalid-schema',
     });
+  });
+
+  it('summarizes diagnostics bundles defensively', () => {
+    const summary = summarizeDiagnosticsBundle({
+      schemaVersion: 2,
+      generatedAt: '2025-01-01T00:00:00.000Z',
+      build: { version: '1.0.0', shortSha: 'abc1234' },
+      logs: [{ id: 1 }],
+      errors: [{ id: 2 }, { id: 3 }],
+      snapshot: { perf: { inp: { value: 123 } } },
+    });
+
+    expect(summary.schemaVersion).toBe(2);
+    expect(summary.build.version).toBe('1.0.0');
+    expect(summary.build.shortSha).toBe('abc1234');
+    expect(summary.logsCount).toBe(1);
+    expect(summary.errorsCount).toBe(2);
+    expect(summary.perf.inp).toBe(123);
   });
 });

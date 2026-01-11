@@ -13,7 +13,11 @@ import { getLogs, clearLogs } from '../utils/logger';
 import { getFeatureSummaries } from '../utils/dataVault';
 import { formatBytes } from '../utils/formatBytes';
 import { canGzip, gzipCompressString } from '../utils/compression';
-import { decodeDiagnosticsBytes, parseDiagnosticsBundleText } from '../utils/diagnosticsImport';
+import {
+  decodeDiagnosticsBytes,
+  parseDiagnosticsBundleText,
+  summarizeDiagnosticsBundle,
+} from '../utils/diagnosticsImport';
 import { startHealthMonitoring, stopHealthMonitoring } from '../utils/healthConsole';
 
 const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
@@ -161,6 +165,11 @@ export default function DiagnosticsPage() {
     () => (importedBundle ? JSON.stringify(importedBundle, null, 2) : ''),
     [importedBundle],
   );
+  const currentSummary = useMemo(() => summarizeDiagnosticsBundle(bundle), [bundle]);
+  const importedSummary = useMemo(
+    () => summarizeDiagnosticsBundle(importedBundle),
+    [importedBundle],
+  );
 
   const build = bundle.build || {};
   const snapshot = bundle.snapshot || {};
@@ -226,6 +235,9 @@ export default function DiagnosticsPage() {
     },
     [toast],
   );
+
+  const formatMetric = (value, digits = 0, suffix = '') =>
+    typeof value === 'number' ? `${value.toFixed(digits)}${suffix}` : '—';
 
   return (
     <PageShell
@@ -617,48 +629,96 @@ export default function DiagnosticsPage() {
             }}
           />
           {importedBundle ? (
-            <List>
-              <StatRow>
-                <StatKey>文件</StatKey>
-                <StatValue>
-                  {importedMeta?.filename || '—'}
-                  {importedMeta?.gzip ? ' · gzip' : ''}
-                </StatValue>
-              </StatRow>
-              <StatRow>
-                <StatKey>大小</StatKey>
-                <StatValue>{formatBytes(importedMeta?.sizeBytes || 0)}</StatValue>
-              </StatRow>
-              <StatRow>
-                <StatKey>生成时间</StatKey>
-                <StatValue>
-                  {importedBundle.generatedAt
-                    ? new Date(importedBundle.generatedAt).toLocaleString('zh-CN')
-                    : '—'}
-                </StatValue>
-              </StatRow>
-              <StatRow>
-                <StatKey>版本</StatKey>
-                <StatValue>{importedBundle.build?.version || '—'}</StatValue>
-              </StatRow>
-              <StatRow>
-                <StatKey>Build</StatKey>
-                <StatValue>
-                  {importedBundle.build?.shortSha || importedBundle.build?.sha || '—'}
-                </StatValue>
-              </StatRow>
-              <StatRow>
-                <StatKey>日志 / 错误</StatKey>
-                <StatValue>
-                  {Array.isArray(importedBundle.logs) ? importedBundle.logs.length : 0} 条 /{' '}
-                  {Array.isArray(importedBundle.errors) ? importedBundle.errors.length : 0} 条
-                </StatValue>
-              </StatRow>
-              <StatRow>
-                <StatKey>Schema</StatKey>
-                <StatValue>{importedBundle.schemaVersion ?? '—'}</StatValue>
-              </StatRow>
-            </List>
+            <>
+              <List>
+                <StatRow>
+                  <StatKey>文件</StatKey>
+                  <StatValue>
+                    {importedMeta?.filename || '—'}
+                    {importedMeta?.gzip ? ' · gzip' : ''}
+                  </StatValue>
+                </StatRow>
+                <StatRow>
+                  <StatKey>大小</StatKey>
+                  <StatValue>{formatBytes(importedMeta?.sizeBytes || 0)}</StatValue>
+                </StatRow>
+                <StatRow>
+                  <StatKey>生成时间</StatKey>
+                  <StatValue>
+                    {importedSummary.generatedAt
+                      ? new Date(importedSummary.generatedAt).toLocaleString('zh-CN')
+                      : '—'}
+                  </StatValue>
+                </StatRow>
+                <StatRow>
+                  <StatKey>版本</StatKey>
+                  <StatValue>{importedSummary.build.version || '—'}</StatValue>
+                </StatRow>
+                <StatRow>
+                  <StatKey>Build</StatKey>
+                  <StatValue>
+                    {importedSummary.build.shortSha || importedSummary.build.sha || '—'}
+                  </StatValue>
+                </StatRow>
+                <StatRow>
+                  <StatKey>日志 / 错误</StatKey>
+                  <StatValue>
+                    {importedSummary.logsCount} 条 / {importedSummary.errorsCount} 条
+                  </StatValue>
+                </StatRow>
+                <StatRow>
+                  <StatKey>Schema</StatKey>
+                  <StatValue>{importedSummary.schemaVersion ?? '—'}</StatValue>
+                </StatRow>
+              </List>
+
+              <List>
+                <StatRow>
+                  <StatKey>对照（当前 / 导入）</StatKey>
+                  <StatValue>—</StatValue>
+                </StatRow>
+                <StatRow>
+                  <StatKey>Build</StatKey>
+                  <StatValue>
+                    {currentSummary.build.shortSha || (import.meta.env.DEV ? 'dev' : '—')} /{' '}
+                    {importedSummary.build.shortSha || importedSummary.build.sha || '—'}
+                  </StatValue>
+                </StatRow>
+                <StatRow>
+                  <StatKey>日志</StatKey>
+                  <StatValue>
+                    {currentSummary.logsCount} 条 / {importedSummary.logsCount} 条
+                  </StatValue>
+                </StatRow>
+                <StatRow>
+                  <StatKey>错误</StatKey>
+                  <StatValue>
+                    {currentSummary.errorsCount} 条 / {importedSummary.errorsCount} 条
+                  </StatValue>
+                </StatRow>
+                <StatRow>
+                  <StatKey>INP</StatKey>
+                  <StatValue>
+                    {formatMetric(currentSummary.perf.inp, 0, 'ms')} /{' '}
+                    {formatMetric(importedSummary.perf.inp, 0, 'ms')}
+                  </StatValue>
+                </StatRow>
+                <StatRow>
+                  <StatKey>LCP</StatKey>
+                  <StatValue>
+                    {formatMetric(currentSummary.perf.lcp, 0, 'ms')} /{' '}
+                    {formatMetric(importedSummary.perf.lcp, 0, 'ms')}
+                  </StatValue>
+                </StatRow>
+                <StatRow>
+                  <StatKey>CLS</StatKey>
+                  <StatValue>
+                    {formatMetric(currentSummary.perf.cls, 3)} /{' '}
+                    {formatMetric(importedSummary.perf.cls, 3)}
+                  </StatValue>
+                </StatRow>
+              </List>
+            </>
           ) : (
             <EmptyState
               title="尚未导入"
