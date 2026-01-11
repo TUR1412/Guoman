@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { shareOrCopyLink } from './share';
+import { copyTextToClipboard, shareOrCopyLink } from './share';
 
 describe('shareOrCopyLink', () => {
   afterEach(() => {
@@ -96,5 +96,58 @@ describe('shareOrCopyLink', () => {
     const res = await shareOrCopyLink({ title: 't', url: 'https://example.com' });
     expect(res).toEqual({ ok: false, method: 'manual' });
     spy.mockRestore();
+  });
+});
+
+describe('copyTextToClipboard', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('returns none when window is missing', async () => {
+    vi.stubGlobal('window', undefined);
+    const res = await copyTextToClipboard('x');
+    expect(res).toEqual({ ok: false, method: 'none' });
+  });
+
+  it('uses navigator.clipboard when available', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(globalThis.navigator, 'clipboard', {
+      value: { writeText },
+      configurable: true,
+    });
+
+    const res = await copyTextToClipboard('hello');
+    expect(res).toEqual({ ok: true, method: 'clipboard' });
+    expect(writeText).toHaveBeenCalledWith('hello');
+  });
+
+  it('falls back to execCommand when clipboard not available', async () => {
+    Object.defineProperty(globalThis.navigator, 'clipboard', {
+      value: undefined,
+      configurable: true,
+    });
+    document.execCommand = vi.fn().mockReturnValue(true);
+
+    const res = await copyTextToClipboard('hello');
+    expect(res).toEqual({ ok: true, method: 'clipboard' });
+    expect(document.execCommand).toHaveBeenCalledWith('copy');
+  });
+
+  it('returns manual when clipboard and execCommand are unavailable', async () => {
+    Object.defineProperty(globalThis.navigator, 'clipboard', {
+      value: undefined,
+      configurable: true,
+    });
+    document.execCommand = vi.fn().mockReturnValue(false);
+
+    const res = await copyTextToClipboard('hello');
+    expect(res).toEqual({ ok: false, method: 'manual' });
+  });
+
+  it('returns none when text is empty', async () => {
+    const res = await copyTextToClipboard('');
+    expect(res).toEqual({ ok: false, method: 'none' });
   });
 });

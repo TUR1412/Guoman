@@ -4,16 +4,14 @@ import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import { useToast } from '../components/ToastProvider';
 import { FiActivity, FiDownload, FiTrash2, FiZap } from '../components/icons/feather';
+import { copyTextToClipboard } from '../utils/share';
+import { buildDiagnosticsBundle } from '../utils/diagnosticsBundle';
 import { downloadTextFile } from '../utils/download';
 import { getErrorReports, clearErrorReports } from '../utils/errorReporter';
 import { getLogs, clearLogs } from '../utils/logger';
 import { getFeatureSummaries } from '../utils/dataVault';
 import { formatBytes } from '../utils/formatBytes';
-import {
-  getHealthSnapshot,
-  startHealthMonitoring,
-  stopHealthMonitoring,
-} from '../utils/healthConsole';
+import { startHealthMonitoring, stopHealthMonitoring } from '../utils/healthConsole';
 
 const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
   display: grid;
@@ -120,43 +118,6 @@ const ProgressFill = styled.div`
   );
 `;
 
-const buildDiagnosticsBundle = () => {
-  const snapshot = getHealthSnapshot();
-  return {
-    schemaVersion: 2,
-    generatedAt: new Date().toISOString(),
-    userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
-    snapshot,
-    logs: getLogs().slice(0, 120),
-    errors: getErrorReports().slice(0, 50),
-  };
-};
-
-const copyToClipboard = async (text) => {
-  if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(text);
-    return true;
-  }
-
-  if (typeof document === 'undefined') return false;
-
-  try {
-    const el = document.createElement('textarea');
-    el.value = text;
-    el.setAttribute('readonly', 'true');
-    el.style.position = 'fixed';
-    el.style.top = '-9999px';
-    el.style.left = '-9999px';
-    document.body.appendChild(el);
-    el.select();
-    const ok = document.execCommand('copy');
-    document.body.removeChild(el);
-    return ok;
-  } catch {
-    return false;
-  }
-};
-
 export default function DiagnosticsPage() {
   const toast = useToast();
   const [monitoring, setMonitoring] = useState(false);
@@ -234,8 +195,8 @@ export default function DiagnosticsPage() {
             type="button"
             onClick={async () => {
               try {
-                const ok = await copyToClipboard(jsonText);
-                if (ok) {
+                const result = await copyTextToClipboard(jsonText);
+                if (result.ok) {
                   toast.success('已复制', '诊断 JSON 已复制到剪贴板。');
                 } else {
                   toast.warning('复制失败', '当前浏览器不支持剪贴板写入。');

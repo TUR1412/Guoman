@@ -1,7 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FiAlertTriangle, FiRefreshCcw } from './icons/feather';
+import { FiAlertTriangle, FiDownload, FiRefreshCcw, FiShare2 } from './icons/feather';
+import { buildDiagnosticsBundle } from '../utils/diagnosticsBundle';
+import { downloadTextFile } from '../utils/download';
 import { reportError } from '../utils/errorReporter';
+import { copyTextToClipboard } from '../utils/share';
 
 const Fullscreen = styled.div`
   min-height: 100vh;
@@ -114,6 +117,11 @@ const Actions = styled.div.attrs({ 'data-divider': 'inline' })`
   gap: var(--spacing-md);
 `;
 
+const ActionStatus = styled.div`
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+`;
+
 const Button = styled.button.attrs({ 'data-pressable': true })`
   display: inline-flex;
   align-items: center;
@@ -177,7 +185,7 @@ const DevDetails = styled.details`
 class AppErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false, error: null, actionMessage: '' };
   }
 
   static getDerivedStateFromError(error) {
@@ -193,6 +201,56 @@ class AppErrorBoundary extends React.Component {
     if (import.meta.env?.DEV) {
       console.error('[AppErrorBoundary] 捕获到未处理错误：', error, info);
     }
+  }
+
+  getDiagnosticsJsonText() {
+    try {
+      return JSON.stringify(buildDiagnosticsBundle(), null, 2);
+    } catch (error) {
+      const message = error?.message || String(error || 'Unknown');
+      return JSON.stringify(
+        {
+          schemaVersion: 2,
+          generatedAt: new Date().toISOString(),
+          error: message,
+        },
+        null,
+        2,
+      );
+    }
+  }
+
+  async handleCopyDiagnostics() {
+    const text = this.getDiagnosticsJsonText();
+
+    try {
+      const result = await copyTextToClipboard(text);
+      if (result.ok) {
+        this.setState({ actionMessage: '诊断信息已复制到剪贴板。' });
+        return;
+      }
+
+      this.setState({ actionMessage: '复制失败：当前环境不支持剪贴板写入。' });
+    } catch {
+      this.setState({ actionMessage: '复制失败：当前环境不支持剪贴板写入。' });
+    }
+  }
+
+  handleDownloadDiagnostics() {
+    const text = this.getDiagnosticsJsonText();
+    const filename = `guoman-crash-${Date.now()}.json`;
+    const res = downloadTextFile({
+      text,
+      filename,
+      mimeType: 'application/json;charset=utf-8',
+    });
+
+    if (res.ok) {
+      this.setState({ actionMessage: `已下载诊断包：${filename}` });
+      return;
+    }
+
+    this.setState({ actionMessage: '下载失败：请检查浏览器下载权限。' });
   }
 
   render() {
@@ -217,8 +275,26 @@ class AppErrorBoundary extends React.Component {
                 <FiRefreshCcw />
                 刷新页面
               </Button>
+              <Button
+                type="button"
+                onClick={() => {
+                  void this.handleCopyDiagnostics();
+                }}
+              >
+                <FiShare2 />
+                复制诊断
+              </Button>
+              <Button type="button" onClick={() => this.handleDownloadDiagnostics()}>
+                <FiDownload />
+                下载诊断包
+              </Button>
               <HomeLink href="#/">返回首页</HomeLink>
             </Actions>
+            {this.state.actionMessage ? (
+              <ActionStatus role="status" aria-live="polite">
+                {this.state.actionMessage}
+              </ActionStatus>
+            ) : null}
           </MainPane>
 
           <SidePane>
@@ -227,6 +303,7 @@ class AppErrorBoundary extends React.Component {
               <SideItem>确认网络连接是否正常</SideItem>
               <SideItem>尝试清空浏览器缓存</SideItem>
               <SideItem>稍后刷新或重新打开页面</SideItem>
+              <SideItem>可复制/下载诊断包，便于排障</SideItem>
               <SideItem>如持续出现，请联系维护人员</SideItem>
             </SideList>
           </SidePane>

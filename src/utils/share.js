@@ -22,6 +22,28 @@ const tryCopyViaExecCommand = (text) => {
   }
 };
 
+export const copyTextToClipboard = async (text) => {
+  if (typeof window === 'undefined') {
+    return { ok: false, method: 'none' };
+  }
+
+  const safeText = text === null || text === undefined ? '' : String(text);
+  if (!safeText) return { ok: false, method: 'none' };
+
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(safeText);
+      return { ok: true, method: 'clipboard' };
+    }
+  } catch {}
+
+  if (tryCopyViaExecCommand(safeText)) {
+    return { ok: true, method: 'clipboard' };
+  }
+
+  return { ok: false, method: 'manual' };
+};
+
 export const shareOrCopyLink = async ({ title, url }) => {
   if (typeof window === 'undefined') {
     return { ok: false, method: 'none' };
@@ -41,16 +63,5 @@ export const shareOrCopyLink = async ({ title, url }) => {
     // 用户取消/系统不支持都算可接受失败，继续 fallback
   }
 
-  try {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(safeUrl);
-      return { ok: true, method: 'clipboard' };
-    }
-  } catch {}
-
-  if (tryCopyViaExecCommand(safeUrl)) {
-    return { ok: true, method: 'clipboard' };
-  }
-
-  return { ok: false, method: 'manual' };
+  return copyTextToClipboard(safeUrl);
 };
