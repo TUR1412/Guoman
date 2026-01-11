@@ -207,9 +207,26 @@ export default function DiagnosticsPage() {
     [toast],
   );
 
-  const downloadFilteredTimeline = useCallback(
+  const downloadFilteredLocalTimeline = useCallback(
     (filtered) => {
-      const filename = `guoman-timeline-filtered-${Date.now()}.json`;
+      const filename = `guoman-timeline-local-filtered-${Date.now()}.json`;
+      const res = downloadTextFile({
+        text: JSON.stringify(filtered || [], null, 2),
+        filename,
+        mimeType: 'application/json;charset=utf-8',
+      });
+      if (!res.ok) {
+        toast.warning('下载失败', '请检查浏览器下载权限。');
+        return;
+      }
+      toast.success('已下载', `文件已保存：${filename}`);
+    },
+    [toast],
+  );
+
+  const downloadFilteredImportedTimeline = useCallback(
+    (filtered) => {
+      const filename = `guoman-timeline-imported-filtered-${Date.now()}.json`;
       const res = downloadTextFile({
         text: JSON.stringify(filtered || [], null, 2),
         filename,
@@ -688,7 +705,7 @@ export default function DiagnosticsPage() {
                 logs={importedBundle.logs}
                 errors={importedBundle.errors}
                 events={importedBundle.events}
-                onDownload={downloadFilteredTimeline}
+                onDownload={downloadFilteredImportedTimeline}
                 emptyState={{
                   title: '导入包暂无可回放记录',
                   description: '该诊断包 logs/errors/events 均为空，或导出端已做裁剪。',
@@ -804,6 +821,29 @@ export default function DiagnosticsPage() {
               description="当你收藏、追更、搜索后，这里会显示各模块占用。"
             />
           )}
+        </WideCard>
+
+        <WideCard>
+          <DiagnosticsTimelineExplorer
+            title="本地时间线"
+            logs={logs}
+            errors={errors}
+            events={events}
+            onDownload={downloadFilteredLocalTimeline}
+            emptyState={{
+              title: '暂无本地回放记录',
+              description:
+                '当本地 logs/errors/events 有记录时，这里会聚合为 breadcrumbs 时间线，用于快速还原“行为 → 日志 → 错误”的上下文。',
+              primaryAction: null,
+              secondaryAction: null,
+            }}
+            noMatchState={{
+              title: '本地无匹配记录',
+              description: '请调整类型筛选或关键词条件。',
+              primaryAction: null,
+              secondaryAction: null,
+            }}
+          />
         </WideCard>
 
         <WideCard>
