@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence, LayoutGroup, MotionConfig } from 'framer-motion';
@@ -14,6 +14,7 @@ import { ToastProvider } from './components/ToastProvider';
 import { safeSessionStorageGet, safeSessionStorageSet } from './utils/storage';
 import { prefetchRoutes } from './utils/routePrefetch';
 import { trackEvent } from './utils/analytics';
+import { lazyWithRetry } from './utils/lazyWithRetry';
 import { useIsProEnabled } from './utils/useProMembership';
 import {
   applyVisualSettings,
@@ -25,29 +26,40 @@ import { STORAGE_KEYS } from './utils/dataKeys';
 import { getRouteCurtainMotion, getRouteMotion } from './motion/presets';
 import { useAppReducedMotion } from './motion/useAppReducedMotion';
 
+const routeLazy = (importer, source) =>
+  lazyWithRetry(importer, {
+    source,
+  });
+
 // 页面
 import HomePage from './pages/HomePage';
-const RecommendationsPage = lazy(() => import('./pages/RecommendationsPage'));
-const RankingsPage = lazy(() => import('./pages/RankingsPage'));
-const NewsPage = lazy(() => import('./pages/NewsPage'));
-const NewsDetailPage = lazy(() => import('./pages/NewsDetailPage'));
-const AboutPage = lazy(() => import('./pages/AboutPage'));
-const SearchPage = lazy(() => import('./pages/SearchPage'));
-const TagPage = lazy(() => import('./pages/TagPage'));
-const CategoryPage = lazy(() => import('./pages/CategoryPage'));
-const FavoritesPage = lazy(() => import('./pages/FavoritesPage'));
-const FollowingPage = lazy(() => import('./pages/FollowingPage'));
-const PricingPage = lazy(() => import('./pages/PricingPage'));
-const InsightsPage = lazy(() => import('./pages/InsightsPage'));
-const PostersPage = lazy(() => import('./pages/PostersPage'));
-const AchievementsPage = lazy(() => import('./pages/AchievementsPage'));
-const StaticPage = lazy(() => import('./pages/StaticPage'));
-const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
-const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
-const Login = lazy(() => import('./components/Login'));
-const AnimeDetail = lazy(() => import('./components/AnimeDetail'));
-const UserCenterPage = lazy(() => import('./pages/UserCenterPage'));
-const DiagnosticsPage = lazy(() => import('./pages/DiagnosticsPage'));
+const RecommendationsPage = routeLazy(
+  () => import('./pages/RecommendationsPage'),
+  'route:/recommendations',
+);
+const RankingsPage = routeLazy(() => import('./pages/RankingsPage'), 'route:/rankings');
+const NewsPage = routeLazy(() => import('./pages/NewsPage'), 'route:/news');
+const NewsDetailPage = routeLazy(() => import('./pages/NewsDetailPage'), 'route:/news/:id');
+const AboutPage = routeLazy(() => import('./pages/AboutPage'), 'route:/about');
+const SearchPage = routeLazy(() => import('./pages/SearchPage'), 'route:/search');
+const TagPage = routeLazy(() => import('./pages/TagPage'), 'route:/tag/:tag');
+const CategoryPage = routeLazy(() => import('./pages/CategoryPage'), 'route:/category/:category');
+const FavoritesPage = routeLazy(() => import('./pages/FavoritesPage'), 'route:/favorites');
+const FollowingPage = routeLazy(() => import('./pages/FollowingPage'), 'route:/following');
+const PricingPage = routeLazy(() => import('./pages/PricingPage'), 'route:/pro');
+const InsightsPage = routeLazy(() => import('./pages/InsightsPage'), 'route:/insights');
+const PostersPage = routeLazy(() => import('./pages/PostersPage'), 'route:/posters');
+const AchievementsPage = routeLazy(() => import('./pages/AchievementsPage'), 'route:/achievements');
+const StaticPage = routeLazy(() => import('./pages/StaticPage'), 'route:/static');
+const NotFoundPage = routeLazy(() => import('./pages/NotFoundPage'), 'route:*');
+const ForgotPasswordPage = routeLazy(
+  () => import('./pages/ForgotPasswordPage'),
+  'route:/forgot-password',
+);
+const Login = routeLazy(() => import('./components/Login'), 'route:/login');
+const AnimeDetail = routeLazy(() => import('./components/AnimeDetail'), 'route:/anime/:id');
+const UserCenterPage = routeLazy(() => import('./pages/UserCenterPage'), 'route:/profile');
+const DiagnosticsPage = routeLazy(() => import('./pages/DiagnosticsPage'), 'route:/diagnostics');
 
 const AppContainer = styled.div`
   min-height: 100vh;

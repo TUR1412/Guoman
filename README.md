@@ -54,6 +54,8 @@
   **Performance & Quality Gates**: lint, test, build, and bundle budget in CI.
 - **可观测性**：新增本地日志（log store）+ 诊断面板日志导出，并补齐 INP 指标用于交互体验排障。<br />
   **Observability**: local logs + diagnostics export, with INP tracked for interaction debugging.
+- **稳定性**：路由懒加载 dynamic import 失败自动重试，并写入本地日志（应对弱网/缓存不一致）。<br />
+  **Resilient Lazy Loading**: automatic retry on dynamic-import failures, with local logs for troubleshooting.
 - **离线兜底页**：Service Worker 增加离线页面 fallback，弱网/断网更可控。<br />
   **Offline Fallback**: a dedicated offline page fallback for more resilient navigation.
 
