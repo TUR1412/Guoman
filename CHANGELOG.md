@@ -39,6 +39,7 @@
 - 可视化诊断页：新增 `/diagnostics`（UI 快照 + 复制/下载诊断包 + 可启停采样）
 - 数据导出安全：全量导出默认脱敏（同步 Token 等敏感键默认剔除，可显式包含）
 - 性能预算闸门：新增 `npm run budget:bundle` 并接入 `npm run check`（CI 自动守住首屏体积）
+- Lighthouse 基线：升级 `npm run lighthouse:baseline`，支持 remote/local 生成报告（HTML/JSON）与得分基线摘要（按需 `npx`，避免常规 `npm ci` 负担）
 - 依赖安全：Storybook 升级到修复版本（消除审计高危项）
 - 移动端导航：新增底部 Dock（首页/搜索/收藏/追更/我的），单手操作更顺畅
 - UI 交互：统一过渡曲线与 press feedback（避免 transition: all 的抖动），弹窗/Toast/提示条使用一致的 easing

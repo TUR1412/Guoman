@@ -111,6 +111,7 @@ Runs: Prettier → ESLint → Vitest → Build → Bundle Budget.
 - `docs/ARCHITECTURE.md` — architecture notes and decisions
 - `docs/DESIGN_TOKENS.md` — design tokens and UI conventions
 - `docs/DIAGNOSTICS.md` — diagnostics & performance budget
+- `docs/LIGHTHOUSE_BASELINE.md` — Lighthouse baseline instructions
 - `docs/QUARK_AUDIT.md` — quark-level audit and improvement backlog
 - `docs/ITERATIONS.md` — atomic iteration records
 

@@ -190,6 +190,7 @@ npm run check
 - `docs/ARCHITECTURE.md`：架构说明与关键决策
 - `docs/DESIGN_TOKENS.md`：设计变量与组件规范
 - `docs/DIAGNOSTICS.md`：诊断面板与性能预算
+- `docs/LIGHTHOUSE_BASELINE.md`：Lighthouse 基线与跑分说明
 - `docs/QUARK_AUDIT.md`：夸克级审计与改进清单
 - `docs/ITERATIONS.md`：迭代记录（原子级提交）
 
