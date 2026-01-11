@@ -30,6 +30,7 @@ UI 诊断页导出的 JSON 结构为：
 - `schemaVersion`：诊断包 schema 版本（便于后续兼容升级）
 - `generatedAt`：生成时间（ISO）
 - `userAgent`：浏览器 UA（用于排查兼容性）
+- `build`：构建元信息（版本号 / 提交 SHA / 构建时间；用于定位“线上到底跑的是哪一版”）
 - `snapshot`：健康快照（见下文指标说明）
 - `logs`：本地日志（local-first），用于还原关键行为线索
 - `errors`：本地错误记录（脚本异常 / 未捕获 Promise 拒绝），用于快速定位问题来源

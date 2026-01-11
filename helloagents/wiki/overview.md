@@ -32,7 +32,7 @@
 | Watch Planner       | 观影计划器：剩余时长与每日观看预算                                        | ✅稳定 | `src/utils/watchPlanner.js`<br/>`src/pages/FollowingPage.jsx`                                                                                               |
 | API Client          | 通用请求层：重试 + 去重 + 缓存策略                                        | ✅稳定 | `src/utils/apiClient.js`                                                                                                                                    |
 | PWA                 | Service Worker 离线缓存与更新提示                                         | ✅稳定 | `public/sw.js` + `src/utils/serviceWorker.js`                                                                                                               |
-| Diagnostics         | 控制台健康全景图 + UI 诊断页（可导出诊断包）                              | ✅稳定 | `src/utils/healthConsole.js`<br/>`src/utils/diagnosticsBundle.js`<br/>`src/pages/DiagnosticsPage.jsx`                                                       |
+| Diagnostics         | 控制台健康全景图 + UI 诊断页（可导出诊断包）                              | ✅稳定 | `src/utils/healthConsole.js`<br/>`src/utils/buildInfo.js`<br/>`src/utils/diagnosticsBundle.js`<br/>`src/pages/DiagnosticsPage.jsx`                          |
 | Build & Deploy      | Vite 构建、Bundle Budget 闸门、GitHub Actions 部署                        | ✅稳定 | `docs/DEPLOYMENT.md`<br/>`scripts/bundle-budget.js`<br/>`scripts/bundle-budget.config.json`                                                                 |
 
 ---

@@ -11,6 +11,7 @@
 - ✅ Observability：新增 `src/utils/logger.js` 本地日志模块，并在 `/diagnostics` 增加日志查看/清空/下载；性能监控补齐 INP 指标。
 - ✅ 稳定性：新增 `src/utils/lazyWithRetry.js`，路由懒加载 dynamic import 失败自动重试，并记录日志便于排障。
 - ✅ Crash Recovery：`AppErrorBoundary` 支持复制/下载诊断包（logs + errors + health snapshot），便于快速提交问题与回溯。
+- ✅ Diagnostics：诊断包补齐 build 元信息（版本号/提交 SHA/构建时间），更易定位线上版本。
 - ✅ PWA：新增 `public/offline.html` 离线兜底页，并升级 Service Worker cache version（确保更新一致性）。
 
 - ✅ 表单体系收敛：新增 `SelectField` / `TextAreaField` / `RangeInput` primitives，并迁移 Search/Favorites/Following/StaticPage/UserCenterPage/AnimeDetail 的表单控件以统一 focus/disabled/invalid 交互。

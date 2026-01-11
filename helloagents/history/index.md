@@ -8,6 +8,7 @@
 
 | 时间戳       | 功能名称                      | 类型 | 状态     | 方案包路径                                                                                                |
 | ------------ | ----------------------------- | ---- | -------- | --------------------------------------------------------------------------------------------------------- |
+| 202601120129 | build_info_diagnostics        | 功能 | ✅已完成 | [2026-01/202601120129_build_info_diagnostics](2026-01/202601120129_build_info_diagnostics/)               |
 | 202601120114 | diagnostics_bundle_recovery   | 功能 | ✅已完成 | [2026-01/202601120114_diagnostics_bundle_recovery](2026-01/202601120114_diagnostics_bundle_recovery/)     |
 | 202601111951 | quantum_evolution             | 重构 | ✅已完成 | [2026-01/202601111951_quantum_evolution](2026-01/202601111951_quantum_evolution/)                         |
 | 202512242106 | singularity_refactor          | 重构 | ✅已完成 | [2025-12/202512242106_singularity_refactor](2025-12/202512242106_singularity_refactor/)                   |
@@ -35,6 +36,7 @@
 
 ### 2026-01
 
+- [202601120129_build_info_diagnostics](2026-01/202601120129_build_info_diagnostics/) - 诊断包补齐构建元信息（版本/提交 SHA/构建时间），便于定位线上版本
 - [202601120114_diagnostics_bundle_recovery](2026-01/202601120114_diagnostics_bundle_recovery/) - 崩溃兜底：诊断包（logs + errors + health snapshot）导出与可分享
 - [202601111951_quantum_evolution](2026-01/202601111951_quantum_evolution/) - 量子未来进化：观影计划器 + 内容洞察 + 未来感 UI 重塑
 - [202601010042_r13_uiux_header_modular](2026-01/202601010042_r13_uiux_header_modular/) - R13：Header 模块化 + TextField 输入统一
