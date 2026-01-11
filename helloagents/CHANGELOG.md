@@ -13,6 +13,7 @@
 - ✅ Crash Recovery：`AppErrorBoundary` 支持复制/下载诊断包（logs + errors + health snapshot），便于快速提交问题与回溯。
 - ✅ Diagnostics：诊断包补齐 build 元信息（版本号/提交 SHA/构建时间），更易定位线上版本。
 - ✅ Diagnostics：复制失败自动打开手动复制窗口；浏览器支持时可下载 `.json.gz` 压缩诊断包（更易分享）。
+- ✅ Diagnostics：支持导入 `.json` / `.json.gz` 诊断包并解析展示摘要（本地完成，不出网）。
 - ✅ PWA：新增 `public/offline.html` 离线兜底页，并升级 Service Worker cache version（确保更新一致性）。
 
 - ✅ 表单体系收敛：新增 `SelectField` / `TextAreaField` / `RangeInput` primitives，并迁移 Search/Favorites/Following/StaticPage/UserCenterPage/AnimeDetail 的表单控件以统一 focus/disabled/invalid 交互。

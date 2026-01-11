@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import { useToast } from '../components/ToastProvider';
 import ManualCopyDialog from '../components/ManualCopyDialog';
-import { FiActivity, FiDownload, FiTrash2, FiZap } from '../components/icons/feather';
+import { FiActivity, FiDownload, FiTrash2, FiUpload, FiZap } from '../components/icons/feather';
 import { copyTextToClipboard } from '../utils/share';
 import { buildDiagnosticsBundle } from '../utils/diagnosticsBundle';
 import { downloadBinaryFile, downloadTextFile } from '../utils/download';
@@ -13,6 +13,7 @@ import { getLogs, clearLogs } from '../utils/logger';
 import { getFeatureSummaries } from '../utils/dataVault';
 import { formatBytes } from '../utils/formatBytes';
 import { canGzip, gzipCompressString } from '../utils/compression';
+import { decodeDiagnosticsBytes, parseDiagnosticsBundleText } from '../utils/diagnosticsImport';
 import { startHealthMonitoring, stopHealthMonitoring } from '../utils/healthConsole';
 
 const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
@@ -122,12 +123,16 @@ const ProgressFill = styled.div`
 
 export default function DiagnosticsPage() {
   const toast = useToast();
+  const fileInputRef = useRef(null);
   const [monitoring, setMonitoring] = useState(false);
   const [manualCopyOpen, setManualCopyOpen] = useState(false);
+  const [importedCopyOpen, setImportedCopyOpen] = useState(false);
   const [bundle, setBundle] = useState(() => buildDiagnosticsBundle());
   const [errors, setErrors] = useState(() => getErrorReports());
   const [logs, setLogs] = useState(() => getLogs());
   const [storage, setStorage] = useState(() => getFeatureSummaries());
+  const [importedBundle, setImportedBundle] = useState(null);
+  const [importedMeta, setImportedMeta] = useState(null);
 
   const refresh = useCallback(() => {
     setBundle(buildDiagnosticsBundle());
@@ -152,6 +157,10 @@ export default function DiagnosticsPage() {
   }, [storage]);
 
   const jsonText = useMemo(() => JSON.stringify(bundle, null, 2), [bundle]);
+  const importedJsonText = useMemo(
+    () => (importedBundle ? JSON.stringify(importedBundle, null, 2) : ''),
+    [importedBundle],
+  );
 
   const build = bundle.build || {};
   const snapshot = bundle.snapshot || {};
@@ -162,6 +171,61 @@ export default function DiagnosticsPage() {
   const memory = snapshot.memory || null;
   const gzipSupported = useMemo(() => canGzip(), []);
   const isGzipBytes = useCallback((bytes) => bytes?.[0] === 0x1f && bytes?.[1] === 0x8b, []);
+
+  const handleImport = useCallback(
+    async (file) => {
+      if (!file) return;
+      if (typeof file.arrayBuffer !== 'function') {
+        toast.warning('导入失败', '当前浏览器不支持读取本地文件。');
+        return;
+      }
+
+      const maxSize = 10 * 1024 * 1024;
+      if (Number(file.size) > maxSize) {
+        toast.warning('导入失败', `文件过大（>${formatBytes(maxSize)}），建议先裁剪或压缩。`);
+        return;
+      }
+
+      try {
+        const buffer = await file.arrayBuffer();
+        const bytes = new Uint8Array(buffer);
+        const decoded = await decodeDiagnosticsBytes({ bytes, filename: file.name });
+        if (!decoded.ok) {
+          if (decoded.reason === 'gzip-unavailable') {
+            toast.warning(
+              '导入失败',
+              '当前环境不支持 gzip 解压，请改用 Chrome/Edge 或先本地解压。',
+            );
+            return;
+          }
+          toast.warning('导入失败', '无法解析该文件，请确认文件格式是否正确。');
+          return;
+        }
+
+        const parsed = parseDiagnosticsBundleText(decoded.text);
+        if (!parsed.ok) {
+          if (parsed.reason === 'invalid-json') {
+            toast.warning('导入失败', '文件不是合法 JSON（或 gzip 解压失败）。');
+            return;
+          }
+          toast.warning('导入失败', '文件不是合法诊断包（缺少必要字段）。');
+          return;
+        }
+
+        setImportedBundle(parsed.bundle);
+        setImportedMeta({
+          filename: file.name,
+          sizeBytes: Number(file.size) || 0,
+          gzip: decoded.gzip,
+          importedAt: new Date().toISOString(),
+        });
+        toast.success('导入成功', `已加载：${file.name}`);
+      } catch {
+        toast.warning('导入失败', '读取文件失败，请检查文件或稍后重试。');
+      }
+    },
+    [toast],
+  );
 
   return (
     <PageShell
@@ -458,6 +522,152 @@ export default function DiagnosticsPage() {
         </Card>
 
         <WideCard>
+          <CardTitle>
+            <FiUpload />
+            导入诊断包
+          </CardTitle>
+          <List>
+            <StatRow>
+              <StatKey>支持格式</StatKey>
+              <StatValue>.json / .json.gz</StatValue>
+            </StatRow>
+            <StatRow>
+              <StatKey>隐私</StatKey>
+              <StatValue>仅本地解析，不上传网络</StatValue>
+            </StatRow>
+          </List>
+          <Actions>
+            <ActionButton
+              type="button"
+              onClick={() => {
+                fileInputRef.current?.click?.();
+              }}
+              title="从本地选择导出的诊断包（JSON 或 gzip 压缩包）"
+            >
+              <FiUpload />
+              选择文件
+            </ActionButton>
+            {importedBundle ? (
+              <>
+                <ActionButton
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      const result = await copyTextToClipboard(importedJsonText);
+                      if (result.ok) {
+                        toast.success('已复制', '导入的诊断 JSON 已复制到剪贴板。');
+                        return;
+                      }
+                      setImportedCopyOpen(true);
+                      toast.info('请手动复制', '已打开手动复制窗口。');
+                    } catch {
+                      setImportedCopyOpen(true);
+                      toast.info('请手动复制', '已打开手动复制窗口。');
+                    }
+                  }}
+                >
+                  复制导入 JSON
+                </ActionButton>
+                <ActionButton
+                  type="button"
+                  onClick={() => {
+                    const base = importedMeta?.filename || `imported-${Date.now()}.json`;
+                    const safeName = String(base).replace(/\.gz$/i, '');
+                    const filename = safeName.toLowerCase().endsWith('.json')
+                      ? safeName
+                      : `${safeName}.json`;
+                    const res = downloadTextFile({
+                      text: importedJsonText,
+                      filename,
+                      mimeType: 'application/json;charset=utf-8',
+                    });
+                    if (!res.ok) {
+                      toast.warning('下载失败', '请检查浏览器下载权限。');
+                      return;
+                    }
+                    toast.success('已下载', `文件已保存：${filename}`);
+                  }}
+                >
+                  <FiDownload />
+                  下载导入包
+                </ActionButton>
+                <ActionButton
+                  type="button"
+                  onClick={() => {
+                    setImportedBundle(null);
+                    setImportedMeta(null);
+                    toast.info('已清空导入', '已移除导入的诊断包。');
+                  }}
+                >
+                  <FiTrash2 />
+                  清空导入
+                </ActionButton>
+              </>
+            ) : null}
+          </Actions>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json,.gz,application/json,application/gzip"
+            style={{ display: 'none' }}
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              event.target.value = '';
+              void handleImport(file);
+            }}
+          />
+          {importedBundle ? (
+            <List>
+              <StatRow>
+                <StatKey>文件</StatKey>
+                <StatValue>
+                  {importedMeta?.filename || '—'}
+                  {importedMeta?.gzip ? ' · gzip' : ''}
+                </StatValue>
+              </StatRow>
+              <StatRow>
+                <StatKey>大小</StatKey>
+                <StatValue>{formatBytes(importedMeta?.sizeBytes || 0)}</StatValue>
+              </StatRow>
+              <StatRow>
+                <StatKey>生成时间</StatKey>
+                <StatValue>
+                  {importedBundle.generatedAt
+                    ? new Date(importedBundle.generatedAt).toLocaleString('zh-CN')
+                    : '—'}
+                </StatValue>
+              </StatRow>
+              <StatRow>
+                <StatKey>版本</StatKey>
+                <StatValue>{importedBundle.build?.version || '—'}</StatValue>
+              </StatRow>
+              <StatRow>
+                <StatKey>Build</StatKey>
+                <StatValue>
+                  {importedBundle.build?.shortSha || importedBundle.build?.sha || '—'}
+                </StatValue>
+              </StatRow>
+              <StatRow>
+                <StatKey>日志 / 错误</StatKey>
+                <StatValue>
+                  {Array.isArray(importedBundle.logs) ? importedBundle.logs.length : 0} 条 /{' '}
+                  {Array.isArray(importedBundle.errors) ? importedBundle.errors.length : 0} 条
+                </StatValue>
+              </StatRow>
+              <StatRow>
+                <StatKey>Schema</StatKey>
+                <StatValue>{importedBundle.schemaVersion ?? '—'}</StatValue>
+              </StatRow>
+            </List>
+          ) : (
+            <EmptyState
+              title="尚未导入"
+              description="你可以导入从 ErrorBoundary 或 /diagnostics 导出的诊断包（JSON 或 .json.gz），用于对照排障。"
+            />
+          )}
+        </WideCard>
+
+        <WideCard>
           <CardTitle>本地存储占用</CardTitle>
           {storage.length > 0 ? (
             <List>
@@ -550,6 +760,15 @@ export default function DiagnosticsPage() {
         description="当前环境不支持自动写入剪贴板。你可以手动复制下面的内容并分享给维护者（建议先检查是否需要脱敏）。"
         label="诊断 JSON"
         text={jsonText}
+      />
+
+      <ManualCopyDialog
+        open={importedCopyOpen}
+        onClose={() => setImportedCopyOpen(false)}
+        title="手动复制导入的诊断 JSON"
+        description="当前环境不支持自动写入剪贴板。你可以手动复制下面的内容并分享给维护者（建议先检查是否需要脱敏）。"
+        label="导入的诊断 JSON"
+        text={importedJsonText}
       />
     </PageShell>
   );

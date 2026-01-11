@@ -8,6 +8,7 @@
 
 | 时间戳       | 功能名称                      | 类型 | 状态     | 方案包路径                                                                                                |
 | ------------ | ----------------------------- | ---- | -------- | --------------------------------------------------------------------------------------------------------- |
+| 202601120220 | diagnostics_bundle_import     | 功能 | ✅已完成 | [2026-01/202601120220_diagnostics_bundle_import](2026-01/202601120220_diagnostics_bundle_import/)         |
 | 202601120149 | diagnostics_export_fallback   | 功能 | ✅已完成 | [2026-01/202601120149_diagnostics_export_fallback](2026-01/202601120149_diagnostics_export_fallback/)     |
 | 202601120129 | build_info_diagnostics        | 功能 | ✅已完成 | [2026-01/202601120129_build_info_diagnostics](2026-01/202601120129_build_info_diagnostics/)               |
 | 202601120114 | diagnostics_bundle_recovery   | 功能 | ✅已完成 | [2026-01/202601120114_diagnostics_bundle_recovery](2026-01/202601120114_diagnostics_bundle_recovery/)     |
@@ -37,6 +38,7 @@
 
 ### 2026-01
 
+- [202601120220_diagnostics_bundle_import](2026-01/202601120220_diagnostics_bundle_import/) - 诊断回放：导入 `.json` / `.json.gz` 诊断包并解析展示摘要（本地完成）
 - [202601120149_diagnostics_export_fallback](2026-01/202601120149_diagnostics_export_fallback/) - 诊断导出增强：手动复制兜底 + `.json.gz` 压缩下载
 - [202601120129_build_info_diagnostics](2026-01/202601120129_build_info_diagnostics/) - 诊断包补齐构建元信息（版本/提交 SHA/构建时间），便于定位线上版本
 - [202601120114_diagnostics_bundle_recovery](2026-01/202601120114_diagnostics_bundle_recovery/) - 崩溃兜底：诊断包（logs + errors + health snapshot）导出与可分享
