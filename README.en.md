@@ -35,7 +35,7 @@
 - **PWA & diagnostics**: offline caching + update prompt + `/diagnostics` local health snapshot.
 - **Observability**: local logs and INP tracking for faster debugging of interaction issues.
 - **Crash recovery**: ErrorBoundary provides one-click copy/download diagnostics bundles (logs + errors + health snapshot), with manual-copy fallback and optional `.json.gz` export.
-- **Diagnostics replay**: import `.json` / `.json.gz` bundles in `/diagnostics` to inspect summaries locally (no upload).
+- **Diagnostics replay**: import `.json` / `.json.gz` bundles via drag-and-drop or file picker to inspect summaries locally, and explore logs/errors with query/level filters and expandable details (no upload).
 - **Resilient lazy loading**: automatic retry for dynamic-import failures (flaky networks, stale caches, or chunk mismatch).
 
 ---

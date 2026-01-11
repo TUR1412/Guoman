@@ -1,10 +1,27 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import styled from 'styled-components';
 import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import { useToast } from '../components/ToastProvider';
 import ManualCopyDialog from '../components/ManualCopyDialog';
 import { FiActivity, FiDownload, FiTrash2, FiUpload, FiZap } from '../components/icons/feather';
+import DiagnosticsBundleDropZone from '../components/diagnostics/DiagnosticsBundleDropZone';
+import DiagnosticsErrorsExplorer from '../components/diagnostics/DiagnosticsErrorsExplorer';
+import DiagnosticsLogsExplorer from '../components/diagnostics/DiagnosticsLogsExplorer';
+import {
+  DiagnosticsGrid as Grid,
+  DiagnosticsCard as Card,
+  DiagnosticsWideCard as WideCard,
+  DiagnosticsCardTitle as CardTitle,
+  DiagnosticsList as List,
+  DiagnosticsStatRow as StatRow,
+  DiagnosticsStatKey as StatKey,
+  DiagnosticsStatValue as StatValue,
+  DiagnosticsActions as Actions,
+  DiagnosticsActionButton as ActionButton,
+  DiagnosticsProgressRow as ProgressRow,
+  DiagnosticsProgressTrack as ProgressTrack,
+  DiagnosticsProgressFill as ProgressFill,
+} from '../components/diagnostics/diagnosticsUi';
 import { copyTextToClipboard } from '../utils/share';
 import { buildDiagnosticsBundle } from '../utils/diagnosticsBundle';
 import { downloadBinaryFile, downloadTextFile } from '../utils/download';
@@ -19,111 +36,6 @@ import {
   summarizeDiagnosticsBundle,
 } from '../utils/diagnosticsImport';
 import { startHealthMonitoring, stopHealthMonitoring } from '../utils/healthConsole';
-
-const Grid = styled.div.attrs({ 'data-divider': 'grid' })`
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--spacing-lg);
-`;
-
-const Card = styled.div.attrs({
-  'data-card': true,
-  'data-divider': 'card',
-  'data-elev': '3',
-})`
-  grid-column: span 6;
-  padding: var(--spacing-xl);
-  border-radius: var(--border-radius-lg);
-  display: grid;
-  gap: var(--spacing-md);
-
-  @media (max-width: 768px) {
-    grid-column: 1 / -1;
-  }
-`;
-
-const WideCard = styled(Card)`
-  grid-column: 1 / -1;
-`;
-
-const CardTitle = styled.h3`
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  font-size: var(--text-lg-plus);
-  font-family: var(--font-display);
-`;
-
-const List = styled.div.attrs({ 'data-divider': 'list' })`
-  display: grid;
-  gap: var(--spacing-sm);
-  color: var(--text-secondary);
-`;
-
-const StatRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: var(--spacing-md);
-  flex-wrap: wrap;
-`;
-
-const StatKey = styled.span`
-  color: var(--text-tertiary);
-  font-size: var(--text-sm);
-`;
-
-const StatValue = styled.span`
-  color: var(--text-primary);
-  font-weight: 700;
-  font-size: var(--text-sm);
-`;
-
-const Actions = styled.div.attrs({ 'data-divider': 'inline' })`
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-`;
-
-const ActionButton = styled.button.attrs({ 'data-pressable': true })`
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-soft);
-  color: var(--text-primary);
-  transition: var(--transition);
-
-  &:hover {
-    background: var(--surface-soft-hover);
-  }
-`;
-
-const ProgressRow = styled.div`
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--spacing-md);
-  align-items: center;
-`;
-
-const ProgressTrack = styled.div`
-  height: 10px;
-  border-radius: 999px;
-  border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.04);
-  overflow: hidden;
-`;
-
-const ProgressFill = styled.div`
-  height: 100%;
-  width: var(--progress);
-  background: linear-gradient(
-    90deg,
-    rgba(var(--primary-rgb), 0.58),
-    rgba(var(--secondary-rgb), 0.58)
-  );
-`;
 
 export default function DiagnosticsPage() {
   const toast = useToast();
@@ -238,6 +150,40 @@ export default function DiagnosticsPage() {
 
   const formatMetric = (value, digits = 0, suffix = '') =>
     typeof value === 'number' ? `${value.toFixed(digits)}${suffix}` : '—';
+
+  const downloadFilteredLogs = useCallback(
+    (filtered) => {
+      const filename = `guoman-logs-filtered-${Date.now()}.json`;
+      const res = downloadTextFile({
+        text: JSON.stringify(filtered || [], null, 2),
+        filename,
+        mimeType: 'application/json;charset=utf-8',
+      });
+      if (!res.ok) {
+        toast.warning('下载失败', '请检查浏览器下载权限。');
+        return;
+      }
+      toast.success('已下载', `文件已保存：${filename}`);
+    },
+    [toast],
+  );
+
+  const downloadFilteredErrors = useCallback(
+    (filtered) => {
+      const filename = `guoman-errors-filtered-${Date.now()}.json`;
+      const res = downloadTextFile({
+        text: JSON.stringify(filtered || [], null, 2),
+        filename,
+        mimeType: 'application/json;charset=utf-8',
+      });
+      if (!res.ok) {
+        toast.warning('下载失败', '请检查浏览器下载权限。');
+        return;
+      }
+      toast.success('已下载', `文件已保存：${filename}`);
+    },
+    [toast],
+  );
 
   return (
     <PageShell
@@ -476,6 +422,14 @@ export default function DiagnosticsPage() {
               <StatValue>{errors.length} 条</StatValue>
             </StatRow>
           </List>
+          <DiagnosticsBundleDropZone
+            onPick={() => {
+              fileInputRef.current?.click?.();
+            }}
+            onFile={(file) => {
+              void handleImport(file);
+            }}
+          />
           <Actions>
             <ActionButton
               type="button"
@@ -768,48 +722,27 @@ export default function DiagnosticsPage() {
         </WideCard>
 
         <WideCard>
-          <CardTitle>最近错误明细</CardTitle>
-          {errors.length > 0 ? (
-            <List>
-              {errors.slice(0, 12).map((e) => (
-                <div key={e.id}>
-                  <strong>{new Date(e.at).toLocaleString('zh-CN')}</strong>
-                  {e.source ? <span> · {e.source}</span> : null}
-                  <div>{e.message}</div>
-                </div>
-              ))}
-            </List>
-          ) : (
-            <EmptyState
-              title="暂无错误"
-              description="这里会记录脚本错误与未捕获 Promise 拒绝，便于你导出诊断包定位问题。"
-              primaryAction={{ to: '/', label: '回到首页' }}
-              secondaryAction={{ to: '/profile', label: '用户中心' }}
-            />
-          )}
+          <DiagnosticsErrorsExplorer
+            errors={errors}
+            onClear={() => {
+              clearErrorReports();
+              refresh();
+              toast.success('已清空错误记录', '本地错误列表已清空。');
+            }}
+            onDownload={downloadFilteredErrors}
+          />
         </WideCard>
 
         <WideCard>
-          <CardTitle>最近日志明细</CardTitle>
-          {logs.length > 0 ? (
-            <List>
-              {logs.slice(0, 16).map((entry) => (
-                <div key={entry.id}>
-                  <strong>{new Date(entry.at).toLocaleString('zh-CN')}</strong>{' '}
-                  <span>· {String(entry.level || 'info').toUpperCase()}</span>
-                  {entry.source ? <span> · {entry.source}</span> : null}
-                  <div>{entry.message}</div>
-                </div>
-              ))}
-            </List>
-          ) : (
-            <EmptyState
-              title="暂无日志"
-              description="这里会记录关键行为与异常线索（local-first），方便你导出日志定位问题。"
-              primaryAction={{ to: '/', label: '回到首页' }}
-              secondaryAction={{ to: '/profile', label: '用户中心' }}
-            />
-          )}
+          <DiagnosticsLogsExplorer
+            logs={logs}
+            onClear={() => {
+              clearLogs();
+              refresh();
+              toast.success('已清空日志', '本地日志列表已清空。');
+            }}
+            onDownload={downloadFilteredLogs}
+          />
         </WideCard>
       </Grid>
 
