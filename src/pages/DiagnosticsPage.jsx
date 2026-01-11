@@ -8,6 +8,7 @@ import DiagnosticsBundleDropZone from '../components/diagnostics/DiagnosticsBund
 import DiagnosticsEventsExplorer from '../components/diagnostics/DiagnosticsEventsExplorer';
 import DiagnosticsErrorsExplorer from '../components/diagnostics/DiagnosticsErrorsExplorer';
 import DiagnosticsLogsExplorer from '../components/diagnostics/DiagnosticsLogsExplorer';
+import DiagnosticsTimelineExplorer from '../components/diagnostics/DiagnosticsTimelineExplorer';
 import {
   DiagnosticsGrid as Grid,
   DiagnosticsCard as Card,
@@ -192,6 +193,23 @@ export default function DiagnosticsPage() {
   const downloadFilteredEvents = useCallback(
     (filtered) => {
       const filename = `guoman-events-filtered-${Date.now()}.json`;
+      const res = downloadTextFile({
+        text: JSON.stringify(filtered || [], null, 2),
+        filename,
+        mimeType: 'application/json;charset=utf-8',
+      });
+      if (!res.ok) {
+        toast.warning('下载失败', '请检查浏览器下载权限。');
+        return;
+      }
+      toast.success('已下载', `文件已保存：${filename}`);
+    },
+    [toast],
+  );
+
+  const downloadFilteredTimeline = useCallback(
+    (filtered) => {
+      const filename = `guoman-timeline-filtered-${Date.now()}.json`;
       const res = downloadTextFile({
         text: JSON.stringify(filtered || [], null, 2),
         filename,
@@ -664,6 +682,28 @@ export default function DiagnosticsPage() {
 
         {importedBundle ? (
           <>
+            <WideCard>
+              <DiagnosticsTimelineExplorer
+                title="导入时间线"
+                logs={importedBundle.logs}
+                errors={importedBundle.errors}
+                events={importedBundle.events}
+                onDownload={downloadFilteredTimeline}
+                emptyState={{
+                  title: '导入包暂无可回放记录',
+                  description: '该诊断包 logs/errors/events 均为空，或导出端已做裁剪。',
+                  primaryAction: null,
+                  secondaryAction: null,
+                }}
+                noMatchState={{
+                  title: '导入包无匹配记录',
+                  description: '请调整类型筛选或关键词条件。',
+                  primaryAction: null,
+                  secondaryAction: null,
+                }}
+              />
+            </WideCard>
+
             <WideCard>
               <DiagnosticsErrorsExplorer
                 title="导入错误浏览器"

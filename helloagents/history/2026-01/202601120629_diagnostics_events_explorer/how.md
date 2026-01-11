@@ -3,6 +3,7 @@
 ## 技术方案
 
 ### 核心技术
+
 - React 18 + styled-components
 - localStorage + storageQueue（合并写入/空闲刷新）
 - Diagnostics Bundle（本地导出 JSON / gzip）
@@ -48,4 +49,3 @@
   - `DiagnosticsEventsExplorer` 覆盖筛选与下载
 - **质量闸门:** `npm run check`（format/lint/test/build/budget）
 - **部署:** 按现有 GitHub Actions 流程，无需新增配置
-
