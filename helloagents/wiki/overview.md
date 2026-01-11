@@ -32,7 +32,7 @@
 | Watch Planner       | 观影计划器：剩余时长与每日观看预算                                        | ✅稳定 | `src/utils/watchPlanner.js`<br/>`src/pages/FollowingPage.jsx`                                                                                               |
 | API Client          | 通用请求层：重试 + 去重 + 缓存策略                                        | ✅稳定 | `src/utils/apiClient.js`                                                                                                                                    |
 | PWA                 | Service Worker 离线缓存与更新提示                                         | ✅稳定 | `public/sw.js` + `src/utils/serviceWorker.js`                                                                                                               |
-| Diagnostics         | 控制台健康全景图 + UI 诊断页（可导出诊断包）                              | ✅稳定 | `src/utils/healthConsole.js`<br/>`src/pages/DiagnosticsPage.jsx`                                                                                            |
+| Diagnostics         | 控制台健康全景图 + UI 诊断页（可导出诊断包）                              | ✅稳定 | `src/utils/healthConsole.js`<br/>`src/utils/diagnosticsBundle.js`<br/>`src/pages/DiagnosticsPage.jsx`                                                       |
 | Build & Deploy      | Vite 构建、Bundle Budget 闸门、GitHub Actions 部署                        | ✅稳定 | `docs/DEPLOYMENT.md`<br/>`scripts/bundle-budget.js`<br/>`scripts/bundle-budget.config.json`                                                                 |
 
 ---
@@ -60,6 +60,7 @@
 - 日志监控（Local-first）：`src/utils/logger.js` 记录关键行为与异常线索，并在 `/diagnostics` 支持查看/清空/下载日志（不出本地）
 - 性能指标：`src/utils/performance.js` 采集 CLS/LCP/FID，并补齐 INP（用于交互体验诊断）
 - 路由容错：`src/utils/lazyWithRetry.js` 为 route lazy 加载提供失败重试，并将异常写入日志（应对弱网/缓存不一致导致的 chunk 加载失败）
+- 崩溃兜底：`src/components/AppErrorBoundary.jsx` 提供“复制/下载诊断包”入口（logs + errors + health snapshot），便于快速提交问题
 - 分类映射 SSOT：`src/data/categoryMap.js`（分类 slug → 标签映射，被 CategoryPage 与命令面板共同复用）
 - 渐进式模块化：`AnimeDetail` 拆分组件放在 `src/components/anime/detail/`（`AnimeProgressCard`、`AnimeReviews`、`styles.js`），对外入口仍为 `src/components/AnimeDetail.jsx`
 - 表单一致性：Search/Favorites/Following 的 Select、StaticPage/UserCenterPage 的反馈输入、AnimeDetail 的评分/评论/进度滑条已收敛到 `TextField`/`SelectField`/`TextAreaField`/`RangeInput`；后续新增输入优先复用 primitives，避免原生控件样式与交互分叉

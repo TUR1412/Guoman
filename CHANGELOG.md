@@ -8,6 +8,7 @@
 - 命令面板性能：高亮/hover 时 idle 预取目标路由 chunk，Enter 跳转更快
 - 可观测性：新增本地日志模块（log store），诊断面板支持日志查看/清空/下载，性能卡片补齐 INP 指标
 - 稳定性：路由懒加载动态 import 失败自动重试，并将异常写入本地日志（便于诊断与回溯）
+- 崩溃兜底：ErrorBoundary 支持复制/下载诊断包（logs + errors + health snapshot），便于快速提交问题
 - PWA：新增 `public/offline.html` 离线兜底页，并升级 Service Worker cache version（确保离线导航更可控）
 - 未来感 UI 重塑：Space Grotesk + Chakra Petch 字体体系与深浅主题色板升级
 - 内容洞察引擎：新增 Tag Pulse 标签趋势、Studio Radar 工作室雷达、Audience Pulse 口碑脉冲

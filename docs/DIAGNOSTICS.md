@@ -31,6 +31,12 @@ UI 诊断页导出的 JSON 结构为：
 - `generatedAt`：生成时间（ISO）
 - `userAgent`：浏览器 UA（用于排查兼容性）
 - `snapshot`：健康快照（见下文指标说明）
+- `logs`：本地日志（local-first），用于还原关键行为线索
+- `errors`：本地错误记录（脚本异常 / 未捕获 Promise 拒绝），用于快速定位问题来源
+
+对应构建逻辑位于：`src/utils/diagnosticsBundle.js`。
+
+> 说明：为避免文件过大，导出的 `logs`/`errors` 默认会做数量上限裁剪（可在 `buildDiagnosticsBundle({ maxLogs, maxErrors })` 中调整）。
 
 ---
 
@@ -55,7 +61,8 @@ UI 诊断页导出的 JSON 结构为：
 
 - **CLS**：布局偏移累计值（越低越好；常见目标：`<= 0.1`）
 - **LCP**：最大内容绘制时间（越低越好；常见目标：`<= 2.5s`）
-- **FID**：首次输入延迟（越低越好；常见目标：`<= 100ms`）
+- **FID**：首次输入延迟（越低越好；常见目标：`<= 100ms`，更偏历史指标）
+- **INP**：交互到下一次绘制（Interaction to Next Paint，越低越好；常见目标：`<= 200ms`）
 
 > 注意：由于项目为 SPA，Vite 构建与缓存策略也会影响感知时间；请结合网络与硬件环境判断。
 
@@ -83,6 +90,7 @@ UI 诊断页导出的 JSON 结构为：
 诊断页导出的信息来自本地：
 
 - `localStorage`（偏好/收藏/进度/诊断缓存）
+- 本地日志与错误（不上传网络，仅用于排障；你可在 `/diagnostics` 中清空）
 - 浏览器 Performance API（VItals / LongTask / memory）
 - Service Worker 状态（是否接管）
 
