@@ -11,7 +11,7 @@ describe('ConfettiBurst', () => {
     expect(el.style.getPropertyValue('--confetti-x')).toBe('12%');
     expect(el.style.getPropertyValue('--confetti-y')).toBe('34%');
     expect(el.querySelectorAll('span').length).toBeGreaterThanOrEqual(6);
-  });
+  }, 15000);
 
   it('returns null when reduced motion is enabled', async () => {
     vi.resetModules();

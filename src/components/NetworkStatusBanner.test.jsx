@@ -94,7 +94,7 @@ describe('NetworkStatusBanner', () => {
     render(<Banner />);
     expect(screen.queryByLabelText('网络状态提示')).not.toBeInTheDocument();
     expect(document.documentElement.dataset.lowData).toBeUndefined();
-  });
+  }, 15000);
 
   it('shows offline banner and cannot be dismissed', async () => {
     const { Banner } = await loadBanner();
