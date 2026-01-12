@@ -21,8 +21,8 @@
 
 - `--primary-color`：主色
 - `--primary-rgb`：主色 RGB（用于 `rgba(var(--primary-rgb), alpha)`）
-- `--secondary-color / --secondary-rgb`：副色（偏金）
-- `--accent-color / --accent-rgb`：点缀色（偏青）
+- `--secondary-color / --secondary-rgb`：副色（偏青）
+- `--accent-color / --accent-rgb`：点缀色（偏绿）
 - `--accent-soft`：点缀色柔和态（用于渐变/装饰光晕）
 - `--text-primary / --text-secondary / --text-tertiary`：文本层级
 - `--text-on-primary`：主色按钮反白文字

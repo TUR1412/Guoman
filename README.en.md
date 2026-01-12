@@ -2,7 +2,7 @@
   <img src="docs/hero.svg" alt="Guoman World" width="100%" />
   <h1>Guoman World</h1>
   <p>
-    A futuristic Guoman discovery hub · Frontend-only · Local-first · Detail-obsessed
+    A Vercel/Apple-grade Guoman discovery hub · Frontend-only · Local-first · Detail-obsessed
   </p>
   <p>
     <a href="README.md">简体中文</a>
@@ -38,7 +38,7 @@
 
 ## ✨ Highlights
 
-- **Futuristic design language**: aurora mesh, glass layers, modern typography, cinematic depth.
+- **Vercel/Apple-style design language**: neutral surfaces, spectral mesh, glass layers, precision typography, and physics-based micro-interactions.
 - **Content insights**: Tag Pulse, Studio Radar, Audience Pulse summaries.
 - **Watch Planner**: turns progress + following status into daily viewing budgets and ETA.
 - **Match score + reasons**: recommendations are explainable and transparent.
@@ -59,7 +59,7 @@
 | Explore & Recommend   | Taste profile, local recommendations, match explanations, tag momentum        |
 | Follow & Plan         | Following reminders, watch progress, Watch Planner, remaining-time estimation |
 | Insights & Analytics  | Studio Radar, Audience Pulse, viewing history, achievements                   |
-| Visual Experience     | Futuristic themes, glassmorphism, responsive grid system, motion guardrails   |
+| Visual Experience     | Vercel/Apple themes, glassmorphism, micro-interactions, motion guardrails     |
 | Data Management       | Favorites/groups/import/export/Data Vault, local usage metrics                |
 | Quality & Reliability | PWA, diagnostics, bundle budget gate, error boundaries                        |
 

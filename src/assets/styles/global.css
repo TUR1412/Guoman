@@ -193,21 +193,21 @@
 
 /* 主题色板（避免“只换背景不换文字”的灾难） */
 :root[data-theme='dark'] {
-  --primary-color: #5af3ff;
-  --primary-rgb: 90, 243, 255;
-  --secondary-color: #ff9c6b;
-  --secondary-rgb: 255, 156, 107;
-  --accent-color: #7cffb2;
-  --accent-rgb: 124, 255, 178;
+  --primary-color: #7c3aed;
+  --primary-rgb: 124, 58, 237;
+  --secondary-color: #22d3ee;
+  --secondary-rgb: 34, 211, 238;
+  --accent-color: #34d399;
+  --accent-rgb: 52, 211, 153;
 
-  --dark-color: #070a12;
-  --darker-color: #05070d;
-  --text-primary: #eef6ff;
-  --text-secondary: #c9d4e2;
-  --text-tertiary: #9aa6b2;
-  --text-on-primary: #021015;
+  --dark-color: #05060b;
+  --darker-color: #02030a;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --text-on-primary: #ffffff;
   --text-on-dark: #ffffff;
-  --border-color: rgba(238, 246, 255, 0.18);
+  --border-color: rgba(248, 250, 252, 0.16);
 
   --surface-glass:
     linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02)),
@@ -220,9 +220,9 @@
   --surface-paper:
     linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
     rgba(255, 255, 255, 0.06);
-  --border-subtle: rgba(238, 246, 255, 0.12);
-  --shadow-color-rgb: 2, 6, 12;
-  --grid-line: rgba(var(--primary-rgb), 0.08);
+  --border-subtle: rgba(248, 250, 252, 0.12);
+  --shadow-color-rgb: 0, 0, 0;
+  --grid-line: rgba(148, 163, 184, 0.07);
   --border-gradient: linear-gradient(
     120deg,
     rgba(var(--primary-rgb), 0.72),
@@ -231,41 +231,41 @@
   );
 
   /* 组件级 tokens（避免散落 hardcode rgba） */
-  --surface-soft: rgba(255, 255, 255, 0.08);
-  --surface-soft-hover: rgba(255, 255, 255, 0.12);
+  --surface-soft: rgba(255, 255, 255, 0.06);
+  --surface-soft-hover: rgba(255, 255, 255, 0.1);
 
-  --chip-bg: rgba(4, 9, 14, 0.6);
-  --chip-bg-hover: rgba(4, 9, 14, 0.72);
-  --chip-border: rgba(255, 255, 255, 0.2);
-  --chip-border-hover: rgba(var(--primary-rgb), 0.45);
-  --chip-bg-active: rgba(var(--primary-rgb), 0.22);
-  --chip-border-active: rgba(var(--primary-rgb), 0.55);
+  --chip-bg: rgba(2, 6, 23, 0.62);
+  --chip-bg-hover: rgba(2, 6, 23, 0.72);
+  --chip-border: rgba(248, 250, 252, 0.18);
+  --chip-border-hover: rgba(var(--primary-rgb), 0.38);
+  --chip-bg-active: rgba(var(--primary-rgb), 0.18);
+  --chip-border-active: rgba(var(--primary-rgb), 0.48);
 
-  --primary-soft: rgba(var(--primary-rgb), 0.2);
-  --primary-soft-hover: rgba(var(--primary-rgb), 0.32);
-  --primary-soft-border: rgba(var(--primary-rgb), 0.55);
+  --primary-soft: rgba(var(--primary-rgb), 0.16);
+  --primary-soft-hover: rgba(var(--primary-rgb), 0.24);
+  --primary-soft-border: rgba(var(--primary-rgb), 0.45);
 
-  --badge-bg: rgba(4, 9, 14, 0.6);
-  --badge-border: rgba(255, 255, 255, 0.2);
+  --badge-bg: rgba(2, 6, 23, 0.62);
+  --badge-border: rgba(248, 250, 252, 0.18);
 
-  --header-bg: rgba(7, 10, 18, 0.7);
-  --header-bg-scrolled: rgba(7, 10, 18, 0.92);
+  --header-bg: rgba(5, 6, 11, 0.72);
+  --header-bg-scrolled: rgba(5, 6, 11, 0.92);
 
-  --field-bg: rgba(255, 255, 255, 0.1);
-  --field-bg-focus: rgba(255, 255, 255, 0.16);
-  --control-bg: rgba(255, 255, 255, 0.09);
-  --control-bg-hover: rgba(255, 255, 255, 0.14);
-  --control-border: rgba(255, 255, 255, 0.24);
-  --button-disabled-bg: rgba(255, 255, 255, 0.18);
-  --button-disabled-text: rgba(255, 255, 255, 0.88);
-  --progress-track: rgba(255, 255, 255, 0.18);
+  --field-bg: rgba(248, 250, 252, 0.06);
+  --field-bg-focus: rgba(248, 250, 252, 0.09);
+  --control-bg: rgba(248, 250, 252, 0.05);
+  --control-bg-hover: rgba(248, 250, 252, 0.09);
+  --control-border: rgba(248, 250, 252, 0.18);
+  --button-disabled-bg: rgba(248, 250, 252, 0.12);
+  --button-disabled-text: rgba(248, 250, 252, 0.72);
+  --progress-track: rgba(248, 250, 252, 0.14);
   --progress-fill: rgba(var(--primary-rgb), 0.9);
-  --overlay-strong: rgba(0, 0, 0, 0.62);
-  --text-glow-primary: 0 0 14px rgba(var(--primary-rgb), 0.38);
-  --text-shadow-hero: 0 10px 24px rgba(0, 0, 0, 0.4);
-  --text-shadow-hero-soft: 0 8px 20px rgba(0, 0, 0, 0.35);
-  --stamp-bg: rgba(4, 9, 14, 0.7);
-  --stamp-border: rgba(var(--primary-rgb), 0.45);
+  --overlay-strong: rgba(0, 0, 0, 0.68);
+  --text-glow-primary: 0 0 12px rgba(var(--primary-rgb), 0.22);
+  --text-shadow-hero: 0 16px 34px rgba(0, 0, 0, 0.42);
+  --text-shadow-hero-soft: 0 12px 26px rgba(0, 0, 0, 0.36);
+  --stamp-bg: rgba(2, 6, 23, 0.7);
+  --stamp-border: rgba(var(--primary-rgb), 0.35);
   --stamp-text: var(--text-primary);
   --divider-gradient: linear-gradient(
     90deg,
@@ -274,8 +274,8 @@
     rgba(var(--accent-rgb), 0.35) 70%,
     transparent 100%
   );
-  --scrollbar-track: rgba(255, 255, 255, 0.12);
-  --scrollbar-thumb: rgba(var(--primary-rgb), 0.55);
+  --scrollbar-track: rgba(248, 250, 252, 0.08);
+  --scrollbar-thumb: rgba(var(--primary-rgb), 0.42);
   --success-rgb: 34, 197, 94;
   --info-rgb: 59, 130, 246;
   --warning-rgb: 245, 158, 11;
@@ -290,38 +290,38 @@
   --warning-color: rgba(var(--warning-rgb), 0.85);
   --hero-overlay: linear-gradient(
     0deg,
-    rgba(5, 7, 13, 0.98) 0%,
-    rgba(5, 7, 13, 0.74) 32%,
-    rgba(5, 7, 13, 0.52) 60%,
-    rgba(5, 7, 13, 0.28) 78%,
-    rgba(5, 7, 13, 0.08) 100%
+    rgba(2, 6, 23, 0.95) 0%,
+    rgba(2, 6, 23, 0.72) 36%,
+    rgba(2, 6, 23, 0.46) 64%,
+    rgba(2, 6, 23, 0.18) 82%,
+    rgba(2, 6, 23, 0.04) 100%
   );
 
-  /* 极光 + Mesh 渐变（拒绝死黑） */
+  /* 极光 + Mesh 渐变（Vercel/Apple：克制但有层次） */
   --app-bg:
-    radial-gradient(900px 520px at 10% 12%, rgba(90, 243, 255, 0.18), transparent 60%),
-    radial-gradient(900px 520px at 88% 10%, rgba(124, 255, 178, 0.14), transparent 60%),
-    radial-gradient(900px 520px at 20% 88%, rgba(255, 156, 107, 0.16), transparent 65%),
+    radial-gradient(900px 520px at 10% 12%, rgba(var(--primary-rgb), 0.16), transparent 60%),
+    radial-gradient(900px 520px at 88% 10%, rgba(var(--secondary-rgb), 0.12), transparent 60%),
+    radial-gradient(900px 520px at 20% 88%, rgba(var(--accent-rgb), 0.1), transparent 65%),
     radial-gradient(1000px 560px at 70% 60%, rgba(var(--primary-rgb), 0.1), transparent 70%),
     linear-gradient(180deg, var(--dark-color) 0%, var(--darker-color) 100%);
 }
 
 :root[data-theme='light'] {
-  --primary-color: #0ea5e9;
-  --primary-rgb: 14, 165, 233;
-  --secondary-color: #ff7a45;
-  --secondary-rgb: 255, 122, 69;
-  --accent-color: #22c55e;
-  --accent-rgb: 34, 197, 94;
+  --primary-color: #2563eb;
+  --primary-rgb: 37, 99, 235;
+  --secondary-color: #7c3aed;
+  --secondary-rgb: 124, 58, 237;
+  --accent-color: #10b981;
+  --accent-rgb: 16, 185, 129;
 
-  --dark-color: #f5f7fb;
+  --dark-color: #f8fafc;
   --darker-color: #ffffff;
-  --text-primary: #0b1220;
-  --text-secondary: #273447;
-  --text-tertiary: #4b5b6a;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-tertiary: #64748b;
   --text-on-primary: #ffffff;
   --text-on-dark: #ffffff;
-  --border-color: rgba(11, 18, 32, 0.16);
+  --border-color: rgba(15, 23, 42, 0.16);
 
   --surface-glass:
     linear-gradient(160deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.82)),
@@ -334,9 +334,9 @@
   --surface-paper:
     linear-gradient(170deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.9)),
     rgba(255, 255, 255, 0.94);
-  --border-subtle: rgba(11, 18, 32, 0.14);
-  --shadow-color-rgb: 14, 21, 32;
-  --grid-line: rgba(var(--primary-rgb), 0.12);
+  --border-subtle: rgba(15, 23, 42, 0.12);
+  --shadow-color-rgb: 15, 23, 42;
+  --grid-line: rgba(15, 23, 42, 0.08);
   --border-gradient: linear-gradient(
     120deg,
     rgba(var(--primary-rgb), 0.55),
@@ -345,41 +345,41 @@
   );
 
   /* 组件级 tokens（避免散落 hardcode rgba） */
-  --surface-soft: rgba(11, 18, 32, 0.06);
-  --surface-soft-hover: rgba(11, 18, 32, 0.1);
+  --surface-soft: rgba(15, 23, 42, 0.04);
+  --surface-soft-hover: rgba(15, 23, 42, 0.08);
 
-  --chip-bg: rgba(11, 18, 32, 0.06);
-  --chip-bg-hover: rgba(11, 18, 32, 0.1);
-  --chip-border: rgba(11, 18, 32, 0.18);
-  --chip-border-hover: rgba(var(--primary-rgb), 0.35);
-  --chip-bg-active: rgba(var(--primary-rgb), 0.16);
-  --chip-border-active: rgba(var(--primary-rgb), 0.45);
+  --chip-bg: rgba(15, 23, 42, 0.04);
+  --chip-bg-hover: rgba(15, 23, 42, 0.08);
+  --chip-border: rgba(15, 23, 42, 0.16);
+  --chip-border-hover: rgba(var(--primary-rgb), 0.28);
+  --chip-bg-active: rgba(var(--primary-rgb), 0.12);
+  --chip-border-active: rgba(var(--primary-rgb), 0.38);
 
-  --primary-soft: rgba(var(--primary-rgb), 0.14);
-  --primary-soft-hover: rgba(var(--primary-rgb), 0.22);
-  --primary-soft-border: rgba(var(--primary-rgb), 0.4);
+  --primary-soft: rgba(var(--primary-rgb), 0.12);
+  --primary-soft-hover: rgba(var(--primary-rgb), 0.18);
+  --primary-soft-border: rgba(var(--primary-rgb), 0.35);
 
-  --badge-bg: rgba(255, 255, 255, 0.8);
-  --badge-border: rgba(11, 18, 32, 0.16);
+  --badge-bg: rgba(255, 255, 255, 0.85);
+  --badge-border: rgba(15, 23, 42, 0.12);
 
-  --header-bg: rgba(245, 247, 251, 0.82);
-  --header-bg-scrolled: rgba(245, 247, 251, 0.96);
+  --header-bg: rgba(248, 250, 252, 0.86);
+  --header-bg-scrolled: rgba(248, 250, 252, 0.96);
 
-  --field-bg: rgba(11, 18, 32, 0.06);
-  --field-bg-focus: rgba(11, 18, 32, 0.1);
-  --control-bg: rgba(11, 18, 32, 0.06);
-  --control-bg-hover: rgba(11, 18, 32, 0.12);
-  --control-border: rgba(11, 18, 32, 0.2);
-  --button-disabled-bg: rgba(11, 18, 32, 0.18);
-  --button-disabled-text: rgba(11, 18, 32, 0.62);
-  --progress-track: rgba(11, 18, 32, 0.16);
+  --field-bg: rgba(15, 23, 42, 0.04);
+  --field-bg-focus: rgba(15, 23, 42, 0.06);
+  --control-bg: rgba(15, 23, 42, 0.04);
+  --control-bg-hover: rgba(15, 23, 42, 0.08);
+  --control-border: rgba(15, 23, 42, 0.14);
+  --button-disabled-bg: rgba(15, 23, 42, 0.1);
+  --button-disabled-text: rgba(15, 23, 42, 0.52);
+  --progress-track: rgba(15, 23, 42, 0.12);
   --progress-fill: rgba(var(--primary-rgb), 0.9);
-  --overlay-strong: rgba(0, 0, 0, 0.58);
-  --text-glow-primary: 0 0 10px rgba(var(--primary-rgb), 0.25);
-  --text-shadow-hero: 0 8px 18px rgba(14, 21, 32, 0.25);
-  --text-shadow-hero-soft: 0 6px 16px rgba(14, 21, 32, 0.2);
-  --stamp-bg: rgba(255, 255, 255, 0.86);
-  --stamp-border: rgba(var(--primary-rgb), 0.35);
+  --overlay-strong: rgba(0, 0, 0, 0.56);
+  --text-glow-primary: 0 0 10px rgba(var(--primary-rgb), 0.18);
+  --text-shadow-hero: 0 10px 20px rgba(15, 23, 42, 0.18);
+  --text-shadow-hero-soft: 0 8px 16px rgba(15, 23, 42, 0.14);
+  --stamp-bg: rgba(255, 255, 255, 0.9);
+  --stamp-border: rgba(var(--primary-rgb), 0.28);
   --stamp-text: var(--text-primary);
   --divider-gradient: linear-gradient(
     90deg,
@@ -388,8 +388,8 @@
     rgba(var(--accent-rgb), 0.22) 70%,
     transparent 100%
   );
-  --scrollbar-track: rgba(26, 26, 26, 0.12);
-  --scrollbar-thumb: rgba(var(--primary-rgb), 0.5);
+  --scrollbar-track: rgba(15, 23, 42, 0.08);
+  --scrollbar-thumb: rgba(var(--primary-rgb), 0.32);
   --success-rgb: 22, 163, 74;
   --info-rgb: 37, 99, 235;
   --warning-rgb: 217, 119, 6;
@@ -404,19 +404,19 @@
   --warning-color: rgba(var(--warning-rgb), 0.85);
   --hero-overlay: linear-gradient(
     0deg,
-    rgba(245, 247, 251, 0.98) 0%,
-    rgba(245, 247, 251, 0.82) 35%,
-    rgba(245, 247, 251, 0.58) 62%,
-    rgba(245, 247, 251, 0.34) 80%,
-    rgba(245, 247, 251, 0.12) 100%
+    rgba(248, 250, 252, 0.98) 0%,
+    rgba(248, 250, 252, 0.84) 35%,
+    rgba(248, 250, 252, 0.6) 62%,
+    rgba(248, 250, 252, 0.36) 80%,
+    rgba(248, 250, 252, 0.12) 100%
   );
 
-  /* 极光 + Mesh 渐变（拒绝死白） */
+  /* 极光 + Mesh 渐变（Vercel/Apple：克制但有层次） */
   --app-bg:
-    radial-gradient(900px 500px at 12% 12%, rgba(14, 165, 233, 0.14), transparent 60%),
-    radial-gradient(900px 500px at 86% 12%, rgba(255, 122, 69, 0.12), transparent 55%),
+    radial-gradient(900px 500px at 12% 12%, rgba(var(--primary-rgb), 0.12), transparent 60%),
+    radial-gradient(900px 500px at 86% 12%, rgba(var(--secondary-rgb), 0.1), transparent 55%),
     radial-gradient(800px 520px at 50% 40%, rgba(var(--primary-rgb), 0.06), transparent 70%),
-    radial-gradient(1000px 600px at 30% 95%, rgba(34, 197, 94, 0.12), transparent 55%),
+    radial-gradient(1000px 600px at 30% 95%, rgba(var(--accent-rgb), 0.08), transparent 55%),
     linear-gradient(180deg, var(--dark-color) 0%, var(--darker-color) 100%);
 }
 
@@ -1276,7 +1276,7 @@ ol {
     background-position:
       0 0,
       100% 50%;
-    animation: borderShift var(--glass-border-shift-duration) var(--ease-soft) infinite;
+    animation: borderShift 2.8s var(--ease-soft) 1;
   }
 }
 
@@ -1287,7 +1287,7 @@ ol {
     background-position:
       0 0,
       100% 50%;
-    animation: borderShift var(--glass-border-shift-duration) var(--ease-soft) infinite;
+    animation: borderShift 2.8s var(--ease-soft) 1;
   }
 }
 
@@ -1375,13 +1375,13 @@ ol {
 
 @supports (translate: 0 0) {
   [data-pressable]:hover {
-    translate: 0 -2px;
+    translate: 0 -1px;
     box-shadow: var(--shadow-sm);
   }
 
   [data-pressable]:active {
     translate: 0 0;
-    scale: 0.97;
+    scale: 0.985;
   }
 
   [data-pressable][aria-disabled='true'],
@@ -1394,12 +1394,12 @@ ol {
 
 @supports not (translate: 0 0) {
   [data-pressable]:hover {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
     box-shadow: var(--shadow-sm);
   }
 
   [data-pressable]:active {
-    transform: translateY(0) scale(0.97);
+    transform: translateY(0) scale(0.985);
   }
 
   [data-pressable][aria-disabled='true'],

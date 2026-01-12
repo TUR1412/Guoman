@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- UI：视觉体系升级为 Vercel/Apple 风格（中性精致的主题色板、Mesh 背景、统一的微交互与弹簧动效预设）。
+
 - CI：新增 GitHub Actions `quality.yml` 工作流（lint/format:check/test/build/budget:bundle），为 push/PR 提供质量闸门
 - CI：新增 GitHub Actions `lighthouse.yml` 手动工作流（remote/local）并上传 `reports/` artifact，便于回归对比
 

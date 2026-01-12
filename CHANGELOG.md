@@ -20,7 +20,7 @@
 - 诊断回放增强：诊断包新增 `events`（本地埋点事件），诊断面板支持本地/导入事件浏览器（事件名筛选、展开 payload、下载筛选结果）
 - 诊断回放增强：新增本地/导入时间线（breadcrumbs），聚合 logs/errors/events，并支持类型筛选/关键词检索/下载筛选结果 + 一键定位到对应浏览器
 - PWA：新增 `public/offline.html` 离线兜底页，并升级 Service Worker cache version（确保离线导航更可控）
-- 未来感 UI 重塑：Space Grotesk + Chakra Petch 字体体系与深浅主题色板升级
+- Vercel/Apple 风格 UI 重塑：中性精致的主题色板 + Mesh 背景 + 微交互与弹簧动效统一
 - 内容洞察引擎：新增 Tag Pulse 标签趋势、Studio Radar 工作室雷达、Audience Pulse 口碑脉冲
 - 观影计划器：结合追更与观看进度计算剩余时长与每日观看预算
 - 推荐解释升级：卡片新增匹配度与推荐理由

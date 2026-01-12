@@ -177,9 +177,11 @@ const PaginationRow = styled.div`
   gap: 10px;
   padding: 10px 12px;
   border-radius: var(--border-radius-pill);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-glass);
+  backdrop-filter: blur(12px) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(12px) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-elev-3);
 `;
 
 const Dot = styled.button.attrs({ type: 'button', 'data-pressable': true })`

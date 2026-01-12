@@ -92,7 +92,7 @@ const LevelBadge = styled.span`
   padding: 2px 8px;
   border-radius: 999px;
   border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface-paper);
   font-weight: 800;
   letter-spacing: 0.02em;
   color: var(--badge-color, var(--text-secondary));
@@ -114,7 +114,7 @@ const Pre = styled.pre`
   margin: 0;
   padding: var(--spacing-sm);
   border-radius: var(--border-radius-md);
-  background: rgba(0, 0, 0, 0.18);
+  background: var(--surface-paper);
   border: 1px solid var(--border-subtle);
   overflow: auto;
   color: var(--text-secondary);

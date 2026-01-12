@@ -100,7 +100,7 @@ const Pre = styled.pre`
   margin: 0;
   padding: var(--spacing-sm);
   border-radius: var(--border-radius-md);
-  background: rgba(0, 0, 0, 0.18);
+  background: var(--surface-paper);
   border: 1px solid var(--border-subtle);
   overflow: auto;
   color: var(--text-secondary);

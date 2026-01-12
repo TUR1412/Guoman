@@ -46,7 +46,7 @@ export const getModalBackdropMotion = (reducedMotion) => {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
     exit: { opacity: 0 },
-    transition: { duration: 0.22, ease: MOTION_EASINGS.out },
+    transition: { duration: MOTION_DURATIONS.fast, ease: MOTION_EASINGS.out },
   };
 };
 
@@ -64,7 +64,11 @@ export const getModalPanelMotion = (reducedMotion) => {
     initial: { opacity: 0, y: 10, scale: 0.98 },
     animate: { opacity: 1, y: 0, scale: 1 },
     exit: { opacity: 0, y: 8, scale: 0.98 },
-    transition: { duration: 0.24, ease: MOTION_EASINGS.out },
+    transition: {
+      opacity: { duration: MOTION_DURATIONS.fast, ease: MOTION_EASINGS.out },
+      y: MOTION_SPRINGS.dialog,
+      scale: MOTION_SPRINGS.dialog,
+    },
   };
 };
 
@@ -82,7 +86,11 @@ export const getToastMotion = (reducedMotion) => {
     initial: { opacity: 0, y: 12, scale: 0.98 },
     animate: { opacity: 1, y: 0, scale: 1 },
     exit: { opacity: 0, y: 10, scale: 0.98 },
-    transition: { duration: 0.22, ease: MOTION_EASINGS.out },
+    transition: {
+      opacity: { duration: MOTION_DURATIONS.fast, ease: MOTION_EASINGS.out },
+      y: MOTION_SPRINGS.toast,
+      scale: MOTION_SPRINGS.toast,
+    },
   };
 };
 

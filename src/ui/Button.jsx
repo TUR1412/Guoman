@@ -1,7 +1,10 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import styled from 'styled-components';
+import { useAppReducedMotion } from '../motion/useAppReducedMotion';
+import { MOTION_SPRINGS } from '../motion/tokens';
 
-const ButtonRoot = styled.button`
+const ButtonRoot = styled(motion.button)`
   --btn-bg: var(--control-bg);
   --btn-bg-hover: var(--control-bg-hover);
   --btn-border: var(--control-border);
@@ -22,6 +25,7 @@ const ButtonRoot = styled.button`
   color: var(--btn-text);
   font: inherit;
   line-height: 1;
+  will-change: transform;
 
   cursor: pointer;
   user-select: none;
@@ -29,17 +33,18 @@ const ButtonRoot = styled.button`
   -webkit-tap-highlight-color: transparent;
 
   transition:
-    transform 120ms var(--ease-out),
     background 160ms var(--ease-out),
     border-color 160ms var(--ease-out),
     box-shadow 160ms var(--ease-out),
-    color 160ms var(--ease-out);
+    color 160ms var(--ease-out),
+    filter 160ms var(--ease-out);
 
   &[data-variant='primary'] {
-    --btn-bg: var(--accent-color, var(--primary-color));
-    --btn-bg-hover: var(--accent-soft, var(--primary-color));
+    --btn-bg: var(--primary-color);
+    --btn-bg-hover: var(--primary-color);
     --btn-border: transparent;
     --btn-text: var(--text-on-primary, var(--text-on-dark));
+    box-shadow: var(--shadow-primary-soft);
   }
 
   &[data-variant='ghost'] {
@@ -65,10 +70,12 @@ const ButtonRoot = styled.button`
 
   &:hover:not(:disabled) {
     background: var(--btn-bg-hover);
+    box-shadow: var(--shadow-elev-2);
   }
 
-  &:active:not(:disabled) {
-    transform: translateY(1px);
+  &[data-variant='primary']:hover:not(:disabled) {
+    box-shadow: var(--shadow-primary-hover);
+    filter: brightness(1.06) saturate(1.02);
   }
 
   &:focus-visible {
@@ -81,7 +88,7 @@ const ButtonRoot = styled.button`
     background: var(--button-disabled-bg);
     border-color: transparent;
     color: var(--button-disabled-text);
-    transform: none;
+    transform: none !important;
   }
 `;
 
@@ -93,11 +100,23 @@ export function Button({
   className,
   ...props
 }) {
+  const reducedMotion = useAppReducedMotion();
+
   const forwardedProps = {};
   Object.keys(props).forEach((key) => {
     if (key.startsWith('$')) return;
     forwardedProps[key] = props[key];
   });
+
+  const useCssPressable = Boolean(props['data-pressable']);
+  const interactionMotion =
+    reducedMotion || disabled || useCssPressable
+      ? {}
+      : {
+          whileHover: { y: -1, scale: 1.01 },
+          whileTap: { y: 0, scale: 0.985 },
+          transition: MOTION_SPRINGS.pressable,
+        };
 
   return (
     <ButtonRoot
@@ -106,6 +125,7 @@ export function Button({
       disabled={disabled}
       data-variant={variant}
       data-size={size}
+      {...interactionMotion}
       {...forwardedProps}
     />
   );
