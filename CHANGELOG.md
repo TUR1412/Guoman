@@ -5,6 +5,7 @@
 ## [Unreleased]
 
 - CI：新增 GitHub Actions `quality.yml` 工作流（lint/format:check/test/build/budget:bundle），为 push/PR 提供质量闸门
+- CI：新增 GitHub Actions `lighthouse.yml` 手动工作流（remote/local）并上传 `reports/` artifact，便于回归对比
 
 - 命令面板升级：支持作品/标签/#tag/分类/静态页直达，搜索 action 作为兜底项保留（不抢占首选命令）
 - 命令面板性能：高亮/hover 时 idle 预取目标路由 chunk，Enter 跳转更快

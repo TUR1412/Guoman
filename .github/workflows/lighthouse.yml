@@ -1,0 +1,120 @@
+name: lighthouse-baseline
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Run mode: remote (Pages) or local (preview)'
+        required: false
+        default: 'remote'
+        type: choice
+        options:
+          - remote
+          - local
+      preset:
+        description: 'Lighthouse preset'
+        required: false
+        default: 'desktop'
+        type: choice
+        options:
+          - desktop
+          - mobile
+      url:
+        description: 'Remote URL (only used in remote mode)'
+        required: false
+        default: 'https://tur1412.github.io/Guoman/'
+        type: string
+      html:
+        description: 'Generate HTML report'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  baseline:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Run Lighthouse baseline
+        env:
+          LH_MODE: ${{ inputs.mode }}
+          LH_PRESET: ${{ inputs.preset }}
+          LH_URL: ${{ inputs.url }}
+          LH_HTML: ${{ inputs.html }}
+          LIGHTHOUSE_CHROME_PATH: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $args = @("run", "lighthouse:baseline", "--")
+          if ($env:LH_MODE -eq "local") {
+            $args += "--local"
+          } else {
+            $args += "--remote"
+            if ($env:LH_URL) {
+              $args += @("--url", $env:LH_URL)
+            }
+          }
+
+          if ($env:LH_PRESET) {
+            $args += @("--preset", $env:LH_PRESET)
+          }
+
+          if ($env:LH_HTML -eq "False") {
+            $args += "--no-html"
+          }
+
+          npm @args
+
+      - name: Summarize baseline
+        if: always()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Continue"
+          if (-not (Test-Path "reports/lighthouse-baseline.json")) {
+            "No baseline file found at reports/lighthouse-baseline.json" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding UTF8
+            exit 0
+          }
+
+          $baseline = Get-Content -Raw -Encoding UTF8 "reports/lighthouse-baseline.json" | ConvertFrom-Json
+          $lines = @(
+            "## Lighthouse baseline",
+            "",
+            ("- Mode: **{0}**" -f ($baseline.mode ?? "—")),
+            ("- Preset: **{0}**" -f ($baseline.preset ?? "—")),
+            ("- URL: {0}" -f ($baseline.url ?? "—")),
+            "",
+            "### Scores",
+            ("- Performance: **{0}**" -f ($baseline.metrics.performance ?? "—")),
+            ("- Accessibility: **{0}**" -f ($baseline.metrics.accessibility ?? "—")),
+            ("- Best Practices: **{0}**" -f ($baseline.metrics.bestPractices ?? "—")),
+            ("- SEO: **{0}**" -f ($baseline.metrics.seo ?? "—"))
+          )
+          $lines -join "`n" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding UTF8
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: reports/**
+          if-no-files-found: warn

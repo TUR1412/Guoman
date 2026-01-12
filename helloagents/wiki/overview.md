@@ -72,4 +72,10 @@
 
 - `public/robots.txt`、`public/sitemap.xml` 为 `npm run build` 的 `prebuild` 阶段生成物，已从 Git 移除并加入 `.gitignore`。
 - PWA 离线兜底页：`public/offline.html` 由 Service Worker 在离线导航时作为 fallback 返回（配合 `public/sw.js` precache）
-  \n## CI\n\n- GitHub Actions：`static.yml` 负责 Pages 部署；`quality.yml` 负责 lint/format/test/build/budget:bundle 的质量闸门\n\*\*\* End of File
+
+## CI
+
+- GitHub Actions：
+  - `static.yml`：Pages 构建/部署（push 到 `master`）+ PR 预检（`npm run check`）
+  - `quality.yml`：push/PR 质量闸门（lint/format:check/test/build/budget:bundle）
+  - `lighthouse.yml`：手动 Lighthouse 基线（remote/local）并上传 `reports/` artifact

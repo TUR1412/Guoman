@@ -39,6 +39,16 @@ npm run lighthouse:baseline -- --local
 
 > 说明：本地模式会先执行 `npm run build`，再拉起 `vite preview`，并对 `http://127.0.0.1:4173/Guoman/` 执行审计。
 
+### 2.3 GitHub Actions（可选）
+
+仓库内置了手动工作流：`.github/workflows/lighthouse.yml`。
+
+- 触发方式：GitHub → Actions → `lighthouse-baseline` → Run workflow
+- 产物：会将 `reports/` 以 artifact 形式上传（包含 `lighthouse-report.json/.html` 与 `lighthouse-baseline.json`）
+- 支持参数：
+  - `mode=remote`：对 GitHub Pages URL 执行审计（默认）
+  - `mode=local`：CI 内 build + preview 后再审计
+
 ---
 
 ## 3) 输出文件
