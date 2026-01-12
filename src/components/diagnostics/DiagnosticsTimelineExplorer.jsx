@@ -91,8 +91,8 @@ const MetaRow = styled.div`
 const KindBadge = styled.span`
   padding: 2px 8px;
   border-radius: 999px;
-  border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--badge-border);
+  background: var(--badge-bg);
   font-weight: 800;
   letter-spacing: 0.02em;
   color: var(--badge-color, var(--text-secondary));

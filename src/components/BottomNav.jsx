@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { LayoutGroup, motion } from 'framer-motion';
 import { FiBell, FiHeart, FiHome, FiSearch, FiUser } from './icons/feather';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
-import { MOTION_DURATIONS, MOTION_EASINGS } from '../motion/tokens';
+import { MOTION_DURATIONS, MOTION_EASINGS, MOTION_SPRINGS } from '../motion/tokens';
 
 const Dock = styled(motion.nav)`
   position: fixed;
@@ -148,7 +148,12 @@ function BottomNav() {
                   $active={active}
                   aria-current={active ? 'page' : undefined}
                 >
-                  {active ? <ActivePill layoutId="guoman:bottom-nav:pill" /> : null}
+                  {active ? (
+                    <ActivePill
+                      layoutId="guoman:bottom-nav:pill"
+                      transition={reducedMotion ? { duration: 0 } : MOTION_SPRINGS.pressable}
+                    />
+                  ) : null}
                   <DockInner>
                     <DockIcon aria-hidden="true">
                       <Icon />

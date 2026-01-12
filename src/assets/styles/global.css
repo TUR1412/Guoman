@@ -260,6 +260,8 @@
   --button-disabled-text: rgba(248, 250, 252, 0.72);
   --progress-track: rgba(248, 250, 252, 0.14);
   --progress-fill: rgba(var(--primary-rgb), 0.9);
+  --overlay-soft: rgba(0, 0, 0, 0.38);
+  --overlay-medium: rgba(0, 0, 0, 0.46);
   --overlay-strong: rgba(0, 0, 0, 0.68);
   --text-glow-primary: 0 0 12px rgba(var(--primary-rgb), 0.22);
   --text-shadow-hero: 0 16px 34px rgba(0, 0, 0, 0.42);
@@ -374,6 +376,8 @@
   --button-disabled-text: rgba(15, 23, 42, 0.52);
   --progress-track: rgba(15, 23, 42, 0.12);
   --progress-fill: rgba(var(--primary-rgb), 0.9);
+  --overlay-soft: rgba(0, 0, 0, 0.22);
+  --overlay-medium: rgba(0, 0, 0, 0.38);
   --overlay-strong: rgba(0, 0, 0, 0.56);
   --text-glow-primary: 0 0 10px rgba(var(--primary-rgb), 0.18);
   --text-shadow-hero: 0 10px 20px rgba(15, 23, 42, 0.18);

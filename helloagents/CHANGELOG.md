@@ -6,6 +6,7 @@
 
 ## [Unreleased]
 
+- UI：补齐遮罩层级 Tokens（`--overlay-soft` / `--overlay-medium` / `--overlay-strong`），并统一导航/庆祝层的遮罩与动效入口（保持业务逻辑不变）。
 - UI：视觉体系升级为 Vercel/Apple 风格（中性精致的主题色板、Mesh 背景、统一的微交互与弹簧动效预设）。
 
 - CI：新增 GitHub Actions `quality.yml` 工作流（lint/format:check/test/build/budget:bundle），为 push/PR 提供质量闸门

@@ -89,7 +89,7 @@ const CelebrationOverlay = styled(motion.div)`
   background:
     radial-gradient(1200px 520px at 50% 15%, rgba(var(--primary-rgb), 0.22), transparent 60%),
     radial-gradient(900px 460px at 20% 100%, rgba(var(--secondary-rgb), 0.18), transparent 70%),
-    rgba(0, 0, 0, 0.46);
+    var(--overlay-medium);
   backdrop-filter: blur(10px);
 `;
 

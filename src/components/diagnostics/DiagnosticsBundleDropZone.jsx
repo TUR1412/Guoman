@@ -39,7 +39,8 @@ const IconWrap = styled.div`
   display: grid;
   place-items: center;
   border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--control-bg);
+  box-shadow: var(--shadow-elev-1);
   color: var(--primary-color);
 
   svg {

@@ -63,6 +63,8 @@
 - `--app-bg`：全局墨韵 + Aurora 背景
 - `--aurora-opacity / --aurora-opacity-multiplier`：极光叠层强度（支持与 `data-low-data` 叠乘降载）
 - `--hero-overlay`：英雄区遮罩渐变
+- `--overlay-soft`：轻遮罩（浅层浮层/轻提示/次级遮罩）
+- `--overlay-medium`：中遮罩（弹窗/庆祝层/半透明背板）
 - `--overlay-strong`：图片/卡片上文字的对比遮罩
 - `--progress-track / --progress-fill`：进度条轨道/填充
 - `--stamp-*`：徽章/题签（Banner/页头 badge）

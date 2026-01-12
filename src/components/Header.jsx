@@ -14,6 +14,7 @@ import { safeJsonParse } from '../utils/json';
 import { useIsProEnabled } from '../utils/useProMembership';
 import CommandPalette from './CommandPalette';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
+import { MOTION_SPRINGS } from '../motion/tokens';
 import { usePointerGlow } from './usePointerGlow';
 import HeaderSearch from './header/HeaderSearch';
 import { navItems } from './header/navItems';
@@ -606,11 +607,7 @@ function Header() {
                       {active ? (
                         <NavPill
                           layoutId="guoman-nav-pill"
-                          transition={
-                            reducedMotion
-                              ? { duration: 0 }
-                              : { type: 'spring', stiffness: 560, damping: 46 }
-                          }
+                          transition={reducedMotion ? { duration: 0 } : MOTION_SPRINGS.pressable}
                         />
                       ) : null}
                       <NavLabel>{item.title}</NavLabel>
