@@ -1284,25 +1284,27 @@ ol {
   --card-shadow: var(--shadow-elev-12);
 }
 
-@supports (translate: 0 0) {
-  [data-card][data-card]:hover {
-    translate: 0 -4px;
-    box-shadow: var(--shadow-lg), var(--shadow-glow);
-    background-position:
-      0 0,
-      100% 50%;
-    animation: borderShift 2.8s var(--ease-soft) 1;
+@media (hover: hover) and (pointer: fine) {
+  @supports (translate: 0 0) {
+    [data-card][data-card]:hover {
+      translate: 0 -4px;
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+      background-position:
+        0 0,
+        100% 50%;
+      animation: borderShift 2.8s var(--ease-soft) 1;
+    }
   }
-}
 
-@supports not (translate: 0 0) {
-  [data-card][data-card]:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg), var(--shadow-glow);
-    background-position:
-      0 0,
-      100% 50%;
-    animation: borderShift 2.8s var(--ease-soft) 1;
+  @supports not (translate: 0 0) {
+    [data-card][data-card]:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+      background-position:
+        0 0,
+        100% 50%;
+      animation: borderShift 2.8s var(--ease-soft) 1;
+    }
   }
 }
 
@@ -1375,8 +1377,11 @@ ol {
 }
 
 [data-pressable] {
+  --pressable-offset-x: 0px;
   --pressable-offset-y: 0px;
+  --pressable-translate-x: 0px;
   --pressable-translate-y: 0px;
+  --pressable-hover-translate-x: 0px;
   --pressable-hover-translate-y: -1px;
   --pressable-scale: 1;
   --pressable-scale-active: 0.985;
@@ -1395,25 +1400,32 @@ ol {
     filter var(--motion-fast) var(--ease-out);
 }
 
-@supports (translate: 0 0) {
-  [data-pressable] {
-    translate: 0 calc(var(--pressable-offset-y) + var(--pressable-translate-y));
-    scale: var(--pressable-scale);
-  }
-
+@media (hover: hover) and (pointer: fine) {
   [data-pressable]:hover {
+    --pressable-translate-x: var(--pressable-hover-translate-x);
     --pressable-translate-y: var(--pressable-hover-translate-y);
     box-shadow: var(--shadow-sm);
   }
+}
+
+@supports (translate: 0 0) {
+  [data-pressable] {
+    translate: calc(var(--pressable-offset-x) + var(--pressable-translate-x))
+      calc(var(--pressable-offset-y) + var(--pressable-translate-y));
+    scale: var(--pressable-scale);
+  }
 
   [data-pressable]:active {
+    --pressable-translate-x: 0px;
     --pressable-translate-y: 0px;
     --pressable-scale: var(--pressable-scale-active);
   }
 
   [data-pressable][aria-disabled='true'],
   [data-pressable]:disabled {
+    --pressable-offset-x: 0px;
     --pressable-offset-y: 0px;
+    --pressable-translate-x: 0px;
     --pressable-translate-y: 0px;
     --pressable-scale: 1;
     box-shadow: none;
@@ -1422,23 +1434,25 @@ ol {
 
 @supports not (translate: 0 0) {
   [data-pressable] {
-    transform: translate3d(0, calc(var(--pressable-offset-y) + var(--pressable-translate-y)), 0)
+    transform: translate3d(
+        calc(var(--pressable-offset-x) + var(--pressable-translate-x)),
+        calc(var(--pressable-offset-y) + var(--pressable-translate-y)),
+        0
+      )
       scale(var(--pressable-scale));
   }
 
-  [data-pressable]:hover {
-    --pressable-translate-y: var(--pressable-hover-translate-y);
-    box-shadow: var(--shadow-sm);
-  }
-
   [data-pressable]:active {
+    --pressable-translate-x: 0px;
     --pressable-translate-y: 0px;
     --pressable-scale: var(--pressable-scale-active);
   }
 
   [data-pressable][aria-disabled='true'],
   [data-pressable]:disabled {
+    --pressable-offset-x: 0px;
     --pressable-offset-y: 0px;
+    --pressable-translate-x: 0px;
     --pressable-translate-y: 0px;
     --pressable-scale: 1;
     transform: none;
