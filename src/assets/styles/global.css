@@ -1219,10 +1219,11 @@ ol {
   position: relative;
   transition:
     transform var(--motion-base) var(--ease-out),
+    translate var(--motion-base) var(--ease-out),
     box-shadow var(--motion-base) var(--ease-out),
     border-color var(--motion-base) var(--ease-out),
     background-position var(--motion-slow) var(--ease-soft);
-  will-change: transform, background-position;
+  will-change: transform, translate, background-position;
 
   /* 动态渐变边框 + 玻璃拟态：覆盖 styled-components 的默认背景/边框 */
   border: 1px solid transparent;
@@ -1380,6 +1381,8 @@ ol {
   transform: translate3d(0, 0, 0);
   transition:
     transform var(--motion-fast) var(--ease-out-back),
+    translate var(--motion-fast) var(--ease-out-back),
+    scale var(--motion-fast) var(--ease-out-back),
     box-shadow var(--motion-fast) var(--ease-out),
     background-color var(--motion-fast) var(--ease-out),
     color var(--motion-fast) var(--ease-out),
