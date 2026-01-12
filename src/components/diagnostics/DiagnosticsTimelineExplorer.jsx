@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import EmptyState from '../EmptyState';
-import { FiDownload, FiFilter, FiSearch } from '../icons/feather';
+import { FiArrowRight, FiDownload, FiFilter, FiSearch } from '../icons/feather';
 import TextField from '../../ui/TextField';
 import SelectField from '../../ui/SelectField';
 import { DiagnosticsActions, DiagnosticsActionButton, DiagnosticsCardTitle } from './diagnosticsUi';
@@ -147,6 +147,12 @@ const kindLabel = (kind) => {
   return 'LOG';
 };
 
+const kindTitle = (kind) => {
+  if (kind === 'error') return '错误';
+  if (kind === 'event') return '事件';
+  return '日志';
+};
+
 const kindColor = (kind, record) => {
   if (kind === 'error') return 'rgba(255, 90, 90, 0.92)';
   if (kind === 'event') return 'var(--info-color)';
@@ -224,6 +230,7 @@ export default function DiagnosticsTimelineExplorer({
   errors,
   events,
   onDownload,
+  onJump,
   defaultLimit = 32,
   emptyState,
   noMatchState,
@@ -344,10 +351,22 @@ export default function DiagnosticsTimelineExplorer({
                         </MetaRow>
                         <Message>{record?.message || '—'}</Message>
                       </RecordSummary>
-                      {record?.detail ? (
+                      {record?.detail || typeof onJump === 'function' ? (
                         <DetailsBody>
                           {record?.id ? <div>id: {record.id}</div> : null}
-                          <Pre>{record.detail}</Pre>
+                          {typeof onJump === 'function' ? (
+                            <DiagnosticsActions>
+                              <DiagnosticsActionButton
+                                type="button"
+                                onClick={() => onJump(record)}
+                                title={`定位到${kindTitle(recordKind)}浏览器`}
+                              >
+                                <FiArrowRight />
+                                定位到{kindTitle(recordKind)}浏览器
+                              </DiagnosticsActionButton>
+                            </DiagnosticsActions>
+                          ) : null}
+                          {record?.detail ? <Pre>{record.detail}</Pre> : null}
                         </DetailsBody>
                       ) : null}
                     </RecordItem>

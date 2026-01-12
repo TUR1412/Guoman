@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import EmptyState from '../EmptyState';
 import { FiDownload, FiSearch, FiTrash2 } from '../icons/feather';
@@ -130,6 +130,12 @@ const normalizeLevel = (value) => {
   return 'info';
 };
 
+const normalizeLevelFilter = (value) => {
+  const text = String(value || '').toLowerCase();
+  if (text === 'all') return 'all';
+  return normalizeLevel(text);
+};
+
 const safeJson = (value) => {
   if (value === null || value === undefined) return '';
   if (typeof value === 'string') return value;
@@ -156,6 +162,7 @@ export default function DiagnosticsLogsExplorer({
   logs,
   onClear,
   onDownload,
+  focus,
   defaultLimit = 24,
   title = '日志浏览器',
   emptyState,
@@ -164,6 +171,23 @@ export default function DiagnosticsLogsExplorer({
   const [query, setQuery] = useState('');
   const [level, setLevel] = useState('all');
   const [limit, setLimit] = useState(defaultLimit);
+  const focusToken = focus?.token;
+  const focusQuery = focus?.query;
+  const focusLevel = focus?.level;
+
+  useEffect(() => {
+    if (!focusToken) return;
+
+    if (typeof focusQuery === 'string') {
+      setQuery(focusQuery);
+    }
+
+    if (focusLevel !== null && focusLevel !== undefined) {
+      setLevel(normalizeLevelFilter(focusLevel));
+    }
+
+    setLimit(defaultLimit);
+  }, [defaultLimit, focusLevel, focusQuery, focusToken]);
 
   const normalizedQuery = useMemo(() => query.trim().toLowerCase(), [query]);
 

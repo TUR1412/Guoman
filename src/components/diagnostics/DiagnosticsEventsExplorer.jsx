@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import EmptyState from '../EmptyState';
 import { FiDownload, FiSearch, FiTrash2 } from '../icons/feather';
@@ -138,11 +138,19 @@ const safeJson = (value) => {
 
 const normalizeEventName = (value) => String(value || '').trim();
 
+const normalizeEventNameFilter = (value) => {
+  const text = String(value || '').trim();
+  if (!text) return 'all';
+  if (text.toLowerCase() === 'all') return 'all';
+  return text;
+};
+
 export default function DiagnosticsEventsExplorer({
   className,
   events,
   onClear,
   onDownload,
+  focus,
   defaultLimit = 24,
   title = '事件浏览器',
   emptyState,
@@ -151,6 +159,23 @@ export default function DiagnosticsEventsExplorer({
   const [query, setQuery] = useState('');
   const [eventName, setEventName] = useState('all');
   const [limit, setLimit] = useState(defaultLimit);
+  const focusToken = focus?.token;
+  const focusQuery = focus?.query;
+  const focusEventName = focus?.eventName;
+
+  useEffect(() => {
+    if (!focusToken) return;
+
+    if (typeof focusQuery === 'string') {
+      setQuery(focusQuery);
+    }
+
+    if (focusEventName !== null && focusEventName !== undefined) {
+      setEventName(normalizeEventNameFilter(focusEventName));
+    }
+
+    setLimit(defaultLimit);
+  }, [defaultLimit, focusEventName, focusQuery, focusToken]);
 
   const list = useMemo(() => (Array.isArray(events) ? events : []), [events]);
   const normalizedQuery = useMemo(() => query.trim().toLowerCase(), [query]);

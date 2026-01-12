@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import EmptyState from '../EmptyState';
 import { FiDownload, FiSearch, FiTrash2 } from '../icons/feather';
@@ -123,6 +123,7 @@ export default function DiagnosticsErrorsExplorer({
   errors,
   onClear,
   onDownload,
+  focus,
   defaultLimit = 16,
   title = '错误浏览器',
   emptyState,
@@ -130,6 +131,16 @@ export default function DiagnosticsErrorsExplorer({
 }) {
   const [query, setQuery] = useState('');
   const [limit, setLimit] = useState(defaultLimit);
+  const focusToken = focus?.token;
+  const focusQuery = focus?.query;
+
+  useEffect(() => {
+    if (!focusToken) return;
+    if (typeof focusQuery === 'string') {
+      setQuery(focusQuery);
+    }
+    setLimit(defaultLimit);
+  }, [defaultLimit, focusQuery, focusToken]);
 
   const normalizedQuery = useMemo(() => query.trim().toLowerCase(), [query]);
 

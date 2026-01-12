@@ -17,7 +17,7 @@
 - ✅ Diagnostics：新增日志/错误浏览器（关键词检索、级别筛选、展开详情、下载筛选结果）并支持拖拽导入诊断包。
 - ✅ Diagnostics：导入回放增强：导入诊断包后可直接浏览导入的 logs/errors（筛选/检索/展开/下载筛选结果），无需复制 JSON 手动排查。
 - ✅ Diagnostics：事件回放增强：诊断包新增 `events`（本地埋点事件），诊断面板支持本地/导入事件浏览器（事件名筛选、展开 payload、下载筛选结果）。
-- ✅ Diagnostics：本地/导入时间线：新增 breadcrumbs 聚合时间线（logs/errors/events），支持类型筛选/关键词检索/下载筛选结果。
+- ✅ Diagnostics：本地/导入时间线：新增 breadcrumbs 聚合时间线（logs/errors/events），支持类型筛选/关键词检索/下载筛选结果，并支持一键定位到对应浏览器。
 - ✅ PWA：新增 `public/offline.html` 离线兜底页，并升级 Service Worker cache version（确保更新一致性）。
 
 - ✅ 表单体系收敛：新增 `SelectField` / `TextAreaField` / `RangeInput` primitives，并迁移 Search/Favorites/Following/StaticPage/UserCenterPage/AnimeDetail 的表单控件以统一 focus/disabled/invalid 交互。

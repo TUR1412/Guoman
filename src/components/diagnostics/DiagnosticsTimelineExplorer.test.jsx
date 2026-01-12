@@ -44,6 +44,28 @@ describe('DiagnosticsTimelineExplorer', () => {
     expect(filtered[0].kind).toBe('error');
   });
 
+  it('supports drilldown via onJump', async () => {
+    const user = userEvent.setup();
+    const onJump = vi.fn();
+
+    render(
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <DiagnosticsTimelineExplorer
+          logs={[{ id: 'l1', level: 'warn', message: 'route enter', source: 'router', at: 3 }]}
+          errors={[]}
+          events={[]}
+          onJump={onJump}
+        />
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByText('route enter'));
+    await user.click(screen.getByRole('button', { name: '定位到日志浏览器' }));
+
+    expect(onJump).toHaveBeenCalledTimes(1);
+    expect(onJump.mock.calls[0][0].kind).toBe('log');
+  });
+
   it('supports empty state overrides', () => {
     render(
       <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>

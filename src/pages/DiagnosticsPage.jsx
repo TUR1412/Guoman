@@ -43,6 +43,7 @@ import { startHealthMonitoring, stopHealthMonitoring } from '../utils/healthCons
 export default function DiagnosticsPage() {
   const toast = useToast();
   const fileInputRef = useRef(null);
+  const focusSeqRef = useRef(0);
   const [monitoring, setMonitoring] = useState(false);
   const [manualCopyOpen, setManualCopyOpen] = useState(false);
   const [importedCopyOpen, setImportedCopyOpen] = useState(false);
@@ -53,6 +54,23 @@ export default function DiagnosticsPage() {
   const [storage, setStorage] = useState(() => getFeatureSummaries());
   const [importedBundle, setImportedBundle] = useState(null);
   const [importedMeta, setImportedMeta] = useState(null);
+  const [localLogsFocus, setLocalLogsFocus] = useState(null);
+  const [localErrorsFocus, setLocalErrorsFocus] = useState(null);
+  const [localEventsFocus, setLocalEventsFocus] = useState(null);
+  const [importedLogsFocus, setImportedLogsFocus] = useState(null);
+  const [importedErrorsFocus, setImportedErrorsFocus] = useState(null);
+  const [importedEventsFocus, setImportedEventsFocus] = useState(null);
+
+  const nextFocusToken = useCallback(() => {
+    focusSeqRef.current += 1;
+    return `${Date.now()}-${focusSeqRef.current}`;
+  }, []);
+
+  const scrollToCard = useCallback((id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
 
   const refresh = useCallback(() => {
     setBundle(buildDiagnosticsBundle());
@@ -239,6 +257,66 @@ export default function DiagnosticsPage() {
       toast.success('已下载', `文件已保存：${filename}`);
     },
     [toast],
+  );
+
+  const handleLocalTimelineJump = useCallback(
+    (record) => {
+      if (!record) return;
+      const token = nextFocusToken();
+      const kind = String(record.kind || '').toLowerCase();
+
+      if (kind === 'log') {
+        const query = String(record.source || record.message || '').trim();
+        const level = record.level || 'all';
+        setLocalLogsFocus({ token, query, level });
+        scrollToCard('diagnostics-local-logs');
+        return;
+      }
+
+      if (kind === 'error') {
+        const query = String(record.message || '').trim();
+        setLocalErrorsFocus({ token, query });
+        scrollToCard('diagnostics-local-errors');
+        return;
+      }
+
+      if (kind === 'event') {
+        const eventName = String(record.message || '').trim();
+        setLocalEventsFocus({ token, query: '', eventName });
+        scrollToCard('diagnostics-local-events');
+      }
+    },
+    [nextFocusToken, scrollToCard],
+  );
+
+  const handleImportedTimelineJump = useCallback(
+    (record) => {
+      if (!record) return;
+      const token = nextFocusToken();
+      const kind = String(record.kind || '').toLowerCase();
+
+      if (kind === 'log') {
+        const query = String(record.source || record.message || '').trim();
+        const level = record.level || 'all';
+        setImportedLogsFocus({ token, query, level });
+        scrollToCard('diagnostics-imported-logs');
+        return;
+      }
+
+      if (kind === 'error') {
+        const query = String(record.message || '').trim();
+        setImportedErrorsFocus({ token, query });
+        scrollToCard('diagnostics-imported-errors');
+        return;
+      }
+
+      if (kind === 'event') {
+        const eventName = String(record.message || '').trim();
+        setImportedEventsFocus({ token, query: '', eventName });
+        scrollToCard('diagnostics-imported-events');
+      }
+    },
+    [nextFocusToken, scrollToCard],
   );
 
   return (
@@ -572,6 +650,9 @@ export default function DiagnosticsPage() {
                 onClick={() => {
                   setImportedBundle(null);
                   setImportedMeta(null);
+                  setImportedLogsFocus(null);
+                  setImportedErrorsFocus(null);
+                  setImportedEventsFocus(null);
                   toast.info('已清空导入', '已移除导入的诊断包。');
                 }}
               >
@@ -699,13 +780,14 @@ export default function DiagnosticsPage() {
 
         {importedBundle ? (
           <>
-            <WideCard>
+            <WideCard id="diagnostics-imported-timeline">
               <DiagnosticsTimelineExplorer
                 title="导入时间线"
                 logs={importedBundle.logs}
                 errors={importedBundle.errors}
                 events={importedBundle.events}
                 onDownload={downloadFilteredImportedTimeline}
+                onJump={handleImportedTimelineJump}
                 emptyState={{
                   title: '导入包暂无可回放记录',
                   description: '该诊断包 logs/errors/events 均为空，或导出端已做裁剪。',
@@ -721,11 +803,12 @@ export default function DiagnosticsPage() {
               />
             </WideCard>
 
-            <WideCard>
+            <WideCard id="diagnostics-imported-errors">
               <DiagnosticsErrorsExplorer
                 title="导入错误浏览器"
                 errors={importedBundle.errors}
                 onDownload={downloadFilteredErrors}
+                focus={importedErrorsFocus}
                 emptyState={{
                   title: '导入包暂无错误',
                   description: '该诊断包未包含 errors 记录，或导出端已做裁剪。',
@@ -741,11 +824,12 @@ export default function DiagnosticsPage() {
               />
             </WideCard>
 
-            <WideCard>
+            <WideCard id="diagnostics-imported-logs">
               <DiagnosticsLogsExplorer
                 title="导入日志浏览器"
                 logs={importedBundle.logs}
                 onDownload={downloadFilteredLogs}
+                focus={importedLogsFocus}
                 emptyState={{
                   title: '导入包暂无日志',
                   description: '该诊断包未包含 logs 记录，或导出端已做裁剪。',
@@ -761,11 +845,12 @@ export default function DiagnosticsPage() {
               />
             </WideCard>
 
-            <WideCard>
+            <WideCard id="diagnostics-imported-events">
               <DiagnosticsEventsExplorer
                 title="导入事件浏览器"
                 events={importedBundle.events}
                 onDownload={downloadFilteredEvents}
+                focus={importedEventsFocus}
                 emptyState={{
                   title: '导入包暂无事件',
                   description: '该诊断包未包含 events 记录，或导出端已做裁剪。',
@@ -823,13 +908,14 @@ export default function DiagnosticsPage() {
           )}
         </WideCard>
 
-        <WideCard>
+        <WideCard id="diagnostics-local-timeline">
           <DiagnosticsTimelineExplorer
             title="本地时间线"
             logs={logs}
             errors={errors}
             events={events}
             onDownload={downloadFilteredLocalTimeline}
+            onJump={handleLocalTimelineJump}
             emptyState={{
               title: '暂无本地回放记录',
               description:
@@ -846,7 +932,7 @@ export default function DiagnosticsPage() {
           />
         </WideCard>
 
-        <WideCard>
+        <WideCard id="diagnostics-local-errors">
           <DiagnosticsErrorsExplorer
             errors={errors}
             onClear={() => {
@@ -855,10 +941,11 @@ export default function DiagnosticsPage() {
               toast.success('已清空错误记录', '本地错误列表已清空。');
             }}
             onDownload={downloadFilteredErrors}
+            focus={localErrorsFocus}
           />
         </WideCard>
 
-        <WideCard>
+        <WideCard id="diagnostics-local-logs">
           <DiagnosticsLogsExplorer
             logs={logs}
             onClear={() => {
@@ -867,10 +954,11 @@ export default function DiagnosticsPage() {
               toast.success('已清空日志', '本地日志列表已清空。');
             }}
             onDownload={downloadFilteredLogs}
+            focus={localLogsFocus}
           />
         </WideCard>
 
-        <WideCard>
+        <WideCard id="diagnostics-local-events">
           <DiagnosticsEventsExplorer
             events={events}
             onClear={() => {
@@ -879,6 +967,7 @@ export default function DiagnosticsPage() {
               toast.success('已清空事件记录', '本地事件列表已清空。');
             }}
             onDownload={downloadFilteredEvents}
+            focus={localEventsFocus}
           />
         </WideCard>
       </Grid>
