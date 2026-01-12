@@ -84,7 +84,7 @@ const MetaRow = styled.div`
 `;
 
 const Message = styled.div`
-  color: rgba(255, 90, 90, 0.95);
+  color: var(--danger-color);
   font-weight: 700;
   line-height: var(--leading-snug-plus);
 `;

@@ -27,7 +27,7 @@
 - `--text-primary / --text-secondary / --text-tertiary`：文本层级
 - `--text-on-primary`：主色按钮反白文字
 - `--text-on-dark`：深色遮罩上文本（海报/进度条）
-- `--success-* / --info-* / --warning-*`：状态色（用于 Toast/表单提示）
+- `--success-* / --info-* / --warning-* / --danger-*`：状态色（用于 Toast/表单提示）
 
 ### 2.2 字体与排版
 

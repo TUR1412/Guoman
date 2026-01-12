@@ -154,11 +154,11 @@ const kindTitle = (kind) => {
 };
 
 const kindColor = (kind, record) => {
-  if (kind === 'error') return 'rgba(255, 90, 90, 0.92)';
+  if (kind === 'error') return 'var(--danger-color)';
   if (kind === 'event') return 'var(--info-color)';
 
   const level = String(record?.level || '').toLowerCase();
-  if (level === 'error') return 'rgba(255, 90, 90, 0.92)';
+  if (level === 'error') return 'var(--danger-color)';
   if (level === 'warn' || level === 'warning') return 'var(--warning-color)';
   if (level === 'debug') return 'var(--text-tertiary)';
   return 'var(--text-secondary)';

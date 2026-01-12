@@ -38,7 +38,7 @@ const Control = styled.div`
   }
 
   &[data-invalid='true'] {
-    --tf-border: rgba(255, 90, 90, 0.75);
+    --tf-border: var(--danger-border-strong);
   }
 
   &[data-disabled='true'] {
@@ -89,7 +89,7 @@ const Helper = styled.div`
 `;
 
 const ErrorText = styled(Helper)`
-  color: rgba(255, 90, 90, 0.95);
+  color: var(--danger-color);
   font-weight: 600;
 `;
 

@@ -495,7 +495,7 @@ export const RelatedImage = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    transition: transform var(--motion-base) var(--ease-out);
   }
 `;
 

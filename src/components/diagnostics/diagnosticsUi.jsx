@@ -91,7 +91,7 @@ export const DiagnosticsProgressTrack = styled.div`
   height: 10px;
   border-radius: 999px;
   border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--progress-track);
   overflow: hidden;
 `;
 

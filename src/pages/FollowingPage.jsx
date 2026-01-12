@@ -158,12 +158,12 @@ const Button = styled.button.attrs({ type: 'button', 'data-pressable': true })`
 `;
 
 const DangerButton = styled(Button)`
-  border-color: rgba(255, 90, 90, 0.35);
-  color: rgba(255, 140, 140, 0.96);
+  border-color: rgba(var(--danger-rgb), 0.35);
+  color: var(--danger-color);
 
   &:hover {
-    border-color: rgba(255, 90, 90, 0.6);
-    background: rgba(255, 90, 90, 0.08);
+    border-color: rgba(var(--danger-rgb), 0.6);
+    background: rgba(var(--danger-rgb), 0.08);
   }
 `;
 

@@ -151,7 +151,7 @@ const safeJson = (value) => {
 };
 
 const getLevelColor = (level) => {
-  if (level === 'error') return 'rgba(255, 90, 90, 0.92)';
+  if (level === 'error') return 'var(--danger-color)';
   if (level === 'warn') return 'var(--warning-color)';
   if (level === 'debug') return 'var(--text-tertiary)';
   return 'var(--info-color)';
