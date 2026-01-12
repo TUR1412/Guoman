@@ -95,10 +95,6 @@ const ClearButton = styled.button.attrs({ 'data-pressable': true })`
     background: var(--surface-soft-hover);
     color: var(--text-primary);
   }
-
-  &:active {
-    transform: scale(0.98);
-  }
 `;
 
 function ContinueWatching() {

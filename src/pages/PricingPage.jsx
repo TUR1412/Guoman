@@ -96,7 +96,6 @@ const Button = styled.button.attrs({
   transition: var(--transition);
 
   &:hover {
-    transform: translateY(-1px);
     border-color: var(--chip-border-hover);
     background: rgba(var(--primary-rgb), 0.22);
   }

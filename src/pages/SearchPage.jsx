@@ -144,13 +144,8 @@ const Button = styled.button.attrs({
   transition: var(--transition);
 
   &:hover {
-    transform: translateY(-1px);
     box-shadow: var(--shadow-glow);
     background: var(--primary-soft-hover);
-  }
-
-  &:active {
-    transform: translateY(0px) scale(0.98);
   }
 `;
 
@@ -172,10 +167,6 @@ const ClearButton = styled.button.attrs({ 'data-pressable': true })`
   &:hover {
     background: var(--surface-soft-hover);
     color: var(--text-primary);
-  }
-
-  &:active {
-    transform: scale(0.98);
   }
 `;
 

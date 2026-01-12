@@ -74,13 +74,8 @@ const ActionButton = styled.button.attrs({
   transition: var(--transition);
 
   &:hover:not(:disabled) {
-    transform: translateY(-1px);
     box-shadow: var(--shadow-glow);
     background: var(--surface-soft-hover);
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(0px) scale(0.98);
   }
 
   &:disabled {
@@ -102,13 +97,8 @@ const DangerButton = styled.button.attrs({ 'data-pressable': true })`
   transition: var(--transition);
 
   &:hover:not(:disabled) {
-    transform: translateY(-1px);
     box-shadow: var(--shadow-glow);
     background: var(--primary-soft-hover);
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(0px) scale(0.98);
   }
 
   &:disabled {

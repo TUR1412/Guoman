@@ -68,7 +68,6 @@ const Button = styled.button.attrs({
   transition: var(--transition);
 
   &:hover {
-    transform: translateY(-1px);
     box-shadow: var(--shadow-glow);
     background: var(--primary-soft-hover);
   }

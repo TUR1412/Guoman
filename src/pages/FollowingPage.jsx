@@ -151,7 +151,6 @@ const Button = styled.button.attrs({ type: 'button', 'data-pressable': true })`
   transition: var(--transition);
 
   &:hover {
-    transform: translateY(-1px);
     border-color: var(--chip-border-hover);
     background: var(--control-bg-hover);
   }

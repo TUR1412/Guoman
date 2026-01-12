@@ -136,12 +136,7 @@ const Button = styled.button.attrs({ 'data-pressable': true })`
   transition: var(--transition);
 
   &:hover {
-    transform: translateY(-1px);
     background: var(--control-bg-hover);
-  }
-
-  &:active {
-    transform: translateY(0px) scale(0.98);
   }
 `;
 
@@ -159,7 +154,6 @@ const HomeLink = styled.a.attrs({ 'data-pressable': true })`
 
   &:hover {
     background: var(--primary-soft);
-    transform: translateY(-1px);
   }
 `;
 

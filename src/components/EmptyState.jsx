@@ -83,7 +83,6 @@ const PrimaryLink = styled.a.attrs({
   transition: var(--transition);
 
   &:hover {
-    transform: translateY(-1px);
     background: var(--primary-soft-hover);
     box-shadow: var(--shadow-glow);
   }
@@ -101,7 +100,6 @@ const SecondaryLink = styled.a.attrs({ 'data-pressable': true })`
   transition: var(--transition);
 
   &:hover {
-    transform: translateY(-1px);
     background: var(--surface-soft-hover);
   }
 `;

@@ -127,7 +127,6 @@ const Button = styled.button.attrs({
   transition: var(--transition);
 
   &:hover:not(:disabled) {
-    transform: translateY(-1px);
     border-color: var(--chip-border-hover);
     background: var(--surface-soft-hover);
   }

@@ -49,10 +49,6 @@ const DockLink = styled(Link).attrs({ 'data-pressable': true })`
     color: ${(p) => (p.$active ? 'var(--text-on-primary)' : 'var(--text-primary)')};
     background: ${(p) => (p.$active ? 'transparent' : 'var(--surface-soft-hover)')};
   }
-
-  &:active {
-    transform: translateY(0) scale(0.98);
-  }
 `;
 
 const ActivePill = styled(motion.span)`

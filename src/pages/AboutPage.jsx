@@ -58,7 +58,6 @@ const LinkButton = styled.a.attrs({
   transition: var(--transition);
 
   &:hover {
-    transform: translateY(-1px);
     background: var(--surface-soft-hover);
   }
 `;

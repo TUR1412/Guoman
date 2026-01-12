@@ -100,10 +100,6 @@ const ActionButton = styled(Button).attrs({
     background: rgba(var(--primary-rgb), 0.26);
     box-shadow: var(--shadow-glow);
   }
-
-  &:active {
-    transform: scale(0.98);
-  }
 `;
 
 const readConnection = () => {
