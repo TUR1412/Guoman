@@ -1375,10 +1375,15 @@ ol {
 }
 
 [data-pressable] {
+  --pressable-offset-y: 0px;
+  --pressable-translate-y: 0px;
+  --pressable-hover-translate-y: -1px;
+  --pressable-scale: 1;
+  --pressable-scale-active: 0.985;
+
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   user-select: none;
-  transform: translate3d(0, 0, 0);
   transition:
     transform var(--motion-fast) var(--ease-out-back),
     translate var(--motion-fast) var(--ease-out-back),
@@ -1391,36 +1396,51 @@ ol {
 }
 
 @supports (translate: 0 0) {
+  [data-pressable] {
+    translate: 0 calc(var(--pressable-offset-y) + var(--pressable-translate-y));
+    scale: var(--pressable-scale);
+  }
+
   [data-pressable]:hover {
-    translate: 0 -1px;
+    --pressable-translate-y: var(--pressable-hover-translate-y);
     box-shadow: var(--shadow-sm);
   }
 
   [data-pressable]:active {
-    translate: 0 0;
-    scale: 0.985;
+    --pressable-translate-y: 0px;
+    --pressable-scale: var(--pressable-scale-active);
   }
 
   [data-pressable][aria-disabled='true'],
   [data-pressable]:disabled {
-    translate: 0 0;
-    scale: 1;
+    --pressable-offset-y: 0px;
+    --pressable-translate-y: 0px;
+    --pressable-scale: 1;
     box-shadow: none;
   }
 }
 
 @supports not (translate: 0 0) {
+  [data-pressable] {
+    transform: translate3d(0, calc(var(--pressable-offset-y) + var(--pressable-translate-y)), 0)
+      scale(var(--pressable-scale));
+  }
+
   [data-pressable]:hover {
-    transform: translateY(-1px);
+    --pressable-translate-y: var(--pressable-hover-translate-y);
     box-shadow: var(--shadow-sm);
   }
 
   [data-pressable]:active {
-    transform: translateY(0) scale(0.985);
+    --pressable-translate-y: 0px;
+    --pressable-scale: var(--pressable-scale-active);
   }
 
   [data-pressable][aria-disabled='true'],
   [data-pressable]:disabled {
+    --pressable-offset-y: 0px;
+    --pressable-translate-y: 0px;
+    --pressable-scale: 1;
     transform: none;
     box-shadow: none;
   }

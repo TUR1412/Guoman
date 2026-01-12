@@ -155,7 +155,7 @@ const GroupChip = styled.button.attrs({ 'data-pressable': true })`
     border-color: var(--primary-soft-border);
     background: rgba(var(--primary-rgb), 0.18);
     color: var(--text-primary);
-    transform: translateY(-1px);
+    --pressable-offset-y: -1px;
   `
       : ''}
 `;
@@ -205,10 +205,6 @@ const Handle = styled.button.attrs({ type: 'button', 'data-pressable': true })`
     border-color: var(--chip-border-hover);
     color: var(--text-primary);
     background: var(--surface-soft-hover);
-  }
-
-  &:active {
-    transform: translateY(0) scale(0.98);
   }
 `;
 

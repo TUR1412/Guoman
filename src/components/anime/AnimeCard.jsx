@@ -54,6 +54,9 @@ const CoverImg = styled.img`
 `;
 
 const FavButton = styled(motion.button).attrs({ 'data-pressable': true })`
+  --pressable-offset-y: -2px;
+  --pressable-scale-active: 0.96;
+
   position: absolute;
   top: 10px;
   right: 10px;
@@ -71,31 +74,26 @@ const FavButton = styled(motion.button).attrs({ 'data-pressable': true })`
   transition: var(--transition);
 
   opacity: 0;
-  transform: translateY(-2px);
 
   ${Card}:hover & {
     opacity: 1;
-    transform: translateY(0);
+    --pressable-offset-y: 0px;
   }
 
   ${Card}:focus-within &,
   &:focus-visible {
     opacity: 1;
-    transform: translateY(0);
+    --pressable-offset-y: 0px;
   }
 
   @media (max-width: 768px) {
     opacity: 1;
-    transform: translateY(0);
+    --pressable-offset-y: 0px;
   }
 
   &:hover {
     border-color: var(--chip-border-hover);
     color: var(--primary-color);
-  }
-
-  &:active {
-    transform: translateY(0) scale(0.96);
   }
 `;
 

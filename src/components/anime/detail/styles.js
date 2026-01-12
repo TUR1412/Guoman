@@ -246,6 +246,8 @@ export const WatchButton = styled.a.attrs({
   'data-pressable': true,
   'data-focus-guide': true,
 })`
+  --pressable-hover-translate-y: -2px;
+
   padding: var(--spacing-sm-plus) var(--spacing-xl);
   background-color: var(--primary-color);
   color: var(--text-on-primary);
@@ -260,7 +262,6 @@ export const WatchButton = styled.a.attrs({
   &:hover {
     background-color: var(--primary-color);
     filter: brightness(1.05);
-    transform: translateY(-2px);
     box-shadow: var(--shadow-primary-hover);
   }
 
@@ -275,6 +276,8 @@ export const WatchButton = styled.a.attrs({
 `;
 
 export const SecondaryButton = styled.button.attrs({ 'data-pressable': true })`
+  --pressable-hover-translate-y: -2px;
+
   padding: var(--spacing-sm-plus) var(--spacing-lg);
   background-color: ${(p) => (p.$active ? 'var(--primary-soft)' : 'var(--surface-soft)')};
   color: ${(p) => (p.$active ? 'var(--text-primary)' : 'var(--text-secondary)')};
@@ -289,7 +292,6 @@ export const SecondaryButton = styled.button.attrs({ 'data-pressable': true })`
   &:hover {
     background-color: ${(p) =>
       p.$active ? 'var(--primary-soft-hover)' : 'var(--surface-soft-hover)'};
-    transform: translateY(-2px);
   }
 `;
 
@@ -316,6 +318,8 @@ export const Tags = styled.div.attrs({ role: 'list' })`
 `;
 
 export const Tag = styled(Link).attrs({ 'data-pressable': true, role: 'listitem' })`
+  --pressable-hover-translate-y: -2px;
+
   padding: var(--spacing-xs) var(--spacing-sm-plus);
   background-color: var(--primary-soft);
   border: 1px solid var(--primary-soft-border);
@@ -326,7 +330,6 @@ export const Tag = styled(Link).attrs({ 'data-pressable': true, role: 'listitem'
 
   &:hover {
     background-color: var(--primary-soft-hover);
-    transform: translateY(-2px);
   }
 `;
 
@@ -473,8 +476,6 @@ export const RelatedCard = styled(Link).attrs({
   transition: var(--transition);
 
   &:hover {
-    transform: translateY(-5px);
-
     img {
       transform: scale(1.05);
     }

@@ -131,10 +131,12 @@ const NavButton = styled(IconButton).attrs({
   variant: 'secondary',
   'data-pressable': true,
 })`
+  --pressable-offset-y: -50%;
+  --pressable-scale-active: 0.975;
+
   pointer-events: auto;
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -150,11 +152,6 @@ const NavButton = styled(IconButton).attrs({
   &:hover {
     background: var(--control-bg-hover);
     box-shadow: var(--shadow-lg);
-    transform: translateY(-50%) scale(1.02);
-  }
-
-  &:active {
-    transform: translateY(-50%) scale(0.96);
   }
 `;
 
@@ -196,7 +193,7 @@ const Dot = styled.button.attrs({ type: 'button', 'data-pressable': true })`
 
   &:hover {
     opacity: 1;
-    transform: scale(1.08);
+    border-color: var(--chip-border-hover);
   }
 `;
 
@@ -390,6 +387,8 @@ const BannerButton = styled(motion(Link)).attrs({
   'data-pressable': true,
   'data-focus-guide': true,
 })`
+  --pressable-hover-translate-y: -2px;
+
   padding: var(--spacing-sm-plus) var(--spacing-xl);
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   color: var(--text-on-primary);
@@ -407,7 +406,6 @@ const BannerButton = styled(motion(Link)).attrs({
 
   &:hover {
     filter: brightness(1.05);
-    transform: translateY(-2px);
     box-shadow: var(--shadow-primary-hover);
   }
 `;

@@ -141,6 +141,8 @@ const SocialLinks = styled.div.attrs({ 'data-divider': 'inline', role: 'list' })
 `;
 
 const SocialLink = styled.a.attrs({ 'data-pressable': true, role: 'listitem' })`
+  --pressable-hover-translate-y: -3px;
+
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -154,7 +156,6 @@ const SocialLink = styled.a.attrs({ 'data-pressable': true, role: 'listitem' })`
   &:hover {
     background-color: var(--primary-color);
     color: var(--text-on-primary);
-    transform: translateY(-3px);
   }
 `;
 

@@ -118,6 +118,8 @@ const ShowMoreButton = styled.button.attrs({
   'data-shimmer': true,
   'data-focus-guide': true,
 })`
+  --pressable-hover-translate-y: -2px;
+
   display: block;
   margin: var(--spacing-xl) auto 0;
   padding: var(--spacing-sm-plus) var(--spacing-xl);
@@ -130,7 +132,6 @@ const ShowMoreButton = styled.button.attrs({
 
   &:hover {
     background-color: var(--primary-soft);
-    transform: translateY(-2px);
   }
 `;
 

@@ -232,10 +232,11 @@ const InputIcon = styled.div`
 `;
 
 const TogglePasswordButton = styled.button.attrs({ 'data-pressable': true })`
+  --pressable-offset-y: -50%;
+
   position: absolute;
   top: 50%;
   right: var(--spacing-sm-plus);
-  transform: translateY(-50%);
   color: var(--text-tertiary);
   display: flex;
   align-items: center;
@@ -300,6 +301,8 @@ const SubmitButton = styled(Button).attrs({
   'data-pressable': true,
   'data-focus-guide': true,
 })`
+  --pressable-hover-translate-y: -2px;
+
   padding: var(--spacing-md);
   background-color: var(--primary-color);
   color: var(--text-on-primary);
@@ -313,7 +316,6 @@ const SubmitButton = styled(Button).attrs({
   &:hover {
     background-color: var(--primary-color);
     filter: brightness(1.05);
-    transform: translateY(-2px);
     box-shadow: var(--shadow-primary-hover);
   }
 
@@ -321,7 +323,6 @@ const SubmitButton = styled(Button).attrs({
     background-color: var(--button-disabled-bg);
     color: var(--button-disabled-text);
     cursor: not-allowed;
-    transform: none;
     box-shadow: none;
   }
 `;
@@ -358,6 +359,8 @@ const SocialButton = styled(Button).attrs({
   'data-pressable': true,
   role: 'listitem',
 })`
+  --pressable-hover-translate-y: -2px;
+
   flex: 1;
   padding: var(--spacing-md);
   border-radius: var(--border-radius-md);
@@ -372,7 +375,6 @@ const SocialButton = styled(Button).attrs({
 
   &:hover {
     background-color: var(--control-bg-hover);
-    transform: translateY(-2px);
   }
 `;
 

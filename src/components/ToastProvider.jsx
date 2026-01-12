@@ -72,6 +72,8 @@ const Message = styled.div`
 `;
 
 const CloseButton = styled.button.attrs({ 'data-pressable': true })`
+  --pressable-scale-active: 0.96;
+
   width: 28px;
   height: 28px;
   border-radius: var(--border-radius-md);
@@ -85,10 +87,6 @@ const CloseButton = styled.button.attrs({ 'data-pressable': true })`
   &:hover {
     background: var(--chip-bg-hover);
     color: var(--text-primary);
-  }
-
-  &:active {
-    transform: scale(0.96);
   }
 `;
 

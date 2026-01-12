@@ -147,6 +147,8 @@ const ContactButton = styled(Link).attrs({
   'data-pressable': true,
   'data-focus-guide': true,
 })`
+  --pressable-hover-translate-y: -2px;
+
   display: inline-block;
   margin-top: var(--spacing-lg);
   padding: var(--spacing-sm-plus) var(--spacing-xl);
@@ -160,7 +162,6 @@ const ContactButton = styled(Link).attrs({
   &:hover {
     background-color: var(--primary-color);
     filter: brightness(1.05);
-    transform: translateY(-2px);
     box-shadow: var(--shadow-primary-hover);
   }
 `;
