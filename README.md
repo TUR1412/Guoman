@@ -25,6 +25,7 @@
   <p>
     <img alt="GitHub License" src="https://img.shields.io/github/license/TUR1412/Guoman?style=flat-square" />
     <img alt="Build" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/static.yml?branch=master&style=flat-square" />
+    <img alt="Quality" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/quality.yml?branch=master&style=flat-square" />
     <img alt="Last Commit" src="https://img.shields.io/github/last-commit/TUR1412/Guoman?style=flat-square" />
     <img alt="Node" src="https://img.shields.io/badge/node-%3E%3D18-339933?style=flat-square" />
     <img alt="React" src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=000&style=flat-square" />

@@ -20,6 +20,17 @@
     ·
     <a href="#-deployment">Deployment</a>
   </p>
+  <p>
+    <img alt="GitHub License" src="https://img.shields.io/github/license/TUR1412/Guoman?style=flat-square" />
+    <img alt="Build" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/static.yml?branch=master&style=flat-square" />
+    <img alt="Quality" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/quality.yml?branch=master&style=flat-square" />
+    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/TUR1412/Guoman?style=flat-square" />
+    <img alt="Node" src="https://img.shields.io/badge/node-%3E%3D18-339933?style=flat-square" />
+    <img alt="React" src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=000&style=flat-square" />
+    <img alt="Vite" src="https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=fff&style=flat-square" />
+    <img alt="Vitest" src="https://img.shields.io/badge/Vitest-tested-6E9F18?style=flat-square" />
+    <img alt="ESLint" src="https://img.shields.io/badge/ESLint-enabled-4B32C3?style=flat-square" />
+  </p>
 </div>
 
 ---

@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+- CI：新增 GitHub Actions `quality.yml` 工作流（lint/format:check/test/build/budget:bundle），为 push/PR 提供质量闸门
+
 - 命令面板升级：支持作品/标签/#tag/分类/静态页直达，搜索 action 作为兜底项保留（不抢占首选命令）
 - 命令面板性能：高亮/hover 时 idle 预取目标路由 chunk，Enter 跳转更快
 - 可观测性：新增本地日志模块（log store），诊断面板支持日志查看/清空/下载，性能卡片补齐 INP 指标

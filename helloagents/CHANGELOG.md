@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- CI：新增 GitHub Actions `quality.yml` 工作流（lint/format:check/test/build/budget:bundle），为 push/PR 提供质量闸门
+
 - ✅ Command Palette：支持作品/标签/#tag/分类/静态页直达，搜索 action 下沉为兜底项（不抢占首选命令）。
 - ✅ Command Palette：高亮/hover action 时 idle 预取目标路由 chunk（更快跳转）。
 - ✅ Observability：新增 `src/utils/logger.js` 本地日志模块，并在 `/diagnostics` 增加日志查看/清空/下载；性能监控补齐 INP 指标。
