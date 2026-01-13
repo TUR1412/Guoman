@@ -30,6 +30,20 @@ const Control = styled.div`
   background: var(--tf-bg);
   transition: var(--transition);
 
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      --tf-border: rgba(var(--primary-rgb), 0.28);
+      --tf-bg: var(--field-bg-hover, var(--control-bg-hover));
+      --tf-icon: var(--text-secondary);
+    }
+
+    &[data-disabled='true']:hover {
+      --tf-border: var(--control-border);
+      --tf-bg: var(--field-bg, var(--control-bg));
+      --tf-icon: var(--text-tertiary);
+    }
+  }
+
   &:focus-within {
     --tf-border: rgba(var(--primary-rgb), 0.62);
     --tf-bg: var(--field-bg-focus, var(--control-bg-hover));
@@ -43,6 +57,7 @@ const Control = styled.div`
 
   &[data-disabled='true'] {
     opacity: 0.72;
+    cursor: not-allowed;
   }
 `;
 

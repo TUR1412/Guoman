@@ -114,7 +114,7 @@ const FooterBrand = styled(FooterColumn).attrs({
   }
 `;
 
-const FooterLogo = styled(Link)`
+const FooterLogo = styled(Link).attrs({ 'data-pressable': true })`
   font-size: var(--text-4xl);
   font-weight: 700;
   color: var(--text-primary);

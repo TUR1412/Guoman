@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { FiChevronLeft, FiChevronRight } from './icons/feather';
 import { IconButton } from '../ui';
 import { prefetchRoute } from '../utils/routePrefetch';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
+import { usePointerGlow } from './usePointerGlow';
 
 // 导入本地图片
 import placeholder1 from '../assets/images/placeholder-1.svg';
@@ -418,9 +419,12 @@ const BannerButton = styled(motion(Link)).attrs({
 
 function Banner() {
   const reducedMotion = useAppReducedMotion();
+  const metaGlowRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const slideCount = bannerData.length;
+
+  usePointerGlow(metaGlowRef, { disabled: reducedMotion });
 
   const active = useMemo(() => {
     if (slideCount <= 0) return null;
@@ -598,6 +602,8 @@ function Banner() {
                 </BannerMain>
 
                 <BannerMetaCard
+                  ref={metaGlowRef}
+                  data-pointer-glow
                   initial={reducedMotion ? false : { opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={

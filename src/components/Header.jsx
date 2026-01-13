@@ -71,7 +71,7 @@ const HeaderInner = styled.div`
   margin: 0 auto;
 `;
 
-const Logo = styled(Link)`
+const Logo = styled(Link).attrs({ 'data-pressable': true })`
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);

@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+- UI：为 Header/ Footer 的 Logo 入口补齐 `data-pressable` 物理微交互与 `:focus-visible` 光环，增强可点击反馈与键盘可达性（保持业务逻辑不变）。
+- UI：为 Banner「剧集速览」卡片引入 `data-pointer-glow` 指针辉光（尊重 reduced motion），增强“玻璃层级 + 光谱”视觉纵深（保持业务逻辑不变）。
+- UI：为 `src/ui/TextField` / `SelectField` / `TextAreaField` 增加 hover-safe 的边框/背景/图标反馈，并补齐 disabled cursor 语义（保持业务逻辑不变）。
+
 - UI：将 Header 导航/登录入口的 hover 视觉反馈限制为 hover 设备（`(hover: hover) and (pointer: fine)`），避免触屏 hover 粘滞（保持业务逻辑不变）。
 
 - UI：批量将多页面/多组件的 hover 视觉反馈限制为 hover 设备（`(hover: hover) and (pointer: fine)`），避免触屏 hover 粘滞（保持业务逻辑不变）。
