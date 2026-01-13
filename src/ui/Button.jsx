@@ -68,14 +68,16 @@ const ButtonRoot = styled(motion.button)`
     border-radius: var(--border-radius-lg);
   }
 
-  &:hover:not(:disabled) {
-    background: var(--btn-bg-hover);
-    box-shadow: var(--shadow-elev-2);
-  }
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      background: var(--btn-bg-hover);
+      box-shadow: var(--shadow-elev-2);
+    }
 
-  &[data-variant='primary']:hover:not(:disabled) {
-    box-shadow: var(--shadow-primary-hover);
-    filter: brightness(1.06) saturate(1.02);
+    &[data-variant='primary']:hover:not(:disabled) {
+      box-shadow: var(--shadow-primary-hover);
+      filter: brightness(1.06) saturate(1.02);
+    }
   }
 
   &:focus-visible {
