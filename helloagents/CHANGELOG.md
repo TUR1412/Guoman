@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- UI：将 AnimeDetail 关键操作按钮（Watch/Secondary/Tag/Comment）的 hover 视觉反馈限制为 hover 设备（`(hover: hover) and (pointer: fine)`），避免触屏 hover 粘滞（保持业务逻辑不变）。
+
 - UI：将 `src/ui/Button` 的 hover 视觉反馈限制为 hover 设备（`(hover: hover) and (pointer: fine)`），避免触屏 hover 粘滞（保持业务逻辑不变）。
 
 - UI：为 `[data-pressable]` 补齐 `:focus-visible` 光环与 disabled 光标语义（cursor），提升键盘可达性与可点击反馈一致性（保持业务逻辑不变）。

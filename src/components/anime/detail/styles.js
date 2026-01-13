@@ -259,10 +259,12 @@ export const WatchButton = styled.a.attrs({
   transition: var(--transition);
   box-shadow: var(--shadow-primary);
 
-  &:hover {
-    background-color: var(--primary-color);
-    filter: brightness(1.05);
-    box-shadow: var(--shadow-primary-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--primary-color);
+      filter: brightness(1.05);
+      box-shadow: var(--shadow-primary-hover);
+    }
   }
 
   &[aria-disabled='true'] {
@@ -289,9 +291,11 @@ export const SecondaryButton = styled.button.attrs({ 'data-pressable': true })`
   transition: var(--transition);
   border: 1px solid ${(p) => (p.$active ? 'var(--primary-soft-border)' : 'var(--border-subtle)')};
 
-  &:hover {
-    background-color: ${(p) =>
-      p.$active ? 'var(--primary-soft-hover)' : 'var(--surface-soft-hover)'};
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: ${(p) =>
+        p.$active ? 'var(--primary-soft-hover)' : 'var(--surface-soft-hover)'};
+    }
   }
 `;
 
@@ -328,8 +332,10 @@ export const Tag = styled(Link).attrs({ 'data-pressable': true, role: 'listitem'
   font-size: var(--text-sm);
   transition: var(--transition);
 
-  &:hover {
-    background-color: var(--primary-soft-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--primary-soft-hover);
+    }
   }
 `;
 
@@ -592,7 +598,9 @@ export const CommentButton = styled.button.attrs({ 'data-pressable': true })`
   color: var(--text-primary);
   transition: var(--transition);
 
-  &:hover {
-    background: var(--surface-soft-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--surface-soft-hover);
+    }
   }
 `;
