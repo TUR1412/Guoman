@@ -10,7 +10,7 @@ function Harness({ disabled = false } = {}) {
 }
 
 describe('usePointerGlow', () => {
-  it('updates CSS vars on pointer move and resets on leave', () => {
+  it('updates CSS vars on pointer move and deactivates on leave', () => {
     vi.useFakeTimers();
     const { getByTestId } = render(<Harness />);
     const el = getByTestId('target');
@@ -43,8 +43,8 @@ describe('usePointerGlow', () => {
 
     el.dispatchEvent(new MouseEvent('pointerleave', { bubbles: true }));
     expect(el.style.getPropertyValue('--pointer-active')).toBe('0');
-    expect(el.style.getPropertyValue('--pointer-x')).toBe('0px');
-    expect(el.style.getPropertyValue('--pointer-y')).toBe('0px');
+    expect(el.style.getPropertyValue('--pointer-x')).toBe('50px');
+    expect(el.style.getPropertyValue('--pointer-y')).toBe('50px');
 
     vi.useRealTimers();
   });

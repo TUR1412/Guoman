@@ -24,10 +24,10 @@ export const usePointerGlow = (ref, { disabled = false } = {}) => {
       el.style.setProperty('--pointer-active', active ? '1' : '0');
     };
 
-    const onMove = (event) => {
+    const setVarsFromEvent = (event, { allowTouch = true } = {}) => {
       if (!event) return;
       const pointerType = event.pointerType ?? 'mouse';
-      if (pointerType === 'touch') return;
+      if (!allowTouch && pointerType === 'touch') return;
       const rect = el.getBoundingClientRect();
       const x = clamp(event.clientX - rect.left, 0, rect.width || 0);
       const y = clamp(event.clientY - rect.top, 0, rect.height || 0);
@@ -39,6 +39,14 @@ export const usePointerGlow = (ref, { disabled = false } = {}) => {
       });
     };
 
+    const onDown = (event) => {
+      setVarsFromEvent(event, { allowTouch: true });
+    };
+
+    const onMove = (event) => {
+      setVarsFromEvent(event, { allowTouch: false });
+    };
+
     const onUpOrCancel = (event) => {
       const pointerType = event?.pointerType ?? 'mouse';
       if (pointerType === 'mouse') return;
@@ -48,9 +56,10 @@ export const usePointerGlow = (ref, { disabled = false } = {}) => {
     const onLeave = () => {
       if (raf) cancelRafFn(raf);
       raf = 0;
-      setVars(0, 0, false);
+      el.style.setProperty('--pointer-active', '0');
     };
 
+    el.addEventListener('pointerdown', onDown, { passive: true });
     el.addEventListener('pointermove', onMove, { passive: true });
     el.addEventListener('pointerleave', onLeave, { passive: true });
     el.addEventListener('pointerup', onUpOrCancel, { passive: true });
@@ -58,6 +67,7 @@ export const usePointerGlow = (ref, { disabled = false } = {}) => {
     onLeave();
 
     return () => {
+      el.removeEventListener('pointerdown', onDown);
       el.removeEventListener('pointermove', onMove);
       el.removeEventListener('pointerleave', onLeave);
       el.removeEventListener('pointerup', onUpOrCancel);
