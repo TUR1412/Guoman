@@ -10,6 +10,7 @@
 - UI：为 Banner「剧集速览」卡片引入 `data-pointer-glow` 指针辉光（尊重 reduced motion），增强“玻璃层级 + 光谱”视觉纵深（保持业务逻辑不变）。
 - UI：增强 `[data-card]` 的键盘可达性微交互：`:focus-within` 时同步触发边框渐变 位移，确保非 hover 场景也具备清晰的层级反馈（保持业务逻辑不变）。
 - UI：为 `html` 引入 `scrollbar-gutter: stable` 与滚动条配色/宽度策略，并同步 `html::-webkit-scrollbar*` 规则，减少弹窗打开/关闭导致的布局跳动并统一滚动条质感（保持业务逻辑不变）。
+- UI：为滚动条 Thumb 增加 hover/active 质感（hover-safe），并补齐 `--scrollbar-thumb-hover/active` tokens，提升细节触感与层次（保持业务逻辑不变）。
 - UI：增强 `usePointerGlow` 的触屏点击反馈：在 `pointerdown` 时写入辉光坐标并点亮 active，且在离开/抬起时仅熄灭 active，避免 fade-out 期间辉光“跳位”（保持业务逻辑不变）。
 - UI：将 `usePointerGlow` 的 pointer-glow 事件监听做成 touch-safe（忽略 touch 的 `pointermove`，并在非 mouse 的 `pointerup/pointercancel` 时复位），避免触屏/触控笔导致辉光粘滞（保持业务逻辑不变）。
 - UI：为 `src/ui/TextField` / `SelectField` / `TextAreaField` 增加 hover-safe 的边框/背景/图标反馈，并补齐 disabled cursor 语义（保持业务逻辑不变）。

@@ -278,6 +278,8 @@
   );
   --scrollbar-track: rgba(248, 250, 252, 0.08);
   --scrollbar-thumb: rgba(var(--primary-rgb), 0.42);
+  --scrollbar-thumb-hover: rgba(var(--primary-rgb), 0.56);
+  --scrollbar-thumb-active: rgba(var(--primary-rgb), 0.68);
   --success-rgb: 34, 197, 94;
   --info-rgb: 59, 130, 246;
   --warning-rgb: 245, 158, 11;
@@ -399,6 +401,8 @@
   );
   --scrollbar-track: rgba(15, 23, 42, 0.08);
   --scrollbar-thumb: rgba(var(--primary-rgb), 0.32);
+  --scrollbar-thumb-hover: rgba(var(--primary-rgb), 0.44);
+  --scrollbar-thumb-active: rgba(var(--primary-rgb), 0.58);
   --success-rgb: 22, 163, 74;
   --info-rgb: 37, 99, 235;
   --warning-rgb: 217, 119, 6;
@@ -563,6 +567,7 @@ body::-webkit-scrollbar-thumb {
   border-radius: var(--border-radius-pill);
   border: 2px solid transparent;
   background-clip: content-box;
+  transition: background 160ms var(--ease-out);
 }
 
 html::-webkit-scrollbar-thumb {
@@ -570,6 +575,19 @@ html::-webkit-scrollbar-thumb {
   border-radius: var(--border-radius-pill);
   border: 2px solid transparent;
   background-clip: content-box;
+  transition: background 160ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body::-webkit-scrollbar-thumb:hover,
+  html::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+}
+
+body::-webkit-scrollbar-thumb:active,
+html::-webkit-scrollbar-thumb:active {
+  background: var(--scrollbar-thumb-active);
 }
 
 h1,
