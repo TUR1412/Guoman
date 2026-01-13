@@ -1312,6 +1312,9 @@ ol {
 
 [data-card][data-card]:focus-within {
   box-shadow: var(--shadow-lg), var(--shadow-ring);
+  background-position:
+    0 0,
+    100% 50%;
 }
 
 :where([data-divider='list']) > * + * {
