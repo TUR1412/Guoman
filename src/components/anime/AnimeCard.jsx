@@ -77,9 +77,11 @@ const FavButton = styled(motion.button).attrs({ 'data-pressable': true })`
 
   opacity: 0;
 
-  ${Card}:hover & {
-    opacity: 1;
-    --pressable-offset-y: 0px;
+  @media (hover: hover) and (pointer: fine) {
+    ${Card}:hover & {
+      opacity: 1;
+      --pressable-offset-y: 0px;
+    }
   }
 
   ${Card}:focus-within &,
@@ -98,6 +100,11 @@ const FavButton = styled(motion.button).attrs({ 'data-pressable': true })`
       border-color: var(--chip-border-hover);
       color: var(--primary-color);
     }
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    opacity: 1;
+    --pressable-offset-y: 0px;
   }
 `;
 
