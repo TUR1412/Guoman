@@ -157,9 +157,11 @@ const NavLink = styled(Link).attrs({ 'data-pressable': true })`
   color: ${(props) => (props.$active ? 'var(--text-on-primary)' : 'var(--text-secondary)')};
   transition: var(--transition);
 
-  &:hover {
-    color: ${(props) => (props.$active ? 'var(--text-on-primary)' : 'var(--primary-color)')};
-    background: ${(props) => (props.$active ? 'transparent' : 'var(--surface-soft-hover)')};
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: ${(props) => (props.$active ? 'var(--text-on-primary)' : 'var(--primary-color)')};
+      background: ${(props) => (props.$active ? 'transparent' : 'var(--surface-soft-hover)')};
+    }
   }
 `;
 
@@ -244,9 +246,11 @@ const LoginButton = styled(Link).attrs({
   font-weight: 500;
   transition: var(--transition);
 
-  &:hover {
-    background-color: var(--primary-color);
-    color: var(--text-on-primary);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--primary-color);
+      color: var(--text-on-primary);
+    }
   }
 `;
 
@@ -292,8 +296,10 @@ const MobileNavLink = styled(Link).attrs({ 'data-pressable': true })`
   font-weight: 500;
   color: ${(props) => (props.$active ? 'var(--primary-color)' : 'var(--text-secondary)')};
 
-  &:hover {
-    color: var(--primary-color);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--primary-color);
+    }
   }
 `;
 
@@ -310,9 +316,11 @@ const MobileLoginButton = styled(Link).attrs({ 'data-pressable': true })`
   font-weight: 500;
   margin-top: var(--spacing-xl);
 
-  &:hover {
-    background-color: var(--primary-color);
-    filter: brightness(1.05);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--primary-color);
+      filter: brightness(1.05);
+    }
   }
 `;
 
