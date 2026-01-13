@@ -94,7 +94,7 @@
 - **字体体系**：Space Grotesk + Chakra Petch（科技感 Display），中文衬底 Noto / ZCOOL。
 - **设计 Tokens**：中性底色 + 光谱点缀，黄金比例排版、12 栅格、玻璃卡片、0-12 阴影深度。
 - **动效体系**：Framer Motion 弹簧预设（Route/Dialog/Toast）+ CSS 微交互（pressable/card），并提供 Reduced Motion 与低数据模式自动降载。
-- **微交互细节**：Button 内置 sheen 覆盖层（hover/focus-visible 触发）+ press 质感、`data-pointer-glow` 指针辉光与 `scrollbar-gutter: stable` 布局稳定策略，追求每次点击/悬停/聚焦/转场的“物理直觉”一致性。
+- **微交互细节**：Button 内置 sheen 覆盖层（hover/focus-visible 触发）+ press 质感、`data-pointer-glow` 指针辉光、`scrollbar-gutter: stable` 布局稳定策略与滚动条 thumb hover/active 质感，追求每次点击/悬停/聚焦/转场的“物理直觉”一致性。
 
 ---
 
