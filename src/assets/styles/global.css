@@ -1391,6 +1391,7 @@ ol {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   user-select: none;
+  cursor: pointer;
   transition:
     transform var(--motion-fast) var(--ease-out-back),
     translate var(--motion-fast) var(--ease-out-back),
@@ -1408,6 +1409,11 @@ ol {
     --pressable-translate-y: var(--pressable-hover-translate-y);
     box-shadow: var(--shadow-sm);
   }
+}
+
+[data-pressable]:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-ring), var(--shadow-sm);
 }
 
 @supports (translate: 0 0) {
@@ -1431,6 +1437,7 @@ ol {
     --pressable-translate-y: 0px;
     --pressable-scale: 1;
     box-shadow: none;
+    cursor: not-allowed;
   }
 }
 
@@ -1459,6 +1466,7 @@ ol {
     --pressable-scale: 1;
     transform: none;
     box-shadow: none;
+    cursor: not-allowed;
   }
 }
 
