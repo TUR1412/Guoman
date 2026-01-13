@@ -26,6 +26,8 @@ export const usePointerGlow = (ref, { disabled = false } = {}) => {
 
     const onMove = (event) => {
       if (!event) return;
+      const pointerType = event.pointerType ?? 'mouse';
+      if (pointerType === 'touch') return;
       const rect = el.getBoundingClientRect();
       const x = clamp(event.clientX - rect.left, 0, rect.width || 0);
       const y = clamp(event.clientY - rect.top, 0, rect.height || 0);
@@ -37,6 +39,12 @@ export const usePointerGlow = (ref, { disabled = false } = {}) => {
       });
     };
 
+    const onUpOrCancel = (event) => {
+      const pointerType = event?.pointerType ?? 'mouse';
+      if (pointerType === 'mouse') return;
+      onLeave();
+    };
+
     const onLeave = () => {
       if (raf) cancelRafFn(raf);
       raf = 0;
@@ -45,11 +53,16 @@ export const usePointerGlow = (ref, { disabled = false } = {}) => {
 
     el.addEventListener('pointermove', onMove, { passive: true });
     el.addEventListener('pointerleave', onLeave, { passive: true });
+    el.addEventListener('pointerup', onUpOrCancel, { passive: true });
+    el.addEventListener('pointercancel', onUpOrCancel, { passive: true });
     onLeave();
 
     return () => {
       el.removeEventListener('pointermove', onMove);
       el.removeEventListener('pointerleave', onLeave);
+      el.removeEventListener('pointerup', onUpOrCancel);
+      el.removeEventListener('pointercancel', onUpOrCancel);
+      onLeave();
       if (raf) cancelRafFn(raf);
     };
   }, [disabled, ref]);
