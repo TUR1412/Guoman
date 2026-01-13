@@ -93,9 +93,11 @@ const FavButton = styled(motion.button).attrs({ 'data-pressable': true })`
     --pressable-offset-y: 0px;
   }
 
-  &:hover {
-    border-color: var(--chip-border-hover);
-    color: var(--primary-color);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-color: var(--chip-border-hover);
+      color: var(--primary-color);
+    }
   }
 `;
 

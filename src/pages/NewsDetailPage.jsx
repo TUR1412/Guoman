@@ -78,9 +78,11 @@ const ActionButton = styled.button.attrs({
   color: var(--text-secondary);
   transition: var(--transition);
 
-  &:hover {
-    background: var(--surface-soft-hover);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--surface-soft-hover);
+      color: var(--text-primary);
+    }
   }
 `;
 

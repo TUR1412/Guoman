@@ -89,10 +89,12 @@ const FilterChip = styled.button.attrs({ role: 'listitem', 'data-pressable': tru
   font-size: var(--text-sm);
   transition: var(--transition);
 
-  &:hover {
-    border-color: var(--chip-border-hover);
-    background: var(--chip-bg-hover);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-color: var(--chip-border-hover);
+      background: var(--chip-bg-hover);
+      color: var(--text-primary);
+    }
   }
 `;
 
@@ -120,9 +122,11 @@ const ResetButton = styled.button.attrs({ 'data-pressable': true })`
   font-size: var(--text-xs);
   transition: var(--transition);
 
-  &:hover {
-    background: var(--surface-soft-hover);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--surface-soft-hover);
+      color: var(--text-primary);
+    }
   }
 `;
 
@@ -143,9 +147,11 @@ const Button = styled.button.attrs({
   font-weight: 700;
   transition: var(--transition);
 
-  &:hover {
-    box-shadow: var(--shadow-glow);
-    background: var(--primary-soft-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      box-shadow: var(--shadow-glow);
+      background: var(--primary-soft-hover);
+    }
   }
 `;
 
@@ -164,9 +170,11 @@ const ClearButton = styled.button.attrs({ 'data-pressable': true })`
   color: var(--text-secondary);
   transition: var(--transition);
 
-  &:hover {
-    background: var(--surface-soft-hover);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--surface-soft-hover);
+      color: var(--text-primary);
+    }
   }
 `;
 
@@ -191,9 +199,11 @@ const HistoryClear = styled.button.attrs({ 'data-pressable': true })`
   font-size: var(--text-xs);
   transition: var(--transition);
 
-  &:hover {
-    background: var(--surface-soft-hover);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--surface-soft-hover);
+      color: var(--text-primary);
+    }
   }
 `;
 
@@ -215,10 +225,12 @@ const TagChip = styled.button.attrs({ role: 'listitem', 'data-pressable': true }
   font-size: var(--text-sm);
   transition: var(--transition);
 
-  &:hover {
-    border-color: var(--chip-border-hover);
-    background: var(--chip-bg-hover);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-color: var(--chip-border-hover);
+      background: var(--chip-bg-hover);
+      color: var(--text-primary);
+    }
   }
 `;
 

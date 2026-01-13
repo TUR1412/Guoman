@@ -35,8 +35,10 @@ const Toggle = styled.button.attrs({ 'data-pressable': true })`
   border: 1px solid ${(p) => (p.$active ? 'transparent' : 'var(--border-subtle)')};
   transition: var(--transition);
 
-  &:hover {
-    background: ${(p) => (p.$active ? 'var(--primary-color)' : 'var(--surface-soft-hover)')};
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: ${(p) => (p.$active ? 'var(--primary-color)' : 'var(--surface-soft-hover)')};
+    }
   }
 `;
 

@@ -120,9 +120,11 @@ const Button = styled.button.attrs({ type: 'button', 'data-pressable': true })`
   color: var(--text-primary);
   transition: var(--transition);
 
-  &:hover {
-    background: var(--surface-soft-hover);
-    border-color: var(--chip-border-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--surface-soft-hover);
+      border-color: var(--chip-border-hover);
+    }
   }
 `;
 
@@ -137,9 +139,11 @@ const LinkButton = styled(Link).attrs({ 'data-pressable': true })`
   color: var(--text-primary);
   transition: var(--transition);
 
-  &:hover {
-    background: var(--surface-soft-hover);
-    border-color: var(--chip-border-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--surface-soft-hover);
+      border-color: var(--chip-border-hover);
+    }
   }
 `;
 

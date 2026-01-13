@@ -82,9 +82,11 @@ const PrimaryLink = styled.a.attrs({
   font-weight: 600;
   transition: var(--transition);
 
-  &:hover {
-    background: var(--primary-soft-hover);
-    box-shadow: var(--shadow-glow);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--primary-soft-hover);
+      box-shadow: var(--shadow-glow);
+    }
   }
 `;
 
@@ -99,8 +101,10 @@ const SecondaryLink = styled.a.attrs({ 'data-pressable': true })`
   color: var(--text-primary);
   transition: var(--transition);
 
-  &:hover {
-    background: var(--surface-soft-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--surface-soft-hover);
+    }
   }
 `;
 

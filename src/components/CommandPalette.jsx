@@ -89,8 +89,10 @@ const Item = styled.button.attrs({ type: 'button', 'data-pressable': true })`
   text-align: left;
   border-bottom: 1px solid var(--border-subtle);
 
-  &:hover {
-    background: var(--surface-soft-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--surface-soft-hover);
+    }
   }
 
   &:focus-visible {

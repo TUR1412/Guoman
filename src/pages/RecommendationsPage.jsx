@@ -176,9 +176,11 @@ const TagPulseItem = styled(Link).attrs({ 'data-pressable': true })`
   gap: 8px;
   transition: var(--transition);
 
-  &:hover {
-    border-color: var(--chip-border-hover);
-    background: var(--surface-soft-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-color: var(--chip-border-hover);
+      background: var(--surface-soft-hover);
+    }
   }
 
   @media (max-width: 992px) {

@@ -84,9 +84,11 @@ const CloseButton = styled.button.attrs({ 'data-pressable': true })`
   grid-column: span 1;
   justify-self: end;
 
-  &:hover {
-    background: var(--chip-bg-hover);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--chip-bg-hover);
+      color: var(--text-primary);
+    }
   }
 `;
 

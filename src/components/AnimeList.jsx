@@ -90,8 +90,10 @@ const Tab = styled.button.attrs({ 'data-pressable': true, role: 'tab' })`
   color: ${(props) => (props.$active ? 'var(--text-on-primary)' : 'var(--text-secondary)')};
   border: 1px solid ${(props) => (props.$active ? 'transparent' : 'var(--border-subtle)')};
 
-  &:hover {
-    background-color: var(--surface-soft-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--surface-soft-hover);
+    }
   }
 `;
 
@@ -130,8 +132,10 @@ const ShowMoreButton = styled.button.attrs({
   font-weight: 500;
   transition: var(--transition);
 
-  &:hover {
-    background-color: var(--primary-soft);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--primary-soft);
+    }
   }
 `;
 

@@ -90,10 +90,12 @@ const Tag = styled.button.attrs({ role: 'listitem', 'data-pressable': true })`
   color: var(--text-secondary);
   transition: var(--transition);
 
-  &:hover {
-    border-color: var(--chip-border-hover);
-    background: var(--chip-bg-hover);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-color: var(--chip-border-hover);
+      background: var(--chip-bg-hover);
+      color: var(--text-primary);
+    }
   }
 `;
 

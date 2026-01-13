@@ -150,9 +150,11 @@ const Button = styled.button.attrs({ type: 'button', 'data-pressable': true })`
   color: var(--text-primary);
   transition: var(--transition);
 
-  &:hover {
-    border-color: var(--chip-border-hover);
-    background: var(--control-bg-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-color: var(--chip-border-hover);
+      background: var(--control-bg-hover);
+    }
   }
 `;
 
@@ -160,9 +162,11 @@ const DangerButton = styled(Button)`
   border-color: rgba(var(--danger-rgb), 0.35);
   color: var(--danger-color);
 
-  &:hover {
-    border-color: rgba(var(--danger-rgb), 0.6);
-    background: rgba(var(--danger-rgb), 0.08);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-color: rgba(var(--danger-rgb), 0.6);
+      background: rgba(var(--danger-rgb), 0.08);
+    }
   }
 `;
 

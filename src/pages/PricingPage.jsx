@@ -95,9 +95,11 @@ const Button = styled.button.attrs({
   letter-spacing: 0.02em;
   transition: var(--transition);
 
-  &:hover {
-    border-color: var(--chip-border-hover);
-    background: rgba(var(--primary-rgb), 0.22);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-color: var(--chip-border-hover);
+      background: rgba(var(--primary-rgb), 0.22);
+    }
   }
 `;
 
@@ -106,9 +108,11 @@ const Secondary = styled(Button)`
   background: var(--surface-soft);
   color: var(--text-primary);
 
-  &:hover {
-    background: var(--surface-soft-hover);
-    border-color: var(--chip-border-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--surface-soft-hover);
+      border-color: var(--chip-border-hover);
+    }
   }
 `;
 

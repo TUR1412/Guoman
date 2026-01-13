@@ -45,9 +45,11 @@ const DockLink = styled(Link).attrs({ 'data-pressable': true })`
   transition: var(--transition);
   min-width: 0;
 
-  &:hover {
-    color: ${(p) => (p.$active ? 'var(--text-on-primary)' : 'var(--text-primary)')};
-    background: ${(p) => (p.$active ? 'transparent' : 'var(--surface-soft-hover)')};
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: ${(p) => (p.$active ? 'var(--text-on-primary)' : 'var(--text-primary)')};
+      background: ${(p) => (p.$active ? 'transparent' : 'var(--surface-soft-hover)')};
+    }
   }
 `;
 

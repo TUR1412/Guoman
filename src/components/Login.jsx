@@ -241,8 +241,10 @@ const TogglePasswordButton = styled.button.attrs({ 'data-pressable': true })`
   display: flex;
   align-items: center;
 
-  &:hover {
-    color: var(--text-secondary);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--text-secondary);
+    }
   }
 `;
 
@@ -289,9 +291,11 @@ const Checkbox = styled.input`
 const ForgotPassword = styled(Link).attrs({ 'data-pressable': true })`
   color: var(--text-tertiary);
 
-  &:hover {
-    color: var(--primary-color);
-    text-decoration: underline;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--primary-color);
+      text-decoration: underline;
+    }
   }
 `;
 
@@ -313,10 +317,12 @@ const SubmitButton = styled(Button).attrs({
   box-shadow: var(--shadow-primary);
   transition: var(--transition);
 
-  &:hover {
-    background-color: var(--primary-color);
-    filter: brightness(1.05);
-    box-shadow: var(--shadow-primary-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--primary-color);
+      filter: brightness(1.05);
+      box-shadow: var(--shadow-primary-hover);
+    }
   }
 
   &:disabled {
@@ -373,8 +379,10 @@ const SocialButton = styled(Button).attrs({
   justify-content: center;
   gap: var(--spacing-sm);
 
-  &:hover {
-    background-color: var(--control-bg-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--control-bg-hover);
+    }
   }
 `;
 

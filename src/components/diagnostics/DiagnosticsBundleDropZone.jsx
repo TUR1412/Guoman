@@ -22,8 +22,10 @@ const DropZone = styled.button.attrs({ 'data-pressable': true })`
     box-shadow: var(--shadow-ring);
   }
 
-  &:hover {
-    background: var(--surface-soft-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--surface-soft-hover);
+    }
   }
 
   &:focus-visible {

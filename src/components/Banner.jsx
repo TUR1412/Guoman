@@ -149,9 +149,11 @@ const NavButton = styled(IconButton).attrs({
   box-shadow: var(--shadow-md);
   transition: var(--transition);
 
-  &:hover {
-    background: var(--control-bg-hover);
-    box-shadow: var(--shadow-lg);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--control-bg-hover);
+      box-shadow: var(--shadow-lg);
+    }
   }
 `;
 
@@ -191,9 +193,11 @@ const Dot = styled.button.attrs({ type: 'button', 'data-pressable': true })`
   opacity: ${(p) => (p.$active ? 1 : 0.75)};
   transition: var(--transition);
 
-  &:hover {
-    opacity: 1;
-    border-color: var(--chip-border-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 1;
+      border-color: var(--chip-border-hover);
+    }
   }
 `;
 
@@ -404,9 +408,11 @@ const BannerButton = styled(motion(Link)).attrs({
   box-shadow: var(--shadow-primary);
   transition: var(--transition);
 
-  &:hover {
-    filter: brightness(1.05);
-    box-shadow: var(--shadow-primary-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      filter: brightness(1.05);
+      box-shadow: var(--shadow-primary-hover);
+    }
   }
 `;
 

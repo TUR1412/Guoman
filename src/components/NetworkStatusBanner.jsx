@@ -67,9 +67,11 @@ const Close = styled(IconButton).attrs({
   background: var(--chip-bg);
   color: var(--text-secondary);
 
-  &:hover {
-    background: var(--chip-bg-hover);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--chip-bg-hover);
+      color: var(--text-primary);
+    }
   }
 `;
 
@@ -96,9 +98,11 @@ const ActionButton = styled(Button).attrs({
   gap: var(--spacing-xs-plus);
   transition: var(--transition);
 
-  &:hover {
-    background: rgba(var(--primary-rgb), 0.26);
-    box-shadow: var(--shadow-glow);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: rgba(var(--primary-rgb), 0.26);
+      box-shadow: var(--shadow-glow);
+    }
   }
 `;
 

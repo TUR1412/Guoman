@@ -67,9 +67,11 @@ const Button = styled.button.attrs({
   font-weight: 700;
   transition: var(--transition);
 
-  &:hover {
-    box-shadow: var(--shadow-glow);
-    background: var(--primary-soft-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      box-shadow: var(--shadow-glow);
+      background: var(--primary-soft-hover);
+    }
   }
 `;
 

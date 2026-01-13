@@ -108,8 +108,10 @@ const ActionButton = styled.button.attrs({ 'data-pressable': true })`
   color: var(--text-primary);
   transition: var(--transition);
 
-  &:hover {
-    background: var(--surface-soft-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--surface-soft-hover);
+    }
   }
 `;
 

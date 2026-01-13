@@ -145,9 +145,11 @@ const FeatureAction = styled(Link).attrs({ 'data-pressable': true })`
   transition: var(--transition);
   margin-top: var(--spacing-md);
 
-  &:hover {
-    border-color: var(--chip-border-hover);
-    background: var(--surface-soft-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-color: var(--chip-border-hover);
+      background: var(--surface-soft-hover);
+    }
   }
 `;
 

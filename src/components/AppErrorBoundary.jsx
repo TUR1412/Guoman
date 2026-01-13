@@ -135,8 +135,10 @@ const Button = styled.button.attrs({ 'data-pressable': true })`
   color: var(--text-primary);
   transition: var(--transition);
 
-  &:hover {
-    background: var(--control-bg-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--control-bg-hover);
+    }
   }
 `;
 
@@ -152,8 +154,10 @@ const HomeLink = styled.a.attrs({ 'data-pressable': true })`
   font-weight: 600;
   transition: var(--transition);
 
-  &:hover {
-    background: var(--primary-soft);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--primary-soft);
+    }
   }
 `;
 

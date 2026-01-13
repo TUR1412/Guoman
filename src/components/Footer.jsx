@@ -153,9 +153,11 @@ const SocialLink = styled.a.attrs({ 'data-pressable': true, role: 'listitem' })`
   color: var(--text-secondary);
   transition: var(--transition);
 
-  &:hover {
-    background-color: var(--primary-color);
-    color: var(--text-on-primary);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--primary-color);
+      color: var(--text-on-primary);
+    }
   }
 `;
 
@@ -176,9 +178,11 @@ const FooterLink = styled(Link).attrs({ 'data-pressable': true })`
   color: var(--text-tertiary);
   transition: var(--transition);
 
-  &:hover {
-    color: var(--primary-color);
-    padding-left: 5px;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--primary-color);
+      padding-left: 5px;
+    }
   }
 `;
 
@@ -203,8 +207,10 @@ const FooterNavLink = styled(Link).attrs({ 'data-pressable': true, role: 'listit
   font-size: var(--text-sm);
   transition: var(--transition);
 
-  &:hover {
-    color: var(--primary-color);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--primary-color);
+    }
   }
 `;
 

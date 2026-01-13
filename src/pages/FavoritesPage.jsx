@@ -52,8 +52,10 @@ const Toggle = styled.button.attrs({ 'data-pressable': true })`
   border: 1px solid ${(p) => (p.$active ? 'transparent' : 'var(--border-subtle)')};
   transition: var(--transition);
 
-  &:hover {
-    background: ${(p) => (p.$active ? 'var(--primary-color)' : 'var(--surface-soft-hover)')};
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: ${(p) => (p.$active ? 'var(--primary-color)' : 'var(--surface-soft-hover)')};
+    }
   }
 `;
 
@@ -73,9 +75,11 @@ const ActionButton = styled.button.attrs({
   font-weight: 800;
   transition: var(--transition);
 
-  &:hover:not(:disabled) {
-    box-shadow: var(--shadow-glow);
-    background: var(--surface-soft-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      box-shadow: var(--shadow-glow);
+      background: var(--surface-soft-hover);
+    }
   }
 
   &:disabled {
@@ -96,9 +100,11 @@ const DangerButton = styled.button.attrs({ 'data-pressable': true })`
   font-weight: 800;
   transition: var(--transition);
 
-  &:hover:not(:disabled) {
-    box-shadow: var(--shadow-glow);
-    background: var(--primary-soft-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      box-shadow: var(--shadow-glow);
+      background: var(--primary-soft-hover);
+    }
   }
 
   &:disabled {
@@ -136,10 +142,12 @@ const GroupChip = styled.button.attrs({ 'data-pressable': true })`
   color: var(--text-secondary);
   transition: var(--transition);
 
-  &:hover {
-    border-color: var(--chip-border-hover);
-    background: var(--chip-bg-hover);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-color: var(--chip-border-hover);
+      background: var(--chip-bg-hover);
+      color: var(--text-primary);
+    }
   }
 
   ${(p) =>
@@ -201,10 +209,12 @@ const Handle = styled.button.attrs({ type: 'button', 'data-pressable': true })`
   font-weight: 800;
   transition: var(--transition);
 
-  &:hover {
-    border-color: var(--chip-border-hover);
-    color: var(--text-primary);
-    background: var(--surface-soft-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-color: var(--chip-border-hover);
+      color: var(--text-primary);
+      background: var(--surface-soft-hover);
+    }
   }
 `;
 

@@ -159,10 +159,12 @@ const ContactButton = styled(Link).attrs({
   transition: var(--transition);
   box-shadow: var(--shadow-primary);
 
-  &:hover {
-    background-color: var(--primary-color);
-    filter: brightness(1.05);
-    box-shadow: var(--shadow-primary-hover);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--primary-color);
+      filter: brightness(1.05);
+      box-shadow: var(--shadow-primary-hover);
+    }
   }
 `;
 

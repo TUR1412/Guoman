@@ -87,9 +87,11 @@ const ClearButton = styled.button.attrs({ 'data-pressable': true })`
   color: var(--text-secondary);
   transition: var(--transition);
 
-  &:hover {
-    background: var(--surface-soft-hover);
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--surface-soft-hover);
+      color: var(--text-primary);
+    }
   }
 `;
 
