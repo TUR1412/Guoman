@@ -23,6 +23,8 @@
 
 - UI：将 `src/ui/Button` 的 hover 视觉反馈限制为 hover 设备（`(hover: hover) and (pointer: fine)`），避免触屏 hover 粘滞（保持业务逻辑不变）。
 
+- UI：为 `src/ui/Button` 引入“光泽 Sheen”覆盖层（hover/focus-visible 触发）与轻微 press 质感（filter），强化按钮的层级与触感（保持业务逻辑不变）。
+
 - UI：为 `[data-pressable]` 补齐 `:focus-visible` 光环与 disabled 光标语义（cursor），提升键盘可达性与可点击反馈一致性（保持业务逻辑不变）。
 
 - UI：升级 `[data-pressable]` 物理微交互为变量驱动（`--pressable-*`），支持 X/Y offset、hover 距离与 active scale，并仅在 hover 设备启用 hover 反馈（避免触屏粘滞 hover），保持逻辑不变。
