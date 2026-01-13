@@ -31,8 +31,10 @@ const Cover = styled(motion.div)`
   padding-top: 140%;
   overflow: hidden;
 
-  ${Card}:hover img {
-    transform: scale(1.05);
+  @media (hover: hover) and (pointer: fine) {
+    ${Card}:hover img {
+      transform: scale(1.05);
+    }
   }
 `;
 

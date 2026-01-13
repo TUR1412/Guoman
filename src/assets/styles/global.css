@@ -1182,22 +1182,10 @@ ol {
   color: var(--text-on-primary);
 }
 
-.btn-primary:hover {
-  background-color: var(--primary-color);
-  filter: brightness(1.05);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
 .btn-secondary {
   background-color: transparent;
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
-}
-
-.btn-secondary:hover {
-  background-color: rgba(var(--primary-rgb), 0.1);
-  transform: translateY(-2px);
 }
 
 .card {
@@ -1209,10 +1197,24 @@ ol {
   transition: var(--transition);
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-lg), var(--shadow-glow);
-  border-color: rgba(var(--primary-rgb), 0.3);
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover {
+    background-color: var(--primary-color);
+    filter: brightness(1.05);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .btn-secondary:hover {
+    background-color: rgba(var(--primary-rgb), 0.1);
+    transform: translateY(-2px);
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    border-color: rgba(var(--primary-rgb), 0.3);
+  }
 }
 
 [data-card][data-card] {

@@ -475,9 +475,11 @@ export const RelatedCard = styled(Link).attrs({
   overflow: hidden;
   transition: var(--transition);
 
-  &:hover {
-    img {
-      transform: scale(1.05);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      img {
+        transform: scale(1.05);
+      }
     }
   }
 `;
