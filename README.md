@@ -40,8 +40,8 @@
 
 ## ✨ 项目亮点 | Highlights
 
-- **Vercel/Apple 风格视觉体系**：中性底色 + 光谱 Mesh + 玻璃层级 + 精准排版 + 物理微交互，追求像素级秩序与层次。<br />
-  **Vercel/Apple-style Visual System**: neutral surfaces, spectral mesh, glass layers, precision typography, and physics-based micro-interactions.
+- **Vercel/Apple 风格视觉体系**：中性底色 + 光谱 Mesh + 玻璃层级 + 精准排版 + 物理微交互（hover-safe + pointer glow），追求像素级秩序与层次。<br />
+  **Vercel/Apple-style Visual System**: neutral surfaces, spectral mesh, glass layers, precision typography, and physics-based micro-interactions (hover-safe guardrails + pointer glow).
 - **内容智能洞察**：Tag Pulse 标签趋势、Studio Radar 工作室雷达、Audience Pulse 口碑脉冲。<br />
   **Content Insights**: tag momentum, studio radar, and audience pulse summaries.
 - **观影计划器**：结合追更与观看进度，计算剩余时长与每日观看预算。<br />

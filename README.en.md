@@ -38,7 +38,7 @@
 
 ## ✨ Highlights
 
-- **Vercel/Apple-style design language**: neutral surfaces, spectral mesh, glass layers, precision typography, and physics-based micro-interactions.
+- **Vercel/Apple-style design language**: neutral surfaces, spectral mesh, glass layers, precision typography, and physics-based micro-interactions (hover-safe guardrails + pointer glow).
 - **Content insights**: Tag Pulse, Studio Radar, Audience Pulse summaries.
 - **Watch Planner**: turns progress + following status into daily viewing budgets and ETA.
 - **Match score + reasons**: recommendations are explainable and transparent.
