@@ -21,9 +21,43 @@ const resolveBuildSha = () => {
   return String(raw);
 };
 
+const normalizeBase = (value) => {
+  const raw = String(value || '').trim();
+  if (!raw) return '/';
+
+  const cleaned = raw
+    .replace(/^https?:\/\/[^/]+/i, '')
+    .replace(/\/index\.html?$/i, '')
+    .trim();
+
+  if (!cleaned || cleaned === '/') return '/';
+  const withLeading = cleaned.startsWith('/') ? cleaned : `/${cleaned}`;
+  return withLeading.endsWith('/') ? withLeading : `${withLeading}/`;
+};
+
+const resolveBase = ({ command }) => {
+  const explicit =
+    process.env.VITE_BASE ||
+    process.env.BASE_PATH ||
+    process.env.PUBLIC_URL ||
+    process.env.VITE_PUBLIC_PATH;
+  if (explicit) return normalizeBase(explicit);
+
+  if (command !== 'build') return '/';
+
+  const repo = String(process.env.GITHUB_REPOSITORY || '').trim();
+  if (repo.includes('/')) {
+    const name = repo.split('/')[1];
+    if (name) return normalizeBase(`/${name}/`);
+  }
+
+  if (packageJson?.homepage) return normalizeBase(packageJson.homepage);
+  return '/';
+};
+
 export default defineConfig(({ command }) => ({
-  // GitHub Pages 部署时使用 /Guoman/，本地开发保持 / 更顺手
-  base: command === 'build' ? '/Guoman/' : '/',
+  // GitHub Pages 部署：优先走环境变量，其次从 GITHUB_REPOSITORY / package.json.homepage 自动推导
+  base: resolveBase({ command }),
   plugins: [react()],
   define: {
     __APP_VERSION__: JSON.stringify(APP_VERSION),

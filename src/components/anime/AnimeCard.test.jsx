@@ -61,6 +61,26 @@ describe('AnimeCard', () => {
     expect(screen.getByRole('button', { name: '追更' })).toBeInTheDocument();
   });
 
+  it('toggles compare and shows toast feedback', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <ToastProvider>
+          <FavoritesProvider>
+            <AnimeCard anime={anime} />
+          </FavoritesProvider>
+        </ToastProvider>
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole('button', { name: '加入对比' })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: '加入对比' }));
+    expect(await screen.findByText('已加入对比')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '从对比中移除' })).toBeInTheDocument();
+  });
+
   it('shows progress panel when watch progress exists', () => {
     window.localStorage.clear();
     window.localStorage.setItem(

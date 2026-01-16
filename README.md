@@ -24,6 +24,7 @@
   </p>
   <p>
     <img alt="GitHub License" src="https://img.shields.io/github/license/TUR1412/Guoman?style=flat-square" />
+    <img alt="Version" src="https://img.shields.io/github/package-json/v/TUR1412/Guoman?style=flat-square" />
     <img alt="Build" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/static.yml?branch=master&style=flat-square" />
     <img alt="Quality" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/quality.yml?branch=master&style=flat-square" />
     <img alt="Lighthouse" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/lighthouse.yml?branch=master&style=flat-square" />
@@ -50,6 +51,8 @@
   **Match Score + Reasons**: transparent recommendation explanations.
 - **本地优先**：收藏/进度/口味画像/视觉偏好全部 localStorage 持久化。<br />
   **Local-first**: all key user state stays in the browser.
+- **探索闭环增强**：Saved Views（保存/恢复搜索视图）、Compare Mode（两作对比）、Pinned Tags（常用标签）、年份分布 SparkBar（Tag Insights）。<br />
+  **Discovery Loop Upgrades**: Saved Views, Compare Mode, Pinned Tags, and SparkBar year distribution insights.
 - **命令面板升级**：支持作品/标签/分类直达，搜索建议作为“兜底项”保留，并在高亮/hover 时自动预取目标路由（更快跳转）。<br />
   **Command Palette Upgrades**: jump to titles/tags/categories, keep search as a fallback, and idle-prefetch highlighted targets for faster navigation.
 - **性能 & 质量闸门**：Lighthouse 友好、Bundle Budget、ESLint + Vitest 全链路守门。<br />
@@ -67,16 +70,37 @@
 
 ---
 
+## 🎬 效果演示 | Demo
+
+> Demo GIF / Screenshot 占位区（欢迎在 PR 中补齐真实截图或录屏）。
+
+- 🧠 Search Pro：高级筛选 + Saved Views（保存/恢复搜索状态）
+- 🆚 Compare Mode：两部作品并排对比（评分/人气/年份/标签等）
+- 📌 Pinned Tags：标签页一键钉住，首页快捷入口
+- 📈 Mini Insights：标签页年份分布 SparkBar（轻量可视化）
+
+<details>
+<summary>📷 Screenshot 占位（可替换为真实图）</summary>
+
+- Home / Pinned Tags
+- Search / Saved Views
+- Compare / Side-by-side
+- Tag / Year Distribution
+
+</details>
+
+---
+
 ## ✅ 功能矩阵 | Feature Matrix
 
-| 模块 Module | 能力 Capabilities                                 |
-| ----------- | ------------------------------------------------- |
-| 探索 & 推荐 | 口味画像、本地推荐、匹配度解释、标签趋势热力      |
-| 追更 & 计划 | 追更提醒、观看进度、观影计划器、剩余时长估算      |
-| 洞察与分析  | Studio Radar、Audience Pulse、足迹中心、成就系统  |
-| 视觉体验    | Vercel/Apple 风格主题、玻璃拟态、微交互、动效护栏 |
-| 数据管理    | 收藏/分组/导入导出/Data Vault、本地占用统计       |
-| 质量保障    | PWA、诊断面板、性能预算闸门、错误兜底             |
+| 模块 Module | 能力 Capabilities                                                   |
+| ----------- | ------------------------------------------------------------------- |
+| 探索 & 推荐 | 口味画像、本地推荐、匹配度解释、标签趋势热力、Saved Views、作品对比 |
+| 追更 & 计划 | 追更提醒、观看进度、观影计划器、剩余时长估算                        |
+| 洞察与分析  | Studio Radar、Audience Pulse、足迹中心、成就系统                    |
+| 视觉体验    | Vercel/Apple 风格主题、玻璃拟态、微交互、动效护栏                   |
+| 数据管理    | 收藏/分组/导入导出/Data Vault、常用标签/视图/对比（本地持久化）     |
+| 质量保障    | PWA、诊断面板、性能预算闸门、错误兜底                               |
 
 ---
 
@@ -146,15 +170,15 @@ flowchart TD
 ├── scripts/               # SEO / bundle / lighthouse 等脚本
 ├── src/
 │   ├── assets/            # 图片/样式
-│   ├── components/        # 组件与 Providers
+│   ├── components/        # 组件与 Providers（含 charts/ 轻量可视化）
 │   ├── data/              # 模拟数据（可替换为真实 API）
-│   ├── pages/             # 页面级路由
-│   ├── utils/             # 本地数据层 / 监控 / SEO 等工具
+│   ├── pages/             # 页面级路由（Search / Tag / Compare 等）
+│   ├── utils/             # 本地数据层 / 监控 / SEO 等工具（Saved Views / Compare / Pinned Tags）
 │   ├── App.jsx            # 根路由与布局
 │   └── index.jsx          # 应用入口（主题/监控初始化）
 ├── 404.html               # GitHub Pages 深链兜底
 ├── index.html             # 首屏主题初始化 + 字体引入
-└── vite.config.js         # build base 为 /Guoman/
+└── vite.config.js         # base 自动推导（支持 VITE_BASE 覆盖）
 ```
 
 ---
@@ -167,6 +191,12 @@ flowchart TD
 npm ci
 npm run dev
 ```
+
+常用命令：
+
+- `npm run check`：一键质量闸门（format/lint/test/build/budget）
+- `npm run test:watch`：本地 TDD（Vitest watch）
+- `npm run storybook`：查看/开发 UI 组件与交互态
 
 ---
 
@@ -182,9 +212,10 @@ npm run check
 
 ## 🚢 部署到 GitHub Pages | Deployment
 
-- `vite.config.js` 已配置 `base: '/Guoman/'`
-- GitHub Actions 会在每次 push 后自动构建并发布 `dist/`
-- 需要手动启用 `Settings → Pages → GitHub Actions`
+- `vite.config.js` 会在 build 时自动推导 `base`（优先 `VITE_BASE/BASE_PATH/PUBLIC_URL`，其次 `GITHUB_REPOSITORY` / `package.json.homepage`）
+- 路由采用 **Hash Router**，并提供 `404.html` 深链兜底，刷新不会 404
+- GitHub Actions 会在每次 push 后自动构建并发布 `dist/`（见 `.github/workflows/static.yml`）
+- 需要手动启用：`Settings → Pages → GitHub Actions`
 
 ---
 

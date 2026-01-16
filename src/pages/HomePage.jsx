@@ -6,6 +6,7 @@ import Features from '../components/Features';
 import About from '../components/About';
 import RecentlyViewed from '../components/RecentlyViewed';
 import ContinueWatching from '../components/ContinueWatching';
+import PinnedTagsSection from '../components/PinnedTagsSection';
 import { usePageMeta } from '../utils/pageMeta';
 import { getPageMotion } from '../motion/presets';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
@@ -22,6 +23,7 @@ function HomePage() {
       <Banner />
       <ContinueWatching />
       <RecentlyViewed />
+      <PinnedTagsSection />
       <AnimeList />
       <Features />
       <About cta={{ to: '/about', label: '了解更多' }} />

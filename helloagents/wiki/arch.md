@@ -15,6 +15,10 @@ flowchart TD
   App --> Data["Local-first Data Layer"]
   Data --> LS[(localStorage)]
   Data --> Queue["storageQueue: 合并写入/空闲刷新"]
+  Data --> Vault["Data Vault (Import/Export)"]
+  Data --> SavedViews["Saved Views (Search Presets)"]
+  Data --> Compare["Compare Mode (max 2)"]
+  Data --> Pins["Pinned Tags (Home Shortcuts)"]
 
   App --> Search["Search Intelligence (Filter Engine + Prefetch)"]
   App --> Api["API Client (Retry + Cache + Dedupe)"]

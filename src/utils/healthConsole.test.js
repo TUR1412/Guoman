@@ -25,6 +25,7 @@ const loadHealthConsole = async ({
   perfSnapshot = { fps: 60, longTasks: 0 },
 } = {}) => {
   vi.resetModules();
+  const logWarn = vi.fn();
   vi.doMock('./dataVault', () => ({
     getFeatureSummaries: () => featureSummaries,
   }));
@@ -33,12 +34,14 @@ const loadHealthConsole = async ({
   }));
   vi.doMock('./logger', () => ({
     getLogs: () => logs,
+    logWarn,
   }));
   vi.doMock('./performance', () => ({
     getPerformanceSnapshot: () => perfSnapshot,
   }));
 
-  return import('./healthConsole');
+  const healthConsole = await import('./healthConsole');
+  return { ...healthConsole, __logWarn: logWarn };
 };
 
 const setPerformanceMemory = (value) => {
@@ -68,6 +71,7 @@ describe('healthConsole', () => {
       getHealthSnapshot,
       installHealthConsole,
       printHealthPanorama,
+      __logWarn,
       recordReactCommit,
       startHealthMonitoring,
       stopHealthMonitoring,
@@ -98,10 +102,9 @@ describe('healthConsole', () => {
     expect(snap.storage[0].bytes).toBeGreaterThanOrEqual(snap.storage[1].bytes);
     expect(typeof snap.storage[0].bytesText).toBe('string');
 
-    // printing
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    // printing should report to local logger (no console.*)
     printHealthPanorama();
-    expect(warnSpy).toHaveBeenCalled();
+    expect(__logWarn).toHaveBeenCalled();
 
     // install is idempotent
     const api1 = installHealthConsole();

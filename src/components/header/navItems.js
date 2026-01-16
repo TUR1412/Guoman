@@ -2,6 +2,7 @@ export const navItems = [
   { title: '首页', path: '/' },
   { title: '国漫推荐', path: '/recommendations' },
   { title: '收藏', path: '/favorites' },
+  { title: '对比', path: '/compare' },
   { title: '追更', path: '/following' },
   { title: '排行榜', path: '/rankings' },
   { title: '最新资讯', path: '/news' },

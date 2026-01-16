@@ -1,15 +1,19 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useSearchParams } from 'react-router-dom';
-import { FiSearch } from '../components/icons/feather';
+import { FiFilter, FiSearch, FiTrash2 } from '../components/icons/feather';
 import PageShell from '../components/PageShell';
 import EmptyState from '../components/EmptyState';
 import AnimeCard from '../components/anime/AnimeCard';
 import { AnimeGrid } from '../components/anime/AnimeGrid';
 import VirtualizedGrid from '../components/VirtualizedGrid';
 import animeData, { animeIndex, tagCounts } from '../data/animeData';
+import { useToast } from '../components/ToastProvider';
+import Dialog from '../ui/Dialog';
 import { usePersistedState } from '../utils/usePersistedState';
 import { getCachedSearch, setCachedSearch } from '../utils/searchCache';
+import { getPinnedTags } from '../utils/pinnedTags';
+import { createSavedView, deleteSavedView, getSavedViews } from '../utils/savedViews';
 import {
   applyAnimeFilters,
   buildAnimeFacets,
@@ -17,6 +21,7 @@ import {
 } from '../utils/animeFilterEngine';
 import { trackEvent } from '../utils/analytics';
 import { STORAGE_KEYS } from '../utils/dataKeys';
+import { useStorageSignal } from '../utils/useStorageSignal';
 import { SelectField, TextField } from '../ui';
 
 const SearchBar = styled.form.attrs({
@@ -54,6 +59,82 @@ const FiltersTitle = styled.h2`
 const FiltersMeta = styled.div`
   color: var(--text-tertiary);
   font-size: var(--text-sm);
+`;
+
+const SavedViewsRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const SavedViewsControls = styled.div.attrs({ 'data-divider': 'inline' })`
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+`;
+
+const SavedViewsSelect = styled(SelectField)`
+  min-width: min(320px, 100%);
+`;
+
+const MiniButton = styled.button.attrs({
+  type: 'button',
+  'data-pressable': true,
+  'data-shimmer': true,
+})`
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs-plus);
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-soft);
+  color: var(--text-primary);
+  font-weight: 800;
+  font-size: var(--text-xs);
+  transition: var(--transition);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      border-color: var(--chip-border-hover);
+      background: var(--surface-soft-hover);
+      box-shadow: var(--shadow-glow);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+`;
+
+const DialogBody = styled.div`
+  padding: var(--spacing-xl);
+  display: grid;
+  gap: var(--spacing-lg);
+`;
+
+const DialogTitle = styled.h3`
+  font-size: var(--text-3xl);
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+`;
+
+const DialogHint = styled.p`
+  color: var(--text-tertiary);
+  line-height: var(--leading-relaxed);
+  font-size: var(--text-sm);
+`;
+
+const DialogActions = styled.div.attrs({ 'data-divider': 'inline' })`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
 `;
 
 const FiltersGrid = styled.div.attrs({ 'data-grid': '12' })`
@@ -312,7 +393,24 @@ function SearchPage() {
     serialize: (next) => JSON.stringify(next),
     deserialize: parseFilters,
   });
+  const toast = useToast();
+  const { signal: viewsSignal, bump: bumpViews } = useStorageSignal([STORAGE_KEYS.savedViews]);
+  const savedViews = useMemo(
+    () => (viewsSignal, getSavedViews({ scope: 'search' })),
+    [viewsSignal],
+  );
+  const [selectedViewId, setSelectedViewId] = useState('');
+  const selectedView = useMemo(
+    () => savedViews.find((entry) => entry.id === selectedViewId) ?? null,
+    [savedViews, selectedViewId],
+  );
+  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+  const [draftViewName, setDraftViewName] = useState('');
+  const viewNameRef = useRef(null);
   const searchInputId = useId();
+  const viewNameInputId = useId();
+  const { signal: pinnedSignal } = useStorageSignal([STORAGE_KEYS.pinnedTags]);
+  const pinnedTags = useMemo(() => (pinnedSignal, getPinnedTags()), [pinnedSignal]);
 
   useEffect(() => {
     if (resetFlag !== '1') return;
@@ -330,11 +428,16 @@ function SearchPage() {
   }, []);
 
   const trendingTags = useMemo(() => {
-    return Object.entries(tagCounts)
+    const baseTrending = Object.entries(tagCounts)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 8)
       .map(([tag]) => tag);
-  }, []);
+
+    const pinned = Array.isArray(pinnedTags) ? pinnedTags : [];
+    const merged = [...pinned, ...baseTrending]
+      .map((tag) => String(tag || '').trim())
+      .filter(Boolean);
+    return Array.from(new Set(merged)).slice(0, 8);
+  }, [pinnedTags]);
 
   const hasActiveFilters = useMemo(() => {
     if (!filters) return false;
@@ -347,6 +450,78 @@ function SearchPage() {
     if (filters.minRating != null) return true;
     return false;
   }, [filters]);
+
+  const canSaveView = Boolean(q) || hasActiveFilters;
+
+  const applySavedViewPayload = (payload) => {
+    const nextQ = String(payload?.q || '').trim();
+    const nextFilters = parseFilters(JSON.stringify(payload?.filters ?? DEFAULT_FILTERS));
+    setFilters(nextFilters);
+    setSearchParams(nextQ ? { q: nextQ } : {});
+  };
+
+  const onApplyView = (viewId) => {
+    const target = String(viewId || '').trim();
+    if (!target) return;
+
+    const view = savedViews.find((entry) => entry.id === target);
+    if (!view) return;
+
+    applySavedViewPayload(view.payload);
+    setSelectedViewId(view.id);
+    toast.success('已应用视图', view.name);
+    trackEvent('search.savedView.apply', { id: view.id });
+  };
+
+  const onDeleteView = () => {
+    if (!selectedView) return;
+    const ok = window.confirm(`确定要删除视图「${selectedView.name}」吗？`);
+    if (!ok) return;
+
+    deleteSavedView(selectedView.id);
+    bumpViews();
+    setSelectedViewId('');
+    toast.info('已删除视图', '你可以随时重新保存。');
+    trackEvent('search.savedView.delete', { id: selectedView.id });
+  };
+
+  const openSaveDialog = () => {
+    const base = q?.trim() ? `搜索：${q.trim()}` : hasActiveFilters ? '筛选视图' : '未命名视图';
+    setDraftViewName(base);
+    setIsSaveDialogOpen(true);
+  };
+
+  const onSaveView = () => {
+    const name = String(draftViewName || '').trim();
+    if (!name) {
+      toast.warning('无法保存', '请先输入视图名称。');
+      return;
+    }
+
+    const entry = createSavedView({
+      name,
+      scope: 'search',
+      payload: {
+        q: String(q || '').trim(),
+        filters,
+      },
+    });
+    bumpViews();
+
+    if (!entry) {
+      toast.warning('无法保存', '视图名称不能为空。');
+      return;
+    }
+
+    setSelectedViewId(entry.id);
+    setIsSaveDialogOpen(false);
+    toast.success('已保存视图', entry.name);
+    trackEvent('search.savedView.create', {
+      id: entry.id,
+      hasQuery: Boolean(String(q || '').trim()),
+      hasFilters: hasActiveFilters,
+    });
+  };
 
   const normalizedQuery = useMemo(() => normalize(q), [q]);
   const cachedIds = useMemo(() => getCachedSearch(normalizedQuery), [normalizedQuery]);
@@ -568,6 +743,66 @@ function SearchPage() {
             <FiltersMeta>未启用筛选</FiltersMeta>
           )}
         </FiltersHeader>
+
+        {(savedViews.length > 0 || canSaveView) && (
+          <SavedViewsRow aria-label="保存视图">
+            <SavedViewsControls>
+              <SavedViewsSelect
+                id="guoman-search-saved-views"
+                label="保存的搜索视图"
+                labelSrOnly
+                startIcon={<FiFilter />}
+                value={selectedViewId}
+                onChange={(event) => {
+                  const nextId = event.target.value;
+                  if (!nextId) {
+                    setSelectedViewId('');
+                    trackEvent('search.savedView.select.none');
+                    return;
+                  }
+                  onApplyView(nextId);
+                }}
+                helperText={
+                  savedViews.length > 0
+                    ? `已保存 ${savedViews.length} 个视图 · 本地持久化`
+                    : '保存当前关键词/筛选为视图'
+                }
+              >
+                <option value="">未选择（当前筛选）</option>
+                {savedViews.map((view) => (
+                  <option key={view.id} value={view.id}>
+                    {view.name}
+                  </option>
+                ))}
+              </SavedViewsSelect>
+            </SavedViewsControls>
+
+            <SavedViewsControls>
+              <MiniButton
+                onClick={() => {
+                  if (!canSaveView) return;
+                  openSaveDialog();
+                  trackEvent('search.savedView.openSaveDialog', {
+                    hasQuery: Boolean(String(q || '').trim()),
+                    hasFilters: hasActiveFilters,
+                  });
+                }}
+                disabled={!canSaveView}
+                title="将当前关键词 + 筛选组合保存为可复用视图"
+              >
+                保存视图
+              </MiniButton>
+              <MiniButton
+                onClick={onDeleteView}
+                disabled={!selectedView}
+                title={selectedView ? `删除视图「${selectedView.name}」` : '请选择要删除的视图'}
+              >
+                <FiTrash2 />
+                删除
+              </MiniButton>
+            </SavedViewsControls>
+          </SavedViewsRow>
+        )}
 
         <FiltersGrid>
           <div data-col-span="12" data-col-span-md="6">
@@ -876,6 +1111,63 @@ function SearchPage() {
           }
         />
       )}
+
+      <Dialog
+        open={isSaveDialogOpen}
+        onClose={() => {
+          setIsSaveDialogOpen(false);
+          trackEvent('search.savedView.saveDialog.close');
+        }}
+        ariaLabel="保存搜索视图"
+        initialFocusRef={viewNameRef}
+      >
+        <DialogBody>
+          <DialogTitle>保存为视图</DialogTitle>
+          <DialogHint>
+            将当前关键词与筛选条件保存为可复用的「搜索视图」（Local-first）。你可以在之后一键恢复到相同的搜索状态。
+          </DialogHint>
+
+          <TextField
+            id={viewNameInputId}
+            label="视图名称"
+            inputRef={viewNameRef}
+            value={draftViewName}
+            onChange={(event) => setDraftViewName(event.target.value)}
+            helperText={
+              canSaveView
+                ? `已捕获：${q ? `关键词「${q}」` : '无关键词'} · 标签 ${filters.tags.length} · 类型 ${filters.types.length} · 状态 ${filters.statuses.length}`
+                : '当前没有关键词或筛选条件'
+            }
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                onSaveView();
+              }
+            }}
+          />
+
+          <DialogActions>
+            <MiniButton
+              onClick={() => {
+                setIsSaveDialogOpen(false);
+                trackEvent('search.savedView.saveDialog.cancel');
+              }}
+            >
+              取消
+            </MiniButton>
+            <Button
+              type="button"
+              onClick={() => {
+                onSaveView();
+                trackEvent('search.savedView.saveDialog.confirm');
+              }}
+              disabled={!canSaveView}
+            >
+              保存
+            </Button>
+          </DialogActions>
+        </DialogBody>
+      </Dialog>
     </PageShell>
   );
 }

@@ -27,6 +27,7 @@ import { downloadTextFile } from '../utils/download';
 import { recordDownload, recordPlay } from '../utils/engagementStore';
 import { buildPosterSvg, recordSharePoster } from '../utils/sharePoster';
 import { trackEvent } from '../utils/analytics';
+import { reportError } from '../utils/errorReporter';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 import AnimeProgressCard from './anime/detail/AnimeProgressCard';
 import AnimeReviews from './anime/detail/AnimeReviews';
@@ -142,16 +143,19 @@ function AnimeDetail() {
           setRelatedAnimes([]);
         }
       } catch (error) {
-        if (import.meta.env?.DEV) {
-          console.error('Error fetching anime:', error);
-        }
+        reportError({
+          message: error?.message || 'Error fetching anime',
+          stack: error?.stack,
+          source: 'AnimeDetail.fetchAnime',
+        });
+        toast.warning('加载失败', '作品详情解析异常，已写入诊断面板。');
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchAnime();
-  }, [id]);
+  }, [id, toast]);
 
   useEffect(() => {
     if (!anime?.id) return;

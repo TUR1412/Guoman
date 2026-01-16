@@ -46,6 +46,7 @@ const TagPage = routeLazy(() => import('./pages/TagPage'), 'route:/tag/:tag');
 const CategoryPage = routeLazy(() => import('./pages/CategoryPage'), 'route:/category/:category');
 const FavoritesPage = routeLazy(() => import('./pages/FavoritesPage'), 'route:/favorites');
 const FollowingPage = routeLazy(() => import('./pages/FollowingPage'), 'route:/following');
+const ComparePage = routeLazy(() => import('./pages/ComparePage'), 'route:/compare');
 const PricingPage = routeLazy(() => import('./pages/PricingPage'), 'route:/pro');
 const InsightsPage = routeLazy(() => import('./pages/InsightsPage'), 'route:/insights');
 const PostersPage = routeLazy(() => import('./pages/PostersPage'), 'route:/posters');
@@ -372,6 +373,7 @@ function App() {
                         <Route path="/recommendations" element={<RecommendationsPage />} />
                         <Route path="/favorites" element={<FavoritesPage />} />
                         <Route path="/following" element={<FollowingPage />} />
+                        <Route path="/compare" element={<ComparePage />} />
                         <Route path="/pro" element={<PricingPage />} />
                         <Route path="/insights" element={<InsightsPage />} />
                         <Route path="/posters" element={<PostersPage />} />

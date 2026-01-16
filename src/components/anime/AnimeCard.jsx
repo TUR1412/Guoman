@@ -3,12 +3,15 @@ import React, { memo, useCallback, useEffect, useId, useMemo, useState } from 'r
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FiBell, FiHeart } from '../icons/feather';
+import { FiBell, FiColumns, FiHeart } from '../icons/feather';
 import { useToast } from '../ToastProvider';
+import { getCompareList, toggleCompare as toggleCompareInStore } from '../../utils/compareStore';
+import { STORAGE_KEYS } from '../../utils/dataKeys';
 import { toggleFavorite as toggleFavoriteInStore } from '../../utils/favoritesStore';
 import { toggleFollowing } from '../../utils/followingStore';
 import { useIsFavorite } from '../../utils/useIsFavorite';
 import { useIsFollowing } from '../../utils/useIsFollowing';
+import { useStorageSignal } from '../../utils/useStorageSignal';
 import { getWatchProgress, subscribeWatchProgressById } from '../../utils/watchProgress';
 import { prefetchRoute } from '../../utils/routePrefetch';
 import { trackEvent } from '../../utils/analytics';
@@ -111,6 +114,12 @@ const FavButton = styled(motion.button).attrs({ 'data-pressable': true })`
 const FollowButton = styled(FavButton)`
   left: 10px;
   right: auto;
+`;
+
+const CompareButton = styled(FavButton)`
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
 `;
 
 const FavDot = styled(motion.div)`
@@ -272,6 +281,11 @@ function AnimeCard({ anime, virtualized = false, insight }) {
 
   const favorited = useIsFavorite(animeId);
   const following = useIsFollowing(animeId);
+  const { signal: compareSignal, bump: bumpCompare } = useStorageSignal([STORAGE_KEYS.compareList]);
+  const compared = useMemo(
+    () => (compareSignal, animeId ? getCompareList().includes(animeId) : false),
+    [animeId, compareSignal],
+  );
   const typeShort = useMemo(() => anime?.type?.split('、')?.[0] ?? '', [anime?.type]);
   const insightScore = useMemo(() => {
     const raw = Number(insight?.score);
@@ -324,6 +338,41 @@ function AnimeCard({ anime, virtualized = false, insight }) {
       trackEvent('following.toggle', { id: animeId, active: result.action === 'followed' });
     },
     [anime?.title, animeId, toast],
+  );
+
+  const toggleCompare = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!animeId) return;
+      const before = getCompareList();
+      const result = toggleCompareInStore(animeId);
+      bumpCompare();
+      if (!result?.changed) return;
+
+      const replaced =
+        result.action === 'add' &&
+        before.length === 2 &&
+        before.some((id) => !result.list.includes(id));
+
+      if (result.action === 'add') {
+        toast.success(
+          '已加入对比',
+          replaced ? '已自动替换最早的对比项。' : '再选一部作品即可并排对照。',
+        );
+      } else {
+        toast.info('已移出对比', '你可以继续添加其他作品。');
+      }
+
+      trackEvent('compare.toggle', {
+        id: animeId,
+        active: result.action === 'add',
+        replaced: Boolean(replaced),
+        size: result.list.length,
+      });
+    },
+    [animeId, bumpCompare, toast],
   );
 
   useEffect(() => {
@@ -399,6 +448,39 @@ function AnimeCard({ anime, virtualized = false, insight }) {
             <FiBell />
           </FavIcon>
         </FollowButton>
+
+        <CompareButton
+          type="button"
+          aria-label={compared ? '从对比中移除' : '加入对比'}
+          aria-pressed={compared}
+          onClick={toggleCompare}
+          whileTap={reducedMotion ? undefined : { scale: 0.92 }}
+          whileHover={reducedMotion ? undefined : { scale: 1.02 }}
+          style={
+            compared
+              ? {
+                  borderColor: 'rgba(var(--secondary-rgb), 0.55)',
+                  color: 'var(--secondary-color)',
+                  background: 'rgba(var(--secondary-rgb), 0.14)',
+                }
+              : undefined
+          }
+          title={compared ? '已加入对比' : '加入对比'}
+        >
+          <FavIcon
+            key={compared ? 'compared' : 'not-compared'}
+            initial={reducedMotion ? false : { scale: 0.9, rotate: -10 }}
+            animate={reducedMotion ? { scale: 1, rotate: 0 } : { scale: 1, rotate: 0 }}
+            transition={
+              reducedMotion
+                ? { duration: 0 }
+                : { type: 'spring', stiffness: 620, damping: 32, mass: 0.6 }
+            }
+            aria-hidden="true"
+          >
+            <FiColumns />
+          </FavIcon>
+        </CompareButton>
 
         <FavButton
           type="button"

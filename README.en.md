@@ -22,6 +22,7 @@
   </p>
   <p>
     <img alt="GitHub License" src="https://img.shields.io/github/license/TUR1412/Guoman?style=flat-square" />
+    <img alt="Version" src="https://img.shields.io/github/package-json/v/TUR1412/Guoman?style=flat-square" />
     <img alt="Build" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/static.yml?branch=master&style=flat-square" />
     <img alt="Quality" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/quality.yml?branch=master&style=flat-square" />
     <img alt="Lighthouse" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/lighthouse.yml?branch=master&style=flat-square" />
@@ -44,6 +45,7 @@
 - **Match score + reasons**: recommendations are explainable and transparent.
 - **Command Palette upgrades**: jump to titles / `#tags` / categories / pages; search stays as a fallback item, and highlighted targets are idle-prefetched for snappier navigation.
 - **Local-first**: favorites, progress, taste profile, and visual settings are persisted in `localStorage`.
+- **Discovery loop upgrades**: Saved Views (search presets), Compare Mode (side-by-side), Pinned Tags (home shortcuts), and SparkBar mini year distribution insights.
 - **PWA & diagnostics**: offline caching + update prompt + `/diagnostics` local health snapshot.
 - **Observability**: local logs + local analytics events + diagnostics replay (logs/errors/events), with INP tracked for interaction debugging.
 - **Crash recovery**: ErrorBoundary provides one-click copy/download diagnostics bundles (logs + errors + health snapshot), with manual-copy fallback and optional `.json.gz` export.
@@ -52,16 +54,37 @@
 
 ---
 
+## 🎬 Demo
+
+> Demo GIF / screenshots placeholders (PRs welcome).
+
+- Search Pro: advanced filters + Saved Views (search presets)
+- Compare Mode: side-by-side comparison (rating/popularity/year/tags)
+- Pinned Tags: pin/unpin tags, home shortcuts
+- Mini Insights: Tag page year distribution SparkBar (lightweight SVG)
+
+<details>
+<summary>📷 Screenshot placeholders</summary>
+
+- Home / Pinned Tags
+- Search / Saved Views
+- Compare / Side-by-side
+- Tag / Year Distribution
+
+</details>
+
+---
+
 ## ✅ Feature Matrix
 
-| Module                | Capabilities                                                                  |
-| --------------------- | ----------------------------------------------------------------------------- |
-| Explore & Recommend   | Taste profile, local recommendations, match explanations, tag momentum        |
-| Follow & Plan         | Following reminders, watch progress, Watch Planner, remaining-time estimation |
-| Insights & Analytics  | Studio Radar, Audience Pulse, viewing history, achievements                   |
-| Visual Experience     | Vercel/Apple themes, glassmorphism, micro-interactions, motion guardrails     |
-| Data Management       | Favorites/groups/import/export/Data Vault, local usage metrics                |
-| Quality & Reliability | PWA, diagnostics, bundle budget gate, error boundaries                        |
+| Module                | Capabilities                                                                                      |
+| --------------------- | ------------------------------------------------------------------------------------------------- |
+| Explore & Recommend   | Taste profile, local recommendations, match explanations, tag momentum, Saved Views, Compare Mode |
+| Follow & Plan         | Following reminders, watch progress, Watch Planner, remaining-time estimation                     |
+| Insights & Analytics  | Studio Radar, Audience Pulse, viewing history, achievements                                       |
+| Visual Experience     | Vercel/Apple themes, glassmorphism, micro-interactions, motion guardrails                         |
+| Data Management       | Favorites/groups/import/export/Data Vault, Saved Views/Compare/Pinned Tags, local usage metrics   |
+| Quality & Reliability | PWA, diagnostics, bundle budget gate, error boundaries                                            |
 
 ---
 
@@ -98,6 +121,12 @@ npm ci
 npm run dev
 ```
 
+Common scripts:
+
+- `npm run check`: format/lint/test/build/budget in one shot
+- `npm run test:watch`: local TDD (Vitest watch)
+- `npm run storybook`: UI component playground
+
 ---
 
 ## ✅ Quality Gates
@@ -112,7 +141,8 @@ Runs: Prettier → ESLint → Vitest → Build → Bundle Budget.
 
 ## 🚢 Deployment
 
-- `vite.config.js` is configured with `base: '/Guoman/'` for GitHub Pages.
+- `vite.config.js` auto-resolves the Vite `base` for Pages (prefers `VITE_BASE/BASE_PATH/PUBLIC_URL`, falls back to `GITHUB_REPOSITORY` / `package.json.homepage`).
+- Routing uses **Hash Router** with a `404.html` deep-link fallback (no refresh 404s on Pages).
 - GitHub Actions builds and publishes `dist/` on every push to the default branch.
 - Enable Pages: `Settings → Pages → GitHub Actions`
 

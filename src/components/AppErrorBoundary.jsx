@@ -204,9 +204,6 @@ class AppErrorBoundary extends React.Component {
       stack: error?.stack,
       source: info?.componentStack,
     });
-    if (import.meta.env?.DEV) {
-      console.error('[AppErrorBoundary] 捕获到未处理错误：', error, info);
-    }
   }
 
   getDiagnosticsJsonText() {

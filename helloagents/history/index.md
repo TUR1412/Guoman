@@ -8,6 +8,7 @@
 
 | 时间戳       | 功能名称                              | 类型 | 状态     | 方案包路径                                                                                                                |
 | ------------ | ------------------------------------- | ---- | -------- | ------------------------------------------------------------------------------------------------------------------------- |
+| 202601150943 | r16_neoglass_evolution                | 重构 | ✅已完成 | [2026-01/202601150943_r16_neoglass_evolution](2026-01/202601150943_r16_neoglass_evolution/)                               |
 | 202601120740 | diagnostics_local_timeline            | 功能 | ✅已完成 | [2026-01/202601120740_diagnostics_local_timeline](2026-01/202601120740_diagnostics_local_timeline/)                       |
 | 202601120702 | diagnostics_timeline_explorer         | 功能 | ✅已完成 | [2026-01/202601120702_diagnostics_timeline_explorer](2026-01/202601120702_diagnostics_timeline_explorer/)                 |
 | 202601120629 | diagnostics_events_explorer           | 功能 | ✅已完成 | [2026-01/202601120629_diagnostics_events_explorer](2026-01/202601120629_diagnostics_events_explorer/)                     |
@@ -44,6 +45,7 @@
 
 ### 2026-01
 
+- [202601150943_r16_neoglass_evolution](2026-01/202601150943_r16_neoglass_evolution/) - R16：NeoGlass UI & 功能进化：Saved Views（搜索视图）、Compare Mode（作品对比）、Pinned Tags（常用标签）、SparkBar 迷你可视化 + GitHub Pages base 加固
 - [202601120740_diagnostics_local_timeline](2026-01/202601120740_diagnostics_local_timeline/) - 诊断回放增强：本地时间线（breadcrumbs）聚合 logs/errors/events（类型筛选/关键词检索/下载筛选结果）
 - [202601120702_diagnostics_timeline_explorer](2026-01/202601120702_diagnostics_timeline_explorer/) - 诊断回放增强：导入时间线（breadcrumbs）聚合 logs/errors/events，并支持类型筛选/关键词检索/下载筛选结果
 - [202601120629_diagnostics_events_explorer](2026-01/202601120629_diagnostics_events_explorer/) - 诊断回放增强：诊断包 events + 本地/导入事件浏览器（筛选/展开/下载筛选结果）

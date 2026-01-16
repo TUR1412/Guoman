@@ -4,6 +4,7 @@ import {
   FiAward,
   FiBell,
   FiBookOpen,
+  FiColumns,
   FiCompass,
   FiDownload,
   FiFilm,
@@ -127,6 +128,15 @@ export const buildCommandPaletteActions = ({ navigate, theme, onToggleTheme }) =
       <FiHeart />,
       () => navigate('/favorites'),
       { prefetchPath: '/favorites' },
+    ),
+    createAction(
+      'nav.compare',
+      '作品对比',
+      '并排对照两部作品的关键指标',
+      ['对比', 'compare', '比较', 'diff'],
+      <FiColumns />,
+      () => navigate('/compare'),
+      { prefetchPath: '/compare' },
     ),
     createAction(
       'nav.following',

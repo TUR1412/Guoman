@@ -6,6 +6,13 @@
 
 ## [Unreleased]
 
+- ✅ Saved Views：Search 页面新增“保存/应用/删除”搜索视图（关键词 + 高级筛选一键复用，Local-first）。
+- ✅ Compare Mode：新增作品对比页 `/compare`，支持从 AnimeCard 一键加入/移除并并排对比关键指标（Data Vault 已纳入导入导出）。
+- ✅ Pinned Tags：标签页支持一键钉住/取消钉住，首页新增“常用标签”快捷入口（Local-first）。
+- ✅ Mini Insights：标签页新增年份分布 SparkBar（纯 SVG，轻量可视化）。
+- ✅ GitHub Pages：`vite.config.js` base 支持自动推导与环境变量覆盖，配合 Hash Router + `404.html` 深链兜底。
+- ✅ 质量与洁癖：清除所有 `console.*`，统一走本地 `logger/errorReporter`，并升级 ESLint 为完全禁止 `console.*`。
+
 - UI：为 Header/ Footer 的 Logo 入口补齐 `data-pressable` 物理微交互与 `:focus-visible` 光环，增强可点击反馈与键盘可达性（保持业务逻辑不变）。
 - UI：为 Banner「剧集速览」卡片引入 `data-pointer-glow` 指针辉光（尊重 reduced motion），增强“玻璃层级 + 光谱”视觉纵深（保持业务逻辑不变）。
 - UI：增强 `[data-card]` 的键盘可达性微交互：`:focus-within` 时同步触发边框渐变 位移，确保非 hover 场景也具备清晰的层级反馈（保持业务逻辑不变）。

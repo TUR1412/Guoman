@@ -179,6 +179,15 @@ export function FiCommand(props) {
   );
 }
 
+export function FiColumns(props) {
+  return (
+    <FeatherIcon {...props}>
+      <rect x={'3'} y={'3'} width={'18'} height={'18'} rx={'2'} ry={'2'} />
+      <line x1={'12'} y1={'3'} x2={'12'} y2={'21'} />
+    </FeatherIcon>
+  );
+}
+
 export function FiCompass(props) {
   return (
     <FeatherIcon {...props}>

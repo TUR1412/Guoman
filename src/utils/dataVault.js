@@ -91,6 +91,27 @@ const FEATURE_MAP = [
     emptyHint: '创建分组后可在收藏页管理。',
   },
   {
+    key: 'savedViews',
+    label: '保存视图',
+    keys: [STORAGE_KEYS.savedViews],
+    getCount: () => readKey(STORAGE_KEYS.savedViews, []).length,
+    emptyHint: '在搜索页保存筛选条件后可快速复用。',
+  },
+  {
+    key: 'compare',
+    label: '作品对比',
+    keys: [STORAGE_KEYS.compareList],
+    getCount: () => readKey(STORAGE_KEYS.compareList, []).length,
+    emptyHint: '在作品卡片点“加入对比”即可开始。',
+  },
+  {
+    key: 'pinnedTags',
+    label: '常用标签',
+    keys: [STORAGE_KEYS.pinnedTags],
+    getCount: () => readKey(STORAGE_KEYS.pinnedTags, []).length,
+    emptyHint: '在标签页点“钉住”即可固定到常用区。',
+  },
+  {
     key: 'searchHistory',
     label: '搜索历史',
     keys: [STORAGE_KEYS.searchHistory],

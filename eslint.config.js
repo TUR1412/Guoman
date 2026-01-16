@@ -67,8 +67,8 @@ export default [
       'react-hooks/preserve-manual-memoization': 'off',
       'react-hooks/set-state-in-effect': 'off',
 
-      // 允许 warn/error（用于错误边界/开发期诊断），禁止 console.log
-      'no-console': ['error', { allow: ['warn', 'error'] }],
+      // 项目采用本地可观测性（logger/errorReporter），统一禁止 console.*
+      'no-console': 'error',
 
       // 轻量提升 JSX 质量（警告级别，不阻塞 CI）
       'react/jsx-no-useless-fragment': 'warn',

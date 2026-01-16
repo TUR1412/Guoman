@@ -1,6 +1,6 @@
 import { getFeatureSummaries } from './dataVault';
 import { getErrorReports } from './errorReporter';
-import { getLogs } from './logger';
+import { getLogs, logWarn } from './logger';
 import { getPerformanceSnapshot } from './performance';
 import { formatBytes } from './formatBytes';
 
@@ -229,9 +229,9 @@ export const getHealthSnapshot = () => {
 };
 
 export const printHealthPanorama = () => {
-  if (typeof console === 'undefined') return;
   const snap = getHealthSnapshot();
-  console.warn('[Guoman] 系统健康全景图', snap);
+  logWarn('[Guoman] 系统健康全景图', snap, 'healthConsole');
+  return snap;
 };
 
 export const startHealthMonitoring = ({ loopIntervalMs = 1000, memoryIntervalMs = 5000 } = {}) => {
