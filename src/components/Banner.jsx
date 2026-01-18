@@ -525,7 +525,7 @@ function Banner() {
       </span>
 
       <CarouselViewport role="list" aria-label="精选轮播列表">
-        <AnimatePresence initial={false} mode="wait">
+        <AnimatePresence mode="wait">
           {active ? (
             <Slide
               key={active.id}
