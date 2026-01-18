@@ -61,9 +61,9 @@ const HeaderContainer = styled.header`
 const HeaderInner = styled.div`
   position: relative;
   z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
   align-items: center;
   height: 100%;
   padding: 0 var(--spacing-lg);
@@ -75,7 +75,7 @@ const Logo = styled(Link).attrs({ 'data-pressable': true })`
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  grid-column: span 2;
+  flex: 0 0 auto;
 
   img {
     height: 32px;
@@ -93,12 +93,8 @@ const Logo = styled(Link).attrs({ 'data-pressable': true })`
     }
   }
 
-  @media (max-width: 992px) {
-    grid-column: span 2;
-  }
-
   @media (max-width: 768px) {
-    grid-column: 1 / span 10;
+    flex: 1 1 auto;
   }
 `;
 
@@ -123,15 +119,7 @@ const Nav = styled.nav`
   justify-content: center;
   gap: var(--spacing-lg);
   min-width: 0;
-  grid-column: span 5;
-
-  @media (max-width: 1200px) {
-    grid-column: span 4;
-  }
-
-  @media (max-width: 992px) {
-    grid-column: span 3;
-  }
+  flex: 1 1 auto;
 
   @media (max-width: 768px) {
     display: none;
@@ -140,22 +128,30 @@ const Nav = styled.nav`
 
 const NavLinks = styled.ul.attrs({ 'data-divider': 'inline', role: 'list' })`
   display: flex;
-  gap: var(--spacing-lg);
-  row-gap: var(--spacing-sm);
-  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  flex-wrap: nowrap;
   align-items: center;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const NavLink = styled(Link).attrs({ 'data-pressable': true })`
   position: relative;
   display: inline-flex;
   align-items: center;
-  padding: 0.45rem 0.8rem;
+  padding: 0.42rem 0.65rem;
   border-radius: var(--border-radius-pill);
   overflow: hidden;
   font-weight: 500;
   color: ${(props) => (props.$active ? 'var(--text-on-primary)' : 'var(--text-secondary)')};
   transition: var(--transition);
+  white-space: nowrap;
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
@@ -184,19 +180,19 @@ const NavLabel = styled.span`
 `;
 
 const DesktopSearch = styled.div`
-  grid-column: span 3;
   display: flex;
   justify-self: end;
   width: 100%;
   max-width: clamp(220px, 24vw, 340px);
+  flex: 0 1 clamp(220px, 24vw, 340px);
 
   @media (max-width: 1200px) {
-    grid-column: span 4;
     max-width: 100%;
+    flex-basis: 280px;
   }
 
   @media (max-width: 992px) {
-    grid-column: span 4;
+    flex-basis: 240px;
   }
 
   @media (max-width: 768px) {
@@ -205,15 +201,11 @@ const DesktopSearch = styled.div`
 `;
 
 const ActionGroup = styled.div`
-  grid-column: span 2;
   display: flex;
   align-items: center;
   justify-self: end;
   gap: var(--spacing-sm);
-
-  @media (max-width: 992px) {
-    grid-column: span 3;
-  }
+  flex: 0 0 auto;
 
   @media (max-width: 768px) {
     display: none;
@@ -259,10 +251,10 @@ const MobileMenuButton = styled(IconButton).attrs({ variant: 'ghost', 'data-pres
   font-size: var(--text-4xl);
   color: var(--text-primary);
   justify-self: end;
+  flex: 0 0 auto;
 
   @media (max-width: 768px) {
     display: flex;
-    grid-column: 11 / -1;
   }
 `;
 
