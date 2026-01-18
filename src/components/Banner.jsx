@@ -105,7 +105,7 @@ const BannerContainer = styled.section`
   }
 
   @media (max-width: 576px) {
-    height: calc(60svh - var(--header-height));
+    height: calc(82svh - var(--header-height));
   }
 `;
 
@@ -251,6 +251,10 @@ const BannerContent = styled.div`
   @media (max-width: 768px) {
     left: 5%;
     right: 5%;
+  }
+
+  @media (max-width: 576px) {
+    bottom: 8%;
   }
 `;
 
