@@ -160,10 +160,18 @@ const NavButton = styled(IconButton).attrs({
 
 const PrevButton = styled(NavButton)`
   left: 16px;
+
+  @media (max-width: 576px) {
+    display: none;
+  }
 `;
 
 const NextButton = styled(NavButton)`
   right: 16px;
+
+  @media (max-width: 576px) {
+    display: none;
+  }
 `;
 
 const PaginationRow = styled.div`
@@ -284,6 +292,11 @@ const BannerMetaCard = styled(motion.div).attrs({
   @media (max-width: 992px) {
     grid-column: 1 / -1;
   }
+
+  @media (max-width: 576px) {
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
 `;
 
 const BannerMetaBadge = styled.div`
@@ -304,11 +317,29 @@ const BannerMetaBadge = styled.div`
 const BannerMetaTitle = styled.div`
   font-weight: 700;
   color: var(--text-primary);
+
+  @media (max-width: 576px) {
+    display: none;
+  }
 `;
 
 const BannerMetaList = styled.div.attrs({ 'data-divider': 'list', role: 'list' })`
   display: grid;
   gap: var(--spacing-xs-wide);
+
+  @media (max-width: 576px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--spacing-md);
+
+    > * + * {
+      margin-top: 0;
+      padding-top: 0;
+    }
+
+    > * + *::before {
+      content: none;
+    }
+  }
 `;
 
 const BannerMetaItem = styled.div.attrs({ role: 'listitem' })`
@@ -316,6 +347,16 @@ const BannerMetaItem = styled.div.attrs({ role: 'listitem' })`
   justify-content: space-between;
   font-size: var(--text-sm);
   color: var(--text-secondary);
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+
+    strong {
+      font-size: var(--text-base);
+    }
+  }
 
   strong {
     color: var(--text-primary);
@@ -325,6 +366,9 @@ const BannerMetaItem = styled.div.attrs({ role: 'listitem' })`
 const BannerTag = styled(motion.span)`
   display: inline-flex;
   align-items: center;
+  justify-self: start;
+  width: fit-content;
+  max-width: 100%;
   padding: var(--spacing-xs-plus) var(--spacing-md-tight);
   border-radius: var(--border-radius-pill);
   background: var(--stamp-bg);
