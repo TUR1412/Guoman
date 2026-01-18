@@ -530,7 +530,7 @@ function Banner() {
             <Slide
               key={active.id}
               role="listitem"
-              initial={reducedMotion ? false : { opacity: 0 }}
+              initial={false}
               animate={{ opacity: 1 }}
               exit={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
               transition={
