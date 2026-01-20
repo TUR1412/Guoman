@@ -54,9 +54,9 @@
   --border-gradient: linear-gradient(120deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
 
   /* 视觉设置（可由用户中心调参） */
-  --paper-noise-opacity: 0.08;
+  --paper-noise-opacity: 0.06;
   --paper-noise-multiplier: 1;
-  --aurora-opacity: 0.9;
+  --aurora-opacity: 0.55;
   --aurora-opacity-multiplier: 1;
 
   /* 动态阴影层级：0-12 级（用于统一“空间感”与 hover/press 状态） */

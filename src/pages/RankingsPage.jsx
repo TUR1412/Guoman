@@ -77,7 +77,7 @@ const HighlightCard = styled(Link).attrs({
   role: 'listitem',
 })`
   border-radius: var(--border-radius-lg);
-  padding: var(--spacing-xl);
+  padding: var(--spacing-lg);
   display: grid;
   gap: var(--spacing-md);
   position: relative;
@@ -91,8 +91,9 @@ const HighlightCover = styled.div`
   background-image: url(${(p) => p.$image});
   background-size: cover;
   background-position: center;
-  opacity: 0.16;
-  filter: saturate(1.2);
+  opacity: 0.12;
+  filter: blur(12px) saturate(1.1);
+  transform: scale(1.06);
 `;
 
 const HighlightOverlay = styled.div`
@@ -226,7 +227,7 @@ function RankingsPage() {
         <h2 className="section-title" style={{ marginBottom: 'var(--spacing-xl)' }}>
           Top 12
         </h2>
-        <AnimeGrid $bento>
+        <AnimeGrid>
           {rest.map((anime) => (
             <AnimeCard key={anime.id} anime={anime} />
           ))}

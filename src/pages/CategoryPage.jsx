@@ -111,7 +111,7 @@ function CategoryPage() {
             renderItem={(anime) => <AnimeCard anime={anime} virtualized />}
           />
         ) : (
-          <AnimeGrid $bento>
+          <AnimeGrid>
             {results.map((anime) => (
               <AnimeCard key={anime.id} anime={anime} />
             ))}

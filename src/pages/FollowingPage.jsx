@@ -493,7 +493,7 @@ function FollowingPage() {
             </ButtonRow>
           </PlannerCard>
 
-          <AnimeGrid $bento>
+          <AnimeGrid>
             {list.map((entry) => {
               const reminderValue = entry.reminderAt ? toDatetimeLocal(entry.reminderAt) : '';
 

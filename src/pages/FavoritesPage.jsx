@@ -822,7 +822,7 @@ function FavoritesPage() {
             </SortableList>
           </div>
         ) : (
-          <AnimeGrid $bento>
+          <AnimeGrid>
             {sortedList.map((anime) => (
               <FavoriteItem key={anime.id}>
                 <AnimeCard anime={anime} />

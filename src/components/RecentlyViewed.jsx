@@ -137,7 +137,7 @@ function RecentlyViewed() {
         </SectionHeader>
 
         {list.length > 0 ? (
-          <AnimeGrid $bento>
+          <AnimeGrid>
             {list.map((anime) => (
               <AnimeCard key={anime.id} anime={anime} />
             ))}

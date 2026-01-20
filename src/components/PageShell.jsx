@@ -7,7 +7,7 @@ import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 import Container from '../ui/Container';
 
 const Page = styled(motion.section)`
-  padding: var(--spacing-3xl) 0;
+  padding: var(--spacing-2xl) 0;
   min-height: calc(100vh - var(--header-height));
 `;
 
@@ -19,8 +19,8 @@ const Header = styled.div.attrs({
 })`
   display: grid;
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-2xl);
-  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-lg);
   border-radius: var(--border-radius-lg);
   position: relative;
   overflow: hidden;
@@ -67,7 +67,7 @@ const TitleStack = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: var(--text-8xl);
+  font-size: var(--text-7xl);
   line-height: var(--leading-tight);
   letter-spacing: 0.02em;
   font-family: var(--font-display);
@@ -134,7 +134,7 @@ const Actions = styled.div`
 const Content = styled.div.attrs({ 'data-stagger': true, 'data-divider': 'list' })`
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--spacing-2xl);
+  gap: var(--spacing-xl);
 
   & > * {
     grid-column: 1 / -1;

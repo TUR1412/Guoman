@@ -2,13 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FiStar, FiTrash2 } from './icons/feather';
+import Container from '../ui/Container';
 import { useToast } from './ToastProvider';
 import { trackEvent } from '../utils/analytics';
 import { STORAGE_KEYS } from '../utils/dataKeys';
 import { useStorageSignal } from '../utils/useStorageSignal';
 import { clearPinnedTags, getPinnedTags } from '../utils/pinnedTags';
 
-const Card = styled.section.attrs({
+const Section = styled.section`
+  padding: var(--spacing-2xl) 0;
+`;
+
+const Card = styled.div.attrs({
   'data-card': true,
   'data-divider': 'card',
   'data-elev': '3',
@@ -147,45 +152,49 @@ export default function PinnedTagsSection() {
   if (!Array.isArray(pinnedTags) || pinnedTags.length === 0) return null;
 
   return (
-    <Card aria-label="常用标签">
-      <Header>
-        <div>
-          <Title>
-            <FiStar /> 常用标签
-          </Title>
-          <Meta>已钉住 {pinnedTags.length} 个标签 · 首页快捷入口</Meta>
-        </div>
-        <Actions>
-          <DangerButton
-            onClick={() => {
-              clearPinnedTags();
-              bump();
-              toast.info('已清空常用标签', '你可以随时重新钉住。');
-              trackEvent('pinnedTags.clear');
-            }}
-            title="清空所有常用标签"
-          >
-            <FiTrash2 />
-            清空
-          </DangerButton>
-        </Actions>
-      </Header>
+    <Section aria-label="常用标签区块">
+      <Container>
+        <Card aria-label="常用标签">
+          <Header>
+            <div>
+              <Title>
+                <FiStar /> 常用标签
+              </Title>
+              <Meta>已钉住 {pinnedTags.length} 个标签 · 首页快捷入口</Meta>
+            </div>
+            <Actions>
+              <DangerButton
+                onClick={() => {
+                  clearPinnedTags();
+                  bump();
+                  toast.info('已清空常用标签', '你可以随时重新钉住。');
+                  trackEvent('pinnedTags.clear');
+                }}
+                title="清空所有常用标签"
+              >
+                <FiTrash2 />
+                清空
+              </DangerButton>
+            </Actions>
+          </Header>
 
-      <TagRow aria-label="常用标签列表">
-        {pinnedTags.map((tag) => (
-          <TagChip
-            key={tag}
-            to={`/tag/${encodeURIComponent(tag)}`}
-            onClick={() => trackEvent('pinnedTags.open', { tag })}
-            title={`打开标签：${tag}`}
-          >
-            <FiStar aria-hidden="true" />
-            {tag}
-          </TagChip>
-        ))}
-      </TagRow>
+          <TagRow aria-label="常用标签列表">
+            {pinnedTags.map((tag) => (
+              <TagChip
+                key={tag}
+                to={`/tag/${encodeURIComponent(tag)}`}
+                onClick={() => trackEvent('pinnedTags.open', { tag })}
+                title={`打开标签：${tag}`}
+              >
+                <FiStar aria-hidden="true" />
+                {tag}
+              </TagChip>
+            ))}
+          </TagRow>
 
-      <Hint>提示：进入任意标签页，点击“钉住”即可把标签固定到首页。</Hint>
-    </Card>
+          <Hint>提示：进入任意标签页，点击“钉住”即可把标签固定到首页。</Hint>
+        </Card>
+      </Container>
+    </Section>
   );
 }

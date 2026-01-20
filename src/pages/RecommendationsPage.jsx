@@ -308,7 +308,7 @@ function RecommendationsPage() {
         )}
 
         {rankedWithInsight.length > 0 ? (
-          <Grid $bento>
+          <Grid>
             {rankedWithInsight.map((item) => (
               <AnimeCard key={item.anime.id} anime={item.anime} insight={item.insight} />
             ))}

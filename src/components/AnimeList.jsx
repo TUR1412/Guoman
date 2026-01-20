@@ -154,7 +154,7 @@ function AnimeList({
   defaultTab = 'all',
   storageKey = DEFAULT_STORAGE_KEY,
   initialDisplayCount = 8,
-  bento = true,
+  bento = false,
 }) {
   const titleId = useId();
   const descId = useId();

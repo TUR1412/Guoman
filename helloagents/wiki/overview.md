@@ -55,6 +55,8 @@
 - 入口：`src/ui/index.js`
 - Primitives：`Button`、`IconButton`、`TextField`、`SelectField`、`TextAreaField`、`RangeInput`（统一 variants/sizes/disabled/focus-visible/表单交互一致性）
 - 约定：页面/组件优先复用 primitives，避免重复声明 `styled.*` 导致交互分叉
+- Grid：`AnimeGrid` 默认使用标准响应式网格；Bento 布局仅作为可选装饰（传入 `$bento`）。
+- Layout：`PageShell`/`Banner` 以 `Container` 为对齐基准，PC 端默认节奏更紧凑并降低背景噪声，避免过度留白造成的“视觉松散”。
 - 渐进式模块化：`Header` 相关拆分组件放在 `src/components/header/`，对外入口仍为 `src/components/Header.jsx`
 - 命令面板入口：`src/components/header/paletteActions.jsx` 统一收口 Command Palette actions（支持作品/标签/#tag/分类/静态页直达）
 - 命令面板预取：`src/components/CommandPalette.jsx` 在高亮/hover action 时读取 `prefetchPath` 并调用 `src/utils/routePrefetch.js` 提前加载目标路由 chunk（提升跳转响应）

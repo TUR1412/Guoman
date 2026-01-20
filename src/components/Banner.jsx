@@ -81,8 +81,8 @@ const bannerData = [
 
 const BannerContainer = styled.section`
   width: 100%;
-  height: calc(100vh - var(--header-height));
-  height: calc(100svh - var(--header-height));
+  height: min(680px, calc(100vh - var(--header-height)));
+  height: min(680px, calc(100svh - var(--header-height)));
   position: relative;
   overflow: hidden;
 
@@ -233,36 +233,31 @@ const BannerImage = styled.div.attrs({ 'data-parallax': true })`
   background-size: cover;
   background-position: center;
   z-index: 1;
-  opacity: 0.9;
+  opacity: 0.55;
+  filter: saturate(1.05) blur(10px);
+  transform: scale(1.04);
 `;
 
 const BannerContent = styled.div`
   position: absolute;
-  bottom: 12%;
-  left: 8%;
-  right: 8%;
+  inset: 0;
   z-index: 3;
+  display: grid;
+  align-items: center;
+  padding: 0 var(--spacing-lg);
+`;
+
+const BannerGrid = styled.div`
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--spacing-lg);
   align-items: end;
 
-  @media (max-width: 1200px) {
-    left: 6%;
-    right: 6%;
-  }
-
   @media (max-width: 992px) {
-    bottom: 10%;
-  }
-
-  @media (max-width: 768px) {
-    left: 5%;
-    right: 5%;
-  }
-
-  @media (max-width: 576px) {
-    bottom: 8%;
+    align-items: start;
   }
 `;
 
@@ -380,7 +375,7 @@ const BannerTag = styled(motion.span)`
 `;
 
 const BannerTitle = styled(motion.h1)`
-  font-size: var(--text-10xl);
+  font-size: clamp(var(--text-6xl), 1.4rem + 1.4vw, var(--text-9xl));
   font-weight: 900;
   margin-bottom: var(--spacing-md);
   color: var(--text-primary);
@@ -394,33 +389,25 @@ const BannerTitle = styled(motion.h1)`
     -webkit-text-fill-color: transparent;
   }
 
-  @media (max-width: 768px) {
-    font-size: var(--text-9xl);
-  }
-
   @media (max-width: 576px) {
-    font-size: var(--text-8xl);
+    margin-bottom: var(--spacing-sm);
   }
 `;
 
 const BannerSubtitle = styled(motion.h2)`
-  font-size: var(--text-4xl);
+  font-size: clamp(var(--text-lg-plus), 1.1rem + 0.6vw, var(--text-3xl));
   font-weight: 700;
   margin-bottom: var(--spacing-md);
   color: var(--secondary-color);
   text-shadow: var(--text-shadow-hero-soft);
   font-family: var(--font-display);
-
-  @media (max-width: 576px) {
-    font-size: var(--text-xl);
-  }
 `;
 
 const BannerDescription = styled(motion.p)`
   font-size: var(--text-lg);
   margin-bottom: var(--spacing-xl);
   color: var(--text-secondary);
-  max-width: 90%;
+  max-width: 62ch;
 
   @media (max-width: 576px) {
     font-size: var(--text-base);
@@ -584,95 +571,99 @@ function Banner() {
               <BannerImage $image={active.image} />
               <BannerOverlay />
               <BannerContent>
-                <BannerMain>
-                  <BannerTag
+                <BannerGrid>
+                  <BannerMain>
+                    <BannerTag
+                      initial={reducedMotion ? false : { opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={
+                        reducedMotion
+                          ? { duration: 0 }
+                          : { duration: 0.55, ease: [0.22, 1, 0.36, 1] }
+                      }
+                    >
+                      {active.tag}
+                    </BannerTag>
+                    <BannerTitle
+                      initial={reducedMotion ? false : { opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={
+                        reducedMotion
+                          ? { duration: 0 }
+                          : { duration: 0.6, delay: 0.12, ease: [0.22, 1, 0.36, 1] }
+                      }
+                    >
+                      {active.title}
+                    </BannerTitle>
+                    <BannerSubtitle
+                      initial={reducedMotion ? false : { opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={
+                        reducedMotion
+                          ? { duration: 0 }
+                          : { duration: 0.6, delay: 0.22, ease: [0.22, 1, 0.36, 1] }
+                      }
+                    >
+                      {active.subtitle}
+                    </BannerSubtitle>
+                    <BannerDescription
+                      initial={reducedMotion ? false : { opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={
+                        reducedMotion
+                          ? { duration: 0 }
+                          : { duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }
+                      }
+                    >
+                      {active.desc}
+                    </BannerDescription>
+                    <BannerActions
+                      initial={reducedMotion ? false : { opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={
+                        reducedMotion
+                          ? { duration: 0 }
+                          : { duration: 0.6, delay: 0.42, ease: [0.22, 1, 0.36, 1] }
+                      }
+                    >
+                      <BannerButton
+                        to={active.link}
+                        aria-label={active.buttonText}
+                        whileHover={reducedMotion ? undefined : { scale: 1.05 }}
+                        whileTap={reducedMotion ? undefined : { scale: 0.95 }}
+                        onMouseEnter={() => prefetchRoute(active.link)}
+                        onFocus={() => prefetchRoute(active.link)}
+                      >
+                        {active.buttonText}
+                      </BannerButton>
+                    </BannerActions>
+                  </BannerMain>
+
+                  <BannerMetaCard
+                    ref={metaGlowRef}
+                    data-pointer-glow
                     initial={reducedMotion ? false : { opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={
-                      reducedMotion ? { duration: 0 } : { duration: 0.55, ease: [0.22, 1, 0.36, 1] }
-                    }
-                  >
-                    {active.tag}
-                  </BannerTag>
-                  <BannerTitle
-                    initial={reducedMotion ? false : { opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={
                       reducedMotion
                         ? { duration: 0 }
-                        : { duration: 0.6, delay: 0.12, ease: [0.22, 1, 0.36, 1] }
+                        : { duration: 0.6, delay: 0.24, ease: [0.22, 1, 0.36, 1] }
                     }
                   >
-                    {active.title}
-                  </BannerTitle>
-                  <BannerSubtitle
-                    initial={reducedMotion ? false : { opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={
-                      reducedMotion
-                        ? { duration: 0 }
-                        : { duration: 0.6, delay: 0.22, ease: [0.22, 1, 0.36, 1] }
-                    }
-                  >
-                    {active.subtitle}
-                  </BannerSubtitle>
-                  <BannerDescription
-                    initial={reducedMotion ? false : { opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={
-                      reducedMotion
-                        ? { duration: 0 }
-                        : { duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }
-                    }
-                  >
-                    {active.desc}
-                  </BannerDescription>
-                  <BannerActions
-                    initial={reducedMotion ? false : { opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={
-                      reducedMotion
-                        ? { duration: 0 }
-                        : { duration: 0.6, delay: 0.42, ease: [0.22, 1, 0.36, 1] }
-                    }
-                  >
-                    <BannerButton
-                      to={active.link}
-                      aria-label={active.buttonText}
-                      whileHover={reducedMotion ? undefined : { scale: 1.05 }}
-                      whileTap={reducedMotion ? undefined : { scale: 0.95 }}
-                      onMouseEnter={() => prefetchRoute(active.link)}
-                      onFocus={() => prefetchRoute(active.link)}
-                    >
-                      {active.buttonText}
-                    </BannerButton>
-                  </BannerActions>
-                </BannerMain>
-
-                <BannerMetaCard
-                  ref={metaGlowRef}
-                  data-pointer-glow
-                  initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={
-                    reducedMotion
-                      ? { duration: 0 }
-                      : { duration: 0.6, delay: 0.24, ease: [0.22, 1, 0.36, 1] }
-                  }
-                >
-                  <BannerMetaBadge>
-                    第 {activeIndex + 1} / {slideCount} 帧
-                  </BannerMetaBadge>
-                  <BannerMetaTitle>剧集速览</BannerMetaTitle>
-                  <BannerMetaList>
-                    {active.meta?.map((meta) => (
-                      <BannerMetaItem key={`${active.id}-${meta.label}`}>
-                        <span>{meta.label}</span>
-                        <strong>{meta.value}</strong>
-                      </BannerMetaItem>
-                    ))}
-                  </BannerMetaList>
-                </BannerMetaCard>
+                    <BannerMetaBadge>
+                      第 {activeIndex + 1} / {slideCount} 帧
+                    </BannerMetaBadge>
+                    <BannerMetaTitle>剧集速览</BannerMetaTitle>
+                    <BannerMetaList>
+                      {active.meta?.map((meta) => (
+                        <BannerMetaItem key={`${active.id}-${meta.label}`}>
+                          <span>{meta.label}</span>
+                          <strong>{meta.value}</strong>
+                        </BannerMetaItem>
+                      ))}
+                    </BannerMetaList>
+                  </BannerMetaCard>
+                </BannerGrid>
               </BannerContent>
             </Slide>
           ) : null}

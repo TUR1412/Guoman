@@ -35,6 +35,8 @@
 
 - UI：修复移动端首页 Banner 在小屏下内容被裁切的问题（提升小屏 banner 高度并调整内容底部间距，保持业务逻辑不变）。
 
+- UI：PC 端视觉收敛：降低背景网格/极光与纸纹噪点强度，PageShell 页头卡片与页面节奏更紧凑；Banner 改为容器化居中布局并弱化背景干扰；默认关闭 Bento 网格以提升对齐与一致性（保持业务逻辑不变）。
+
 - UI：为 `[data-pressable]` 补齐 `:focus-visible` 光环与 disabled 光标语义（cursor），提升键盘可达性与可点击反馈一致性（保持业务逻辑不变）。
 
 - UI：升级 `[data-pressable]` 物理微交互为变量驱动（`--pressable-*`），支持 X/Y offset、hover 距离与 active scale，并仅在 hover 设备启用 hover 反馈（避免触屏粘滞 hover），保持逻辑不变。
