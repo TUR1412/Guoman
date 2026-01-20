@@ -222,7 +222,7 @@
     rgba(255, 255, 255, 0.06);
   --border-subtle: rgba(248, 250, 252, 0.12);
   --shadow-color-rgb: 0, 0, 0;
-  --grid-line: rgba(148, 163, 184, 0.07);
+  --grid-line: rgba(148, 163, 184, 0.05);
   --border-gradient: linear-gradient(
     120deg,
     rgba(var(--primary-rgb), 0.72),
@@ -345,7 +345,7 @@
     rgba(255, 255, 255, 0.94);
   --border-subtle: rgba(15, 23, 42, 0.12);
   --shadow-color-rgb: 15, 23, 42;
-  --grid-line: rgba(15, 23, 42, 0.08);
+  --grid-line: rgba(15, 23, 42, 0.05);
   --border-gradient: linear-gradient(
     120deg,
     rgba(var(--primary-rgb), 0.55),

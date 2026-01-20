@@ -81,8 +81,8 @@ const bannerData = [
 
 const BannerContainer = styled.section`
   width: 100%;
-  height: min(680px, calc(100vh - var(--header-height)));
-  height: min(680px, calc(100svh - var(--header-height)));
+  height: min(600px, calc(100vh - var(--header-height)));
+  height: min(600px, calc(100svh - var(--header-height)));
   position: relative;
   overflow: hidden;
 
@@ -97,7 +97,7 @@ const BannerContainer = styled.section`
     background-size: cover;
     background-position: center;
     z-index: 0;
-    opacity: 0.6;
+    opacity: 0.45;
   }
 
   @media (max-width: 768px) {
@@ -233,8 +233,8 @@ const BannerImage = styled.div.attrs({ 'data-parallax': true })`
   background-size: cover;
   background-position: center;
   z-index: 1;
-  opacity: 0.55;
-  filter: saturate(1.05) blur(10px);
+  opacity: 0.5;
+  filter: saturate(1.05) blur(8px);
   transform: scale(1.04);
 `;
 
@@ -556,7 +556,7 @@ function Banner() {
       </span>
 
       <CarouselViewport role="list" aria-label="精选轮播列表">
-        <AnimatePresence mode="wait">
+        <AnimatePresence initial={false}>
           {active ? (
             <Slide
               key={active.id}
@@ -573,59 +573,11 @@ function Banner() {
               <BannerContent>
                 <BannerGrid>
                   <BannerMain>
-                    <BannerTag
-                      initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={
-                        reducedMotion
-                          ? { duration: 0 }
-                          : { duration: 0.55, ease: [0.22, 1, 0.36, 1] }
-                      }
-                    >
-                      {active.tag}
-                    </BannerTag>
-                    <BannerTitle
-                      initial={reducedMotion ? false : { opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={
-                        reducedMotion
-                          ? { duration: 0 }
-                          : { duration: 0.6, delay: 0.12, ease: [0.22, 1, 0.36, 1] }
-                      }
-                    >
-                      {active.title}
-                    </BannerTitle>
-                    <BannerSubtitle
-                      initial={reducedMotion ? false : { opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={
-                        reducedMotion
-                          ? { duration: 0 }
-                          : { duration: 0.6, delay: 0.22, ease: [0.22, 1, 0.36, 1] }
-                      }
-                    >
-                      {active.subtitle}
-                    </BannerSubtitle>
-                    <BannerDescription
-                      initial={reducedMotion ? false : { opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={
-                        reducedMotion
-                          ? { duration: 0 }
-                          : { duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }
-                      }
-                    >
-                      {active.desc}
-                    </BannerDescription>
-                    <BannerActions
-                      initial={reducedMotion ? false : { opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={
-                        reducedMotion
-                          ? { duration: 0 }
-                          : { duration: 0.6, delay: 0.42, ease: [0.22, 1, 0.36, 1] }
-                      }
-                    >
+                    <BannerTag>{active.tag}</BannerTag>
+                    <BannerTitle>{active.title}</BannerTitle>
+                    <BannerSubtitle>{active.subtitle}</BannerSubtitle>
+                    <BannerDescription>{active.desc}</BannerDescription>
+                    <BannerActions>
                       <BannerButton
                         to={active.link}
                         aria-label={active.buttonText}
@@ -639,17 +591,7 @@ function Banner() {
                     </BannerActions>
                   </BannerMain>
 
-                  <BannerMetaCard
-                    ref={metaGlowRef}
-                    data-pointer-glow
-                    initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={
-                      reducedMotion
-                        ? { duration: 0 }
-                        : { duration: 0.6, delay: 0.24, ease: [0.22, 1, 0.36, 1] }
-                    }
-                  >
+                  <BannerMetaCard ref={metaGlowRef} data-pointer-glow>
                     <BannerMetaBadge>
                       第 {activeIndex + 1} / {slideCount} 帧
                     </BannerMetaBadge>
