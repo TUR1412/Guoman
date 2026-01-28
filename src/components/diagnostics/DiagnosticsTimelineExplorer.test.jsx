@@ -17,7 +17,7 @@ describe('DiagnosticsTimelineExplorer', () => {
     const events = [{ id: 'a1', name: 'anime.play', payload: { id: 42 }, at: 1 }];
 
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <DiagnosticsTimelineExplorer
           logs={logs}
           errors={errors}
@@ -49,7 +49,7 @@ describe('DiagnosticsTimelineExplorer', () => {
     const onJump = vi.fn();
 
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <DiagnosticsTimelineExplorer
           logs={[{ id: 'l1', level: 'warn', message: 'route enter', source: 'router', at: 3 }]}
           errors={[]}
@@ -68,7 +68,7 @@ describe('DiagnosticsTimelineExplorer', () => {
 
   it('supports empty state overrides', () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <DiagnosticsTimelineExplorer
           logs={[]}
           errors={[]}

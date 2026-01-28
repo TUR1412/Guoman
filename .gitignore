@@ -9,6 +9,11 @@
 # 报告
 /reports
 
+# Playwright
+/test-results
+/playwright-report
+/blob-report
+
 # 生产
 /build
 /dist

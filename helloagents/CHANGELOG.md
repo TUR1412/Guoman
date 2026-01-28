@@ -6,6 +6,14 @@
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-01-27
+
+- ✅ 依赖升级：React 19 / React Router 7 / Vite 7 / Vitest 4 / Storybook 10 / Framer Motion 12（工具链大版本对齐，门禁保持全绿）。
+- ✅ 发布体系：新增 `.github/workflows/release.yml` + `docs/RELEASE.md`（tag 自动生成 Release Notes + 上传 `dist.zip`，并校验 tag 与 `package.json#version` 一致）。
+- ✅ 性能：路由入口改为 `HashRouter`（替换 Data Router），显著降低首屏依赖链体积，并同步收紧 Bundle Budget。
+- ✅ 性能预算：更新 `scripts/bundle-budget.config.json` 基线（2026-01-27），适配大版本升级后的分包与体积变化。
+- ✅ 工程稳定性：eslint/prettier 忽略 `storybook-static/` 生成物，避免 Storybook build 反噬 `npm run check`。
+
 - ✅ Saved Views：Search 页面新增“保存/应用/删除”搜索视图（关键词 + 高级筛选一键复用，Local-first）。
 - ✅ Compare Mode：新增作品对比页 `/compare`，支持从 AnimeCard 一键加入/移除并并排对比关键指标（Data Vault 已纳入导入导出）。
 - ✅ Pinned Tags：标签页支持一键钉住/取消钉住，首页新增“常用标签”快捷入口（Local-first）。
@@ -75,6 +83,8 @@
 - ✅ 工程体验：`public/robots.txt` 与 `public/sitemap.xml` 改为构建生成物（避免本地 build 产生无意义 diff）。
 - ✅ 质量门禁：修复覆盖率门禁相关失败（补齐关键分支测试，`npm run check` 全绿）。
 - ✅ Lighthouse Baseline：升级 `npm run lighthouse:baseline`，支持 remote/local 自动生成报告（HTML/JSON）与得分基线摘要（按需 `npx`，避免 CI 依赖膨胀）。
+- ✅ Lighthouse Baseline（增强）：支持 `LH_*` 环境变量传参；修复 Windows `spawn EINVAL`；local preview 自动追加 `--base /Guoman/`；并用 `taskkill /T` 可靠清理预览进程树。
+- ✅ A11y（修复）：Tab role=tab 移除不合法的 `aria-pressed`；Footer 移除误用的 list/listitem roles；修复按钮/链接可见文本与可访问名称不一致（local Lighthouse A11y 可达 100）。
 - ✅ 可测试性：`registerServiceWorker({ forceProd })` 支持注入生产分支以便稳定覆盖。
 - ✅ 稳定性：避免 `apiClient` 中未消费的 Promise `finally` 链触发未处理拒绝告警。
 

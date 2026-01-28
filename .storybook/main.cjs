@@ -4,8 +4,13 @@ module.exports = {
     name: '@storybook/react-vite',
     options: {},
   },
-  stories: ['../src/**/*.stories.@(js|jsx)'],
-  addons: ['@storybook/addon-essentials', '@storybook/addon-a11y', '@storybook/addon-interactions'],
+  stories: ['../src/**/*.stories.@(js|jsx|ts|tsx)'],
+  addons: [
+    '@storybook/addon-docs',
+    '@storybook/addon-a11y',
+    '@storybook/addon-vitest',
+    '@storybook/addon-onboarding',
+  ],
   docs: {
     autodocs: true,
   },

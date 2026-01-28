@@ -147,7 +147,7 @@ function ContinueWatching() {
             </TitleWrap>
             <MetaLine>最近更新：{formatZhMonthDayTime(latestUpdatedAt, '暂无记录')}</MetaLine>
           </TitleGroup>
-          <ClearButton type="button" onClick={onClear} aria-label="清空观看进度">
+          <ClearButton type="button" onClick={onClear}>
             <FiTrash2 />
             清空进度
           </ClearButton>
@@ -156,7 +156,9 @@ function ContinueWatching() {
         {list.length > 0 ? (
           <AnimeGrid>
             {list.map((anime) => (
-              <AnimeCard key={anime.id} anime={anime} />
+              <div key={anime.id} role="listitem">
+                <AnimeCard anime={anime} />
+              </div>
             ))}
           </AnimeGrid>
         ) : (

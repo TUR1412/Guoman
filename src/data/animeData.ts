@@ -13,7 +13,9 @@ import animeCover11 from '../assets/images/anime-cover-11.svg';
 import animeCover12 from '../assets/images/anime-cover-12.svg';
 
 // 模拟国漫数据
-const animeData = [
+import type { Anime, AnimeId, Category } from '../types/content';
+
+const animeData: Anime[] = [
   {
     id: 1,
     title: '斗罗大陆',
@@ -436,10 +438,10 @@ const animeData = [
   },
 ];
 
-export const featuredAnime = [1, 2, 3, 4, 10];
-export const popularAnime = [11, 3, 1, 7, 10, 2, 5, 9];
-export const newReleases = [10, 12, 5, 6, 9];
-export const categories = [
+export const featuredAnime: AnimeId[] = [1, 2, 3, 4, 10];
+export const popularAnime: AnimeId[] = [11, 3, 1, 7, 10, 2, 5, 9];
+export const newReleases: AnimeId[] = [10, 12, 5, 6, 9];
+export const categories: Category[] = [
   { id: 1, name: '热血' },
   { id: 2, name: '古风' },
   { id: 3, name: '玄幻' },
@@ -452,15 +454,16 @@ export const categories = [
   { id: 10, name: '冒险' },
 ];
 
-export const animeIndex = new Map(animeData.map((anime) => [anime.id, anime]));
+export const animeIndex = new Map<AnimeId, Anime>(animeData.map((anime) => [anime.id, anime]));
 
-export const selectAnimeByIds = (ids = []) => ids.map((id) => animeIndex.get(id)).filter(Boolean);
+export const selectAnimeByIds = (ids: AnimeId[] = []): Anime[] =>
+  ids.map((id) => animeIndex.get(id)).filter((anime): anime is Anime => Boolean(anime));
 
-export const selectAnimeByCategory = (categoryName) =>
+export const selectAnimeByCategory = (categoryName: string): Anime[] =>
   animeData.filter((anime) => anime.tags.some((tag) => tag === categoryName));
 
-export const tagCounts = animeData.reduce((acc, anime) => {
-  (anime.tags || []).forEach((tag) => {
+export const tagCounts = animeData.reduce<Record<string, number>>((acc, anime) => {
+  anime.tags.forEach((tag) => {
     acc[tag] = (acc[tag] || 0) + 1;
   });
   return acc;

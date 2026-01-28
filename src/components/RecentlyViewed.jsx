@@ -130,7 +130,7 @@ function RecentlyViewed() {
             </TitleWrap>
             <MetaLine>共 {list.length} 部作品</MetaLine>
           </TitleGroup>
-          <ClearButton type="button" onClick={onClear} aria-label="清空最近浏览">
+          <ClearButton type="button" onClick={onClear}>
             <FiTrash2 />
             清空记录
           </ClearButton>
@@ -139,7 +139,9 @@ function RecentlyViewed() {
         {list.length > 0 ? (
           <AnimeGrid>
             {list.map((anime) => (
-              <AnimeCard key={anime.id} anime={anime} />
+              <div key={anime.id} role="listitem">
+                <AnimeCard anime={anime} />
+              </div>
             ))}
           </AnimeGrid>
         ) : (

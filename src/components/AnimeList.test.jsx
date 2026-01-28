@@ -15,7 +15,7 @@ describe('AnimeList', () => {
     const user = userEvent.setup();
 
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ToastProvider>
           <FavoritesProvider>
             <AnimeList storageKey="test.animeList.tab" defaultTab="all" initialDisplayCount={4} />
@@ -39,7 +39,7 @@ describe('AnimeList', () => {
     const user = userEvent.setup();
 
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ToastProvider>
           <FavoritesProvider>
             <AnimeList

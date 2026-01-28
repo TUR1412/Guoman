@@ -20,7 +20,7 @@ describe('AnimeCard', () => {
     const user = userEvent.setup();
 
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ToastProvider>
           <FavoritesProvider>
             <AnimeCard anime={anime} />
@@ -41,7 +41,7 @@ describe('AnimeCard', () => {
     const user = userEvent.setup();
 
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ToastProvider>
           <FavoritesProvider>
             <AnimeCard anime={anime} />
@@ -65,7 +65,7 @@ describe('AnimeCard', () => {
     const user = userEvent.setup();
 
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ToastProvider>
           <FavoritesProvider>
             <AnimeCard anime={anime} />
@@ -89,7 +89,7 @@ describe('AnimeCard', () => {
     );
 
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ToastProvider>
           <FavoritesProvider>
             <AnimeCard anime={anime} />
@@ -104,7 +104,7 @@ describe('AnimeCard', () => {
 
   it('returns null when anime is missing', () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ToastProvider>
           <FavoritesProvider>
             <AnimeCard anime={null} />

@@ -135,12 +135,12 @@ const FooterDescription = styled.p`
   margin-bottom: var(--spacing-lg);
 `;
 
-const SocialLinks = styled.div.attrs({ 'data-divider': 'inline', role: 'list' })`
+const SocialLinks = styled.div.attrs({ 'data-divider': 'inline' })`
   display: flex;
   gap: var(--spacing-md);
 `;
 
-const SocialLink = styled.a.attrs({ 'data-pressable': true, role: 'listitem' })`
+const SocialLink = styled.a.attrs({ 'data-pressable': true })`
   --pressable-hover-translate-y: -3px;
 
   width: 36px;
@@ -161,14 +161,14 @@ const SocialLink = styled.a.attrs({ 'data-pressable': true, role: 'listitem' })`
   }
 `;
 
-const FooterHeading = styled.h4`
+const FooterHeading = styled.h2`
   font-size: var(--text-lg);
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: var(--spacing-lg);
 `;
 
-const FooterLinks = styled.ul.attrs({ 'data-divider': 'list', role: 'list' })`
+const FooterLinks = styled.ul.attrs({ 'data-divider': 'list' })`
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
@@ -191,7 +191,7 @@ const Copyright = styled.p`
   font-size: var(--text-sm);
 `;
 
-const FooterNav = styled.nav.attrs({ 'data-divider': 'inline', role: 'list' })`
+const FooterNav = styled.nav.attrs({ 'data-divider': 'inline' })`
   display: flex;
   gap: var(--spacing-lg);
 
@@ -202,7 +202,7 @@ const FooterNav = styled.nav.attrs({ 'data-divider': 'inline', role: 'list' })`
   }
 `;
 
-const FooterNavLink = styled(Link).attrs({ 'data-pressable': true, role: 'listitem' })`
+const FooterNavLink = styled(Link).attrs({ 'data-pressable': true })`
   color: var(--text-tertiary);
   font-size: var(--text-sm);
   transition: var(--transition);

@@ -48,7 +48,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install
@@ -64,26 +64,7 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-
-          $args = @("run", "lighthouse:baseline", "--")
-          if ($env:LH_MODE -eq "local") {
-            $args += "--local"
-          } else {
-            $args += "--remote"
-            if ($env:LH_URL) {
-              $args += @("--url", $env:LH_URL)
-            }
-          }
-
-          if ($env:LH_PRESET) {
-            $args += @("--preset", $env:LH_PRESET)
-          }
-
-          if ($env:LH_HTML -eq "False") {
-            $args += "--no-html"
-          }
-
-          npm @args
+          npm run lighthouse:baseline
 
       - name: Summarize baseline
         if: always()

@@ -555,12 +555,11 @@ function Banner() {
         轮播展示国漫精选推荐与播放入口。
       </span>
 
-      <CarouselViewport role="list" aria-label="精选轮播列表">
+      <CarouselViewport aria-label="精选轮播列表">
         <AnimatePresence initial={false}>
           {active ? (
             <Slide
               key={active.id}
-              role="listitem"
               initial={false}
               animate={{ opacity: 1 }}
               exit={reducedMotion ? { opacity: 1 } : { opacity: 0 }}

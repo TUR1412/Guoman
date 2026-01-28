@@ -31,12 +31,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
           cache: 'npm'
       - name: Install Dependencies
         run: npm ci
+      - name: Install Playwright (chromium)
+        run: npx playwright install --with-deps chromium
       - name: Quality Gate (format/lint/test/build)
         run: npm run check
+      - name: E2E (Playwright)
+        run: npm run e2e:ci
       - name: Failure hints
         if: failure()
         run: |

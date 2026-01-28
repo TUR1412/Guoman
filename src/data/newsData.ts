@@ -1,4 +1,6 @@
-const newsData = [
+import type { NewsItem } from '../types/content';
+
+const newsData: NewsItem[] = [
   {
     id: '2025-guoman-trend',
     title: '国漫热度持续攀升：2025 迎来“内容+技术”双加速',

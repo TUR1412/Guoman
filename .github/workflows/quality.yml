@@ -24,23 +24,17 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
+      - name: Install Playwright (chromium)
+        run: npx playwright install --with-deps chromium
 
-      - name: Format (check)
-        run: npm run format:check
+      - name: Quality gate (single SSOT)
+        run: npm run check
 
-      - name: Unit tests
-        run: npm run test
-
-      - name: Build
-        run: npm run build
-
-      - name: Bundle budget
-        run: npm run budget:bundle
+      - name: E2E (Playwright)
+        run: npm run e2e:ci

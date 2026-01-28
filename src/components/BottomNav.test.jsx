@@ -7,10 +7,7 @@ import BottomNav from './BottomNav';
 describe('BottomNav', () => {
   it('marks active route via aria-current', () => {
     render(
-      <MemoryRouter
-        initialEntries={['/favorites']}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter initialEntries={['/favorites']}>
         <BottomNav />
       </MemoryRouter>,
     );

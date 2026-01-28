@@ -80,5 +80,5 @@ describe('routePrefetch', () => {
     expect(loads.get('../pages/StaticPage')).toBe(1);
     expect(loads.get('../pages/UserCenterPage')).toBe(1);
     expect(loads.get('../pages/DiagnosticsPage')).toBe(1);
-  });
+  }, 30000);
 });

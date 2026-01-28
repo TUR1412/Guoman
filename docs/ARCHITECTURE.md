@@ -6,8 +6,8 @@
 
 ## 1. 技术栈
 
-- **React 18**：组件与状态
-- **Vite 6**：开发与构建
+- **React 19**：组件与状态
+- **Vite 7**：开发与构建
 - **React Router（Hash Router）**：路由（适配 GitHub Pages）
 - **styled-components**：样式（配合全局 Design Tokens）
 - **framer-motion**：动效（含页面切换动效）
@@ -18,7 +18,7 @@
 
 ## 2. 路由策略
 
-入口路由在 `src/App.jsx`，采用：
+入口路由在 `src/App.tsx`，采用：
 
 - 路由级 **lazy + Suspense**：减小首包体积，避免“单包过大”的构建警告
 - `AnimatePresence`：页面切换具有轻量过渡（不影响首帧可见性）

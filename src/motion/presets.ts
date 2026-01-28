@@ -1,6 +1,11 @@
 import { MOTION_DURATIONS, MOTION_EASINGS, MOTION_SPRINGS } from './tokens';
 
-export const getPageMotion = (reducedMotion, { y = 10, duration = MOTION_DURATIONS.base } = {}) => {
+type PageMotionOptions = { y?: number; duration?: number };
+
+export const getPageMotion = (
+  reducedMotion: boolean,
+  { y = 10, duration = MOTION_DURATIONS.base }: PageMotionOptions = {},
+) => {
   if (reducedMotion) {
     return { initial: false, animate: { opacity: 1, y: 0 }, exit: { opacity: 1, y: 0 } };
   }
@@ -13,7 +18,7 @@ export const getPageMotion = (reducedMotion, { y = 10, duration = MOTION_DURATIO
   };
 };
 
-export const getRouteMotion = (reducedMotion) => {
+export const getRouteMotion = (reducedMotion: boolean) => {
   const stable = { opacity: 1, y: 0, scale: 1 };
   if (reducedMotion) {
     return {
@@ -32,7 +37,7 @@ export const getRouteMotion = (reducedMotion) => {
   };
 };
 
-export const getModalBackdropMotion = (reducedMotion) => {
+export const getModalBackdropMotion = (reducedMotion: boolean) => {
   if (reducedMotion) {
     return {
       initial: false,
@@ -50,7 +55,7 @@ export const getModalBackdropMotion = (reducedMotion) => {
   };
 };
 
-export const getModalPanelMotion = (reducedMotion) => {
+export const getModalPanelMotion = (reducedMotion: boolean) => {
   if (reducedMotion) {
     return {
       initial: false,
@@ -72,7 +77,7 @@ export const getModalPanelMotion = (reducedMotion) => {
   };
 };
 
-export const getToastMotion = (reducedMotion) => {
+export const getToastMotion = (reducedMotion: boolean) => {
   if (reducedMotion) {
     return {
       initial: false,
@@ -94,7 +99,7 @@ export const getToastMotion = (reducedMotion) => {
   };
 };
 
-export const getRouteCurtainMotion = (reducedMotion) => {
+export const getRouteCurtainMotion = (reducedMotion: boolean) => {
   if (reducedMotion) return null;
 
   return {

@@ -4,4 +4,6 @@ export const CATEGORY_SLUG_MAP = Object.freeze({
   ancient: { title: '古风仙侠', tag: '古风' },
   scifi: { title: '科幻未来', tag: '科幻' },
   comedy: { title: '轻松搞笑', tag: '搞笑' },
-});
+} as const);
+
+export type CategorySlug = keyof typeof CATEGORY_SLUG_MAP;

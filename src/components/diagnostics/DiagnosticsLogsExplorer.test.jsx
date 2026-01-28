@@ -24,7 +24,7 @@ describe('DiagnosticsLogsExplorer', () => {
     ];
 
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <DiagnosticsLogsExplorer logs={logs} onDownload={onDownload} />
       </MemoryRouter>,
     );
@@ -53,7 +53,7 @@ describe('DiagnosticsLogsExplorer', () => {
 
   it('supports custom title and empty state overrides', () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <DiagnosticsLogsExplorer
           title="导入日志浏览器"
           logs={[]}

@@ -453,7 +453,6 @@ function Login() {
               type="button"
               $active={activeTab === 'login'}
               aria-selected={activeTab === 'login'}
-              aria-pressed={activeTab === 'login'}
               tabIndex={activeTab === 'login' ? 0 : -1}
               onClick={() => setActiveTab('login')}
             >
@@ -463,7 +462,6 @@ function Login() {
               type="button"
               $active={activeTab === 'register'}
               aria-selected={activeTab === 'register'}
-              aria-pressed={activeTab === 'register'}
               tabIndex={activeTab === 'register' ? 0 : -1}
               onClick={() => setActiveTab('register')}
             >

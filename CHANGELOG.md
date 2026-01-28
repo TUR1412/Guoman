@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-01-27
+
+- 依赖：升级到 React 19 / React Router 7 / Vite 7 / Vitest 4 / Storybook 10 / Framer Motion 12，并更新 Bundle Budget 基线（`npm run check` 保持全绿）
+- 发布：新增 tag 发布工作流（自动生成 GitHub Release + 上传 `dist.zip`），并校验 tag 与 `package.json#version` 一致
+- 性能：路由入口改为 `HashRouter`（替换 Data Router），显著降低首屏依赖链体积（Bundle Budget 更严格）
+
 - CI：新增 GitHub Actions `quality.yml` 工作流（lint/format:check/test/build/budget:bundle），为 push/PR 提供质量闸门
 - CI：新增 GitHub Actions `lighthouse.yml` 手动工作流（remote/local）并上传 `reports/` artifact，便于回归对比
 
@@ -45,6 +51,8 @@
 - 数据导出安全：全量导出默认脱敏（同步 Token 等敏感键默认剔除，可显式包含）
 - 性能预算闸门：新增 `npm run budget:bundle` 并接入 `npm run check`（CI 自动守住首屏体积）
 - Lighthouse 基线：升级 `npm run lighthouse:baseline`，支持 remote/local 生成报告（HTML/JSON）与得分基线摘要（按需 `npx`，避免常规 `npm ci` 负担）
+- Lighthouse 脚本增强：支持 `LH_*` 环境变量传参，修复 Windows `spawn EINVAL`，local preview 自动追加 `--base /Guoman/`，并用 `taskkill /T` 可靠清理预览进程树
+- A11y：修复 Tab 的 aria 属性（role=tab 不应使用 `aria-pressed`）、Footer 列表 role 误用、按钮/链接的可见文本与可访问名称不一致（local Lighthouse A11y 可达 100）
 - 依赖安全：Storybook 升级到修复版本（消除审计高危项）
 - 移动端导航：新增底部 Dock（首页/搜索/收藏/追更/我的），单手操作更顺畅
 - UI 交互：统一过渡曲线与 press feedback（避免 transition: all 的抖动），弹窗/Toast/提示条使用一致的 easing

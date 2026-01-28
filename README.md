@@ -29,10 +29,10 @@
     <img alt="Quality" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/quality.yml?branch=master&style=flat-square" />
     <img alt="Lighthouse" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/lighthouse.yml?branch=master&style=flat-square" />
     <img alt="Last Commit" src="https://img.shields.io/github/last-commit/TUR1412/Guoman?style=flat-square" />
-    <img alt="Node" src="https://img.shields.io/badge/node-%3E%3D18-339933?style=flat-square" />
-    <img alt="React" src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=000&style=flat-square" />
-    <img alt="Vite" src="https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=fff&style=flat-square" />
-    <img alt="Vitest" src="https://img.shields.io/badge/Vitest-tested-6E9F18?style=flat-square" />
+    <img alt="Node" src="https://img.shields.io/badge/node-%3E%3D22-339933?style=flat-square" />
+    <img alt="React" src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=000&style=flat-square" />
+    <img alt="Vite" src="https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=fff&style=flat-square" />
+    <img alt="Vitest" src="https://img.shields.io/badge/Vitest-4-6E9F18?style=flat-square" />
     <img alt="ESLint" src="https://img.shields.io/badge/ESLint-enabled-4B32C3?style=flat-square" />
   </p>
 </div>
@@ -150,8 +150,8 @@ flowchart TD
 
 | 模块 | 技术                              |
 | ---- | --------------------------------- |
-| 框架 | React 18                          |
-| 构建 | Vite 6                            |
+| 框架 | React 19                          |
+| 构建 | Vite 7                            |
 | 路由 | React Router (Hash Router)        |
 | 动效 | Framer Motion                     |
 | 样式 | styled-components + Design Tokens |
@@ -185,12 +185,14 @@ flowchart TD
 
 ## 🚀 快速开始 | Quick Start
 
-> 建议 Node.js v18+（与 GitHub Actions 构建环境一致）
+> 建议 Node.js v22+（与 GitHub Actions 构建环境一致）
 
 ```bash
 npm ci
 npm run dev
 ```
+
+> Windows 提示：若 `npm ci` 因 `EPERM`（常见于 `esbuild.exe` / `rollup.*.node` 被占用）失败，先关闭正在运行的 `node` 进程/编辑器后重试；仍失败可临时使用 `npm install`。
 
 常用命令：
 
@@ -206,7 +208,7 @@ npm run dev
 npm run check
 ```
 
-`check` 会依次执行：Prettier → ESLint → Vitest → Build → Bundle Budget。
+`check` 会依次执行：Prettier → ESLint → TypeScript（typecheck）→ Vitest → Build → Bundle Budget。
 
 ---
 
@@ -225,6 +227,7 @@ npm run check
 - `docs/DESIGN_TOKENS.md`：设计变量与组件规范
 - `docs/DIAGNOSTICS.md`：诊断面板与性能预算
 - `docs/LIGHTHOUSE_BASELINE.md`：Lighthouse 基线与跑分说明
+- `docs/RELEASE.md`：发布流程（tag / Release Notes / 产物追溯）
 - `docs/QUARK_AUDIT.md`：夸克级审计与改进清单
 - `docs/ITERATIONS.md`：迭代记录（原子级提交）
 

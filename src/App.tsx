@@ -26,7 +26,8 @@ import { STORAGE_KEYS } from './utils/dataKeys';
 import { getRouteCurtainMotion, getRouteMotion } from './motion/presets';
 import { useAppReducedMotion } from './motion/useAppReducedMotion';
 
-const routeLazy = (importer, source) =>
+type LazyModule = { default: unknown };
+const routeLazy = (importer: () => Promise<LazyModule>, source: string) =>
   lazyWithRetry(importer, {
     source,
   });
@@ -147,6 +148,8 @@ const RouteCurtain = styled(motion.div)`
 const INTRO_KEY = 'guoman.introSeen';
 
 function App() {
+  type VisualSettings = ReturnType<typeof getStoredVisualSettings>;
+
   const [loading, setLoading] = useState(() => {
     if (typeof window === 'undefined') return false;
     return !safeSessionStorageGet(INTRO_KEY);
@@ -155,7 +158,9 @@ function App() {
   const reducedMotion = useAppReducedMotion();
   const proEnabled = useIsProEnabled();
   const { signal: visualSignal } = useStorageSignal([STORAGE_KEYS.visualSettings]);
-  const [visualSettings, setVisualSettings] = useState(() => getStoredVisualSettings());
+  const [visualSettings, setVisualSettings] = useState<VisualSettings>(() =>
+    getStoredVisualSettings(),
+  );
   const routeMotion = getRouteMotion(reducedMotion);
   const curtainMotion = getRouteCurtainMotion(reducedMotion);
 
@@ -168,8 +173,12 @@ function App() {
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
 
-    const onUpdate = (event) => {
-      const next = event?.detail?.settings;
+    const onUpdate = (event: Event) => {
+      const detail =
+        event instanceof CustomEvent
+          ? (event.detail as { settings?: VisualSettings } | undefined)
+          : undefined;
+      const next = detail?.settings;
       if (!next) return;
       setVisualSettings(next);
       applyVisualSettings(next);
@@ -199,8 +208,14 @@ function App() {
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
 
-    const connection =
-      navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    type NetworkInformation = { saveData?: boolean; effectiveType?: string };
+    type NavigatorWithConnection = Navigator & {
+      connection?: NetworkInformation;
+      mozConnection?: NetworkInformation;
+      webkitConnection?: NetworkInformation;
+    };
+    const nav = navigator as NavigatorWithConnection;
+    const connection = nav.connection || nav.mozConnection || nav.webkitConnection;
 
     if (connection?.saveData) return undefined;
     if (connection?.effectiveType && ['slow-2g', '2g'].includes(connection.effectiveType)) {
@@ -241,7 +256,7 @@ function App() {
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
 
-    let rafId = null;
+    let rafId: number | null = null;
     const update = () => {
       rafId = null;
       document.documentElement.style.setProperty('--scroll-y', `${window.scrollY || 0}px`);
@@ -266,14 +281,14 @@ function App() {
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
 
-    const markLoaded = (img) => {
+    const markLoaded = (img: HTMLImageElement | null) => {
       if (!img || img.dataset.loaded === 'true') return;
       img.dataset.loaded = 'true';
     };
 
-    const onLoad = (event) => {
-      const target = event.target;
-      if (target && target.tagName === 'IMG') {
+    const onLoad = (event: Event) => {
+      const target = event.target as HTMLElement | null;
+      if (target instanceof HTMLImageElement) {
         markLoaded(target);
       }
     };

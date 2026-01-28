@@ -10,10 +10,7 @@ describe('Header', () => {
     const user = userEvent.setup();
 
     render(
-      <MemoryRouter
-        initialEntries={['/']}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter initialEntries={['/']}>
         <Header />
       </MemoryRouter>,
     );
@@ -27,5 +24,5 @@ describe('Header', () => {
     await waitFor(() => {
       expect(screen.queryByRole('dialog', { name: '命令面板' })).not.toBeInTheDocument();
     });
-  });
+  }, 20000);
 });

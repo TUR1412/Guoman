@@ -1,5 +1,7 @@
 import js from '@eslint/js';
 import globals from 'globals';
+import tsParser from '@typescript-eslint/parser';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
 import importPlugin from 'eslint-plugin-import';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import react from 'eslint-plugin-react';
@@ -8,7 +10,16 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default [
   {
-    ignores: ['dist/**', 'node_modules/**', 'coverage/**'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'coverage/**',
+      'reports/**',
+      'test-results/**',
+      'playwright-report/**',
+      'blob-report/**',
+      'storybook-static/**',
+    ],
   },
   js.configs.recommended,
   {
@@ -69,6 +80,78 @@ export default [
 
       // 项目采用本地可观测性（logger/errorReporter），统一禁止 console.*
       'no-console': 'error',
+
+      // 轻量提升 JSX 质量（警告级别，不阻塞 CI）
+      'react/jsx-no-useless-fragment': 'warn',
+    },
+  },
+  {
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      parser: tsParser,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        __APP_VERSION__: 'readonly',
+        __BUILD_SHA__: 'readonly',
+        __BUILD_TIME__: 'readonly',
+      },
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
+      'import/resolver': {
+        node: {
+          extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        },
+      },
+    },
+    plugins: {
+      import: importPlugin,
+      'jsx-a11y': jsxA11y,
+      react,
+      'react-hooks': reactHooks,
+      '@typescript-eslint': tsPlugin,
+    },
+    rules: {
+      ...react.configs.recommended.rules,
+      ...reactHooks.configs.recommended.rules,
+      ...jsxA11y.configs.recommended.rules,
+      ...importPlugin.configs.recommended.rules,
+      ...tsPlugin.configs.recommended.rules,
+
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+
+      // 允许“有意为空”的 catch 块（用于 feature-detect / 用户取消等可接受失败）
+      'no-empty': ['error', { allowEmptyCatch: true }],
+
+      // Vite alias（@/ 等）会让该规则产生误报，交给 TypeScript 或构建期处理更合适
+      'import/no-unresolved': 'off',
+      'import/no-named-as-default': 'off',
+      'import/no-named-as-default-member': 'off',
+
+      // 项目为 JS/JSX，避免强推 PropTypes
+      'react/prop-types': 'off',
+      'react/react-in-jsx-scope': 'off',
+
+      // React Compiler 相关建议规则目前过于激进，会把正常写法当成错误
+      'react-hooks/preserve-manual-memoization': 'off',
+      'react-hooks/set-state-in-effect': 'off',
+
+      // 项目采用本地可观测性（logger/errorReporter），统一禁止 console.*
+      'no-console': 'error',
+
+      // TS 文件中禁用 no-undef，避免与类型/declare 冲突（运行时未定义仍应由构建/测试暴露）
+      'no-undef': 'off',
 
       // 轻量提升 JSX 质量（警告级别，不阻塞 CI）
       'react/jsx-no-useless-fragment': 'warn',

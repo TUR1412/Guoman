@@ -215,7 +215,6 @@ function AnimeList({
                 type="button"
                 $active={activeTab === category.id}
                 aria-selected={activeTab === category.id}
-                aria-pressed={activeTab === category.id}
                 tabIndex={activeTab === category.id ? 0 : -1}
                 onClick={() => setActiveTab(category.id)}
               >
@@ -243,6 +242,7 @@ function AnimeList({
             {displayedAnime.slice(0, displayCount).map((anime) => (
               <motion.div
                 key={anime.id}
+                role="listitem"
                 layout
                 initial={reducedMotion ? false : { opacity: 0, y: 10, scale: 0.98 }}
                 animate={

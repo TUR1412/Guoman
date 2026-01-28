@@ -18,7 +18,6 @@ import { trackEvent } from '../../utils/analytics';
 import { useAppReducedMotion } from '../../motion/useAppReducedMotion';
 
 const Card = styled(motion.article).attrs({
-  role: 'listitem',
   'data-card': true,
   'data-divider': 'card',
   'data-elev': '3',
@@ -539,7 +538,6 @@ function AnimeCard({ anime, virtualized = false, insight }) {
       <CardLink
         to={`/anime/${anime.id}`}
         state={coverLayoutId ? { coverLayoutId } : undefined}
-        aria-label={`查看《${anime.title}》详情`}
         aria-describedby={descId}
         onMouseEnter={() => prefetchRoute(`/anime/${anime.id}`)}
         onFocus={() => prefetchRoute(`/anime/${anime.id}`)}

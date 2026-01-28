@@ -13,7 +13,7 @@
 
 ## 0. 基线信息（Baseline）
 
-- 框架：React 18 + Vite 6
+- 框架：React 19 + Vite 7
 - 路由：React Router Hash Router（适配 GitHub Pages）
 - 样式：styled-components + 全局 Design Tokens（CSS Variables）
 - 动效：framer-motion（尊重 `prefers-reduced-motion`）

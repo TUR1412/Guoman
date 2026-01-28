@@ -4,6 +4,14 @@ export default defineConfig({
   test: {
     testTimeout: 10000,
     environment: 'jsdom',
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/coverage/**',
+      '**/.{git,cache,output,temp}/**',
+      '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,eslint,prettier}.config.*',
+      'e2e/**',
+    ],
     environmentOptions: {
       jsdom: {
         url: 'http://localhost/',
@@ -16,7 +24,7 @@ export default defineConfig({
       reporter: ['text', 'json-summary', 'html'],
       all: true,
       include: [
-        'src/utils/**/*.{js,jsx}',
+        'src/utils/**/*.{js,jsx,ts,tsx}',
         'src/components/CommandPalette.jsx',
         'src/components/NetworkStatusBanner.jsx',
         'src/components/AnimeList.jsx',
@@ -29,7 +37,7 @@ export default defineConfig({
       thresholds: {
         perFile: true,
         // Core logic should be near “极限”覆盖率。
-        'src/utils/**/*.{js,jsx}': {
+        'src/utils/**/*.{js,jsx,ts,tsx}': {
           statements: 92,
           lines: 92,
           functions: 90,

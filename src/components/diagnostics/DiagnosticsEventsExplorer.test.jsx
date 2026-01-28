@@ -17,7 +17,7 @@ describe('DiagnosticsEventsExplorer', () => {
     ];
 
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <DiagnosticsEventsExplorer events={events} onDownload={onDownload} />
       </MemoryRouter>,
     );
@@ -42,7 +42,7 @@ describe('DiagnosticsEventsExplorer', () => {
 
   it('supports custom title and empty state overrides', () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <DiagnosticsEventsExplorer
           title="导入事件浏览器"
           events={[]}

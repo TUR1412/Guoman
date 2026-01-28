@@ -27,10 +27,10 @@
     <img alt="Quality" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/quality.yml?branch=master&style=flat-square" />
     <img alt="Lighthouse" src="https://img.shields.io/github/actions/workflow/status/TUR1412/Guoman/lighthouse.yml?branch=master&style=flat-square" />
     <img alt="Last Commit" src="https://img.shields.io/github/last-commit/TUR1412/Guoman?style=flat-square" />
-    <img alt="Node" src="https://img.shields.io/badge/node-%3E%3D18-339933?style=flat-square" />
-    <img alt="React" src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=000&style=flat-square" />
-    <img alt="Vite" src="https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=fff&style=flat-square" />
-    <img alt="Vitest" src="https://img.shields.io/badge/Vitest-tested-6E9F18?style=flat-square" />
+    <img alt="Node" src="https://img.shields.io/badge/node-%3E%3D22-339933?style=flat-square" />
+    <img alt="React" src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=000&style=flat-square" />
+    <img alt="Vite" src="https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=fff&style=flat-square" />
+    <img alt="Vitest" src="https://img.shields.io/badge/Vitest-4-6E9F18?style=flat-square" />
     <img alt="ESLint" src="https://img.shields.io/badge/ESLint-enabled-4B32C3?style=flat-square" />
   </p>
 </div>
@@ -102,10 +102,10 @@
 
 | Area   | Tech                                                         |
 | ------ | ------------------------------------------------------------ |
-| UI     | React 18 + styled-components + Design Tokens (CSS Variables) |
+| UI     | React 19 + styled-components + Design Tokens (CSS Variables) |
 | Router | React Router (Hash Router)                                   |
 | Motion | Framer Motion                                                |
-| Build  | Vite 6                                                       |
+| Build  | Vite 7                                                       |
 | Tests  | Vitest + Testing Library                                     |
 | PWA    | Web App Manifest + Service Worker                            |
 | Deploy | GitHub Actions → GitHub Pages                                |
@@ -114,12 +114,14 @@
 
 ## 🚀 Quick Start
 
-> Node.js v18+ recommended (aligned with GitHub Actions).
+> Node.js v22+ recommended (aligned with GitHub Actions).
 
 ```bash
 npm ci
 npm run dev
 ```
+
+> Windows note: if `npm ci` fails with `EPERM` (commonly due to locked `esbuild.exe` / `rollup.*.node`), close any running `node` processes/editors and retry. If it still fails, you can temporarily use `npm install`.
 
 Common scripts:
 
@@ -135,7 +137,7 @@ Common scripts:
 npm run check
 ```
 
-Runs: Prettier → ESLint → Vitest → Build → Bundle Budget.
+Runs: Prettier → ESLint → TypeScript (typecheck) → Vitest → Build → Bundle Budget.
 
 ---
 
@@ -154,6 +156,7 @@ Runs: Prettier → ESLint → Vitest → Build → Bundle Budget.
 - `docs/DESIGN_TOKENS.md` — design tokens and UI conventions
 - `docs/DIAGNOSTICS.md` — diagnostics & performance budget
 - `docs/LIGHTHOUSE_BASELINE.md` — Lighthouse baseline instructions
+- `docs/RELEASE.md` — release workflow (tags / release notes / artifacts)
 - `docs/QUARK_AUDIT.md` — quark-level audit and improvement backlog
 - `docs/ITERATIONS.md` — atomic iteration records
 

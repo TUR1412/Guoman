@@ -28,7 +28,7 @@ describe('DiagnosticsErrorsExplorer', () => {
     ];
 
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <DiagnosticsErrorsExplorer errors={errors} onDownload={onDownload} />
       </MemoryRouter>,
     );
@@ -50,7 +50,7 @@ describe('DiagnosticsErrorsExplorer', () => {
 
   it('supports custom title and empty state overrides', () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <DiagnosticsErrorsExplorer
           title="导入错误浏览器"
           errors={[]}

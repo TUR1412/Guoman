@@ -1,5 +1,9 @@
 dist
 coverage
 reports
+test-results
+playwright-report
+blob-report
+storybook-static
 node_modules
 package-lock.json
