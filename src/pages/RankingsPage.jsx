@@ -39,7 +39,7 @@ const Toggle = styled.button.attrs({ 'data-pressable': true })`
 
 const HighlightGrid = styled.div.attrs({
   'data-divider': 'grid',
-  role: 'list',
+  role: 'group',
   'aria-label': '排行榜精选作品',
 })`
   display: grid;
@@ -74,7 +74,6 @@ const HighlightCard = styled(Link).attrs({
   'data-shimmer': true,
   'data-focus-guide': true,
   'data-elev': '4',
-  role: 'listitem',
 })`
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-lg);

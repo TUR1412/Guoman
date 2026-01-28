@@ -13,7 +13,9 @@ import { flushStorageQueue } from './storageQueue';
 
 describe('dataVault', () => {
   beforeEach(() => {
+    flushStorageQueue();
     window.localStorage.clear();
+    flushStorageQueue();
   });
 
   it('summarizes features with counts and bytes', () => {

@@ -85,7 +85,10 @@ describe('AnimeCard', () => {
     window.localStorage.clear();
     window.localStorage.setItem(
       'guoman.watchProgress.v1',
-      JSON.stringify({ version: 1, items: { 101: { episode: 2, progress: 25, updatedAt: 1 } } }),
+      JSON.stringify({
+        schemaVersion: 1,
+        items: { 101: { episode: 2, progress: 25, updatedAt: 1 } },
+      }),
     );
 
     render(

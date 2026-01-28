@@ -101,7 +101,7 @@ const DangerButton = styled(ActionButton)`
   background: rgba(var(--danger-rgb), 0.1);
 `;
 
-const TagRow = styled.div.attrs({ role: 'list' })`
+const TagRow = styled.div.attrs({ role: 'group' })`
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-sm);
@@ -109,7 +109,7 @@ const TagRow = styled.div.attrs({ role: 'list' })`
   z-index: 1;
 `;
 
-const TagChip = styled(Link).attrs({ role: 'listitem', 'data-pressable': true })`
+const TagChip = styled(Link).attrs({ 'data-pressable': true })`
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-xs-plus);

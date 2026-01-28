@@ -2,6 +2,44 @@ import { safeLocalStorageGet } from './storage';
 import { scheduleStorageWrite } from './storageQueue';
 import { STORAGE_KEYS } from './dataKeys';
 import { safeJsonParse } from './json';
+import { getBuildInfo } from './buildInfo';
+import { ensureStorageSchemaBaseline } from './storageSchemaRegistry';
+
+const DATA_VAULT_SCHEMA_VERSION = 2;
+const SUPPORTED_IMPORT_SCHEMA_VERSIONS = new Set([1, 2]);
+
+const parseDataVaultText = (jsonText) => {
+  if (typeof jsonText !== 'string') throw new Error('导入数据格式错误：内容不是文本');
+
+  let parsed;
+  try {
+    parsed = JSON.parse(jsonText);
+  } catch {
+    throw new Error('导入数据格式错误：不是合法 JSON');
+  }
+
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    throw new Error('导入数据格式错误：顶层必须是对象');
+  }
+
+  const schemaVersion = Number(parsed.schemaVersion);
+  if (!Number.isFinite(schemaVersion) || schemaVersion <= 0) {
+    throw new Error('导入数据格式错误：缺少 schemaVersion');
+  }
+  if (!SUPPORTED_IMPORT_SCHEMA_VERSIONS.has(schemaVersion)) {
+    throw new Error(`导入数据版本不受支持：schemaVersion=${schemaVersion}（支持：1, 2）`);
+  }
+
+  const feature = String(parsed.feature || '').trim();
+  if (!feature) throw new Error('导入数据格式错误：缺少 feature 字段');
+
+  const payload = parsed.payload;
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+    throw new Error('导入数据格式错误：payload 必须是对象');
+  }
+
+  return { schemaVersion, feature, payload };
+};
 
 const readKey = (key, fallback) => safeJsonParse(safeLocalStorageGet(key), fallback);
 
@@ -266,11 +304,15 @@ export const exportFeatureData = (featureKey, { includeSensitive = false } = {})
   const feature = FEATURE_MAP.find((item) => item.key === featureKey);
   if (!feature) throw new Error('未知的数据模块');
 
+  const storageSchema = ensureStorageSchemaBaseline();
   const { payload, redactedKeys } = omitSensitivePayload(feature.keys, { includeSensitive });
   return JSON.stringify({
-    schemaVersion: 1,
+    schemaVersion: DATA_VAULT_SCHEMA_VERSION,
+    kind: 'guoman-data-vault',
     feature: feature.key,
     exportedAt: new Date().toISOString(),
+    build: getBuildInfo(),
+    storageSchema,
     payload,
     redactedKeys,
   });
@@ -280,10 +322,12 @@ export const importFeatureData = (featureKey, jsonText, { mode = 'merge' } = {})
   const feature = FEATURE_MAP.find((item) => item.key === featureKey);
   if (!feature) throw new Error('未知的数据模块');
 
-  const parsed = safeJsonParse(jsonText, null);
-  if (!parsed || typeof parsed !== 'object') throw new Error('导入数据格式错误');
+  const parsed = parseDataVaultText(jsonText);
+  if (parsed.feature !== feature.key) {
+    throw new Error(`导入数据不匹配：文件内 feature=${parsed.feature}，当前选择=${feature.key}`);
+  }
 
-  const payload = parsed.payload || {};
+  const payload = parsed.payload;
   const summary = { before: {}, after: {}, feature: feature.key };
 
   feature.keys.forEach((key) => {
@@ -323,22 +367,29 @@ export const importFeatureData = (featureKey, jsonText, { mode = 'merge' } = {})
 
 export const exportAllData = ({ includeSensitive = false } = {}) => {
   const keys = Array.from(new Set(FEATURE_MAP.flatMap((feature) => feature.keys)));
+  const storageSchema = ensureStorageSchemaBaseline();
   const { payload, redactedKeys } = omitSensitivePayload(keys, { includeSensitive });
   return JSON.stringify({
-    schemaVersion: 1,
+    schemaVersion: DATA_VAULT_SCHEMA_VERSION,
+    kind: 'guoman-data-vault',
     feature: 'all',
     exportedAt: new Date().toISOString(),
+    build: getBuildInfo(),
+    storageSchema,
     payload,
     redactedKeys,
   });
 };
 
 export const importAllData = (jsonText, { mode = 'merge' } = {}) => {
-  const parsed = safeJsonParse(jsonText, null);
-  if (!parsed || typeof parsed !== 'object') throw new Error('导入数据格式错误');
-  const payload = parsed.payload || {};
+  const parsed = parseDataVaultText(jsonText);
+  if (parsed.feature !== 'all') {
+    throw new Error(`导入数据不匹配：文件内 feature=${parsed.feature}，当前选择=all`);
+  }
+  const payload = parsed.payload;
 
-  const keys = Object.keys(payload);
+  const knownKeys = new Set(Object.values(STORAGE_KEYS));
+  const keys = Object.keys(payload).filter((key) => knownKeys.has(key));
   keys.forEach((key) => {
     const currentRaw = safeLocalStorageGet(key);
     const current = safeJsonParse(currentRaw, currentRaw);
@@ -365,7 +416,7 @@ export const importAllData = (jsonText, { mode = 'merge' } = {}) => {
     scheduleStorageWrite(key, incomingRaw ?? currentRaw ?? null);
   });
 
-  return { importedKeys: keys.length };
+  return { importedKeys: keys.length, skippedKeys: Object.keys(payload).length - keys.length };
 };
 
 export const FEATURE_KEYS = FEATURE_MAP.map((feature) => feature.key);
@@ -379,7 +430,9 @@ export const clearFeatureData = (featureKey) => {
 };
 
 export const clearAllData = () => {
-  const keys = Array.from(new Set(FEATURE_MAP.flatMap((feature) => feature.keys)));
+  const keys = Array.from(
+    new Set([STORAGE_KEYS.schemaRegistry, ...FEATURE_MAP.flatMap((feature) => feature.keys)]),
+  );
   keys.forEach((key) => scheduleStorageWrite(key, null));
   return { clearedKeys: keys.length };
 };

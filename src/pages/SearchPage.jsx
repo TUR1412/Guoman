@@ -152,13 +152,13 @@ const FieldLabel = styled.label`
   font-size: var(--text-sm);
 `;
 
-const FilterChipRow = styled.div.attrs({ role: 'list' })`
+const FilterChipRow = styled.div.attrs({ role: 'group' })`
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-sm);
 `;
 
-const FilterChip = styled.button.attrs({ role: 'listitem', 'data-pressable': true })`
+const FilterChip = styled.button.attrs({ 'data-pressable': true })`
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-xs-plus);
@@ -288,13 +288,13 @@ const HistoryClear = styled.button.attrs({ 'data-pressable': true })`
   }
 `;
 
-const TagRow = styled.div.attrs({ role: 'list' })`
+const TagRow = styled.div.attrs({ role: 'group' })`
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-sm);
 `;
 
-const TagChip = styled.button.attrs({ role: 'listitem', 'data-pressable': true })`
+const TagChip = styled.button.attrs({ 'data-pressable': true })`
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-xs-plus);

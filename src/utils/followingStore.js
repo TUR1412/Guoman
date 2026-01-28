@@ -37,7 +37,7 @@ const getMonotonicNow = () => {
 
 const readStorage = () => {
   if (typeof window === 'undefined') {
-    return { version: 1, meta: { lastWriteAt: 0 }, items: {} };
+    return { schemaVersion: 1, meta: { lastWriteAt: 0 }, items: {} };
   }
 
   const raw = hasPendingStorageWrite(STORAGE_KEY)
@@ -46,7 +46,7 @@ const readStorage = () => {
 
   if (!raw) {
     if (cachedPayload && cachedRaw === null) return cachedPayload;
-    cachedPayload = { version: 1, meta: { lastWriteAt: 0 }, items: {} };
+    cachedPayload = { schemaVersion: 1, meta: { lastWriteAt: 0 }, items: {} };
     cachedRaw = null;
     if (!cachedEntries || cachedEntriesRaw !== null) {
       cachedEntries = [];
@@ -63,11 +63,11 @@ const readStorage = () => {
     const lastWriteAt =
       parsed?.meta && typeof parsed.meta === 'object' ? Number(parsed.meta.lastWriteAt) || 0 : 0;
 
-    cachedPayload = { version: 1, meta: { lastWriteAt }, items };
+    cachedPayload = { schemaVersion: 1, meta: { lastWriteAt }, items };
     cachedRaw = raw;
     return cachedPayload;
   } catch {
-    cachedPayload = { version: 1, meta: { lastWriteAt: 0 }, items: {} };
+    cachedPayload = { schemaVersion: 1, meta: { lastWriteAt: 0 }, items: {} };
     cachedRaw = null;
     cachedEntries = null;
     cachedEntriesRaw = null;

@@ -6,6 +6,11 @@
 
 ## [Unreleased]
 
+- ✅ 本地数据层：新增 `storageSchemaRegistry` + `storageMigrations`，启动阶段自动固化 schema 基线并执行迁移（统一 `version` → `schemaVersion`）。
+- ✅ Data Vault：导入/导出契约升级到 `schemaVersion=2`（包含 build/storageSchema 元信息；导入时校验 schema/feature 并输出可行动错误信息）。
+- ✅ A11y 门禁：新增 Vitest（UI primitives）+ Playwright（真实浏览器）axe 回归扫描，自动阻断无障碍回退。
+- UI：用户中心导入成功提示增强，展示写入/跳过的键数量（更透明、更可诊断）。
+
 ## [1.2.0] - 2026-01-27
 
 - ✅ 依赖升级：React 19 / React Router 7 / Vite 7 / Vitest 4 / Storybook 10 / Framer Motion 12（工具链大版本对齐，门禁保持全绿）。

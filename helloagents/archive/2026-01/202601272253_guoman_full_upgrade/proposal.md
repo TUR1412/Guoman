@@ -1,6 +1,6 @@
 # [GUOMAN] 全方位升级计划书（唯一方案 · 非保守路线）
 
-- 方案包：`helloagents/plan/202601272253_guoman_full_upgrade/`
+- 方案包：`helloagents/archive/2026-01/202601272253_guoman_full_upgrade/`
 - 计划类型：implementation（计划完成后进入落地实施）
 - 日期：2026-01-27
 - 目标发布：`v1.2.0`（已对齐 `package.json#version`）
@@ -69,8 +69,8 @@
 - **M0（已完成）**：核心依赖大版本升级 + 闸门恢复全绿（含预算基线更新、Storybook 产物隔离）
 - **M1（已完成）**：发布体系（版本/Changelog/Release Notes）与基线策略固化
 - **M2**：性能二次审计（预算目标重定、分包策略精炼、关键交互 INP 回归）
-- **M3**：数据层迁移体系（schemaVersion 注册表 + 导入导出契约升级）
-- **M4**：A11y 体系化回归（Storybook A11y + 自动化检查）
+- **M3（已完成）**：数据层迁移体系（schemaVersion 注册表 + 导入导出契约升级 + `storagePort` 预留扩展口）
+- **M4（已完成）**：A11y 体系化回归（Vitest UI primitives + Playwright axe 回归门禁）
 
 ---
 

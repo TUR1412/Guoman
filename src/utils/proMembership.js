@@ -11,7 +11,7 @@ const STORAGE_KEY = STORAGE_KEYS.proMembership;
 const EVENT_KEY = 'guoman:pro';
 
 const defaultMembership = Object.freeze({
-  version: 1,
+  schemaVersion: 1,
   enabled: false,
   plan: 'free',
   startedAt: null,
@@ -55,7 +55,7 @@ const readStorage = () => {
     const updatedAt = parsed?.updatedAt ? Number(parsed.updatedAt) : 0;
 
     cached = {
-      version: 1,
+      schemaVersion: 1,
       enabled,
       plan: enabled ? plan : 'free',
       startedAt: enabled && Number.isFinite(startedAt) ? startedAt : null,
@@ -126,7 +126,7 @@ export const setProMembership = ({ enabled, plan } = {}) => {
   const nextPlan = nextEnabled ? normalizePlan(plan) : 'free';
 
   const next = {
-    version: 1,
+    schemaVersion: 1,
     enabled: nextEnabled,
     plan: nextPlan,
     startedAt: nextEnabled ? now : null,

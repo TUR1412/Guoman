@@ -8,6 +8,7 @@
 - `ui`：UI primitives / design tokens / 交互护栏
 - `components`：业务组件（页面片段、Providers）
 - `pages`：页面级路由与聚合编排
+- `storage`：本地存储与数据演进（schema 注册表 / 迁移 / Data Vault）
 - `utils`：本地数据层、诊断、性能、SEO 等工具层
 - `scripts`：构建期脚本（SEO / bundle / lighthouse / budget）
 

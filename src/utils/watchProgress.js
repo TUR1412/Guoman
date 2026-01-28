@@ -40,7 +40,7 @@ const readStorage = () => {
     if (cachedPayload && cachedRaw !== null && hasPendingStorageWrite(STORAGE_KEY)) {
       return cachedPayload;
     }
-    cachedPayload = { version: 1, items: {} };
+    cachedPayload = { schemaVersion: 1, items: {} };
     cachedRaw = null;
     return cachedPayload;
   }
@@ -50,18 +50,18 @@ const readStorage = () => {
 
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== 'object') {
-      cachedPayload = { version: 1, items: {} };
+      cachedPayload = { schemaVersion: 1, items: {} };
       cachedRaw = null;
       return cachedPayload;
     }
     cachedPayload = {
-      version: 1,
+      schemaVersion: 1,
       items: parsed.items && typeof parsed.items === 'object' ? parsed.items : {},
     };
     cachedRaw = raw;
     return cachedPayload;
   } catch {
-    cachedPayload = { version: 1, items: {} };
+    cachedPayload = { schemaVersion: 1, items: {} };
     cachedRaw = null;
     return cachedPayload;
   }

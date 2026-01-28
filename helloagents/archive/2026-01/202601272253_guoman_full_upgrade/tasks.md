@@ -1,6 +1,6 @@
 # [GUOMAN] 全方位升级任务清单（唯一方案 · 非保守路线）
 
-- 方案包：`helloagents/plan/202601272253_guoman_full_upgrade/`
+- 方案包：`helloagents/archive/2026-01/202601272253_guoman_full_upgrade/`
 - 执行方式：里程碑推进；每个里程碑结束都必须可交付（质量闸门全绿）
 
 ---
@@ -58,9 +58,19 @@
 
 目标：local-first 不只是“能存”，而是“可演进、可迁移、可诊断”。
 
-- [ ] M3.1 schemaVersion 注册表 + 迁移策略固化
-- [ ] M3.2 导入导出契约升级（错误信息可行动）
-- [ ] M3.3 预留 IndexedDB/Worker 扩展口（不提前引入复杂度）
+- [√] M3.1 schemaVersion 注册表 + 迁移策略固化（新增 `storageSchemaRegistry` + `storageMigrations`，并在启动阶段自动执行）
+- [√] M3.2 导入导出契约升级（Data Vault schemaVersion=2，导入时校验 schema/feature 并给出可行动错误信息；导入完成提示展示写入/跳过键数）
+- [√] M3.3 预留 IndexedDB/Worker 扩展口（新增 `storagePort` 作为存储读写的单一入口，未来切换后端仅需收敛修改该模块）
+
+---
+
+## M4｜A11y 体系化回归（自动化门禁）
+
+目标：无障碍不靠“人工感觉”，要能自动回归、自动阻断。
+
+- [√] M4.1 Vitest（UI primitives）：新增 `src/ui/a11y.test.jsx`，对核心原语做 axe 扫描（禁用 jsdom 不可靠的 color-contrast）
+- [√] M4.2 Playwright（真实浏览器）：新增 `e2e/a11y.spec.ts`，对 Home/Search 做 WCAG axe 扫描（真实对比度 & 真实 DOM）
+- [√] M4.3 CI 落地：沿用现有 `quality.yml` / `static.yml` 的 `npm run e2e:ci`，自动把 a11y 回归纳入门禁
 
 ---
 

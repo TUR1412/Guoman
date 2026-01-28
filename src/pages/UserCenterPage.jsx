@@ -277,13 +277,30 @@ function UserCenterPage() {
     }
 
     try {
+      let result = null;
       if (importTarget.scope === 'all') {
-        importAllData(text, { mode: importTarget.mode });
+        result = importAllData(text, { mode: importTarget.mode });
       } else if (importTarget.feature) {
-        importFeatureData(importTarget.feature, text, { mode: importTarget.mode });
+        result = importFeatureData(importTarget.feature, text, { mode: importTarget.mode });
       }
       flushStorageQueue();
-      toast.success('导入完成', '数据已写入本地存储。');
+
+      const importedKeys = Number.isFinite(result?.importedKeys)
+        ? result.importedKeys
+        : result?.after && typeof result.after === 'object'
+          ? Object.keys(result.after).length
+          : null;
+      const skippedKeys = Number.isFinite(result?.skippedKeys) ? result.skippedKeys : null;
+
+      const parts = [];
+      if (Number.isFinite(importedKeys)) parts.push(`写入 ${importedKeys} 个键`);
+      if (Number.isFinite(skippedKeys) && skippedKeys > 0)
+        parts.push(`跳过 ${skippedKeys} 个未知键`);
+
+      toast.success(
+        '导入完成',
+        parts.length ? `数据已写入本地存储（${parts.join('，')}）。` : '数据已写入本地存储。',
+      );
       trackEvent('data.import', { scope: importTarget.scope, feature: importTarget.feature });
       triggerRefresh();
     } catch (error) {

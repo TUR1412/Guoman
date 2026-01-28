@@ -315,13 +315,13 @@ export const TagsTitle = styled.h3`
   color: var(--text-primary);
 `;
 
-export const Tags = styled.div.attrs({ role: 'list' })`
+export const Tags = styled.div.attrs({ role: 'group' })`
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-sm);
 `;
 
-export const Tag = styled(Link).attrs({ 'data-pressable': true, role: 'listitem' })`
+export const Tag = styled(Link).attrs({ 'data-pressable': true })`
   --pressable-hover-translate-y: -2px;
 
   padding: var(--spacing-xs) var(--spacing-sm-plus);

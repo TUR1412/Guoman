@@ -11,6 +11,7 @@ import { initPerformanceMonitor } from './utils/performance';
 import { initErrorMonitor } from './utils/errorReporter';
 import { fireDueFollowingReminders } from './utils/followingStore';
 import { isProEnabled } from './utils/proMembership';
+import { runStorageMigrations } from './utils/storageMigrations';
 import { registerServiceWorker } from './utils/serviceWorker';
 import {
   installHealthConsole,
@@ -19,6 +20,7 @@ import {
 } from './utils/healthConsole';
 
 // 尽量在首帧渲染前初始化主题，避免闪烁
+runStorageMigrations();
 initTheme();
 initVisualSettings();
 initPerformanceMonitor();

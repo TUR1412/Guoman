@@ -1,5 +1,6 @@
 // 本地存储键集合：统一管理所有 localStorage key，避免散落与冲突。
 export const STORAGE_KEYS = Object.freeze({
+  schemaRegistry: 'guoman.schema.registry.v1',
   favorites: 'guoman.favorites.v1',
   favoritesUpdatedAt: 'guoman.favorites.updatedAt',
   favoriteGroups: 'guoman.favorites.groups.v1',

@@ -73,13 +73,13 @@ const Summary = styled.p`
   line-height: var(--leading-loose);
 `;
 
-const TagRow = styled.div.attrs({ role: 'list', 'data-divider': 'inline' })`
+const TagRow = styled.div.attrs({ role: 'group', 'data-divider': 'inline' })`
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-sm);
 `;
 
-const Tag = styled.button.attrs({ role: 'listitem', 'data-pressable': true })`
+const Tag = styled.button.attrs({ 'data-pressable': true })`
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-xs-plus);

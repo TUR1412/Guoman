@@ -192,7 +192,7 @@ describe('followingStore', () => {
     window.localStorage.setItem(
       FOLLOWING_STORAGE_KEY,
       JSON.stringify({
-        version: 1,
+        schemaVersion: 1,
         meta: { lastWriteAt: 123 },
         items: {
           1: { title: 'x', createdAt: 1, updatedAt: 2, reminderEnabled: false },
@@ -209,7 +209,7 @@ describe('followingStore', () => {
     flushStorageQueue();
 
     const raw = JSON.stringify({
-      version: 1,
+      schemaVersion: 1,
       meta: { lastWriteAt: 1 },
       items: { 1: { title: 'x', createdAt: 1, updatedAt: 2 } },
     });
@@ -259,7 +259,7 @@ describe('followingStore', () => {
     window.localStorage.setItem(
       FOLLOWING_STORAGE_KEY,
       JSON.stringify({
-        version: 1,
+        schemaVersion: 1,
         meta: { lastWriteAt: 1 },
         items: {
           bad: {
@@ -284,7 +284,7 @@ describe('followingStore', () => {
     window.localStorage.setItem(
       FOLLOWING_STORAGE_KEY,
       JSON.stringify({
-        version: 1,
+        schemaVersion: 1,
         meta: { lastWriteAt: 123 },
         items: {
           '01': {
@@ -350,7 +350,7 @@ describe('followingStore', () => {
     window.dispatchEvent(
       new StorageEvent('storage', {
         key: FOLLOWING_STORAGE_KEY,
-        newValue: JSON.stringify({ version: 1, meta: { lastWriteAt: 1 }, items: {} }),
+        newValue: JSON.stringify({ schemaVersion: 1, meta: { lastWriteAt: 1 }, items: {} }),
       }),
     );
 
