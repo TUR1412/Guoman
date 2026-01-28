@@ -12,6 +12,14 @@
       { "match": "assets/vendor-react-*.js", "gzipBytes": 80000 },
       { "match": "assets/vendor-motion-*.js", "gzipBytes": 45000 },
       { "match": "assets/vendor-styled-*.js", "gzipBytes": 10000 },
+      { "match": "assets/AnimeDetail-*.js", "gzipBytes": 10000 },
+      { "match": "assets/SearchPage-*.js", "gzipBytes": 10000 },
+      { "match": "assets/DiagnosticsPage-*.js", "gzipBytes": 14000 },
+      { "match": "assets/UserCenterPage-*.js", "gzipBytes": 8000 },
+      { "match": "assets/FavoritesPage-*.js", "gzipBytes": 8000 },
+      { "match": "assets/FollowingPage-*.js", "gzipBytes": 7000 },
+      { "match": "assets/Login-*.js", "gzipBytes": 7000 },
+      { "match": "assets/RecommendationsPage-*.js", "gzipBytes": 6000 },
       { "match": "assets/vendor-*.js", "gzipBytes": 40000 }
     ]
   }

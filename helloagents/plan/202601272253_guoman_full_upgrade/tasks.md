@@ -49,7 +49,7 @@
 目标：大版本升级后重新审视“首屏关键路径”，把预算做成长期可维护的纪律。
 
 - [√] M2.1 首屏依赖链审计与分包策略微调（路由入口改为 `HashRouter`，首屏 gzip 体积显著下降）
-- [ ] M2.2 预算策略调整（更细粒度：初始/关键 chunk/路由 chunk）
+- [√] M2.2 预算策略调整（更细粒度：初始/关键 chunk/路由 chunk；budget 脚本纳入 dynamic imports 并增加关键路由 chunk 预算）
 - [√] M2.3 Lighthouse 基线回归（修复 Windows `spawn EINVAL` + local preview base，并更新 `docs/LIGHTHOUSE_BASELINE.md`）
 
 ---

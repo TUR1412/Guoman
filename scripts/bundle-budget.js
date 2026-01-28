@@ -65,7 +65,7 @@ const getCompressedSizes = async (filePath) => {
   };
 };
 
-const collectEntryKeys = (manifest, entryKey) => {
+const collectEntryKeys = (manifest, entryKey, { includeDynamic = false } = {}) => {
   const visited = new Set();
   const stack = [entryKey];
 
@@ -77,6 +77,8 @@ const collectEntryKeys = (manifest, entryKey) => {
 
     const node = manifest[key];
     const imports = node?.imports || [];
+    const dynamicImports = includeDynamic ? node?.dynamicImports || [] : [];
+    dynamicImports.forEach((next) => stack.push(next));
     imports.forEach((next) => stack.push(next));
   }
 
@@ -130,24 +132,33 @@ const main = async () => {
     throw new Error('Bundle budget: dist/ not found. Run build first.');
   }
 
-  const entryKeys = collectEntryKeys(manifest, entryKey);
-  const cssFiles = new Set();
-  const jsFiles = new Set();
-  const allFiles = new Set();
+  const initialKeys = collectEntryKeys(manifest, entryKey, { includeDynamic: false });
+  const allKeys = collectEntryKeys(manifest, entryKey, { includeDynamic: true });
 
-  entryKeys.forEach((key) => {
-    const node = manifest[key];
-    const file = node?.file;
-    if (file) allFiles.add(file);
-    if (file && /\.js$/i.test(file)) jsFiles.add(file);
-    (node?.css || []).forEach((css) => cssFiles.add(css));
-    (node?.assets || []).forEach((asset) => allFiles.add(asset));
-  });
+  const collectFiles = (keys) => {
+    const cssFiles = new Set();
+    const jsFiles = new Set();
+    const allFiles = new Set();
 
-  cssFiles.forEach((file) => allFiles.add(file));
+    keys.forEach((key) => {
+      const node = manifest[key];
+      const file = node?.file;
+      if (file) allFiles.add(file);
+      if (file && /\.js$/i.test(file)) jsFiles.add(file);
+      (node?.css || []).forEach((css) => cssFiles.add(css));
+      (node?.assets || []).forEach((asset) => allFiles.add(asset));
+    });
+
+    cssFiles.forEach((file) => allFiles.add(file));
+
+    return { cssFiles, jsFiles, allFiles };
+  };
+
+  const initialFiles = collectFiles(initialKeys);
+  const allFiles = collectFiles(allKeys);
 
   const fileStats = {};
-  for (const file of allFiles) {
+  for (const file of allFiles.allFiles) {
     const filePath = path.join(distDir, file);
     if (!(await fileExists(filePath))) continue;
     fileStats[file] = await getCompressedSizes(filePath);
@@ -156,8 +167,8 @@ const main = async () => {
   const sum = (files, selector) =>
     Array.from(files).reduce((acc, file) => acc + (fileStats[file]?.[selector] || 0), 0);
 
-  const initialJsGzip = sum(jsFiles, 'gzipBytes');
-  const initialCssGzip = sum(cssFiles, 'gzipBytes');
+  const initialJsGzip = sum(initialFiles.jsFiles, 'gzipBytes');
+  const initialCssGzip = sum(initialFiles.cssFiles, 'gzipBytes');
   const initialTotalGzip = initialJsGzip + initialCssGzip;
 
   const failures = [];
