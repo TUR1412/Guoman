@@ -33,7 +33,7 @@
     "deploy": "gh-pages -d dist --nojekyll"
   },
   "dependencies": {
-    "framer-motion": "^12.29.2",
+    "framer-motion": "^12.31.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router-dom": "^7.13.0",
