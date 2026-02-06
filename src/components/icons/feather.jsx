@@ -440,6 +440,15 @@ export function FiPlay(props) {
   );
 }
 
+export function FiPause(props) {
+  return (
+    <FeatherIcon {...props}>
+      <rect x={'6'} y={'4'} width={'4'} height={'16'} rx={'1'} />
+      <rect x={'14'} y={'4'} width={'4'} height={'16'} rx={'1'} />
+    </FeatherIcon>
+  );
+}
+
 export function FiRefreshCcw(props) {
   return (
     <FeatherIcon {...props}>

@@ -1,6 +1,6 @@
 // 动漫卡片：展示作品概要，并可承载推荐匹配度与理由提示。
 import React, { memo, useCallback, useEffect, useId, useMemo, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiBell, FiColumns, FiHeart } from '../icons/feather';
@@ -30,7 +30,7 @@ const Cover = styled(motion.div)`
   position: relative;
   width: 100%;
   height: 0;
-  padding-top: 140%;
+  padding-top: ${(props) => (props.$compact ? '130%' : '140%')};
   overflow: hidden;
 
   @media (hover: hover) and (pointer: fine) {
@@ -62,14 +62,14 @@ const FavButton = styled(motion.button).attrs({ 'data-pressable': true })`
   --pressable-scale-active: 0.96;
 
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: ${(props) => (props.$compact ? '8px' : '10px')};
+  right: ${(props) => (props.$compact ? '8px' : '10px')};
   z-index: 2;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: ${(props) => (props.$compact ? '32px' : '36px')};
+  height: ${(props) => (props.$compact ? '32px' : '36px')};
   border-radius: var(--border-radius-pill);
   border: 1px solid var(--control-border);
   background: var(--control-bg);
@@ -111,7 +111,7 @@ const FavButton = styled(motion.button).attrs({ 'data-pressable': true })`
 `;
 
 const FollowButton = styled(FavButton)`
-  left: 10px;
+  left: ${(props) => (props.$compact ? '8px' : '10px')};
   right: auto;
 `;
 
@@ -123,8 +123,8 @@ const CompareButton = styled(FavButton)`
 
 const FavDot = styled(motion.div)`
   position: absolute;
-  right: 10px;
-  top: 10px;
+  right: ${(props) => (props.$compact ? '8px' : '10px')};
+  top: ${(props) => (props.$compact ? '8px' : '10px')};
   z-index: 2;
   width: 10px;
   height: 10px;
@@ -145,7 +145,10 @@ const ProgressPanel = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  padding: var(--spacing-sm-compact) var(--spacing-sm-plus);
+  padding: ${(props) =>
+    props.$compact
+      ? 'var(--spacing-xs-plus) var(--spacing-sm-compact)'
+      : 'var(--spacing-sm-compact) var(--spacing-sm-plus)'};
   z-index: 2;
   background: linear-gradient(0deg, var(--overlay-strong) 0%, transparent 100%);
   color: var(--text-on-dark);
@@ -177,14 +180,14 @@ const ProgressFill = styled.div`
 
 const CardLink = styled(Link).attrs({ 'data-pressable': true })`
   display: block;
-  padding: var(--spacing-md);
+  padding: ${(props) => (props.$compact ? 'var(--spacing-sm-plus)' : 'var(--spacing-md)')};
   color: inherit;
 `;
 
 const Title = styled.h3`
-  font-size: var(--text-base-plus);
+  font-size: ${(props) => (props.$compact ? 'var(--text-base)' : 'var(--text-base-plus)')};
   font-weight: 700;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: ${(props) => (props.$compact ? 'var(--spacing-xs-plus)' : 'var(--spacing-sm)')};
   overflow: hidden;
   text-overflow: clip;
   white-space: nowrap;
@@ -198,6 +201,17 @@ const Title = styled.h3`
   @media (max-width: 576px) {
     font-size: var(--text-base);
   }
+
+  ${(props) =>
+    props.$compact &&
+    css`
+      white-space: normal;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      -webkit-mask-image: none;
+      mask-image: none;
+    `}
 `;
 
 const Meta = styled.div`
@@ -205,7 +219,7 @@ const Meta = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: var(--spacing-md);
-  font-size: var(--text-sm);
+  font-size: ${(props) => (props.$compact ? 'var(--text-xs)' : 'var(--text-sm)')};
   color: var(--text-tertiary);
 `;
 
@@ -214,7 +228,7 @@ const InsightRow = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-sm);
-  margin-top: var(--spacing-sm);
+  margin-top: ${(props) => (props.$compact ? 'var(--spacing-xs-plus)' : 'var(--spacing-sm)')};
   flex-wrap: wrap;
 `;
 
@@ -271,7 +285,7 @@ const Rating = styled.span`
   }
 `;
 
-function AnimeCard({ anime, virtualized = false, insight }) {
+function AnimeCard({ anime, virtualized = false, insight, compact = false }) {
   const toast = useToast();
   const reducedMotion = useAppReducedMotion();
   const animeId = anime?.id;
@@ -297,6 +311,10 @@ function AnimeCard({ anime, virtualized = false, insight }) {
       .filter(Boolean)
       .slice(0, 3);
   }, [insight?.reasons]);
+  const displayedInsightTags = useMemo(
+    () => (compact ? insightTags.slice(0, 1) : insightTags),
+    [compact, insightTags],
+  );
   const descId = useMemo(() => `anime-card-desc-${animeId ?? 'unknown'}`, [animeId]);
   const coverLayoutId = useMemo(
     () => (animeId ? `guoman:anime-cover:${animeId}:${instanceId}` : undefined),
@@ -397,7 +415,7 @@ function AnimeCard({ anime, virtualized = false, insight }) {
       transition={enableMountMotion ? { duration: 0.35 } : { duration: 0 }}
       whileHover={reducedMotion ? undefined : { scale: 1.02 }}
     >
-      <Cover layoutId={coverLayoutId}>
+      <Cover $compact={compact} layoutId={coverLayoutId}>
         <CoverLink
           to={`/anime/${anime.id}`}
           state={coverLayoutId ? { coverLayoutId } : undefined}
@@ -416,6 +434,7 @@ function AnimeCard({ anime, virtualized = false, insight }) {
         />
 
         <FollowButton
+          $compact={compact}
           type="button"
           aria-label={following ? '取消追更' : '追更'}
           aria-pressed={following}
@@ -449,6 +468,7 @@ function AnimeCard({ anime, virtualized = false, insight }) {
         </FollowButton>
 
         <CompareButton
+          $compact={compact}
           type="button"
           aria-label={compared ? '从对比中移除' : '加入对比'}
           aria-pressed={compared}
@@ -482,6 +502,7 @@ function AnimeCard({ anime, virtualized = false, insight }) {
         </CompareButton>
 
         <FavButton
+          $compact={compact}
           type="button"
           aria-label={favorited ? '取消收藏' : '加入收藏'}
           aria-pressed={favorited}
@@ -515,6 +536,7 @@ function AnimeCard({ anime, virtualized = false, insight }) {
         </FavButton>
         {favorited ? (
           <FavDot
+            $compact={compact}
             aria-hidden="true"
             initial={reducedMotion ? false : { scale: 0 }}
             animate={reducedMotion ? { scale: 1 } : { scale: [0, 1.2, 1] }}
@@ -522,7 +544,7 @@ function AnimeCard({ anime, virtualized = false, insight }) {
           />
         ) : null}
         {progress && (progress.progress > 0 || progress.episode > 1) ? (
-          <ProgressPanel aria-label={`观看进度 ${progressValue}%`}>
+          <ProgressPanel $compact={compact} aria-label={`观看进度 ${progressValue}%`}>
             <ProgressMeta>
               <span>继续观看</span>
               <span>
@@ -536,6 +558,7 @@ function AnimeCard({ anime, virtualized = false, insight }) {
         ) : null}
       </Cover>
       <CardLink
+        $compact={compact}
         to={`/anime/${anime.id}`}
         state={coverLayoutId ? { coverLayoutId } : undefined}
         aria-describedby={descId}
@@ -546,16 +569,18 @@ function AnimeCard({ anime, virtualized = false, insight }) {
           {typeShort ? `类型：${typeShort}。` : ''}
           评分：{anime.rating}。
         </span>
-        <Title title={anime.title}>{anime.title}</Title>
-        <Meta>
+        <Title $compact={compact} title={anime.title}>
+          {anime.title}
+        </Title>
+        <Meta $compact={compact}>
           <Type title={anime.type}>{typeShort}</Type>
           <Rating>{anime.rating}</Rating>
         </Meta>
-        {insightScore !== null || insightTags.length > 0 ? (
-          <InsightRow>
+        {insightScore !== null || displayedInsightTags.length > 0 ? (
+          <InsightRow $compact={compact}>
             {insightScore !== null ? <InsightBadge>匹配度 {insightScore}%</InsightBadge> : null}
             <InsightChips>
-              {insightTags.map((tag) => (
+              {displayedInsightTags.map((tag) => (
                 <InsightChip key={`${anime.id}-${tag}`}>{tag}</InsightChip>
               ))}
             </InsightChips>

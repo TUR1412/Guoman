@@ -16,6 +16,19 @@ export const AnimeGrid = styled.div.attrs({
   }
 
   ${(props) =>
+    props.$compact &&
+    !props.$bento &&
+    css`
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: var(--spacing-md);
+
+      @media (max-width: 576px) {
+        grid-template-columns: repeat(auto-fill, minmax(144px, 1fr));
+        gap: var(--spacing-sm-plus);
+      }
+    `}
+
+  ${(props) =>
     props.$bento &&
     css`
       grid-template-columns: repeat(12, minmax(0, 1fr));

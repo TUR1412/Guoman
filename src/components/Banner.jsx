@@ -2,9 +2,10 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FiChevronLeft, FiChevronRight } from './icons/feather';
+import { FiChevronLeft, FiChevronRight, FiPause, FiPlay } from './icons/feather';
 import { IconButton } from '../ui';
 import { prefetchRoute } from '../utils/routePrefetch';
+import { trackEvent } from '../utils/analytics';
 import { useAppReducedMotion } from '../motion/useAppReducedMotion';
 import { usePointerGlow } from './usePointerGlow';
 
@@ -78,6 +79,10 @@ const bannerData = [
     link: '/anime/4',
   },
 ];
+
+const AUTO_PLAY_INTERVAL = 5000;
+const SWIPE_THRESHOLD = 44;
+const MotionLink = motion.create(Link);
 
 const BannerContainer = styled.section`
   width: 100%;
@@ -180,16 +185,29 @@ const PaginationRow = styled.div`
   left: 50%;
   bottom: 18px;
   transform: translateX(-50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: var(--border-radius-pill);
+  display: grid;
+  gap: var(--spacing-xs-plus);
+  min-width: min(92vw, 360px);
+  padding: var(--spacing-xs-plus) var(--spacing-sm-plus);
+  border-radius: var(--border-radius-md);
   border: 1px solid var(--border-subtle);
   background: var(--surface-glass);
   backdrop-filter: blur(12px) saturate(var(--glass-saturate));
   -webkit-backdrop-filter: blur(12px) saturate(var(--glass-saturate));
   box-shadow: var(--shadow-elev-3);
+`;
+
+const PaginationContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm-plus);
+`;
+
+const DotsRow = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs-plus);
 `;
 
 const Dot = styled.button.attrs({ type: 'button', 'data-pressable': true })`
@@ -208,6 +226,54 @@ const Dot = styled.button.attrs({ type: 'button', 'data-pressable': true })`
       border-color: var(--chip-border-hover);
     }
   }
+`;
+
+const AutoPlayToggle = styled.button.attrs({ type: 'button', 'data-pressable': true })`
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: 0.34rem 0.62rem;
+  border-radius: var(--border-radius-pill);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+  font-size: var(--text-xxs);
+  font-weight: 700;
+  transition: var(--transition);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-color: var(--chip-border-hover);
+      color: var(--text-primary);
+      background: var(--surface-soft-hover);
+    }
+  }
+`;
+
+const AutoPlayTrack = styled.div`
+  width: 100%;
+  height: 3px;
+  border-radius: var(--border-radius-pill);
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+`;
+
+const AutoPlayProgress = styled(motion.span)`
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(
+    120deg,
+    rgba(var(--primary-rgb), 0.95),
+    rgba(var(--secondary-rgb), 0.85)
+  );
+  box-shadow: var(--shadow-primary-soft);
+`;
+
+const ControlHint = styled.p`
+  color: var(--text-tertiary);
+  font-size: var(--text-xxs);
+  line-height: var(--leading-relaxed);
 `;
 
 const BannerOverlay = styled.div`
@@ -422,7 +488,7 @@ const BannerActions = styled(motion.div)`
   align-items: center;
 `;
 
-const BannerButton = styled(motion(Link)).attrs({
+const BannerButton = styled(MotionLink).attrs({
   'data-shimmer': true,
   'data-pressable': true,
   'data-focus-guide': true,
@@ -452,12 +518,39 @@ const BannerButton = styled(motion(Link)).attrs({
   }
 `;
 
+const BannerSecondaryButton = styled(MotionLink).attrs({ 'data-pressable': true })`
+  padding: var(--spacing-sm-plus) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-soft);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--surface-soft-hover);
+      border-color: var(--chip-border-hover);
+    }
+  }
+`;
+
 function Banner() {
   const reducedMotion = useAppReducedMotion();
   const metaGlowRef = useRef(null);
+  const touchStartRef = useRef({ x: 0, y: 0, active: false });
   const [activeIndex, setActiveIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [manualPaused, setManualPaused] = useState(false);
+  const [hoverPaused, setHoverPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
   const slideCount = bannerData.length;
+  const paused = manualPaused || hoverPaused;
+  const autoPlayEnabled = !reducedMotion && !paused && slideCount > 1;
 
   usePointerGlow(metaGlowRef, { disabled: reducedMotion });
 
@@ -468,41 +561,90 @@ function Banner() {
   }, [activeIndex, slideCount]);
 
   const goTo = useCallback(
-    (nextIndex) => {
+    (nextIndex, source = 'pagination') => {
       if (slideCount <= 0) return;
       const raw = Number(nextIndex) || 0;
       const normalized = ((raw % slideCount) + slideCount) % slideCount;
+      if (source !== 'auto' && normalized !== activeIndex) {
+        trackEvent('banner.slide.change', {
+          source,
+          from: activeIndex,
+          to: normalized,
+        });
+      }
       setActiveIndex(normalized);
     },
-    [slideCount],
+    [activeIndex, slideCount],
   );
 
-  const goPrev = useCallback(() => {
-    setActiveIndex((prev) => {
-      if (slideCount <= 0) return 0;
-      return (prev - 1 + slideCount) % slideCount;
-    });
-  }, [slideCount]);
+  const goPrev = useCallback(
+    (source = 'controls') => {
+      if (slideCount <= 0) return;
+      const nextIndex = (activeIndex - 1 + slideCount) % slideCount;
+      if (source !== 'auto') {
+        trackEvent('banner.slide.change', {
+          source,
+          from: activeIndex,
+          to: nextIndex,
+        });
+      }
+      setActiveIndex(nextIndex);
+    },
+    [activeIndex, slideCount],
+  );
 
-  const goNext = useCallback(() => {
-    setActiveIndex((prev) => {
-      if (slideCount <= 0) return 0;
-      return (prev + 1) % slideCount;
+  const goNext = useCallback(
+    (source = 'controls') => {
+      if (slideCount <= 0) return;
+      const nextIndex = (activeIndex + 1) % slideCount;
+      if (source !== 'auto') {
+        trackEvent('banner.slide.change', {
+          source,
+          from: activeIndex,
+          to: nextIndex,
+        });
+      }
+      setActiveIndex(nextIndex);
+    },
+    [activeIndex, slideCount],
+  );
+
+  const toggleAutoPlay = useCallback(() => {
+    setManualPaused((prev) => {
+      const next = !prev;
+      trackEvent('banner.autoplay.toggle', { paused: next });
+      return next;
     });
-  }, [slideCount]);
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
-    if (reducedMotion) return undefined;
-    if (paused) return undefined;
-    if (slideCount <= 1) return undefined;
+    if (!autoPlayEnabled) return undefined;
 
     const id = window.setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % slideCount);
-    }, 5000);
+      goNext('auto');
+    }, AUTO_PLAY_INTERVAL);
 
     return () => window.clearInterval(id);
-  }, [paused, reducedMotion, slideCount]);
+  }, [autoPlayEnabled, goNext]);
+
+  useEffect(() => {
+    if (reducedMotion || slideCount <= 1) {
+      setProgress(0);
+      return;
+    }
+    if (paused) return;
+
+    setProgress(0);
+    const startedAt = Date.now();
+    const progressTimer = window.setInterval(() => {
+      const elapsed = Date.now() - startedAt;
+      const nextValue = Math.min(100, (elapsed / AUTO_PLAY_INTERVAL) * 100);
+      setProgress(nextValue);
+    }, 100);
+
+    return () => window.clearInterval(progressTimer);
+  }, [activeIndex, paused, reducedMotion, slideCount]);
 
   useEffect(() => {
     if (!active?.link) return;
@@ -529,12 +671,50 @@ function Banner() {
     if (!event) return;
     if (event.key === 'ArrowLeft') {
       event.preventDefault();
-      goPrev();
+      goPrev('keyboard');
     }
     if (event.key === 'ArrowRight') {
       event.preventDefault();
-      goNext();
+      goNext('keyboard');
     }
+  };
+
+  const onTouchStart = (event) => {
+    if (slideCount <= 1) return;
+    const touch = event?.touches?.[0];
+    if (!touch) return;
+    touchStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      active: true,
+    };
+    setHoverPaused(true);
+  };
+
+  const onTouchEnd = (event) => {
+    const state = touchStartRef.current;
+    touchStartRef.current = { x: 0, y: 0, active: false };
+    setHoverPaused(false);
+    if (!state.active) return;
+    const touch = event?.changedTouches?.[0];
+    if (!touch) return;
+
+    const deltaX = touch.clientX - state.x;
+    const deltaY = touch.clientY - state.y;
+    const horizontalEnough = Math.abs(deltaX) >= SWIPE_THRESHOLD;
+    const horizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 1.1;
+
+    if (!horizontalEnough || !horizontalDominant) return;
+    if (deltaX > 0) {
+      goPrev('swipe');
+      return;
+    }
+    goNext('swipe');
+  };
+
+  const onTouchCancel = () => {
+    touchStartRef.current = { x: 0, y: 0, active: false };
+    setHoverPaused(false);
   };
 
   return (
@@ -542,12 +722,15 @@ function Banner() {
       aria-label="首页精选轮播"
       aria-describedby="banner-desc"
       onKeyDownCapture={onKeyDownCapture}
-      onPointerEnter={() => setPaused(true)}
-      onPointerLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      onTouchCancel={onTouchCancel}
+      onPointerEnter={() => setHoverPaused(true)}
+      onPointerLeave={() => setHoverPaused(false)}
+      onFocusCapture={() => setHoverPaused(true)}
       onBlurCapture={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) {
-          setPaused(false);
+          setHoverPaused(false);
         }
       }}
     >
@@ -587,6 +770,16 @@ function Banner() {
                       >
                         {active.buttonText}
                       </BannerButton>
+                      <BannerSecondaryButton
+                        to="/rankings"
+                        aria-label="查看最新榜单"
+                        whileHover={reducedMotion ? undefined : { scale: 1.03 }}
+                        whileTap={reducedMotion ? undefined : { scale: 0.97 }}
+                        onMouseEnter={() => prefetchRoute('/rankings')}
+                        onFocus={() => prefetchRoute('/rankings')}
+                      >
+                        查看榜单
+                      </BannerSecondaryButton>
                     </BannerActions>
                   </BannerMain>
 
@@ -611,25 +804,49 @@ function Banner() {
         </AnimatePresence>
 
         <ControlsLayer>
-          <PrevButton aria-label="上一帧" onClick={goPrev} title="上一帧">
+          <PrevButton aria-label="上一帧" onClick={() => goPrev('controls')} title="上一帧">
             <FiChevronLeft />
           </PrevButton>
-          <NextButton aria-label="下一帧" onClick={goNext} title="下一帧">
+          <NextButton aria-label="下一帧" onClick={() => goNext('controls')} title="下一帧">
             <FiChevronRight />
           </NextButton>
 
           {slideCount > 1 ? (
-            <PaginationRow aria-label="轮播分页">
-              {bannerData.map((item, idx) => (
-                <Dot
-                  key={item.id}
-                  $active={idx === activeIndex}
-                  aria-label={`切换到第 ${idx + 1} 帧：${item.tag}`}
-                  aria-pressed={idx === activeIndex}
-                  tabIndex={idx === activeIndex ? 0 : -1}
-                  onClick={() => goTo(idx)}
+            <PaginationRow aria-label="轮播分页与播放控制">
+              <PaginationContent>
+                <DotsRow>
+                  {bannerData.map((item, idx) => (
+                    <Dot
+                      key={item.id}
+                      $active={idx === activeIndex}
+                      aria-label={`切换到第 ${idx + 1} 帧：${item.tag}`}
+                      aria-pressed={idx === activeIndex}
+                      tabIndex={idx === activeIndex ? 0 : -1}
+                      onClick={() => goTo(idx)}
+                    />
+                  ))}
+                </DotsRow>
+                <AutoPlayToggle
+                  aria-label={manualPaused ? '恢复自动轮播' : '暂停自动轮播'}
+                  onClick={toggleAutoPlay}
+                  title={manualPaused ? '恢复自动轮播' : '暂停自动轮播'}
+                >
+                  {manualPaused ? <FiPlay size={14} /> : <FiPause size={14} />}
+                  {manualPaused ? '恢复' : '暂停'}
+                </AutoPlayToggle>
+              </PaginationContent>
+              <AutoPlayTrack aria-hidden="true">
+                <AutoPlayProgress
+                  initial={false}
+                  animate={{ width: `${progress}%`, opacity: paused ? 0.55 : 1 }}
+                  transition={reducedMotion ? { duration: 0 } : { duration: 0.12, ease: 'linear' }}
                 />
-              ))}
+              </AutoPlayTrack>
+              <ControlHint>
+                {paused
+                  ? '轮播已暂停，可继续手动切换。'
+                  : '支持方向键与左右滑动切换，悬停时自动暂停轮播。'}
+              </ControlHint>
             </PaginationRow>
           ) : null}
         </ControlsLayer>

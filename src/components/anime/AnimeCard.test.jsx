@@ -118,4 +118,24 @@ describe('AnimeCard', () => {
 
     expect(screen.queryByRole('listitem')).not.toBeInTheDocument();
   });
+
+  it('shows compact insight summary when compact mode is enabled', () => {
+    render(
+      <MemoryRouter>
+        <ToastProvider>
+          <FavoritesProvider>
+            <AnimeCard
+              anime={anime}
+              compact
+              insight={{ score: 91, reasons: ['世界观厚重', '角色成长', '动作流畅'] }}
+            />
+          </FavoritesProvider>
+        </ToastProvider>
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText('匹配度 91%')).toBeInTheDocument();
+    expect(screen.getByText('世界观厚重')).toBeInTheDocument();
+    expect(screen.queryByText('角色成长')).not.toBeInTheDocument();
+  });
 });

@@ -6,6 +6,18 @@
 
 ## [Unreleased]
 
+- ✅ UI：首页新增 `HomeQuickHub` 导航枢纽（数据概览 + 热点标签 + 快捷入口），提升首屏信息密度与路径效率。
+- ✅ 性能：首页次级区块改为按需懒加载（`HomeQuickHub/ContinueWatching/RecentlyViewed/PinnedTagsSection/Features/About`），回收首屏主包体积并恢复 Bundle Budget 绿灯。
+- ✅ UI：Banner 轮播升级为可控自动播放（暂停/恢复按钮 + 进度条 + 控制提示）并补充次级 CTA「查看榜单」。
+- ✅ UI：Banner 新增移动端左右滑动切换（touch swipe）并与自动轮播暂停逻辑协同，提升触屏浏览体验。
+- ✅ 工程：Banner 的 `Link` 动效组件改为 `motion.create(Link)`，消除 Framer Motion 过时告警并提升前向兼容性。
+- ✅ UI：`AnimeList` 新增排序切换（综合/评分/热度/新作）与卡片密度切换（舒展/紧凑），提升列表浏览效率。
+- ✅ UI：`AnimeList` 新增「重置视图」快捷操作（恢复默认标签/排序/密度），降低多条件筛选后的回退成本。
+- ✅ A11y：`AnimeList` 结果摘要改为 `role=status + aria-live=polite`，筛选后数量变化可被读屏器及时感知。
+- ✅ UI：`AnimeCard` 新增 `compact` 视图适配（封面比例/信息密度/推荐标签收敛），让紧凑布局具备真实差异化展示。
+- ✅ A11y：首页 `HomeQuickHub` 列表语义修正为 `ul/li + link`，移除链接角色覆盖，恢复正确可访问角色树。
+- ✅ 测试：新增 `Banner.test.jsx`、`HomeQuickHub.test.jsx`，并扩展 `AnimeList.test.jsx` 覆盖排序与布局切换行为。
+- ✅ 测试：扩展 `Banner.test.jsx` 覆盖 touch swipe；扩展 `AnimeCard.test.jsx` 覆盖 compact 推荐摘要收敛行为。
 - ✅ 本地数据层：新增 `storageSchemaRegistry` + `storageMigrations`，启动阶段自动固化 schema 基线并执行迁移（统一 `version` → `schemaVersion`）。
 - ✅ Data Vault：导入/导出契约升级到 `schemaVersion=2`（包含 build/storageSchema 元信息；导入时校验 schema/feature 并输出可行动错误信息）。
 - ✅ A11y 门禁：新增 Vitest（UI primitives）+ Playwright（真实浏览器）axe 回归扫描，自动阻断无障碍回退。

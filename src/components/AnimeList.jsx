@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
+import { FiFilter, FiGrid } from './icons/feather';
 import animeData, {
   categories,
   featuredAnime,
@@ -30,7 +31,8 @@ const SectionInner = styled.div.attrs({ 'data-divider': 'list' })`
 const SectionHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-start;
+  gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
 
   @media (max-width: 576px) {
@@ -38,6 +40,26 @@ const SectionHeader = styled.div`
     align-items: flex-start;
     gap: var(--spacing-md);
   }
+`;
+
+const HeaderContent = styled.div`
+  display: grid;
+  gap: var(--spacing-xs-plus);
+`;
+
+const ResultMeta = styled.p.attrs({ role: 'status', 'aria-live': 'polite' })`
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+`;
+
+const ControlsStack = styled.div`
+  min-width: 0;
+  flex: 1 1 auto;
+  display: grid;
+  gap: var(--spacing-sm-plus);
 `;
 
 const TabsContainer = styled.div.attrs({ role: 'tablist', 'data-divider': 'inline' })`
@@ -115,6 +137,93 @@ const TabIndicator = styled(motion.span).attrs({ 'data-testid': 'anime-list-tab-
   z-index: 0;
 `;
 
+const Toolbar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+`;
+
+const SortGroup = styled.div.attrs({ role: 'group', 'aria-label': '排序方式' })`
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs-plus);
+  flex-wrap: wrap;
+`;
+
+const SortChip = styled.button.attrs({ type: 'button', 'data-pressable': true })`
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: 0.42rem 0.7rem;
+  border-radius: var(--border-radius-pill);
+  border: 1px solid ${(props) => (props.$active ? 'transparent' : 'var(--border-subtle)')};
+  background: ${(props) =>
+    props.$active
+      ? 'linear-gradient(120deg, rgba(var(--primary-rgb), 0.88), rgba(var(--secondary-rgb), 0.78))'
+      : 'var(--surface-soft)'};
+  color: ${(props) => (props.$active ? 'var(--text-on-primary)' : 'var(--text-secondary)')};
+  font-size: var(--text-xs);
+  font-weight: 700;
+  transition: var(--transition);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-color: ${(props) => (props.$active ? 'transparent' : 'var(--chip-border-hover)')};
+      color: ${(props) => (props.$active ? 'var(--text-on-primary)' : 'var(--text-primary)')};
+      background: ${(props) => (props.$active ? undefined : 'var(--surface-soft-hover)')};
+    }
+  }
+`;
+
+const DensityToggle = styled.button.attrs({ type: 'button', 'data-pressable': true })`
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs-plus);
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--border-radius-pill);
+  border: 1px solid
+    ${(props) => (props.$active ? 'rgba(var(--secondary-rgb), 0.55)' : 'var(--border-subtle)')};
+  background: ${(props) =>
+    props.$active ? 'rgba(var(--secondary-rgb), 0.16)' : 'var(--surface-soft)'};
+  color: ${(props) => (props.$active ? 'var(--secondary-color)' : 'var(--text-secondary)')};
+  font-size: var(--text-xs);
+  font-weight: 700;
+  transition: var(--transition);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-color: ${(props) =>
+        props.$active ? 'rgba(var(--secondary-rgb), 0.65)' : 'var(--chip-border-hover)'};
+      background: ${(props) =>
+        props.$active ? 'rgba(var(--secondary-rgb), 0.2)' : 'var(--surface-soft-hover)'};
+    }
+  }
+`;
+
+const ResetButton = styled.button.attrs({ type: 'button', 'data-pressable': true })`
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs-plus);
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--border-radius-pill);
+  border: 1px dashed var(--border-subtle);
+  background: transparent;
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  transition: var(--transition);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-color: var(--chip-border-hover);
+      color: var(--text-primary);
+      background: var(--surface-soft);
+    }
+  }
+`;
+
 const ShowMoreButton = styled.button.attrs({
   'data-pressable': true,
   'data-shimmer': true,
@@ -147,6 +256,13 @@ const categoryOptions = [
   ...categories.map((cat) => ({ id: `cat-${cat.id}`, name: cat.name })),
 ];
 
+const sortOptions = [
+  { id: 'recommended', name: '综合' },
+  { id: 'rating', name: '评分优先' },
+  { id: 'popularity', name: '热度优先' },
+  { id: 'latest', name: '新作优先' },
+];
+
 const DEFAULT_STORAGE_KEY = 'guoman.animeList.activeTab';
 
 function AnimeList({
@@ -160,13 +276,18 @@ function AnimeList({
   const descId = useId();
   const reducedMotion = useAppReducedMotion();
   const [activeTab, setActiveTab] = usePersistedState(storageKey, defaultTab);
+  const [sortMode, setSortMode] = usePersistedState(`${storageKey}:sort`, sortOptions[0].id);
+  const [compactMode, setCompactMode] = usePersistedState(`${storageKey}:compact`, false, {
+    serialize: (value) => (value ? 'true' : 'false'),
+    deserialize: (raw) => raw === true || raw === 'true',
+  });
 
   const [displayCount, setDisplayCount] = useState(initialDisplayCount);
   const indicatorLayoutId = useMemo(() => `guoman-tab-indicator:${storageKey}`, [storageKey]);
 
   useEffect(() => {
     setDisplayCount(initialDisplayCount);
-  }, [activeTab, initialDisplayCount]);
+  }, [activeTab, initialDisplayCount, sortMode]);
 
   const displayedAnime = useMemo(() => {
     switch (activeTab) {
@@ -190,8 +311,61 @@ function AnimeList({
     }
   }, [activeTab]);
 
+  const sortedAnime = useMemo(() => {
+    const candidates = [...displayedAnime];
+
+    switch (sortMode) {
+      case 'rating':
+        return candidates.sort((left, right) => (right.rating || 0) - (left.rating || 0));
+      case 'popularity':
+        return candidates.sort((left, right) => (right.popularity || 0) - (left.popularity || 0));
+      case 'latest':
+        return candidates.sort((left, right) => (right.releaseYear || 0) - (left.releaseYear || 0));
+      default:
+        return candidates;
+    }
+  }, [displayedAnime, sortMode]);
+
+  const visibleAnime = useMemo(
+    () => sortedAnime.slice(0, Math.max(Number(displayCount) || 0, 0)),
+    [displayCount, sortedAnime],
+  );
+
   const handleShowMore = () => {
     setDisplayCount((prev) => prev + initialDisplayCount);
+  };
+
+  const handleSortChange = (nextSortId) => {
+    if (!nextSortId || sortMode === nextSortId) return;
+    setSortMode(nextSortId);
+    trackEvent('recommendations.sort.change', { sort: nextSortId, storageKey });
+    if (storageKey === STORAGE_KEYS.recommendationsTab) {
+      recordInteraction(STORAGE_KEYS.recommendationsActions, { sort: nextSortId });
+    }
+  };
+
+  const handleCompactToggle = () => {
+    const nextValue = !compactMode;
+    setCompactMode(nextValue);
+    trackEvent('recommendations.layout.toggle', { compact: nextValue, storageKey });
+    if (storageKey === STORAGE_KEYS.recommendationsTab) {
+      recordInteraction(STORAGE_KEYS.recommendationsActions, { compact: nextValue });
+    }
+  };
+
+  const handleResetView = () => {
+    const defaultSortMode = sortOptions[0].id;
+    setActiveTab(defaultTab);
+    setSortMode(defaultSortMode);
+    setCompactMode(false);
+    setDisplayCount(initialDisplayCount);
+    trackEvent('recommendations.view.reset', { storageKey, defaultTab });
+    if (storageKey === STORAGE_KEYS.recommendationsTab) {
+      recordInteraction(STORAGE_KEYS.recommendationsActions, {
+        action: 'reset',
+        tab: defaultTab,
+      });
+    }
   };
 
   useEffect(() => {
@@ -201,45 +375,88 @@ function AnimeList({
     }
   }, [activeTab, storageKey]);
 
+  const activeSortName =
+    sortOptions.find((option) => option.id === sortMode)?.name || sortOptions[0].name;
+  const isViewCustomized =
+    activeTab !== defaultTab || sortMode !== sortOptions[0].id || compactMode;
+
   return (
     <SectionContainer aria-labelledby={titleId} aria-describedby={descId} data-stagger>
       <SectionInner>
         <SectionHeader>
-          <h2 className="section-title" id={titleId}>
-            {title}
-          </h2>
-          <TabsContainer aria-label="作品筛选标签">
-            {categoryOptions.map((category) => (
-              <Tab
-                key={category.id}
-                type="button"
-                $active={activeTab === category.id}
-                aria-selected={activeTab === category.id}
-                tabIndex={activeTab === category.id ? 0 : -1}
-                onClick={() => setActiveTab(category.id)}
-              >
-                {activeTab === category.id ? (
-                  <TabIndicator
-                    layoutId={indicatorLayoutId}
-                    transition={
-                      reducedMotion
-                        ? { duration: 0 }
-                        : { type: 'spring', stiffness: 520, damping: 40 }
-                    }
-                  />
+          <HeaderContent>
+            <h2 className="section-title" id={titleId}>
+              {title}
+            </h2>
+            <ResultMeta>
+              <FiFilter size={14} aria-hidden="true" />
+              当前 {sortedAnime.length} 部 · {activeSortName}
+            </ResultMeta>
+          </HeaderContent>
+          <ControlsStack>
+            <TabsContainer aria-label="作品筛选标签">
+              {categoryOptions.map((category) => (
+                <Tab
+                  key={category.id}
+                  type="button"
+                  $active={activeTab === category.id}
+                  aria-selected={activeTab === category.id}
+                  tabIndex={activeTab === category.id ? 0 : -1}
+                  onClick={() => setActiveTab(category.id)}
+                >
+                  {activeTab === category.id ? (
+                    <TabIndicator
+                      layoutId={indicatorLayoutId}
+                      transition={
+                        reducedMotion
+                          ? { duration: 0 }
+                          : { type: 'spring', stiffness: 520, damping: 40 }
+                      }
+                    />
+                  ) : null}
+                  <TabLabel>{category.name}</TabLabel>
+                </Tab>
+              ))}
+            </TabsContainer>
+            <Toolbar>
+              <SortGroup>
+                {sortOptions.map((option) => (
+                  <SortChip
+                    key={option.id}
+                    aria-pressed={sortMode === option.id}
+                    $active={sortMode === option.id}
+                    onClick={() => handleSortChange(option.id)}
+                  >
+                    {option.name}
+                  </SortChip>
+                ))}
+                {isViewCustomized ? (
+                  <ResetButton aria-label="重置筛选与布局" onClick={handleResetView}>
+                    重置视图
+                  </ResetButton>
                 ) : null}
-                <TabLabel>{category.name}</TabLabel>
-              </Tab>
-            ))}
-          </TabsContainer>
+              </SortGroup>
+              {!bento ? (
+                <DensityToggle
+                  $active={compactMode}
+                  aria-pressed={compactMode}
+                  aria-label={compactMode ? '切换为舒展卡片布局' : '切换为紧凑卡片布局'}
+                  onClick={handleCompactToggle}
+                >
+                  <FiGrid size={14} aria-hidden="true" />
+                  {compactMode ? '舒展布局' : '紧凑布局'}
+                </DensityToggle>
+              ) : null}
+            </Toolbar>
+          </ControlsStack>
         </SectionHeader>
         <span id={descId} className="sr-only">
           可通过上方标签切换作品分类，切换后列表将自动更新。
         </span>
 
-        <AnimeGrid $bento={bento}>
+        <AnimeGrid $bento={bento} $compact={compactMode}>
           <AnimatePresence initial={false}>
-            {displayedAnime.slice(0, displayCount).map((anime) => (
+            {visibleAnime.map((anime) => (
               <motion.div
                 key={anime.id}
                 role="listitem"
@@ -253,13 +470,13 @@ function AnimeList({
                   reducedMotion ? { duration: 0 } : { duration: 0.22, ease: [0.22, 1, 0.36, 1] }
                 }
               >
-                <AnimeCard anime={anime} />
+                <AnimeCard anime={anime} compact={compactMode} />
               </motion.div>
             ))}
           </AnimatePresence>
         </AnimeGrid>
 
-        {displayCount < displayedAnime.length && (
+        {displayCount < sortedAnime.length && (
           <ShowMoreButton type="button" onClick={handleShowMore}>
             查看更多
           </ShowMoreButton>
